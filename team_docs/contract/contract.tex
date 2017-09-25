@@ -21,8 +21,10 @@
 
 \documentclass[paper=usletter, fontsize=12pt]{article}
 \input{structure.tex} % specifies the document layout and style
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{subcaption}
 
-% Member's information
 \newcommand{\team}{Galois Field Arithmetic Unit}
 \newcommand{\Sabbir}{Sabbir Ahmed}
 \newcommand{\Jeffrey}{Jeffrey Osazuwa}
@@ -31,32 +33,32 @@
 
 %----------------------------------------------------------------------------------------
 
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    {\textbf{TEAM \#: }} & #1 \\
+                    {\textbf{DATE: }} & #2 \\
+                    {\textbf{TO: }} & #3 \\
+                    {\textbf{FROM: }} & #4 \\
+                    {\textbf{SUBJECT: }} & #5 \\
+                \end{tabular}\\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
 \begin{document}
 
-    \begin{titlepage}
+% \header{CMPE349}{Precision Landing System Project}{MLS Ground Receiver}{1000 Hilltop Cir}{Catonsville, MD 21250}
+\documentinfo{\team~}{March 10, 2017}{Dr. LaBerge}{Team M: Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber}{Team Contract}
 
-        \vspace*{\fill} % Add whitespace above to center the title page content
-        \begin{center}
-
-            {\LARGE \team~Team Contract}\\ [1.5cm]
-
-            \today
-            
-            \vspace*{\fill}
-
-            \Sabbir
-
-            \Jeffrey
-
-            \Howard
-
-            \Brian
-
-        \end{center}
-        \vspace*{\fill} % Add whitespace below to center the title page content
-
-    \end{titlepage}
-
+    \vspace{-0.3in}
     \section{Objective}
 
         This contract serves as a collection of mutual agreements between the members of \team \ in order to successfully complete the project.
@@ -91,7 +93,6 @@
 
         GitHub will be used for source code version controlling. Individuals are responsible for understanding and following the best practices of version controls. Members are expected to create and develop on their own branches, and merge with the master branch after a thorough review by them team. Feature branching may be implemented with individuals in a “user-feature” naming convention. Forcing pushes or overwriting code are not permitted unless deemed necessary by the team.
 
-    \newpage
     \section{Acceptance}
 
     By signing below, the members of \team \ agree to abide by the terms and conditions indicated in this document. \\
