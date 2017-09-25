@@ -1,0 +1,62 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template
+% LaTeX Template
+% Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brandon Fryslie
+% With extensive modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors:
+% Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\input{structure.tex} % specifies the document layout and style
+
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+%----------------------------------------------------------------------------------------
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    \large\textbf{#1} \\
+                    #2 \\
+                    #3 \\
+                    #4 \\
+                    #5 \\
+                \end{tabular}\\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
+\begin{document}
+
+% \header{CMPE349}{Precision Landing System Project}{MLS Ground Receiver}{1000 Hilltop Cir}{Catonsville, MD 21250}
+\documentinfo{\team~}{\today}{Dr. LaBerge}{\Sabbir, \Jeffrey, \Howard, \Brian}{<INSERT DOC SUBJECT>}
+
+    \vspace{-0.3in}
+
+    <INSERT CONTENT>
+
+\end{document}
