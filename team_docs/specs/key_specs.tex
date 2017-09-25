@@ -1,0 +1,86 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template
+% LaTeX Template
+% Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brandon Fryslie
+% With extensive modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors:
+% Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\input{structure.tex} % specifies the document layout and style
+
+%----------------------------------------------------------------------------------------
+
+% names
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    #1 \\
+                    #2 \\
+                    #3 \\
+                    #4 \\
+                    #5 \\
+                \end{tabular}\\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
+\begin{document}
+
+ \documentinfo{\textbf{MEMO NUMBER:} GFAU-SRS}{\textbf{DATE:}  {September 27, 2017}}{\textbf{TO: } EFC LaBerge}{\textbf{FROM: }\Sabbir, \Jeffrey, \Howard, \Brian}{\textbf{SUBJECT: } GFAU Specification Requirements Statement}
+    \vspace{-0.3in}
+
+
+	\section{INTRODUCTION}
+		This document servers to enumerate specific requirements of the GFAU.
+
+	\section{BACKGROUND}
+
+The Galois Field Arithmetic Unit (GFAU) is a hardware-based unit for performing arithmetic operations in Galois Field $2^n$, where n = 2 … 10. Unit will accept inputs to determine n, and to establish the field generating polynomial. A GFAU would serve as a computation engine for a relatively low-powered microcontroller, and would enable complex code and encryption algorithms. Project will include implementation of a Reed Solomon encoder and decoder using the GFAU.
+
+	\section{SPECIFICATION}
+
+	\begin{enumerate}
+		
+		\item At a minimum, the GFAU shall handle inputs up to polynomial degree 8 (G(8)).
+		\item The GFAU should handle inputs up to polynomial degree 16 (G(16)).
+		\item The GFAU shall be implemented using FPGA.
+		\item The GFAU shall provide addition, subtraction, multiplication, division, and logarithms within the context of Galois Fields.
+		\item The GFAU shall be able to generate lookup tables for each operation in (4) given an irreducible polynomial.
+		\item The GFAU should be able to determine if an input polynomial is reducible or not.
+		\item The total cost should be under \$400.
+
+
+
+
+	\end{enumerate}
+
+
+
+\end{document}
