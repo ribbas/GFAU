@@ -1,3 +1,4 @@
 # temporary LaTex files
 *.aux
 *.log
+*.dvi
