@@ -1,13 +1,13 @@
 # Makefile to ease trivial tasks for the project
 
-all: cache_convert
+all: convert
 
 
-.PHONY: cache_convert convert1 convert2
-cache_convert: convert1 convert2
+.PHONY: convert convert1 convert2
+convert: convert1 convert2
 convert1 convert2:
 	# convert LaTex file to PDF
-	@pdflatex contract.tex
+	@pdflatex ${DOC}.tex
 
 
 .PHONY: clean
