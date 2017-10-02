@@ -1,0 +1,222 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template
+% LaTeX Template
+% Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brandon Fryslie
+% With extensive modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors:
+% Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\input{structure.tex} % specifies the document layout and style
+
+%----------------------------------------------------------------------------------------
+
+% names
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+\newcommand{\polynomial}{$x^{3}+x^{2}+x^{0}$}
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{2in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    #1 \\
+                    #2 \\
+                    #3 \\
+                    #4 \\
+                    #5 \\
+                \end{tabular}\\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
+\begin{document}
+
+     \documentinfo{\textbf{MEMO NUMBER:} 02}{\textbf{DATE:} \today}{\textbf{TO: } EFC LaBerge}{\textbf{FROM: }\Sabbir, \Jeffrey, \Howard, \Brian}{\textbf{SUBJECT: } Background Homework}
+    \vspace{-0.1in}
+
+    \section{Show that \polynomial~ is irreducible in $GF(2)[x]$}
+
+        \[ x=0: (0)^{3}+(0)^{2}+(0)^{0}=0+0+1=1 \ (not \ a \ root) \]
+        \[ x=1: (1)^{3}+(1)^{2}+(1)^{0}=1+1+1=1 \ (not \ a \ root) \]
+        \centerline{$\therefore$ \polynomial~ has no roots in $GF(2)[x]$.}
+
+    \section{Generate the 8 elements of $GF(2^{3})$ using the primitive polynomial \polynomial~.}
+
+        \centerline{Let $\beta \ \epsilon \ GF(2^{3})$ be a root of \polynomial~ $\implies \beta^{3}+\beta^{2}+\beta^{0}$}
+
+        \hspace*{\fill}
+        \centerline{$\therefore$ The coefficients are in $GF(2) \implies \beta^{3}=\beta^{2}+\beta^{0}$}
+
+        \[ \because a \ field \ has \ additive \ and \ multiplicative \ identities: \]
+        \[ \therefore 0, 1=\beta^{0} \ \epsilon \ GF(2^{3}) \]
+
+        \[ \therefore \beta^{1} \ \epsilon \ GF(2^{3}) \ (\because \ closure \ of \ multiplication) \]
+
+        \[ \therefore \beta^{2} \ \epsilon \ GF(2^{3}) \ (\because \ assumption) \]
+
+        \[ \therefore \beta^{3} \ \epsilon \ GF(2^{3}) \ (\because \beta^{3}=\beta^{2}+\beta^{0}) \]
+
+        \begin{equation*}
+            \begin{split}
+                \because \beta^{4} & = \beta^{1} \times \beta^{3} \\
+                & = \beta^{1} (\beta^{2}+\beta^{0}) \\
+                & = \beta^{3}+\beta^{1} \\
+                & = \beta^{2}+\beta^{1}+\beta^{0}
+            \end{split}
+        \end{equation*}
+
+        \[ \therefore \beta^{4} \ \epsilon \ GF(2^{3}) \]
+
+        \begin{equation*}
+            \begin{split}
+                \because \beta^{5} & = \beta^{1} \times \beta^{4} \\
+                & = \beta^{1} (\beta^{2}+\beta^{1}+\beta^{0}) \\
+                & = \beta^{3}+\beta^{2}+\beta^{1} \\
+                & = \beta^{2}+\beta^{0}+\beta^{2}+\beta^{1} \\
+                & = \beta^{1}+\beta^{0}
+            \end{split}
+        \end{equation*}
+
+        \[ \therefore \beta^{5} \ \epsilon \ GF(2^{3}) \]
+
+        \begin{equation*}
+            \begin{split}
+                \because \beta^{6} & = \beta^{1} \times \beta^{5} \\
+                & = \beta^{1} (\beta^{1}+\beta^{0}) \\
+                & = \beta^{2}+\beta^{1}
+            \end{split}
+        \end{equation*}
+        \[ \therefore \beta^{6} \ \epsilon \ GF(2^{3}) \]
+
+        \begin{equation*}
+            \begin{split}
+                \because \beta^{7} & = \beta^{1} \times \beta^{6} \\
+                & = \beta^{1} (\beta^{2}+\beta^{1}) \\
+                & = \beta^{3}+\beta^{2} \\
+                & = \beta^{2}+\beta^{0}+\beta^{2} \\
+                & = \beta^{0} = 1
+            \end{split}
+        \end{equation*}
+        \[ \therefore \beta^{7} \ \epsilon \ GF(2^{3}) \]
+
+        \begin{table}[h]
+            \caption{The 8 Element Vectors of \polynomial~ in $GF(2)[x]$}
+
+            \centering
+            \begin{tabular*}{200pt}{@{\extracolsep{\fill}} c | c | c}
+
+            \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol} \\
+            \hline
+            $0$           & $0+0+0$                                 & 000 \\
+            $\beta^{0}$ & $0 + 0 + \beta^{0}$                   & 001 \\
+            $\beta^{1}$ & $0 + \beta^{1} + 0$                   & 010 \\
+            $\beta^{2}$ & $\beta^{2} + 0 + 0$                   & 100 \\
+            $\beta^{3}$ & $\beta^{2} + 0 + \beta^{0}$           & 101 \\
+            $\beta^{4}$ & $\beta^{2} + \beta^{1} + \beta^{0}$   & 111 \\
+            $\beta^{5}$ & $0 + \beta^{1} + \beta^{0}$           & 011 \\
+            $\beta^{6}$ & $\beta^{2} + \beta^{1} + 0$           & 110 \\
+            $\beta^{7}$ & $0 + 0 + \beta^{0}$                   & 001 \\
+            \end{tabular*}
+        \end{table}
+
+    \newpage
+    \section{Generate the addition (bitwise XOR) and multiplication tables for the implementation of $GF(2)[x]$}
+
+        \begin{table}[h]
+            \def\arraystretch{1.5}
+            \caption{Addition Table for \polynomial~ in $GF(2)[x]$}
+            \centering
+            \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c | c c c c c c c c}
+
+                $\bm{+}$ & $\bm{0}$ & $\bm{\beta^{0}}$ & $\bm{\beta^{1}}$ & $\bm{\beta^{2}}$ 
+                & $\bm{\beta^{3}}$ & $\bm{\beta^{4}}$ & $\bm{\beta^{5}}$ & $\bm{\beta^{6}}$ \\
+                \hline
+
+                $\bm{0}$ & $0$ & $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ 
+                & $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ \\
+
+                $\bm{\beta^{0}}$ & $\beta^{0}$ & $0$ & $\beta^{5}$ & $\beta^{3}$ 
+                & $\beta^{2}$ & $\beta^{6}$ & $\beta^{1}$ & $\beta^{4}$ \\
+
+                $\bm{\beta^{1}}$ & $\beta^{1}$ & $\beta^{5}$ & $0$ & $\beta^{6}$ 
+                & $\beta^{4}$ & $\beta^{3}$ & $\beta^{0}$ & $\beta^{2}$ \\
+
+                $\bm{\beta^{2}}$ & $\beta^{2}$ & $\beta^{3}$ & $\beta^{6}$ & $0$ 
+                & $\beta^{0}$ & $\beta^{5}$ & $\beta^{4}$ & $\beta^{1}$ \\
+
+                $\bm{\beta^{3}}$ & $\beta^{3}$ & $\beta^{2}$ & $\beta^{4}$ & $\beta^{0}$ 
+                & $0$ & $\beta^{1}$ & $\beta^{6}$ & $\beta^{5}$ \\
+
+                $\bm{\beta^{4}}$ & $\beta^{4}$ & $\beta^{6}$ & $\beta^{3}$ & $\beta^{5}$ 
+                & $\beta^{1}$ & $0$ & $\beta^{2}$ & $\beta^{0}$ \\
+
+                $\bm{\beta^{5}}$ & $\beta^{5}$ & $\beta^{1}$ & $\beta^{0}$ & $\beta^{4}$ 
+                & $\beta^{6}$ & $\beta^{2}$ & $0$ & $\beta^{3}$ \\
+
+                $\bm{\beta^{6}}$ & $\beta^{6}$ & $\beta^{4}$ & $\beta^{2}$ & $\beta^{1}$ 
+                & $\beta^{5}$ & $\beta^{0}$ & $\beta^{3}$ & $0$ \\
+
+            \end{tabular*}
+        \end{table}
+
+        \begin{table}[h]
+            \def\arraystretch{1.5}
+            \caption{Multiplication Table for \polynomial~ in $GF(2)[x]$}
+            \centering
+            \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c | c c c c c c c c}
+
+                \bm{$\times$} & $\bm{0}$ & $\bm{\beta^{0}}$ & $\bm{\beta^{1}}$ & $\bm{\beta^{2}}$ 
+                & $\bm{\beta^{3}}$ & $\bm{\beta^{4}}$ & $\bm{\beta^{5}}$ & $\bm{\beta^{6}}$ \\
+                \hline
+
+                $\bm{0}$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ \\
+
+                $\bm{\beta^{0}}$ & $0$ & $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ 
+                & $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ \\
+
+                $\bm{\beta^{1}}$ & $0$ & $\beta^{1}$ & $\beta^{2}$ & $\beta^{3}$ 
+                & $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ & $\beta^{0}$ \\
+
+                $\bm{\beta^{2}}$ & $0$ & $\beta^{2}$ & $\beta^{3}$ & $\beta^{4}$ 
+                & $\beta^{5}$ & $\beta^{6}$ & $\beta^{0}$ & $\beta^{1}$ \\
+
+                $\bm{\beta^{3}}$ & $0$ & $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ 
+                & $\beta^{6}$ & $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ \\
+
+                $\bm{\beta^{4}}$ & $0$ & $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ 
+                & $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ & $\beta^{3}$ \\
+
+                $\bm{\beta^{5}}$ & $0$ & $\beta^{5}$ & $\beta^{6}$ & $\beta^{0}$ 
+                & $\beta^{1}$ & $\beta^{2}$ & $\beta^{3}$ & $\beta^{4}$ \\
+
+                $\bm{\beta^{6}}$ & $0$ & $\beta^{6}$ & $\beta^{0}$ & $\beta^{1}$ 
+                & $\beta^{2}$ & $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ \\
+
+            \end{tabular*}
+        \end{table}
+
+
+\end{document}
