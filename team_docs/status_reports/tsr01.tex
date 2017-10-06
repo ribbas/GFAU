@@ -1,0 +1,92 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contract
+% LaTeX Template
+% Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brandon Fryslie
+% With extensive modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors:
+% Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\input{structure.tex} % specifies the document layout and style
+
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+%----------------------------------------------------------------------------------------
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    #1 \\
+                    #2 \\
+                    #3 \\
+                    #4 \\
+                    #5 \\
+                \end{tabular}\\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
+\begin{document}
+
+    \documentinfo{\textbf{MEMO:} TSR-01}{\textbf{DATE: }{\today}}{\textbf{TO: } EFC LaBerge}{\textbf{FROM: }\Sabbir, \Jeffrey, \Howard, \Brian}{\textbf{SUBJECT: } Team Status Report}
+
+    \vspace{-0.3in}
+    \section{Introduction}
+    The Galois Field Arithmetic Unit will accept inputs to determine n, and to establish the field generating polynomial. A GFAU would serve as a computation engine for a relatively low-powered microcontroller, and would enable complex code and encryption algorithms. Project will include implementation of a Reed Solomon encoder and decoder using the GFAU. The purpose of this report is to detail the progress of the GFAU in the period of September 18, 2017 through October 6, 2017. This is the first report for the GFAU project. 
+
+
+    \section{Completed Tasks}
+    During this work period, the team has continued to make progress on the GFAU. Including the following achievements:
+    \begin{enumerate}[label=\alph*)]
+
+        \item Discussed about team management, work distribution, means of communication and came up with a team contract that all members agreed to abide to. The team contract also detailed the consequences of not following any of the items on the contract.
+
+        \item System Boundary Diagram 
+
+        \item Specs
+
+        \item The project manager has met and familiarized himself with the team and the project. The team discussed the ultimate goals of the Capstone project and clarified the requirements and milestones. Means of communication with the team manager have been established, and regular scheduled meetings have been agreed upon.
+
+        \item The team has demonstrated a strong understanding on the mathematics and background behind the Galois field and its relevant concepts. A document has been attached detailing the steps required to analyze a given polynomial in the Galois field of 2 (represented as GF(2)[x]), determine its irreducibility, generate the terms in the “little field” and perform addition and multiplication with them.
+
+    \end{enumerate}
+
+
+    \section{Planned Tasks}
+    \begin{enumerate}[label=\alph*)]
+
+        \item SRS
+
+        \item Complete a Gantt chart for the entire project, highlighting the milestones and the expected time required for each step
+
+    \end{enumerate}
+
+
+    \section{Current Issues}
+
+   
+\end{document}
