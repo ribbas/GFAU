@@ -1,4 +1,6 @@
-# GFAU
+<div align="center">
+  <img src="https://raw.githubusercontent.com/sabbirahm3d/GFAU/master/logo.png">
+</div>
 
 Galois Field Arithmetic Unit.<br>
 
