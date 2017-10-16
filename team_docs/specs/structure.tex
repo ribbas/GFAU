@@ -20,6 +20,7 @@
 \usepackage{amssymb}
 \usepackage{bm}
 \usepackage{caption} 
+\usepackage[pdftex]{graphicx}
 
 \usepackage[utf8]{inputenc} % Required for including letters with accents
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
@@ -31,7 +32,10 @@
 \setlength{\textheight}{23cm} % Height of the text on the page
 \setlength{\oddsidemargin}{0cm} % Width of the margin - negative to move text left, positive to move it right
 \setlength{\topmargin}{-1.25cm} % Reduce the top margin
+\setlength{\parindent}{0mm} % Don't indent paragraphs
+\setlength{\parskip}{2.5mm} % Whitespace between paragraphs
 
 \captionsetup[table]{skip=10pt}
 
+\graphicspath{ {diagrams/} }
 \renewcommand\familydefault{\sfdefault}  % default font for entire document
