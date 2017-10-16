@@ -62,12 +62,8 @@
         \subsection{Introduction}
         A Galois Field is a field with a finite number of elements. The nomenclature $GF(q)$ is used to indicate a Galois field with q elements. For $GF(q)$ in general, $q$ must be a power of a prime. For each prime power, there exists exactly one finite field. The best known and most used Galois field is $GF(2)$, the binary field.
 
-        \subsection{Document Overview}
-        
-
-
     \section{Algorithm}
-    Input polynomials will be represented as 16 bit arrays, where the coefficient of the terms are represented as 1. The arrays are zero-based, so the 16th bit shall be placed on the 15th index. The provided example polynomial, \polynomial~ will be represented as
+    Input polynomials will be represented as 16 bit arrays, where the coefficient of the terms are represented as 1. The arrays are zero-based, so the 16th bit shall be placed on the 15th index. For example, the polynomial \polynomial~ will be represented as
 
         \[ <0000 \ 0000 \ 0000 \ 1101> (3rd, \ 2nd, \ and \ 0th \ bits) \]
 
@@ -115,16 +111,15 @@
             \begin{equation*}
                 \begin{split}
                     \alpha^{n+m} & =\alpha^{n+(m-1)}\times \alpha^{n} \\
-                    & = ( \alpha^{n+(m-1)} \ll 1 )[n-1:0] \oplus \alpha^{n}[n-1:0] \\
+                    & = (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \oplus \alpha^{n}[n-2:0]) \\
+                    & \wedge \neg (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
                 \end{split}
             \end{equation*}
-
-        \noindent To generate the $(n+1)$th term, 
 
         \newpage
 
     \section{VHSIC Hardware Design Language (VHDL) Implementation}
-    TODO: CAN ONLY BE ADDED ONCE ALGORITHM IS FIGURED OUT
+    TODO:
 
     \section{Example}
         \subsection{Show that \polynomial~ is irreducible in $GF(2)[x]$}
