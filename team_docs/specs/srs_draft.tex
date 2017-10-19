@@ -77,15 +77,15 @@
 
     \end{itemize}
 
+        \subsection{Mission Scenario}
+        Cryptography has many expensive calculations that are difficult for low power and inexpensive microcontrollers to handle. Galois fields are frequently used in the field of cryptography. The GFAU will make Galois field computations more accessible to such low powered devices.
+
         \subsection{Document Overview}
         This document serves as the System Requirements Specification for the Galois Field Arithmetic Unit. The description and requirements of the project are embodied in this document.
 
         The Specification is divided into separate segments pertaining to individual components and requirements on different levels. Figures and tables are attached where necessary to assist in demonstrating concepts.
 
-        \subsection{Mission Scenario}
-        Cryptography has many expensive calculations that are difficult for low power and inexpensive microcontrollers to handle. Galois fields are frequently used in the field of cryptography. The GFAU will make Galois field calculations more accessible to such low powered devices.
-
-        \subsection{System Overview}
+        \section{System Overview}
         The GFAU system is composed of discrete modules residing in a single programmable board. Individual modules shall be programmed to solely complete an assigned task. Although modules are assigned individual tasks, they shall not have exclusive components for its functionality.
 
         \subsection{System Boundary Diagram}
@@ -128,18 +128,35 @@
 
     \section{Requirements}
 
-        \subsection{System Requirements}
+        \subsection{Cost and Package Constraints}
+        This section outlines all design constraints imposed by the customer, from which the remainder of the requirements are derived.
+
+        \begin{enumerate}
+
+            \item The total cost of the prototype shall not exceed \$400
+            
+            \item The total area of prototype printed circuit board (PCB) shall not exceed 24 inches square
+            
+            \item The cost at mass production shall not exceed \$1 per chip
+            
+            \item The package of the final product shall not exceed 64 pins and should use fewer than 64 pins.
+
+        \end{enumerate}
 
         \subsection{Hardware Requirements}
         Hardware portability shall be prioritized on the GFAU. The hardware portability provides flexibility in the ranges of its specifications. The ranges of these specifications shall be reasonably bounded.
 
         \begin{enumerate}
 
-            \item The unit shall be functional at a variety of clock speeds at a minimum range of [4 MHz-100 MHz].
+            \item The unit shall be functional at a variety of clock speeds at a minimum range of [4 MHz - 100 MHz].
 
-            \item The GFAU shall perform its computations in [] instructions per clock
+            \item The GFAU shall perform its computations in [0.5] instructions per clock cycle
 
-            \item ...
+            \item The GFAU shall not exceed a thermal design power (TDP) of [1] W
+
+            \item The GFAU shall operate normally at a temperature range of -40$^{\circ}$C \textasciitilde 85$^{\circ}$C
+
+            \item The input/draining? voltage for the unit shall be [5] V
 
         \end{enumerate}
 
@@ -148,11 +165,24 @@
 
         \begin{enumerate}
 
-            \item Extensive design verification simulations shall be done before purchasing any hardware
+            \item Extensive design verification simulations shall be done before purchasing any hardware. The exact simulations shall be left up to the designer, however they shall prove the device operates as expected with at least a [99\%] probability. 
 
             \item All HDL code shall be synthesizable
 
             \item Gate delay and other relevant values shall be parametrized to easily match the specifications of candidate hardware during verification
+
+        \end{enumerate}
+
+        \subsection{Signal Testing and Requirements}
+        To ensure that all communication occurs correctly between the external device and GFAU, all signals shall meet the rise and fall times outlined below. Additionally, this section describes which tools shall be used to verify the correctness of the output, and the tools that shall be used to verify the rise and fall times of each signal.
+
+        \begin{enumerate}
+
+            \item All output signals shall not exceed rise and fall times of [1 ns]
+            
+            \item All output signals rise and fall times shall be measured using an oscilloscope to verify they meet [1].
+            
+            \item All output shall be checked probabilistically using a digital logic analyzer.
 
         \end{enumerate}
 
