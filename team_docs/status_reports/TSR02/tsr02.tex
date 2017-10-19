@@ -1,0 +1,68 @@
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\usepackage{color}
+\usepackage[none]{hyphenat}
+
+\input{structure.tex}
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+%----------------------------------------------------------------------------------------
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    #1 \\
+                    #2 \\
+                    #3 \\
+                    #4 \\
+                    #5 \\
+                \end{tabular} \\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
+\begin{document}
+\documentinfo{\textbf{MEMO:} TSR-02}{\textbf{DATE: }October 20, 2017}{\textbf{TO: } EFC LaBerge}{\textbf{FROM: }\Sabbir, \Jeffrey, \Howard, \Brian}{\textbf{SUBJECT: } Team Status Report}
+
+
+\section{Introduction}
+
+The Galois Field Arithmetic Unit will accept inputs to determine n, and to establish the field generating polynomial. A GFAU would serve as a computation engine for a relatively low-powered microcontroller, and would enable complex code and encryption algorithms. Project will include implementation of a Reed Solomon encoder and decoder using the GFAU. The purpose of this report is to detail the progress of the GFAU in the period of October 7, 2017 through October 20, 2017. This is the second report for the GFAU project. 
+
+
+\section{Completed Task}
+
+During this work period, the team has continued to make progress on the GFAU. Including the following achievements: 
+
+\begin{enumerate}
+	\item Discussed about the specification of the GFAU and a draft system requirement specification was submitted to Dr.LaBerge for review.
+	\item Discussed about the function within the GFAU and the Functional flow diagram have been developed.
+	\item Discussed about the data input and output within the GFAU and the data flow diagram havs been developed.
+	\item A Ganatt chart for the entire project highlighting the milestone and expected time of each task of the project.   
+	\item Came up with rough design on polynomial generation.
+	
+\end{enumerate}
+\section{Planned Task}
+The following task are planned for the next period:
+
+\begin{enumerate}
+	\item Finish VHDL coding for both polynomial term generation and logarithm.
+	\item Simulation for the completed VHDL module. 
+	\item Research on hardware components.
+\end{enumerate}
+
+\section{Current Issues}
+The current issue we are having in this period is coming up with exact Hardware requirements.  
+
+
+\end{document}
