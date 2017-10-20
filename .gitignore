@@ -2,3 +2,11 @@
 *.aux
 *.log
 *.dvi
+
+#vhdl binaries
+*.o
+*.a
+*.cf
+
+#vim tmp files
+*.swp
