@@ -1,0 +1,256 @@
+$date
+  Fri Oct 20 11:39:06 2017
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$var reg 16 ! s_inp[15:0] $end
+$var reg 1 " s_out1 $end
+$scope module r16 $end
+$var reg 16 # inp[15:0] $end
+$var reg 1 $ out1 $end
+$var reg 8 % layer1[7:0] $end
+$var reg 4 & layer2[3:0] $end
+$var reg 2 ' layer3[1:0] $end
+$var reg 1 ( tree_out $end
+$scope module (0) $end
+$scope module xor1_x $end
+$var reg 1 ) in1 $end
+$var reg 1 * in2 $end
+$var reg 1 + out1 $end
+$upscope $end
+$upscope $end
+$scope module (1) $end
+$scope module xor1_x $end
+$var reg 1 , in1 $end
+$var reg 1 - in2 $end
+$var reg 1 . out1 $end
+$upscope $end
+$upscope $end
+$scope module (2) $end
+$scope module xor1_x $end
+$var reg 1 / in1 $end
+$var reg 1 0 in2 $end
+$var reg 1 1 out1 $end
+$upscope $end
+$upscope $end
+$scope module (3) $end
+$scope module xor1_x $end
+$var reg 1 2 in1 $end
+$var reg 1 3 in2 $end
+$var reg 1 4 out1 $end
+$upscope $end
+$upscope $end
+$scope module (4) $end
+$scope module xor1_x $end
+$var reg 1 5 in1 $end
+$var reg 1 6 in2 $end
+$var reg 1 7 out1 $end
+$upscope $end
+$upscope $end
+$scope module (5) $end
+$scope module xor1_x $end
+$var reg 1 8 in1 $end
+$var reg 1 9 in2 $end
+$var reg 1 : out1 $end
+$upscope $end
+$upscope $end
+$scope module (6) $end
+$scope module xor1_x $end
+$var reg 1 ; in1 $end
+$var reg 1 < in2 $end
+$var reg 1 = out1 $end
+$upscope $end
+$upscope $end
+$scope module (7) $end
+$scope module xor1_x $end
+$var reg 1 > in1 $end
+$var reg 1 ? in2 $end
+$var reg 1 @ out1 $end
+$upscope $end
+$upscope $end
+$scope module (0) $end
+$scope module xor2_x $end
+$var reg 1 A in1 $end
+$var reg 1 B in2 $end
+$var reg 1 C out1 $end
+$upscope $end
+$upscope $end
+$scope module (1) $end
+$scope module xor2_x $end
+$var reg 1 D in1 $end
+$var reg 1 E in2 $end
+$var reg 1 F out1 $end
+$upscope $end
+$upscope $end
+$scope module (2) $end
+$scope module xor2_x $end
+$var reg 1 G in1 $end
+$var reg 1 H in2 $end
+$var reg 1 I out1 $end
+$upscope $end
+$upscope $end
+$scope module (3) $end
+$scope module xor2_x $end
+$var reg 1 J in1 $end
+$var reg 1 K in2 $end
+$var reg 1 L out1 $end
+$upscope $end
+$upscope $end
+$scope module (0) $end
+$scope module xor3_x $end
+$var reg 1 M in1 $end
+$var reg 1 N in2 $end
+$var reg 1 O out1 $end
+$upscope $end
+$upscope $end
+$scope module (1) $end
+$scope module xor3_x $end
+$var reg 1 P in1 $end
+$var reg 1 Q in2 $end
+$var reg 1 R out1 $end
+$upscope $end
+$upscope $end
+$scope module xor4_1 $end
+$var reg 1 S in1 $end
+$var reg 1 T in2 $end
+$var reg 1 U out1 $end
+$upscope $end
+$scope module and1 $end
+$var reg 1 V in1 $end
+$var reg 1 W in2 $end
+$var reg 1 X out1 $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+b0000000000001011 !
+1"
+b0000000000001011 #
+1$
+b00000010 %
+b0001 &
+b01 '
+1(
+1)
+1*
+0+
+1,
+0-
+1.
+0/
+00
+01
+02
+03
+04
+05
+06
+07
+08
+09
+0:
+0;
+0<
+0=
+0>
+0?
+0@
+1A
+0B
+1C
+0D
+0E
+0F
+0G
+0H
+0I
+0J
+0K
+0L
+0M
+1N
+1O
+0P
+0Q
+0R
+0S
+1T
+1U
+1V
+1W
+1X
+#1
+b0000000000000011 !
+0"
+b0000000000000011 #
+0$
+b00000000 %
+b0000 &
+b00 '
+0(
+0,
+0.
+0A
+0C
+0N
+0O
+0T
+0U
+0V
+0X
+#2
+b0000000000111011 !
+1"
+b0000000000111011 #
+1$
+b00000010 %
+b0001 &
+b01 '
+1(
+1,
+1.
+1/
+10
+1A
+1C
+1N
+1O
+1T
+1U
+1V
+1X
+#3
+b0111000000000000 !
+0"
+b0111000000000000 #
+0$
+b10000000 %
+b1000 &
+b10 '
+0)
+0*
+0,
+0.
+0/
+00
+1;
+1<
+1?
+1@
+0A
+0C
+1J
+1L
+0N
+0O
+1P
+1R
+1S
+0T
+0W
+0X
+#4
