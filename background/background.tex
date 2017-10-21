@@ -113,8 +113,8 @@
                 \begin{equation*}
                     \begin{split}
                         \alpha^{n+m} & =\alpha^{n+(m-1)}\times \alpha^{n} \\
-                        & = (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \oplus \alpha^{n}[n-2:0]) \\
-                        & \wedge \neg (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
+                        & = (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \oplus \alpha^{n}[n-2:0] \\
+                        & \ \ \ \ \wedge \neg (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
                     \end{split}
                 \end{equation*}
 
@@ -123,17 +123,35 @@
         \subsection{Operations}
 
             \subsubsection{Addition and Subtraction}
-
-            Binary addition and binary subtraction may be done by bitwise XOR-ing the operands.
+            Binary addition and binary subtraction are synonymous in the Galois field. Addition and subtraction of Galois operands may be done by bitwise XOR-ing the operands.
 
                 \begin{equation*}
                     \begin{split}
-                        \alpha^{i} + \alpha^{j} & = \{x^{i}_{n-1}\ldots x^{i}_{2}x^{i}_{1}x^{i}_{0}\} + \{x^{j}_{n-1}\ldots x^{j}_{2}x^{j}_{1}x^{j}_{0}\} \\
-                        & = \{(x^{i}_{n-1} \oplus x^{j}_{n-1})\ldots (x^{i}_{2}\oplus x^{j}_{2})(x^{i}_{1}\oplus x^{j}_{1})(x^{i}_{0}\oplus x^{j}_{0})\} \\
+                        \alpha^{i} \pm \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i, 1},x_{i, 0}\} + \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
+                        & = \{(x_{i, n-1} \oplus x_{j,n-1}), \ldots (x_{i, 2}\oplus x_{j, 2}), (x_{i, 1}\oplus x_{j, 1}), (x_{i, 0}\oplus x_{j, 0})\} \\
+                        & = \alpha^{k}
                     \end{split}
                 \end{equation*}
 
-            \subsubsection{Multiplication and Division}
+            \subsubsection{Multiplication}
+            Binary multiplication of Galois operands is congruent to the sum of the indices of the operands modulo the total number of terms generated from the input polynomial.
+
+                \begin{equation*}
+                    \begin{split}
+                        \alpha^{i} \cdot \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i, 1},x_{i, 0}\} \cdot \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
+                        & = \alpha^{(i + j) (mod \ 2^{n}-1)}
+                    \end{split}
+                \end{equation*}
+
+            \subsubsection{Division}
+            Binary division of Galois operands is congruent to the difference of the indices of the operands modulo the total number of terms generated from the input polynomial. The difference of the indices may consist of negative integers.
+
+                \begin{equation*}
+                    \begin{split}
+                        \alpha^{i} / \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i, 1},x_{i, 0}\} / \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
+                        & = \alpha^{(i - j) (mod \ 2^{n}-1)}
+                    \end{split}
+                \end{equation*}
 
             \subsubsection{Logarithm}
 
