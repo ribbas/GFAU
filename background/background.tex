@@ -114,7 +114,7 @@
                     \begin{split}
                         \alpha^{n+m} & =\alpha^{n+(m-1)}\times \alpha^{n} \\
                         & = (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \oplus \alpha^{n}[n-2:0] \\
-                        & \ \ \ \ \wedge \neg (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
+                        & \ \ \ \ \wedge (\alpha^{n+(m-1)} \ll 1 )[n-1] = 0 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
                     \end{split}
                 \end{equation*}
 
@@ -139,7 +139,8 @@
                 \begin{equation*}
                     \begin{split}
                         \alpha^{i} \cdot \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i, 1},x_{i, 0}\} \cdot \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
-                        & = \alpha^{(i + j) (mod \ 2^{n}-1)}
+                        & = (i + j) \geq 2^{n}-1 \Longrightarrow \alpha^{(i + j) - (2^{n}-1)} \\
+                        & \ \ \ \ \wedge (i + j) < 2^{n}-1 \Longrightarrow \alpha^{(i + j)}
                     \end{split}
                 \end{equation*}
 
