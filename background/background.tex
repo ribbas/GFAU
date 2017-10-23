@@ -134,7 +134,7 @@
                 \end{equation*}
 
             \subsubsection{Multiplication}
-            Binary multiplication of Galois operands is congruent to the sum of the indices of the operands modulo the total number of terms generated from the input polynomial.
+            Binary multiplication of Galois operands is congruent to the sum of the indices of the operands. If the indices sum to greater than or equal to $2^{n}-1$, then $2^{n}-1$ is subtracted from the sum to prevent overflow.
 
                 \begin{equation*}
                     \begin{split}
@@ -145,12 +145,14 @@
                 \end{equation*}
 
             \subsubsection{Division}
-            Binary division of Galois operands is congruent to the difference of the indices of the operands modulo the total number of terms generated from the input polynomial. The difference of the indices may consist of negative integers.
+            Binary division of Galois operands is congruent to the difference of the indices of the operands. If the difference is negative, then the absolute value of the difference is subtracted from $2^{n}-1$ to prevent underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
 
                 \begin{equation*}
                     \begin{split}
                         \alpha^{i} / \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i, 1},x_{i, 0}\} / \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
-                        & = \alpha^{(i - j) (mod \ 2^{n}-1)}
+                        & = (i - j) < 0 \Longrightarrow \alpha^{(2^{n}-1) - |i - j|} \\
+                        & \ \ \ \ \wedge (i - j) > 0 \Longrightarrow \alpha^{(i - j)} \\
+                        & \ \ \ \ \wedge (i - j) = 0 \Longrightarrow \alpha^{0}
                     \end{split}
                 \end{equation*}
 
