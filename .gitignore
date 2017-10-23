@@ -3,10 +3,14 @@
 *.log
 *.dvi
 
-#vhdl binaries
+# VHDL binaries
 *.o
 *.a
 *.cf
 
-#vim tmp files
+# Vim tmp files
 *.swp
+
+# other binaries and compressed files
+*.tar
+*.gz
