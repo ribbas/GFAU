@@ -75,6 +75,21 @@
             Once a polynomial is determined irreducible, its symbols may be generated. The number of terms grow exponentially, $2^{n}-1$, where $n$ is the highest degree of the polynomial.
 
             \subsubsection{Default Symbols}
+           \begin{table}[h]
+                \def\arraystretch{2.5}
+                \caption{Default Symbols Generated for All Irreducible Polynomials}
+                \centering
+                \begin{tabular*}{300pt}{@{\extracolsep{\fill}} ccc}
+
+                \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol} \\
+                \hline
+                $0$ & $0_{15} + \ldots + 0_{2} + 0_{1} + 0_{0}$ & $\{0_{15}\ldots0_{2}0_{1}0_{0}\}$ \\
+                $\alpha^{0}$ & $0_{15} + \ldots + 0_{2} + 0_{1} + \alpha^{0}_{0}$ & $\{0_{15}\ldots0_{2}0_{1}1_{0}\}$ \\
+                $\alpha^{1}$ & $0_{15} + \ldots + 0_{2} + \alpha^{1}_{1} + 0$ & $\{0_{15}\ldots0_{2}1_{1}0_{0}\}$ \\
+                \end{tabular*}
+            \end{table}
+
+            \subsubsection{Automatic Symbols}
 
             Default symbols may be generated concurrently, and consist of all the terms up to $x^{n-1}$.
 
@@ -94,9 +109,6 @@
 
                 \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol} \\
                 \hline
-                $0$                 & $0_{n-1} + \ldots + 0_{2} + 0_{1} + 0_{0}$                                           & $\{0_{n-1}\ldots0_{2}0_{1}0_{0}\}$  \\
-                $\alpha^{0}$        & $0_{n-1} + \ldots + 0_{2} + 0_{1} + \alpha^{0}_{0}$                                  & $\{0_{n-1}\ldots0_{2}0_{1}1_{0}\}$ \\
-                $\alpha^{1}$        & $0_{n-1} + \ldots + 0_{2} + \alpha^{1}_{1} + 0$                                      & $\{0_{n-1}\ldots0_{2}1_{1}0_{0}\}$ \\
                 $\alpha^{2}$        & $0_{n-1} + \ldots + \alpha^{2}_{2} + 0_{1} + 0_{0}$                                  & $\{0_{n-1}\ldots1_{2}0_{1}0_{0}\}$ \\
                 $\ldots$            & $\ldots$                                                                             & $\ldots$ \\
                 $\alpha^{n-1}$      & $1_{n-1} + \ldots + 0_{2} + 0_{1} + 0_{0}$                                           & $\{1_{n-1}\ldots 0_{2}0_{1}0_{0}\}$ \\
