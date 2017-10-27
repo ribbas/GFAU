@@ -1,9 +1,14 @@
 # Makefile to handle compilation and testing of VHDL modules
 
 
-.PHONY: compile
-compile:
+.PHONY: analyze
+analyze:
 	@ghdl -a ${mod}
+
+
+.PHONY: test
+test:
+	@ghdl 
 
 
 .PHONY: clean

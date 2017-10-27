@@ -14,14 +14,15 @@ port(
     nADV    :   in      std_logic;
     nBW     :   in      std_logic_vector(3 downto 0);
     nBWE    :   in      std_logic;
-    nGW     :   in      std_logic; 
+    nGW     :   in      std_logic;
     nCE     :   in      std_logic;
     nCE2    :   in      std_logic;
     CE2     :   in      std_logic;
     nOE     :   in      std_logic;
     DQ      :   inout   std_logic_vector(31 downto 0);
     MODE    :   in      std_logic;
-    ZZ      :   in      std_logic);
+    ZZ      :   in      std_logic
+    );
 
 end IS61LP6432A;
 
@@ -58,10 +59,9 @@ begin
                 DQ <= MEM(to_integer(unsigned(A)));
             elsif nCE = '0' and nCE2='0' and CE2='1' and ZZ = '0' and nADSP = '1' and nADSC = '0' and nWRITE = '1' and nOE = '1' then
                 DQ <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"; 
+            else
+                DQ <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
             end if;
         end if;
     end process;
 end behavior;
-        
-             
-                 

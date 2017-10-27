@@ -7,6 +7,7 @@
 *.o
 *.a
 *.cf
+*.vcd
 
 # Vim tmp files
 *.swp
