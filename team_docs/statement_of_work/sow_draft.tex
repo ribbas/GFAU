@@ -1,0 +1,124 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template LaTeX Template Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+%
+% Original author: Brandon Fryslie With extensive modifications by: Vel
+% (vel@latextemplates.com)
+%
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors: Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\input{../../template/structure.tex} % specifies the document layout and style
+
+%----------------------------------------------------------------------------------------
+
+% names
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l} #1 \\ #2 \\ #3 \\ #4 \\ #5 \\
+                \end{tabular}\\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing} }
+    \end{centering} }
+
+\begin{document}
+
+    \documentinfo {\textbf{MEMO NUMBER:} GFAU-SOW} {\textbf{DATE:} {\today}}
+    {\textbf{TO: } EFC LaBerge} {\textbf{FROM: }\Sabbir, \Jeffrey, \Howard,
+    \Brian} {\textbf{SUBJECT: } Galois Field Arithmetic Unit Statement of Work}
+    \vspace{-0.3in}
+
+    \section{Introduction} A Galois field is a field with a finite number of
+    elements. The nomenclature $GF(q)$ is used to indicate a Galois field with
+    q elements. For $GF(q)$ in general, $q$ must be a power of a prime. For
+    each prime power, there exists exactly one finite field. The best known and
+    most used Galois field is $GF(2)$, the binary field.
+
+    The \team~ handles irreducible polynomials in $GF(2^n)$, where $\{2 \leq n
+    \leq 16\}$. The ALU generates all the terms in the field of the polynomial,
+    and allows the user to view and apply the following binary operations:
+
+    \begin{itemize}
+
+        \item Addition
+        \item Subtraction
+        \item Multiplication
+        \item Division
+        \item Logarithm
+
+    \end{itemize}
+
+        \subsection{Purpose and Scope} This Statement of Work outlines and
+        elaborates the tasks necessary to implement the project. The document
+        also details their corresponding milestones and deadlines and how the
+        contribution will be divided within the team.
+
+    \section{Roles and Division of Labor} This project requires equal team work
+on all tasks because of the steep learning curve on implementing coprocessors
+with programmable boards. None of the team members have comprehensive prior
+knowledge or training on field programmable gate array units, and are therefore
+required to learn the concepts concurrently.
+
+Although there is no clear division of labor within the team, each members have been implicitly designated unofficial roles.
+
+Howard has been chosen to act as the point of contact between the team and the project manager and other consultants. He has also been trusted with the scheduling of team meetings and milestones.
+
+Sabbir is responsible for validating the system inputs and outputs through the operations in the unit. He is also accountable for providing background information on the Galois field and its operations related to the arithmetic unit.
+
+Brian has been put in charge with the digital design of the system at various levels. He is also responsible for overseeing the designing of the system using the hardware description language.
+
+Jeffrey supports the designing processes by providing test benches and by synthesizing the individual modules.
+
+Each members of the GFAU shall contribute to designing the individual modules and the entire system.
+
+    \section{Tasks}
+
+        \subsection{Research}
+
+        \subsubsection{Background}
+
+        \subsubsection{Devices}
+
+            \paragraph{Field Programmable Gate Array (FPGA)}
+
+            \paragraph{External Devices}
+
+        \subsection{Design}
+
+            \subsubsection{System Boundary}
+
+            \subsubsection{Schematics}
+
+        \subsection{Software Implementation}
+
+            \subsubsection{Design in VHSIC Hardware Description Language (VHDL)}
+
+            \subsubsection{Simulation and Synthesis in VHDL}
+
+            \subsubsection{External Devices}
+
+        \subsection{Purchases}
+
+        \subsection{Hardware}
+
+            \subsubsection{Integration}
+
+    \section{Deliverables}
+
+\end{document}
