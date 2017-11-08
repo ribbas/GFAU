@@ -8,7 +8,7 @@ port (
     op : in  STD_LOGIC_VECTOR (5 downto 0);
     addSub : in  STD_LOGIC_VECTOR (15 downto 0);
     mul : in  STD_LOGIC_VECTOR (15 downto 0);
-    div : in  STD_LOGIC_VECTOR (15 downto 0);
+	div : in  STD_LOGIC_VECTOR (15 downto 0);
     log : in  STD_LOGIC_VECTOR (15 downto 0);
     output : out  STD_LOGIC_VECTOR (15 downto 0);
     convert: out std_logic);
@@ -16,36 +16,36 @@ end MUX;
 
 architecture structural of MUX is
 
-component and4_16
-port(
-    in1     :   in  std_logic;
-    in2     :   in  std_logic;
-    in3     :   in  std_logic;
-    in4     :   in  std_logic_vector(15 downto 0);
-    out1    :   out std_logic_vector(15 downto 0));
-end component;
-
-component or4_16
-port(
-    in1     :   in  std_logic_vector(15 downto 0);
-    in2     :   in  std_logic_vector(15 downto 0);
-    in3     :   in  std_logic_vector(15 downto 0);
-    in4     :   in  std_logic_vector(15 downto 0);
-    out1    :   out std_logic_vector(15 downto 0));
-end component;
-
 component and3
 port(
-    in1     :   in  std_logic;
-    in2     :   in  std_logic;
-    in3     :   in  std_logic;
+	in1     :   in  std_logic;
+	in2     :   in  std_logic;
+	in3     :   in  std_logic;
     out1    :   out std_logic);
 end component;
 
 component or2
 port(
+	in1     :   in  std_logic;
+	in2     :   in  std_logic;
+    out1    :   out std_logic);
+end component;
+
+component and4
+port(
     in1     :   in  std_logic;
     in2     :   in  std_logic;
+	in3     :   in  std_logic;
+    in4     :   in  std_logic;
+    out1    :   out std_logic);
+end component;
+
+component or4
+port(
+    in1     :   in  std_logic;
+    in2     :   in  std_logic;
+	in3     :   in  std_logic;
+    in4     :   in  std_logic;
     out1    :   out std_logic);
 end component;
 
@@ -72,12 +72,17 @@ and3_2: and3 port map (n_op2, n_op1, n_op0, temp6);
 
 or2_1: or2 port map (temp5, temp6, convert);
 
-and4_16_1: and4_16 port map (n_op5, n_op4, op(3), addSub, temp1);
-and4_16_2: and4_16 port map (n_op5, op(4), n_op3, mul, temp2);
-and4_16_3: and4_16 port map (n_op5, op(4), op(3), div, temp3);
-and4_16_4: and4_16 port map (op(5), n_op4, n_op3, log, temp4);
+BIT_AND  :   for i in 15 downto 0 generate
+	AND4_1: and4 port map (n_op5, n_op4, op(3), addSub(i), temp4(i));
+	AND4_2: and4 port map (n_op5, op(4), n_op3, mul(i), temp3(i));
+	AND4_3: and4 port map (n_op5, op(4), op(3), div(i), temp2(i));
+	AND4_4: and4 port map (op(5), n_op4, n_op3, log(i), temp1(i));
+end generate BIT_AND;
 
-or4_16_1: or4_16 port map (temp1, temp2, temp3, temp4, output);
+BIT_OR  :   for i in 15 downto 0 generate
+	OR4_1: or4 port map(temp4(i), temp3(i), temp2(i), temp1(i), output(i));
+end generate BIT_OR;
+
 
 end Structural;
 
