@@ -1,0 +1,16 @@
+\subsubsection{Division} Binary division of Galois operands is congruent to the
+difference of the indices of the operands. If the difference is negative, then
+the absolute value of the difference is subtracted from $2^{n}-1$ to prevent
+underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
+
+    \begin{align*}
+        \alpha^{i} / \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i,
+        1},x_{i, 0}\} / \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\}
+        \\
+        & = \begin{cases}
+            \alpha^{(2^{n}-1) - (j - i)} & \text{if $(i - j) < 0$} \\
+            \alpha^{(i - j)} & \text{if $(i - j) > 0$} \\
+            \alpha^{0} & \text{if $(i - j) = 0$} \\
+            ERROR & \text{if $(j - i) = 0$}
+        \end{cases}
+    \end{align*}

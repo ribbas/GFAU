@@ -1,0 +1,32 @@
+\section{Background} A Galois Field is a field with a finite number of
+elements. The nomenclature $GF(q)$ is used to indicate a Galois Field with
+$q$ elements. In $GF(q)$ the parameter $q$ must be a power of a prime. For
+each prime power there exists exactly one finite field. The binary field
+$GF(2)$ is the most frequently used Galois field.
+
+    \subsection{Purpose and Scope} The Galois Field Arithmetic Unit
+    operates in fields of $q^n$, where $2 \leq n \leq 16$. This document
+    will demonstrate the functionality of the unit by deriving all its
+    functionality through mathematical approaches. The mathematical
+    algorithms will be followed by their corresponding implementations in
+    digital design.
+
+    \subsection{Terms and Keywords}
+
+        \subsubsection{Input Primitive Polynomials} Input primiteive
+        polynomials in the Galois Field are represented as:
+
+        \[ c_{n}x^{n}+\ldots+c_{2}x^{2}+c_{1}x^{1}+c_{0}x^{0}, \ where \
+        c,x \ \epsilon \ GF(2)=\{0,1\} \]
+
+        For convenience and simplicity, all the examples provided will
+        refer to the following polynomial: \examplepoly~.
+
+        \subsubsection{Elements} The elements of an input polynomial refer
+        to the $2^{n}-1$ elements in the field.
+
+        \subsubsection{Polynomial Form} The polynomial forms of the
+        elements refer to the $2^{n}-1$ symbolic representations of the of
+        an input primitive polynomials in the field.
+
+    \newpage
