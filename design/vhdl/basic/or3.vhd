@@ -1,20 +1,21 @@
---or2.vhd
+--or3.vhd
 
 library std;
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity or2 is
+entity or3 is
     port(
         in1     :   in  std_logic;
         in2     :   in  std_logic;
+        in3     :   in  std_logic;
         out1    :   out std_logic
     );
-end or2;
+end or3;
 
-architecture structural of or2 is
+architecture structural of or3 is
 begin
 
-    out1 <= in1 or in2;
+    out1 <= in1 or in2 or in3;
 
 end structural;
