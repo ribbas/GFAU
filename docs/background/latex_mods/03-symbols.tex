@@ -19,14 +19,14 @@
 
         \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol}
         \\
-        \hline $0$ & $0_{15} + \ldots + 0_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15}
-        \ldots 0_{2} 0_{1} 0_{0} \}$ \\
+        \hline $0$ & $0_{15} + \ldots + 0_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \
+        \ldots \ 0_{2} 0_{1} 0_{0} \}$ \\
 
         $\alpha^{0}$ & $0_{15} + \ldots + 0_{2} + 0_{1} +
-        \alpha^{0}_{0}$ & $\{0_{15} \ldots 0_{2} 0_{1} 1_{0} \}$ \\
+        \alpha^{0}_{0}$ & $\{0_{15} \ \ldots \ 0_{2} 0_{1} 1_{0} \}$ \\
 
         $\alpha^{1}$ & $0_{15} + \ldots + 0_{2} + \alpha^{1}_{1} + 0$ & $\{
-        0_{15} \ldots 0_{2} 1_{1} 0_{0} \}$ \\
+        0_{15} \ \ldots \ 0_{2} 1_{1} 0_{0} \}$ \\
 
         \end{tabular*}
         \label{table:default_sym}
@@ -80,30 +80,33 @@
         \hline
 
         $\alpha^{2}$ & $0_{15} + \ldots + 0_{n-1} + \ldots +
-        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ldots 0_{n-1}
-        \ldots 1_{2} 0_{1} 0_{0} \}$ \\
+        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ \ldots \ 0_{n-1} \
+        \ldots \ 1_{2} 0_{1} 0_{0} \}$ {\scriptsize [3]} \\
 
         $\ldots$ & $\ldots$ & $\ldots$ \\
 
         $\alpha^{n-1}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
-        + 0_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ldots 1_{n-1} \ldots 0_{2} 0_{1}
-          0_{0} \}$ \\
+        + 0_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ \ldots \ 1_{n-1} \ \ldots \
+          0_{2} \ 0_{1} 0_{0} \}$ \\
 
         $\alpha^{n}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
-        +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $\{ 0_{15}
-        \ldots x_{n-1} \ldots x_{2} x_{1} x_{0} \}$ \\
+        +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $\{ 0_{15} \ 
+        \ldots \ x_{n-1} \ \ldots \ x_{2} x_{1} x_{0} \}$ \\
 
         $\alpha^{2^{n}-1}$ & $0_{15} + \ldots + 0_{n-1} + \ldots +
-        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ldots 0_{n-1}
-        \ldots 0_{2} 0_{1} 0_{0} \}$ \\
+        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ \ldots \ 0_{n-1} \ 
+        \ldots \ 0_{2} 0_{1} 0_{0} \}$ \\
 
         \end{tabular*}
         \label{table:auto_sym}
     \end{table}
 
+    {\scriptsize [3]} \ ``$0_{15} \ \ldots$'' indicates zero- padding of the
+    bits.
+
     Table \ref{table:auto_sym} refers to polynomials with their highest degree
-    of \bm{$n < 15$}. $0_{15}\ldots$ indicates zero- padding of the bits. For
-    $\bm{n = 16}$, the most significant bit will be $1_{15}$.
+    of \bm{$n < 15$}. For $\bm{n = 16}$, the most significant bit will be
+    $1_{15}$.
 
         \paragraph{Analytical Approach} \leavevmode \\ Assuming the preceding
         values exist from the proof above, use the example polynomial
@@ -137,7 +140,6 @@
         \hspace*{\fill}
         \centerline{$\therefore$ The coefficients are in $GF(2) \implies
         \beta^{3} = \beta^{2} + \beta^{0}$}
-
         \begin{minipage}[t]{0.5\textwidth}
             \begin{equation*}
                 \begin{split}
@@ -184,40 +186,11 @@
             \end{equation*}
             \[ \therefore \beta^{7} \ \epsilon \ GF(2^{3}) \]
         \end{minipage}
-
-        \subsubsection{Example}
-
-            \begin{table}[h]
-                \def\arraystretch{1.5}
-                \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
-
-                \centering
-                \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
-
-                \textbf{Element} & \textbf{Symbol} & \textbf{Polynomial Form} &
-                \textbf{Symbol} \\
-                \hline
-                $0$         & \footnotesize{[1]} & $0+0+0$              & 000\\
-                $\beta^{0}$ & 000 & $0 + 0 + \beta^{0}$                 & 001\\
-                $\beta^{1}$ & 001 & $0 + \beta^{1} + 0$                 & 010\\
-                $\beta^{2}$ & 010 & $\beta^{2} + 0 + 0$                 & 100\\
-                $\beta^{3}$ & 011 & $\beta^{2} + 0 + \beta^{0}$         & 101\\
-                $\beta^{4}$ & 100 & $\beta^{2} + \beta^{1} + \beta^{0}$ & 111\\
-                $\beta^{5}$ & 101 & $0 + \beta^{1} + \beta^{0}$         & 011\\
-                $\beta^{6}$ & 110 & $\beta^{2} + \beta^{1} + 0$         & 110\\
-                $\beta^{7}$ & \footnotesize{[2]} & $0 + 0 + \beta^{0}$  & 001\\
-                \end{tabular*}
-            \end{table}
-
-            \footnotesize{[1]} Zero is a reserved element where its binary
-            symbol does not represent its decimal value. \\
-            \footnotesize{[2]} Elements beyond the $(2^{n}-1)$th element will be
-            handled with special conditions since they cycle back to previous.
+        \newpage
 
         \paragraph{Digital Logic} \leavevmode \\ \textbf{ELABORATE MORE}
         Generating the rest of the symbols may be implemented with a linear
         feedback shift register (LFSR), using the following recursive equation:
-
         \begin{equation*}
             \begin{split}
                 \alpha^{n+m} & =\alpha^{n+(m-1)}\times \alpha^{n} \\
@@ -227,5 +200,3 @@
                 \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
             \end{split}
         \end{equation*}
-
-    \newpage

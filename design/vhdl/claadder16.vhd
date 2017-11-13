@@ -103,8 +103,6 @@ begin
     --        (p(3) and p(2) and p(1) and g(0)) or 
     --        (p(3) and p(2) and p(1) and p(0) and cin);
 
-    --c1_1 <= p(0) and cin;
-    --c1 <= g(0) or c1_1;
 
     and2_1  :   and2 port map(p(0), cin, c1_1);  -- p0 and cin = (1)
     --or2_1   :   or2 port map(g(0), c1_1, c1);  -- g0 or (1) = (2)

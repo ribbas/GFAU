@@ -2,14 +2,20 @@
 congruent to the sum of the indices of the operands. If the indices sum to
 greater than or equal to $2^{n}-1$, then $2^{n}-1$ is subtracted from the sum
 to prevent overflow.
-
     \begin{align*}
         \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i,
         1}, x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j,
         0}\} \\
+        & = \alpha^{(i + j) \ mod \ (2^{n}-1)} \\
         & = \begin{cases}
                 \alpha^{(i + j) - (2^{n}-1)} & \text{if $(i + j) \geq 2^{n}-1$}
                 \\
                 \alpha^{(i + j)} & \text{if $(i + j) < 2^{n}-1$}
             \end{cases}
     \end{align*}
+
+    \paragraph{{\small Digital Design}} \leavevmode \\ Only element forms of
+    inputs are valid for this operation.
+
+    Galois multiplication requires multiple binary additions and condition
+    checks.

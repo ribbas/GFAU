@@ -1,8 +1,8 @@
 \section{Background} A Galois Field is a field with a finite number of
-elements. The nomenclature $GF(q)$ is used to indicate a Galois Field with
-$q$ elements. In $GF(q)$ the parameter $q$ must be a power of a prime. For
-each prime power there exists exactly one finite field. The binary field
-$GF(2)$ is the most frequently used Galois field.
+elements. The nomenclature $GF(q)$ is used to indicate a Galois Field with $q$
+elements. In $GF(q)$, the parameter $q$ must be a power of a prime. For each
+prime power there exists exactly one finite field. The binary field $GF(2)$ is
+the most frequently used Galois field. \cite{wolfdef}
 
     \subsection{Purpose and Scope} The Galois Field Arithmetic Unit
     operates in fields of $q^n$, where $2 \leq n \leq 16$. This document
@@ -28,5 +28,33 @@ $GF(2)$ is the most frequently used Galois field.
         \subsubsection{Polynomial Form} The polynomial forms of the
         elements refer to the $2^{n}-1$ symbolic representations of the of
         an input primitive polynomials in the field.
+
+        \subsubsection{Example}
+            \begin{table}[h]
+                \def\arraystretch{1.5}
+                \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
+
+                \centering
+                \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
+
+                \textbf{Element} & \textbf{Symbol} & \textbf{Polynomial Form} &
+                \textbf{Symbol} \\
+                \hline
+                $0$         & {\scriptsize [1]} & $0+0+0$               & 000\\
+                $\beta^{0}$ & 000 & $0 + 0 + \beta^{0}$                 & 001\\
+                $\beta^{1}$ & 001 & $0 + \beta^{1} + 0$                 & 010\\
+                $\beta^{2}$ & 010 & $\beta^{2} + 0 + 0$                 & 100\\
+                $\beta^{3}$ & 011 & $\beta^{2} + 0 + \beta^{0}$         & 101\\
+                $\beta^{4}$ & 100 & $\beta^{2} + \beta^{1} + \beta^{0}$ & 111\\
+                $\beta^{5}$ & 101 & $0 + \beta^{1} + \beta^{0}$         & 011\\
+                $\beta^{6}$ & 110 & $\beta^{2} + \beta^{1} + 0$         & 110\\
+                $\beta^{7}$ & {\scriptsize [2]} & $0 + 0 + \beta^{0}$   & 001\\
+                \end{tabular*}
+            \end{table}
+
+            {\scriptsize [1]} Zero is a reserved element where its binary
+            symbol does not represent its decimal value. \\ {\scriptsize [2]}
+            Elements beyond the $(2^{n}-1)$th element will be handled with
+            special conditions since they cycle back to previous elements.
 
     \newpage

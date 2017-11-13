@@ -1,7 +1,6 @@
 \subsubsection{Addition and Subtraction} Binary addition and binary subtraction
 are synonymous in the Galois Field. Addition and subtraction of Galois operands
 may be done by bitwise exclusive OR-ing the operands.
-
     \begin{equation*}
         \begin{split}
             \alpha^{i} \pm \alpha^{j} & = \{ x_{i, n-1}, \ldots x_{i, 2},
@@ -12,3 +11,9 @@ may be done by bitwise exclusive OR-ing the operands.
             & = \alpha^{k}
         \end{split}
     \end{equation*}
+
+    \paragraph{{\small Digital Design}} \leavevmode \\ Only polynomial forms of
+    inputs are valid for these operations.
+
+    The implementation of Galois addition and subtraction may be computed with
+    a single-level parallel array of XOR gates.
