@@ -2,20 +2,34 @@
 congruent to the sum of the indices of the operands. If the indices sum to
 greater than or equal to $2^{n}-1$, then $2^{n}-1$ is subtracted from the sum
 to prevent overflow.
-    \begin{align*}
-        \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i,
-        1}, x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j,
-        0}\} \\
-        & = \alpha^{(i + j) \ mod \ (2^{n}-1)} \\
-        & = \begin{cases}
-                \alpha^{(i + j) - (2^{n}-1)} & \text{if $(i + j) \geq 2^{n}-1$}
-                \\
-                \alpha^{(i + j)} & \text{if $(i + j) < 2^{n}-1$}
-            \end{cases}
-    \end{align*}
+\begin{align*}
+    \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
+    x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
+    & = \alpha^{(i + j) \ mod \ (2^{n}-1)} \\
+    & = \begin{cases}
+            \alpha^{(i + j) - (2^{n}-1)} & \text{if $(i + j) \geq 2^{n}-1$} \\
+            \alpha^{(i + j)} & \text{if $(i + j) < 2^{n}-1$}
+        \end{cases}
+\end{align*}
 
     \paragraph{{\small Digital Design}} \leavevmode \\ Only element forms of
     inputs are valid for this operation.
 
     Galois multiplication requires multiple binary additions and condition
-    checks.
+    checks. To find the product $\alpha^{k}$ of $\alpha^{i}$ and $\alpha^{j}$,
+    a carry-lookahead adder may be used to sum the elements $b=i+j$. The most
+    significant bits of $b$ and $b + 1$ will then be OR-ed to compute the
+    single-bit $c$. $c$ will then be AND-ed with a binary $1$ to compute $d$ to
+    be added to $b$.
+
+\begin{align*}
+    \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
+    x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
+    & \Longrightarrow b = i + j \\
+    & \Longrightarrow c = b[15] \vee (b+1)[15] \\
+    & \Longrightarrow d = c \wedge 1 \\
+    & \Longrightarrow k = d + b \\
+    & \Longrightarrow k = i + j + \Big(1 \ \wedge \ \big((i+j)[15] \ \vee \
+    (i+j+1)[15]\big)\Big) \\
+    & = \alpha^{k} \\
+\end{align*}
