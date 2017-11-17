@@ -25,11 +25,18 @@ to prevent overflow.
 \begin{align*}
     \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
-    & \Longrightarrow b = i + j \\
-    & \Longrightarrow c = b[15] \vee (b+1)[15] \\
-    & \Longrightarrow d = c \wedge 1 \\
-    & \Longrightarrow k = d + b \\
-    & \Longrightarrow k = i + j + \Big(1 \ \wedge \ \big((i+j)[15] \ \vee \
-    (i+j+1)[15]\big)\Big) \\
-    & = \alpha^{k} \\
+    & \Longrightarrow \text{Let } n = |i| = |j| \\
+    % & \Longrightarrow b = i + j \\
+    % & \Longrightarrow c = b[n+1] \vee (b+1)[n+1] \\
+    % & \Longrightarrow d = c \wedge 1 \\
+    % & \Longrightarrow k = d + b \\
+    % & \Longrightarrow k = i + j + \Big(1 \ \wedge \ \big((i+j)[n+1] \ \vee \
+    % (i+j+1)[n+1]\big)\Big) \\
+    % & = \alpha^{k} \\
+    & = \begin{cases}
+            \alpha^{(i + j)} & \text{if $\Big((i+j)[n+1] \ \vee \
+            (i+j+1)[n+1]\Big)=0$} \\
+            \alpha^{(i + j + 1)} & \text{if $\Big((i+j)[n+1] \ \vee \
+            (i+j+1)[n+1]\Big)=1$}
+        \end{cases}
 \end{align*}

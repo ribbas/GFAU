@@ -13,7 +13,7 @@ the most frequently used Galois field. \cite{wolfdef}
 
     \subsection{Terms and Keywords}
 
-        \subsubsection{Input Primitive Polynomials} Input primiteive
+        \subsubsection{Input Primitive Polynomials} Input primitive
         polynomials in the Galois Field are represented as:
 
         \[ c_{n}x^{n}+\ldots+c_{2}x^{2}+c_{1}x^{1}+c_{0}x^{0}, \ where \
@@ -29,7 +29,9 @@ the most frequently used Galois field. \cite{wolfdef}
         elements refer to the $2^{n}-1$ symbolic representations of the of
         an input primitive polynomials in the field.
 
-        \subsubsection{Example}
+        \subsubsection{Example} An example of the elements and their
+        corresponding polynomials is provided below:
+
             \begin{table}[h]
                 \def\arraystretch{1.5}
                 \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
@@ -56,5 +58,44 @@ the most frequently used Galois field. \cite{wolfdef}
             symbol does not represent its decimal value. \\ {\scriptsize [2]}
             Elements beyond the $(2^{n}-1)$th element will be handled with
             special conditions since they cycle back to previous elements.
+
+        \subsubsection{Notations} Several notations are used in this document
+        to assist in linking the mathematical and digital design concepts. A
+        list of selected notations are provided below:
+
+        \begin{table}[h]
+            \def\arraystretch{2}
+            \caption{Mathematical and Logical Notations}
+
+            \centering
+            \begin{tabular*}{470pt}{@{\extracolsep{\fill}} r p{9cm}}
+
+            \textbf{Notation} & \textbf{Definition} \\
+            \hline
+            $a \ + \ b$ & Arithmetic Addition of $a$ and $b$\\
+            $a \ - \ b$ & Arithmetic Subtraction of $a$ and $b$\\
+            $a \ \cdot \ b$ & Arithmetic Multiplication of $a$ and $b$\\
+            $a \ / \ b$ & Arithmetic Division of $a$ and $b$\\
+            $a \ \wedge \ b$ & Logical AND of $a$ and $b$\\
+            $a \ \vee \ b$ & Logical OR of $a$ and $b$\\
+            $a \ \oplus \ b$ & Logical XOR of $a$ and $b$\\
+            $a \ \ll \ b$ & Logical Shift-Left $a$ by $b$ Bits\\
+            $\overline{a}$ & Bitwise Inversion of $a$\\
+            $a_{2's}$ & Two's Complement of $a$\\
+            $|a|$ & Number of Bits in $a$\\
+            $<x_{n}, \ x_{n-1}, \ \ldots \ x_{0}>$ & Ordered Array of Size $n$
+            \\
+            $\{x_{n}, \ x_{n-1}, \ \ldots \ x_{0}\}$ & Unordered Set of Size
+            $n$ \\
+            $< x_{m}, \ \ \overleftarrow{0_{m-1}, \ \ldots \ 0_{n}}, x_{n-1}, \
+            \ldots \ x_{0} >$ & Zero-Padding Between the $(m-1)$th and $n$th
+            Bits \\
+            $A[i]$ & $i$th Bit of Array $A$ \\
+            $A[i:j]$ & Subarray of Array $A$ from its $i$th to $j$th index
+            inclusive; where $i > j$ \\
+
+            \end{tabular*}
+        \end{table}
+
 
     \newpage

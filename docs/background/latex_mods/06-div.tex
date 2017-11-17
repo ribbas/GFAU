@@ -17,3 +17,14 @@ underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
 
     \paragraph{{\small Digital Design}} \leavevmode \\ Only element forms of
     inputs are valid for this operation.
+
+\begin{align*}
+    \alpha^{i} / \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
+    x_{i, 0} \} / \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
+    & \Longrightarrow \text{Let } n = |i| = |j| \\
+    & = \begin{cases}
+            \alpha^{(i + j_{2's})} & \text{if $\overline{(i+j_{2's})[n+1]}=0$} \\
+            \alpha^{(i + j_{2's} + 1_{2's})} & \text{if
+            $\overline{(i+j_{2's})[n+1]}=1$}
+        \end{cases}
+\end{align*}

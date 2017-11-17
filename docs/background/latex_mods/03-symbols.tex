@@ -19,14 +19,14 @@
 
         \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol}
         \\
-        \hline $0$ & $0_{15} + \ldots + 0_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \
-        \ldots \ 0_{2} 0_{1} 0_{0} \}$ \\
+        \hline $0$ & $0_{15} + \ldots + 0_{2} + 0_{1} + 0_{0}$ & $<
+        \overleftarrow{0_{15} \ \ldots \ 0_{2}} 0_{1} 0_{0} >$ \\
 
-        $\alpha^{0}$ & $0_{15} + \ldots + 0_{2} + 0_{1} +
-        \alpha^{0}_{0}$ & $\{0_{15} \ \ldots \ 0_{2} 0_{1} 1_{0} \}$ \\
+        $\alpha^{0}$ & $0_{15} + \ldots + 0_{2} + 0_{1} + \alpha^{0}_{0}$ &
+        $<\overleftarrow{0_{15} \ \ldots \ 0_{2}} 0_{1} 1_{0} >$ \\
 
-        $\alpha^{1}$ & $0_{15} + \ldots + 0_{2} + \alpha^{1}_{1} + 0$ & $\{
-        0_{15} \ \ldots \ 0_{2} 1_{1} 0_{0} \}$ \\
+        $\alpha^{1}$ & $0_{15} + \ldots + 0_{2} + \alpha^{1}_{1} + 0$ &
+        $<\overleftarrow{0_{15} \ \ldots \ 0_{2}} 1_{1} 0_{0} >$ \\
 
         \end{tabular*}
         \label{table:default_sym}
@@ -39,18 +39,14 @@
         polynomial \examplepoly~, show that 0, the 0th element and the first
         element exist in $GF(2^{3})$.
 
-        \hspace*{\fill}
-        \centerline{Let $\beta \ \epsilon \ GF(2^{3})$ be a root of
-        \examplepoly~ $\implies \beta^{3}+\beta^{2}+\beta^{0}$}
-
-        \hspace*{\fill}
-        \centerline{$\therefore$ The coefficients are in $GF(2) \implies
-        \beta^{3}=\beta^{2}+\beta^{0}$}
-        \[ \because a \ field \ has \ additive \ and \ multiplicative \
-        identities: \]
+        \[ \text{Let }\beta \ \epsilon \ GF(2^{3}) \text{ be a root of
+                \examplepoly~ }\implies \beta^{3}+\beta^{2}+\beta^{0} \]
+        \[ \therefore \text{The coefficients are in }GF(2) \implies
+        \beta^{3}=\beta^{2}+\beta^{0} \]
+        \[ \because \text{a field has additive and multiplicative identities:}
+        \]
         \[ \therefore \{ 0, 1=\beta^{0} \} \ \epsilon \ GF(2^{3}) \]
-        \[ \therefore \beta^{1} \ \epsilon \ GF(2^{3}) \ (\because \ closure \
-        of \ multiplication) \]
+        \[ \therefore \beta^{1} \ \epsilon \ GF(2^{3}) \ (\because \text{closure of  multiplication}) \]
 
     \subsubsection{Automatic Symbols}
 
@@ -73,36 +69,33 @@
         \caption{Automatic Symbols Generated for An Irreducible Polynomial of
         Degree $\bm{n < 16}$.}
         \centering
-        \begin{tabular*}{400pt}{@{\extracolsep{\fill}} ccc}
+        \begin{tabular*}{450pt}{@{\extracolsep{\fill}} ccc}
 
         \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol}
         \\
         \hline
 
         $\alpha^{2}$ & $0_{15} + \ldots + 0_{n-1} + \ldots +
-        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ \ldots \ 0_{n-1} \
-        \ldots \ 1_{2} 0_{1} 0_{0} \}$ {\scriptsize [3]} \\
+        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $< \overleftarrow{0_{15} \ \ldots \
+        0_{n-1}} \ \ldots \ 1_{2} 0_{1} 0_{0} >$ \\
 
         $\ldots$ & $\ldots$ & $\ldots$ \\
 
         $\alpha^{n-1}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
-        + 0_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ \ldots \ 1_{n-1} \ \ldots \
-          0_{2} \ 0_{1} 0_{0} \}$ \\
+        + 0_{2} + 0_{1} + 0_{0}$ & $< 0_{15} \ \ldots \ 1_{n-1} \ \ldots \
+          0_{2} \ 0_{1} 0_{0} >$ \\
 
         $\alpha^{n}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
-        +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $\{ 0_{15} \ 
-        \ldots \ x_{n-1} \ \ldots \ x_{2} x_{1} x_{0} \}$ \\
+        +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $< 0_{15} \ 
+        \ldots \ x_{n-1} \ \ldots \ x_{2} x_{1} x_{0} >$ \\
 
         $\alpha^{2^{n}-1}$ & $0_{15} + \ldots + 0_{n-1} + \ldots +
-        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $\{ 0_{15} \ \ldots \ 0_{n-1} \ 
-        \ldots \ 0_{2} 0_{1} 0_{0} \}$ \\
+        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $< \overleftarrow{0_{15} \ \ldots \
+        0_{2}} 0_{1} 0_{0} >$ \\
 
         \end{tabular*}
         \label{table:auto_sym}
     \end{table}
-
-    {\scriptsize [3]} \ ``$0_{15} \ \ldots$'' indicates zero- padding of the
-    bits.
 
     Table \ref{table:auto_sym} refers to polynomials with their highest degree
     of \bm{$n < 15$}. For $\bm{n = 16}$, the most significant bit will be
@@ -112,15 +105,12 @@
         values exist from the proof above, use the example polynomial
         \examplepoly~ to show that the $n-1$th and the $n$th elements exist in
         $GF(2^{3})$.
-
-        \hspace*{\fill}
-        \centerline{Let $\beta \ \epsilon \ GF(2^{3})$ be a root of
-        \examplepoly~ $\implies \beta^{3} + \beta^{2} + \beta^{0}$}
-        \hspace*{\fill}
-        \centerline{$\therefore$ The coefficients are in $GF(2) \implies
-        \beta^{3} = \beta^{2} + \beta^{0}$}
-        \[ \therefore \beta^{2} \ \epsilon \ GF(2^{3}) \ (\because \ closure \
-        of \ multiplication) \]
+        \[ \text{Let } \beta \ \epsilon \ GF(2^{3}) \text{ be a root of
+        \examplepoly~} \implies \beta^{3} + \beta^{2} + \beta^{0} \]
+        \[ \therefore \text{The coefficients are in } GF(2) \implies
+        \beta^{3} = \beta^{2} + \beta^{0} \]
+        \[ \therefore \beta^{2} \ \epsilon \ GF(2^{3}) \ (\because \text{
+        closure of  multiplication}) \]
         \[ \therefore \beta^{3} \ \epsilon \ GF(2^{3}) \ (\because \beta^{3} =
         \beta^{2} + \beta^{0}) \]
 
@@ -133,13 +123,10 @@
         values exist from the proof above, use the example polynomial
         \examplepoly~ to show that the elements up to the $(2^{n-2})$th
         elements exist in $GF(2^{3})$.
-
-        \hspace*{\fill}
-        \centerline{Let $\beta \ \epsilon \ GF(2^{3})$ be a root of
-        \examplepoly~ $\implies \beta^{3} + \beta^{2} + \beta^{0}$}
-        \hspace*{\fill}
-        \centerline{$\therefore$ The coefficients are in $GF(2) \implies
-        \beta^{3} = \beta^{2} + \beta^{0}$}
+        \[ \text{Let }\beta \ \epsilon \ GF(2^{3}) \text{ be a root of
+        \examplepoly~} \implies \beta^{3} + \beta^{2} + \beta^{0} \]
+        \[ \therefore \text{The coefficients are in } GF(2) \implies \beta^{3}
+        = \beta^{2} + \beta^{0} \]
         \begin{minipage}[t]{0.5\textwidth}
             \begin{equation*}
                 \begin{split}
