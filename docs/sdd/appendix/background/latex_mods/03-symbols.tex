@@ -67,7 +67,8 @@
    \begin{table}[h]
         \def\arraystretch{2.5}
         \caption{Automatic Symbols Generated for An Irreducible Polynomial of
-        Degree $\bm{n < 16}$.}
+        Degree $\bm{n < 16}$. For $\bm{n = 16}$, the most significant bit will
+        be $1_{15}$.}
         \centering
         \begin{tabular*}{450pt}{@{\extracolsep{\fill}} ccc}
 
@@ -83,7 +84,7 @@
 
         $\alpha^{n-1}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
         + 0_{2} + 0_{1} + 0_{0}$ & $< 0_{15} \ \ldots \ 1_{n-1} \ \ldots \
-          0_{2} \ 0_{1} 0_{0} >$ \\
+          0_{2} 0_{1} 0_{0} >$ \\
 
         $\alpha^{n}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
         +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $< 0_{15} \ 
@@ -96,10 +97,6 @@
         \end{tabular*}
         \label{table:auto_sym}
     \end{table}
-
-    Table \ref{table:auto_sym} refers to polynomials with their highest degree
-    of \bm{$n < 15$}. For $\bm{n = 16}$, the most significant bit will be
-    $1_{15}$.
 
         \paragraph{Analytical Approach} \leavevmode \\ Assuming the preceding
         values exist from the proof above, use the example polynomial
@@ -181,9 +178,12 @@
         \begin{equation*}
             \begin{split}
                 \alpha^{n+m} & =\alpha^{n+(m-1)}\times \alpha^{n} \\
-                & = (\alpha^{n+(m-1)} \ll 1 )[n-1] = 1 \Longrightarrow
-                (\alpha^{n+(m-1)} \ll 1 )[n-2:0] \oplus \alpha^{n}[n-2:0] \\
-                & \ \ \ \ \wedge (\alpha^{n+(m-1)} \ll 1 )[n-1] = 0
-                \Longrightarrow ( \alpha^{n+(m-1)} \ll 1 )[n-2:0] \\
+                & = \begin{cases}
+                        (\alpha^{n+(m-1)} \ll 1 )[n-2:0] & \text{if
+                        $(\alpha^{n+(m-1)} \ll 1 )[n-1] = 0$} \\
+                        (\alpha^{n+(m-1)} \ll 1 )[n-2:0] \oplus
+                        \alpha^{n}[n-2:0] & \text{if $(\alpha^{n+(m-1)} \ll 1
+                        )[n-1] = 1$}
+                    \end{cases}
             \end{split}
         \end{equation*}

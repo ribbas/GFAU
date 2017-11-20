@@ -10,7 +10,7 @@ underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
         & = \begin{cases}
             \alpha^{(2^{n}-1) - (j - i)} & \text{if $(i - j) < 0$} \\
             \alpha^{(i - j)} & \text{if $(i - j) > 0$} \\
-            \alpha^{0} & \text{if $i = j, \ \{i,j\} \neq 0$} \\
+            \alpha^{0} & \text{if $i = j, \ i \neq 0$} \\
             ERROR & \text{if $j = 0$}
         \end{cases}
     \end{align*}
@@ -18,6 +18,13 @@ underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
     \paragraph{{\small Digital Design}} \leavevmode \\ Only element forms of
     inputs are valid for this operation.
 
+    Galois division requires multiple binary additions and condition checks. To
+    find the quotient of $\alpha^{i}$ and $\alpha^{j}$, the two's complement of
+    $j$ has to first be summed with $i$. Converting to two's complement may be
+    done with parallel inverters and a carry-lookahead adder. The most
+    significant bit of the sum will then be used as a control signal to a
+    multiplexer. If activated, the multiplexer will add the two's complement of
+    a binary $1$ to the sum.
 \begin{align*}
     \alpha^{i} / \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} / \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\

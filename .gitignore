@@ -9,6 +9,9 @@
 *.cf
 *.vcd
 
+# Xilinx files
+xilinx_tb/
+
 # Vim tmp files
 *.swp
 

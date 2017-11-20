@@ -13,7 +13,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[11pt]{extarticle}
-\input{../../template/structure.tex} % specifies the document layout and style
+% specifies the document layout and style
+\input{../../../template/structure.tex}
 
 % names
 \newcommand{\team}{Galois Field Arithmetic Unit}
@@ -38,9 +39,12 @@
 
 \begin{document}
 
-    \documentinfo{\textbf{MEMO NAME:} GFAU\_BACKGROUND}{\textbf{DATE:}
-    \today}{\textbf{TO:} EFC LaBerge}{\textbf{SUBJECT: } Background on the
-    Galois Field Arithmetic Unit}
+    \documentinfo
+    {\textbf{MEMO NAME:} GFAU\_MATHEMATICAL\_BACKGROUND}
+    {\textbf{DATE:} \today}
+    {\textbf{TO:} EFC LaBerge}
+    {\textbf{SUBJECT: } Mathematical Background on the Galois Field Arithmetic
+    Unit}
     \vspace{-0.1in}
 
     % \tableofcontents
@@ -63,6 +67,12 @@
         \input{latex_mods/05-mult}
         \input{latex_mods/06-div}
         \input{latex_mods/07-log}
+
+        \subsection{Arithmetic Exceptions}
+
+        \input{latex_mods/08-zero}
+        \input{latex_mods/09-infinity}
+
         \begin{thebibliography}{9}
             \bibitem{wolfdef} 
             Weisstein, Eric W. "Finite Field." From \textit{MathWorld}--A

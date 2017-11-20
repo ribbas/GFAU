@@ -1,4 +1,4 @@
---or2.vhd
+--and.vhd
 
 library std;
 library ieee;
