@@ -13,9 +13,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[12pt]{extarticle}
-\input{../../template/structure.tex} % specifies the document layout and style
-
-%-----------------------------------------------------------------------------
+\input{../template/structure.tex} % specifies the document layout and style
 
 % names
 \newcommand{\team}{Galois Field Arithmetic Unit}
@@ -38,41 +36,28 @@
     \end{centering} }
 
 \graphicspath{ {diagrams/} }
-\renewcommand{\baselinestretch}{1.75}
+\renewcommand{\baselinestretch}{1.5}
+\setenumerate[1]{label=\thesubsection.\arabic*., leftmargin=3em}
+\setenumerate[2]{label*=\arabic*.}
 
 \begin{document}
-
 
     \documentinfo {\textbf{MEMO NUMBER:} GFAU SRS} {\textbf{DATE:} \today}
     {\textbf{TO: } EFC LaBerge} {\textbf{FROM: }\Sabbir, \Jeffrey, \Howard,
     \Brian} {\textbf{SUBJECT: } System Requirement Specifications}
     \vspace{-0.1in}
 
-    \section{Introduction} A Galois field is a field with a finite number of
-    elements. The nomenclature $GF(q)$ is used to indicate a Galois field with
-    q elements. For $GF(q)$ in general, $q$ must be a power of a prime. For
-    each prime power, there exists exactly one finite field. The best known and
-    most used Galois field is $GF(2)$, the binary field.
+    \section{Introduction} A Galois Field is a field with a finite number of
+    elements. The nomenclature $GF(q)$ is used to indicate a Galois Field with
+    $q$ elements. In $GF(q)$, the parameter $q$ must be a power of a prime. For
+    each prime power there exists exactly one finite field. The binary field
+    $GF(2)$ is the most frequently used Galois field \cite{wolfdef}.
 
-    The \team~ handles irreducible polynomials in $GF(2^n)$, where $\{2 \leq n
-    \leq 16\}$. The ALU generates all the terms in the field of the polynomial,
-    and allows the user to view and apply the following binary operations:
-
-    \begin{itemize}
-
-        \item Addition
-        \item Subtraction
-        \item Multiplication
-        \item Division
-        \item Logarithm
-
-    \end{itemize}
-
-        \subsection{Mission Scenario} Cryptography has many expensive
-        calculations that are difficult for low power and inexpensive
-        microcontrollers to handle. Galois fields are frequently used in the
-        field of cryptography. The GFAU will make Galois field computations
-        more accessible to such low powered devices.
+    The \team~ will handle irreducible polynomials in $GF(2^n)$, where $2 \leq
+    n \leq 16$. The arithmetic logic unit (ALU) will generate all the terms in
+    the field of the polynomial, and allow the user to view and apply the
+    following Galois operations: addition, subtraction, multiplication,
+    division and logarithm.
 
         \subsection{Document Overview} This document serves as the System
         Requirements Specification for the Galois Field Arithmetic Unit. The
@@ -84,14 +69,21 @@
         tables are attached where necessary to assist in demonstrating
         concepts.
 
-        \section{System Overview} The GFAU system is composed of discrete
-        modules residing in a single programmable board. Individual modules
-        shall be programmed to solely complete an assigned task. Although
-        modules are assigned individual tasks, they shall not have exclusive
-        components for its functionality.
+        \subsection{Mission Scenario} Galois Fields have various applications
+        in error detection and correction (EDAC). Specifically, cyclic
+        redundancy checks (CRC) is an EDAC that employ $GF(2)$ \cite{crc}.
+        EDAC has many expensive calculations that are difficult for low power
+        and inexpensive microcontrollers to handle. The GFAU will make Galois
+        Field computations more accessible to such low powered devices.
+        \newpage
 
-        \subsection{System Boundary Diagram} The system boundary diagram of the
-        GFAU has been provided in Figure \ref{fig:system_boundary} below.
+        \section{System Overview} The GFAU prototype will be composed of
+        discrete modules residing in a single programmable board. Individual
+        modules will be programmed to solely complete an assigned task.
+        Although modules are assigned individual tasks, they should not have
+        exclusive components for its functionality.
+
+        \subsection{System Boundary Diagram} Figure \ref{fig:system_boundary} provides the System Boundary Diagram of the GFAU.
 
         \begin{figure}[ht]
             \begin{center}
@@ -101,16 +93,16 @@
             \end{center}
         \end{figure}
 
-        The user input and output (I/O) interface are handled by the
-        microcontroller (MCU) which are transferred via busses. The user inputs
-        consist of the mode bit, the input generating polynomial and the binary
-        operation(s) along with their corresponding operands. The MCU transfers
-        the data to the unit to perform the desired operations. The GFAU will
-        return the outputs and any errors detected back to the MCU.
+        The user I/O interface are handled by the external device which are
+        transferred via busses. The user inputs consist of the mode bit, the
+        input generating polynomial and the binary operation(s) along with
+        their corresponding operands. The external device transfers the data to
+        the unit to perform the desired operations. The GFAU will return the
+        outputs and any errors detected back to the external device.
         \newpage
 
-        \subsection{Functional Flow Diagram} The functional flow diagram of the
-        GFAU has been provided in Figure \ref{fig:functional_flow}.
+        \subsection{Functional Flow Diagram} Figure \ref{fig:functional_flow}
+        provides the functional flow of the GFAU.
 
         \begin{figure}[ht]
             \begin{center}
@@ -130,8 +122,8 @@
         along with the desired binary operation.
         \newpage
 
-        \subsection{Data Flow Diagram} The data flow diagram of the GFAU has
-        been provided in Figure \ref{fig:data_flow}.
+        \subsection{Data Flow Diagram} Figure \ref{fig:data_flow} provides the
+        data flow diagram of the GFAU.
 
         \begin{figure}[ht]
             \begin{center}
@@ -144,8 +136,39 @@
         individual components and their role in converting the input data to
         the desired output. The \textbf{Error} lines are used by multiple
         components to send interrupt signals to the user when required.
+        \newpage
 
     \section{Requirements}
+
+        \subsection{Functional Requirements} The GFAU shall perform the
+        functions outlined below.
+
+        \begin{enumerate}
+
+            \item The GFAU shall generate terms from input irreducible
+            polynomials of degrees 2 to 8.
+
+            \item The GFAU shall handle operations on terms from $GF(2)$ to
+            $GF(8)$.
+
+            \item The GFAU should generate terms from input irreducible
+            polynomials of degrees 2 to 16.
+
+            \item The GFAU should handle operations on terms from $GF(2)$ to
+            $GF(16)$.
+
+            \item The GFAU shall perform addition, subtraction, multiplication,
+            division, and logarithm operations in the Galois Field.
+
+            \item The GFAU shall handle inputs given in their element or
+            polynomial from depending on the opcode provided from the external
+            device.
+
+            \item The GFAU shall be able to generate outputs in their element
+            or polynomial depending on the opcode from the external device.
+
+
+        \end{enumerate}
 
         \subsection{Cost and Package Constraints} This section outlines all
         design constraints imposed by the customer, from which the remainder of
@@ -153,118 +176,118 @@
 
         \begin{enumerate}
 
-            \item The total cost of the prototype shall not exceed \$400
-            
+            \item The total cost of the prototype shall not exceed \$400.
+
             \item The total area of prototype printed circuit board (PCB) shall
-            not exceed 24 inches square
-            
-            \item The cost at mass production shall not exceed \$1 per chip
-            
+            not exceed 24 inches square.
+
+            \item The cost at mass production shall not exceed \$1 per chip.
+
             \item The package of the final product shall not exceed 64 pins and
             should use fewer than 64 pins.
 
         \end{enumerate}
 
-        \subsection{Hardware Requirements} Hardware portability shall be
-        prioritized on the GFAU. The hardware portability provides flexibility
-        in the ranges of its specifications. The ranges of these specifications
-        shall be reasonably bounded.
+        \subsection{Hardware Requirements} The GFAU shall prioritize hardware
+        portability, as it provides flexibility in the ranges of its
+        specifications. The hardware specifications shall include reasonably
+        bounded ranges.
 
         \begin{enumerate}
 
-            \item The unit shall be functional at a variety of clock speeds at
+            \item The GFAU shall be functional at a variety of clock speeds at
             a minimum range of [4 MHz - 100 MHz].
 
-            \item The GFAU shall perform its computations in [0.5] instructions
-            per clock cycle
-
             \item The GFAU shall not exceed a thermal design power (TDP) of [1]
-            W
+            W in a final implementation.
 
             \item The GFAU shall operate normally at a temperature range of
-            -40$^{\circ}$C \textasciitilde 85$^{\circ}$C
+            -40$^{\circ}$C to \textasciitilde 85$^{\circ}$C.
 
-            \item The input/draining? voltage for the unit shall be [5] V
+            \item The input voltage for the unit shall be [5] V.
 
         \end{enumerate}
 
-        \subsection{Software and Testing Requirements} Extensive simulations
-        shall be conducted during the development of the design in a hardware
-        description language (HDL). This process makes debugging easier and
-        minimizes the risk of unintended behavior in the prototype. This
-        section outlines the HDL code requirements and tests that the
-        simulations are required to pass.
+        \subsection{Software and Testing Requirements} Software testing through
+        extensive simulations in hardware description language (HDL) shall be
+        incorporated into the requirements of the GFAU. Simulations allow for
+        convenient debugging and minimizes the risks of unintended behavior in
+        the prototype. Before purchasing hardware, the HDL code shall pass the
+        following required tests.
 
         \begin{enumerate}
 
-            \item Extensive design verification simulations shall be done
-            before purchasing any hardware. The exact simulations shall be left
-            up to the designer, however they shall prove the device operates as
-            expected with at least a [99\%] probability.
+            \item All HDL code shall be synthesizable.
 
-            \item All HDL code shall be synthesizable
+            \item The simulations shall prove the HDL code functions, as
+            intended, with [99\%] certainty.
 
-            \item Gate delay and other relevant values shall be parametrized to
-            easily match the specifications of candidate hardware during
-            verification
+            \item During verification, values (such as gate delays) shall be
+            parametrized to readily match the specifications of candidate
+            hardware.
 
         \end{enumerate}
 
         \subsection{Signal Testing and Requirements} To ensure that all
-        communication occurs correctly between the external device and GFAU,
-        all signals shall meet the rise and fall times outlined below.
-        Additionally, this section describes which tools shall be used to
-        verify the correctness of the output, and the tools that shall be used
-        to verify the rise and fall times of each signal.
+        communication occurs accurately between the external device and the
+        GFAU, all output signals shall not exceed rise and fall times of [1
+        ns]. All signals shall incorporate an oscilloscope to measure their
+        timings. A digital logic analyzer shall be used to verify the output
+        signals.
+
+        \subsection{Communication Requirements} The GFAU shall be able to
+        communicate with a wide variety of external devices with commonly used
+        communication methods outlined below.
 
         \begin{enumerate}
 
-            \item All output signals shall not exceed rise and fall times of [1
-            ns]
-            
-            \item All output signals rise and fall times shall be measured
-            using an oscilloscope to verify they meet [1].
-            
-            \item All output shall be checked probabilistically using a digital
-            logic analyzer.
+            \item The GFAU shall provide the external device the option to
+            select between a 8, 16, [or 32] bit data-bus.
+
+            \item The GFAU shall set a ready pin after the completion of the
+            given operation.
+
+            \item The GFAU shall allow the external device to use polling or
+            interrupts to monitor the ready pin to pull the data from the bus.
+
+            \item The GFAU shall push relatively small blocks of data over a
+            bus to the external device using a common or easy-to-implement
+            protocol on one clock.
 
         \end{enumerate}
 
-        \subsection{Communication Requirements} In order for the GFAU to be
-        able to communicated with a wide variety of external devices, the GFAU
-        shall implement communication methods which are commonly used. The
-        details of how the GFAU shall communicate are outlined in this section.
+            \subsubsection{Error Codes} Error signals shall be sent to the
+            external device in the following cases.
 
-        \begin{enumerate}
-            
-            \item The GFAU shall have an option to use either a 8, 16, [or 32]
-            bit data-bus.
-            
-            \item After any given operation is complete and the result is
-            placed on the bus, the GFAU shall set a ready pin.
-            
-            \item The external device may monitor the ready pin using polling
-            or interrupts to know when to pull the data from the bus.
-            
-            \item The GFAU shall use a common or easy to implement protocol for
-            pushing blocks of data over a bus that is too small to send on one
-            clock.
-
-        \end{enumerate}
-
-            \subsubsection{Errors} This section outlines the cases in which
-            errors are thrown.
             \begin{enumerate}
 
-                \item The unit shall produce an error if an operand is not in
-                the same Galois field.
-
-                \item The unit shall produce an error if the FPGA does not
-                receive all the inputs from the microcontroller.
-
-                \item The microcontroller shall produce an error if it does not
-                receive all the outputs from the FPGA.
+                \item The GFAU shall produce an error if its input polynomial
+                is reducible.
+                
+                \item The GFAU shall produce an error if an operand exceeds the
+                bounds Galois Field generated by the input polynomial.
+                
+                \item The GFAU shall produce an error if an operand is
+                attempted to be divided by 0 (zero).
+                
+                \item The GFAU shall produce an error if it does not receive
+                all the inputs from the external device.
 
             \end{enumerate}
+
+        \begin{thebibliography}{2}
+            \bibitem{wolfdef}
+            Wolfram Math World, "Finite Field." \textit{Wolfram Math World},
+            2017. [Online document]. Availble:
+                  http://mathworld.wolfram.com/FiniteField.html. [Accessed:
+                  Nov. 21, 2017].
+
+            \bibitem{crc} 
+            N. Matloff , "Cyclic Redundancy Checking." \textit{University of
+               California at Davis}, 2001. [Online]. Availble: http://heather.c
+               s.ucdavis.edu/~matloff/Networks/CRC/Old/ErrChkCorr.html.
+               [Accessed: Nov. 21, 2017].
+        \end{thebibliography}
+
 
 \end{document}
