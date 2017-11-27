@@ -25,9 +25,9 @@
 ## Binary Arithmetic
 - [x] Partial Full Adder (PFA)
     - [x] [1-bit1](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/ops/pfadder.vhd)
-- [ ] Carry-Lookahead Adder (CLA)
+- [x] Carry-Lookahead Adder (CLA)
     - [x] [4-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/ops/claadder4.vhd)
-    - [ ] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/ops/claadder16.vhd)
+    - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/ops/claadder16.vhd)
 - [ ] Most Significant Bit (MSB) Select
     - [ ] 16-bits
 - [ ] Degree of Polynomial
