@@ -28,34 +28,34 @@ architecture structural of claadder16 is
 begin
 
     cla1    :   claadder4 port map(
-                    a(15 downto 12),
-                    b(15 downto 12),
+                    a(3 downto 0),
+                    b(3 downto 0),
                     cin,
-                    s(15 downto 12),
+                    s(3 downto 0),
                     c1
                 );
 
     cla2    :   claadder4 port map(
-                    a(11 downto 8),
-                    b(11 downto 8),
+                    a(7 downto 4),
+                    b(7 downto 4),
                     c1,
-                    s(11 downto 8),
+                    s(7 downto 4),
                     c2
                 );
 
     cla3    :   claadder4 port map(
-                    a(7 downto 4),
-                    b(7 downto 4),
+                    a(11 downto 8),
+                    b(11 downto 8),
                     c2,
-                    s(7 downto 4),
+                    s(11 downto 8),
                     c3
                 );
 
     cla4    :   claadder4 port map(
-                    a(3 downto 0),
-                    b(3 downto 0),
+                    a(15 downto 12),
+                    b(15 downto 12),
                     c3,
-                    s(3 downto 0),
+                    s(15 downto 12),
                     cout
                 );
 
