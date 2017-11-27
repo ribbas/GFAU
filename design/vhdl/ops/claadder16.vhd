@@ -13,7 +13,7 @@ end claadder16;
 
 architecture structural of claadder16 is
 
-    component cladder4
+    component claadder4
         port(
             a       : in std_logic_vector (3 downto 0);
             b       : in std_logic_vector (3 downto 0);
@@ -27,7 +27,7 @@ architecture structural of claadder16 is
 
 begin
 
-    cla1    :   cladder4 port map(
+    cla1    :   claadder4 port map(
                     a(15 downto 12),
                     b(15 downto 12),
                     cin,
@@ -35,7 +35,7 @@ begin
                     c1
                 );
 
-    cla2    :   cladder4 port map(
+    cla2    :   claadder4 port map(
                     a(11 downto 8),
                     b(11 downto 8),
                     c1,
@@ -43,7 +43,7 @@ begin
                     c2
                 );
 
-    cla3    :   cladder4 port map(
+    cla3    :   claadder4 port map(
                     a(7 downto 4),
                     b(7 downto 4),
                     c2,
@@ -51,7 +51,7 @@ begin
                     c3
                 );
 
-    cla4    :   cladder4 port map(
+    cla4    :   claadder4 port map(
                     a(3 downto 0),
                     b(3 downto 0),
                     c3,
