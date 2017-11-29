@@ -2,16 +2,16 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mul16 is
+entity div16 is
     port(
         i       : in std_logic_vector (15 downto 0);    -- first element
         j       : in std_logic_vector (15 downto 0);    -- second element
         n       : in integer;                           -- size of element
         prod    : out std_logic_vector (15 downto 0)    -- product of elements
     );
-end mul16;
+end div16;
 
-architecture structural of mul16 is
+architecture structural of div16 is
 
     component claadder16
         port(

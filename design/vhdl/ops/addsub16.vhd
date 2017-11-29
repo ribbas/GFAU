@@ -1,15 +1,15 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
 
-entity addSub is
+entity addsub is
    
 port ( 
-    op1 : in  STD_LOGIC_VECTOR (15 downto 0);
-    op2 : in  STD_LOGIC_VECTOR (15 downto 0);
-    output : out  STD_LOGIC_VECTOR (15 downto 0));
-end addSub;
+    op1 : in  std_logic_vector (15 downto 0);
+    op2 : in  std_logic_vector (15 downto 0);
+    output : out  std_logic_vector (15 downto 0));
+end addsub;
 
-architecture structural of addSub is
+architecture structural of addsub is
 
 component xor2
 port(
@@ -20,9 +20,9 @@ end component;
 
 begin
 
-COMPUTE  :   for i in 15 downto 0 generate
-    XOR_X  :   xor2 port map (op1(i), op2(i), output(i));
-end generate COMPUTE;
+compute  :   for i in 15 downto 0 generate
+    xor_x  :   xor2 port map (op1(i), op2(i), output(i));
+end generate compute;
 
 end structural;
 
