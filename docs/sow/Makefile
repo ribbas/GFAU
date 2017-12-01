@@ -7,7 +7,7 @@ all: convert
 convert: convert1 convert2
 convert1 convert2:
 	# convert LaTex file to PDF
-	@pdflatex ${DOC}.tex
+	@pdflatex ${DOC}
 
 
 .PHONY: clean
