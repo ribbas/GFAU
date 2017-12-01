@@ -146,8 +146,8 @@
                 inquiries regarding FPGA development boards and design.
                 \begin{enumerate}
                     \item The team shall conduct trade studies on designs
-                    commonly used for arithmetic operations for suitability
-                    with the GFAU.
+                    commonly used for arithmetic operations which are performed
+                    in the GFAU.
                     \item The team shall identify styles and best practices for
                     hardware synthesizable VHDL code.
                     \item The team shall identify hardware specifications
@@ -171,9 +171,13 @@
                 \begin{enumerate}
                     \item The team shall identify the external devices suitable
                     for interfacing the GFAU.
-                    \item The team shall identify hardware specifications to
-                    meet the requirements detailed in the System Requirements
-                    Specifications.
+                    \item The team shall conduct a study of protocols commonly
+                    used to communicate with coprocessors to determine how to
+                    communicate with the widest range of the most commonly used
+                    microprocessors.
+                    \item The team shall identify hardware specifications of the
+                    external devices to meet the requirements detailed in the
+                    System Requirements Specifications.
                 \end{enumerate}
 
                 % What are some
@@ -186,8 +190,8 @@
             \subsubsection{System Boundary} The team shall design a system
             boundary diagram detailing the functions, inputs and outputs of the
             system. The team shall also develop and maintain additional
-            diagrams elaborating on various hierarchies of the project,
-            including the functional flow and data flow diagrams.
+            diagrams elaborating various hierarchical and functional views of
+            the project, including the functional flow and data flow diagrams.
 
             \subsubsection{Schematics} The team shall develop 
             schematics and other documentation necessary for the development
@@ -195,6 +199,10 @@
             schematic consisting of all the modules in the system. The
             schematic shall be divided into segments to be elaborated on a
             lower level by individual members.
+            
+            \subsection{System Design Document} The team shall write a System
+            Design Document which breaks down and describes the design and
+            implementation of the GFAU at every level of design.
 
         \subsection{Software Implementation}
 
@@ -207,13 +215,16 @@
 
             \subsubsection{Simulation and Synthesis in VHDL} The team shall
             test each module after completion to minimize syntax and
-            implementation warnings and errors. Individual test benches shall
-            accompany their corresponding module for every modules in the
-            system. The modules shall be completed using standards for
-            synthesis. Each modules shall be independently synthesized to
-            ensure they match the intended schematics and designs. All
-            simulations and software testing are expected to be completed by
-            the end of December.
+            implementation warnings and errors. Individual test benches shall be
+            written to accompany their corresponding module for every module in
+            the system. The team shall complete the modules using using syntax
+            that is synthesizable for use in our chosen FPGA. Each module shall
+            be independently synthesized to ensure they match the intended
+            schematics and designs. The team should complete all simulations and
+            software testing by the end of December.
+            %All simulations and
+            %software testing are expected to be completed by the end of
+            %December.
 
             \subsubsection{External Devices} The system may required external
             devices, such as memory. The team shall abstract and simulate their
@@ -225,10 +236,9 @@
         on external memory chips suitable for storing the lookup tables created
         during the polynomial term generation. Research on the external memory
         interface includes simulation and testing of its truth tables using
-        VHDL. The team shall concurrently research on a development board
-        before its purchase to prototype the implementation. The board shall
-        comply with the constraints detailed in the System Requirement
-        Specifications.
+        VHDL. The team shall concurrently conduct research to find a development
+        board which satisfies the requirements outlined in the System
+        Requirements Document.
 
         \subsection{Hardware}
 
@@ -240,15 +250,25 @@
             phases by mid-spring after all final purchases.
 
             \subsubsection{Hardware Testing} The team shall continuously test
-            on the FPGA board and its external components before, during and
+            the FPGA board and its external components before, during and
             after the integration with the VHDL system modules. The testing of
             the hardware in the system shall serve as the final milestone for
             the project during the end of the spring semester.
 
+            \begin{enumerate}
+                \item The team shall conduct logical tests of the prototype GFAU
+                using a Digital Logic Analyzer to verify the GFAU is both
+                logically correct, and meets timing constraints.
+                \item The team shall conduct testing of both input and output
+                signals using an oscilloscope to verify all signals going in and
+                out of the GFAU meet the requirements outlined in section 3.5 of
+                the System Requirements Specification.
+            \end{enumerate}
+
     \newpage
-    \section{Deliverables} Table 1 details the expected deliverables throughout
-    the project and shall be completed concurrently with the project
-    development.
+    \section{Deliverables} Table \ref{deliverables} details the expected
+    deliverables throughout the project and shall be completed concurrently with
+    the project development.
 
     \begin{table}[h]
 
@@ -287,7 +307,7 @@
             \hline
 
         \end{tabular}
-
+    \label{deliverables}
     \end{table}
 
     \section{Timeline} Figure 1 below shows a timeline of the capstone project
