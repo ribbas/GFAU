@@ -15,6 +15,7 @@
 \documentclass[12pt]{extarticle}
 \input{../template/structure.tex} % specifies the document layout and style
 \usepackage{tabularx}
+\usepackage{outlines}
 % names
 \newcommand{\team}{Galois Field Arithmetic Unit}
 \newcommand{\Sabbir}{Sabbir Ahmed}
@@ -38,7 +39,15 @@
 \graphicspath{ {diagrams/} }
 \renewcommand{\baselinestretch}{1.5}
 \setenumerate[1]{label=\textbf{\theparagraph.\arabic*.}, leftmargin=6em}
-\setenumerate[2]{label*=\arabic*.}
+% \setenumerate[2]{label=\textbf{\thesubsubsection.\arabic*.}, leftmargin=6em}
+% \renewcommand{\theenumi}{  %
+%     \ifnum\value{paragraph}=0
+%         \setenumerate[1]{label=\textbf{\thesubsubsection.\arabic*.},
+%         leftmargin=6em}
+%     \fi
+% }
+
+% \setenumerate[2]{label*=\arabic*.}
 
 \begin{document}
 
@@ -113,6 +122,7 @@
             various levels
             \item Oversee the designing of the system using the hardware
             description language
+            \item Finalize written reports and deliverables
         \end{itemize}} \\
         \hline
 
@@ -129,7 +139,7 @@
 
         \subsection{Research} The initial set of tasks relate to research
         efforts to fully understand the requirements and develop an
-        implementation.
+        implementation of the GFAU.
 
             \subsubsection{Background} The team shall conduct research on the
             mathematics and theoretical concepts related to Galois fields. The
@@ -157,13 +167,6 @@
                     Specifications.
                 \end{enumerate}
 
-                %  What are designs that are commonly used, such as common
-                % arithmetic operations that will be helpful in the design of our
-                % system? What is and isn't allowed in VHDL in order for it to be
-                % synthesizable? What are some important specifications to look
-                % at when shopping for an FPGA? What are specifications do we
-                % need of our FPGA to meet our requirements?
-
                 \paragraph{External Devices} \leavevmode \\~\\ The team shall
                 conduct research to address the following inquiries regarding
                 external devices interfacing the FPGA development board.
@@ -175,15 +178,10 @@
                     used to communicate with coprocessors to determine how to
                     communicate with the widest range of the most commonly used
                     microprocessors.
-                    \item The team shall identify hardware specifications of the
-                    external devices to meet the requirements detailed in the
-                    System Requirements Specifications.
+                    \item The team shall identify hardware specifications of
+                    the external devices to meet the requirements detailed in
+                    the System Requirements Specifications.
                 \end{enumerate}
-
-                % What are some
-                % external devices that we will need to use? How will the GFAU
-                % communicate with these devices? What specifications are
-                % required of these devices to meet our system requirements?
 
         \subsection{Design}
 
@@ -200,9 +198,9 @@
             schematic shall be divided into segments to be elaborated on a
             lower level by individual members.
             
-            \subsection{System Design Document} The team shall write a System
-            Design Document which breaks down and describes the design and
-            implementation of the GFAU at every level of design.
+            \subsubsection{System Design Document} The team shall compile a
+            System Design Document detailing the architectural, logical and
+            physical design of every level of the system.
 
         \subsection{Software Implementation}
 
@@ -215,30 +213,33 @@
 
             \subsubsection{Simulation and Synthesis in VHDL} The team shall
             test each module after completion to minimize syntax and
-            implementation warnings and errors. Individual test benches shall be
-            written to accompany their corresponding module for every module in
-            the system. The team shall complete the modules using using syntax
-            that is synthesizable for use in our chosen FPGA. Each module shall
-            be independently synthesized to ensure they match the intended
-            schematics and designs. The team should complete all simulations and
-            software testing by the end of December.
-            %All simulations and
-            %software testing are expected to be completed by the end of
-            %December.
+            implementation warnings and errors. Individual test benches shall
+            be written to accompany their corresponding module for every module
+            in the system. The team shall complete the modules using using
+            syntax that is synthesizable for use in the chosen FPGA. Each
+            module shall be independently synthesized to ensure they match the
+            intended schematics and designs. The team should complete all
+            simulations and software testing by the end of December.
 
-            \subsubsection{External Devices} The system may required external
+            \subsubsection{External Devices} The system may require external
             devices, such as memory. The team shall abstract and simulate their
             behavior in VHDL before the physical integration to validate their
             functionality. The VHDL code written to describe the behavior of
             external devices does not necessarily have to be synthesizable.
 
+            \paragraph{External Device Library} \leavevmode \\~\\ The team may
+            provide a library for the external device to interface the GFAU
+            system. The library may include methods, protocols and constants to
+            establish communication with and send and receive signals to the
+            GFAU prototype.
+
         \subsection{Purchases} Before purchase, the team shall conduct research
         on external memory chips suitable for storing the lookup tables created
         during the polynomial term generation. Research on the external memory
         interface includes simulation and testing of its truth tables using
-        VHDL. The team shall concurrently conduct research to find a development
-        board which satisfies the requirements outlined in the System
-        Requirements Document.
+        VHDL. The team shall concurrently conduct research to find a
+        development board which satisfies the requirements outlined in the
+        System Requirements Document.
 
         \subsection{Hardware}
 
@@ -255,20 +256,21 @@
             the hardware in the system shall serve as the final milestone for
             the project during the end of the spring semester.
 
-            \begin{enumerate}
-                \item The team shall conduct logical tests of the prototype GFAU
-                using a Digital Logic Analyzer to verify the GFAU is both
-                logically correct, and meets timing constraints.
+            \begin{enumerate}[label=\textbf{\thesubsubsection.\arabic*.},
+            leftmargin=6em]
+                \item The team shall conduct logical tests of the prototype
+                using a Digital Logic Analyzer to verify the logical
+                correctness and timing constraints of the GFAU.
                 \item The team shall conduct testing of both input and output
-                signals using an oscilloscope to verify all signals going in and
-                out of the GFAU meet the requirements outlined in section 3.5 of
-                the System Requirements Specification.
+                signals using an oscilloscope to verify all signals going in
+                and out of the GFAU meet the requirements outlined in Section
+                3.5 of the System Requirements Specification.
             \end{enumerate}
 
     \newpage
     \section{Deliverables} Table \ref{deliverables} details the expected
-    deliverables throughout the project and shall be completed concurrently with
-    the project development.
+    deliverables throughout the project and shall be completed concurrently
+    with the project development.
 
     \begin{table}[h]
 
