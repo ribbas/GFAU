@@ -35,7 +35,10 @@
         \end{spacing} }
     \end{centering} }
 
+\graphicspath{ {diagrams/} }
 \renewcommand{\baselinestretch}{1.5}
+\setenumerate[1]{label=\textbf{\theparagraph.\arabic*.}, leftmargin=6em}
+\setenumerate[2]{label*=\arabic*.}
 
 \begin{document}
 
@@ -68,7 +71,8 @@
     units, and are therefore required to learn the concepts concurrently.
 
     Although there is no clear division of labor within the team, each members
-    have been implicitly designated unofficial roles. Table \ref{table:roles} provides an estimated division of labor among the members of \team~.
+    have been implicitly designated unofficial roles. Table \ref{table:roles}
+    provides an estimated division of labor among the members of \team.
 
     \begin{table}[h]
         \renewcommand{\arraystretch}{1.5}
@@ -93,14 +97,14 @@
         \textbf{Jeffrey} & \noindent\parbox[c]{\hsize}{\begin{itemize}
             \item Design modules using the hardware description language
             \item Support the designing processes by providing test benches
-            and by synthesizing the individual modules.
+            and by synthesizing the individual modules
         \end{itemize}} \\
         \hline
 
         \textbf{Howard} & \noindent\parbox[c]{\hsize}{\begin{itemize}
             \item Act as the point of contact between the team and the project
             manager and other consultants
-            \item Schedule of team meetings and milestones.
+            \item Schedule team meetings and milestones
         \end{itemize}} \\
         \hline
 
@@ -116,107 +120,135 @@
         \label{table:roles}
     \end{table}
 
-    Each members of the GFAU shall contribute to designing the individual
-    modules and the entire system.
+    Along with the assigned responsibilities, each members of the GFAU shall
+    contribute to programming the individual modules in the system. Each
+    members shall also contribute to authoring the documents supporting the
+    project design and requirements.
 
     \section{Tasks}
 
-        \subsection{Research} In this section, we introduce a series of
-        questions that shall be answered in our preliminary research relating
-        to the title of each subsection.
+        \subsection{Research} The initial set of tasks relate to research
+        efforts to fully understand the requirements and develop an
+        implementation.
 
-        \subsubsection{Background} The team shall conduct extensive research on
-        the mathematics and theoretical concepts behind the operations in the
-        GFAU. The unit emphasizes on the terms and the unary and binary
-        operations among them bounded in the Galois field. A strong
-        understanding on such topics is therefore essential for successful and
-        accurate computations.
+            \subsubsection{Background} The team shall conduct research on the
+            mathematics and theoretical concepts related to Galois fields. The
+            GFAU generates terms in specified Galois fields and stores them for
+            further operations. Therefore, a strong understanding on such
+            topics is essential for successful and accurate computations.
 
-        \subsubsection{Devices} The team shall conduct extensive research on
-        the implementation and synthesis of digital design on programmable
-        boards and their corresponding best practices.
-        
-            \paragraph{Field Programmable Gate Array (FPGA)} \leavevmode \\~\\
-            What are designs that are commonly used, such as common arithmetic
-            operations that will be helpful in the design of our system? What
-            is and isn't allowed in VHDL in order for it to be synthesizable?
-            What are some important specifications to look at when shopping for
-            an FPGA? What are specifications do we need of our FPGA to meet our
-            requirements?
+            \subsubsection{Devices} The team shall conduct research on the
+            implementation and synthesis of digital design on programmable
+            boards and their corresponding best practices.
+            
+                \paragraph{Field Programmable Gate Array (FPGA)} \leavevmode
+                \\~\\ The team shall conduct research to address the following
+                inquiries regarding FPGA development boards and design.
+                \begin{enumerate}
+                    \item The team shall conduct trade studies on designs
+                    commonly used for arithmetic operations for suitability
+                    with the GFAU.
+                    \item The team shall identify styles and best practices for
+                    hardware synthesizable VHDL code.
+                    \item The team shall identify hardware specifications
+                    deemed important before purchase.
+                    \item The team shall identify hardware specifications to
+                    meet the requirements detailed in the System Requirements
+                    Specifications.
+                \end{enumerate}
 
-            \paragraph{External Devices} \leavevmode \\~\\ What are some
-            external devices that we will need to use? How will the GFAU
-            communicate with these devices? What specifications are required of
-            these devices to meet our system requirements?
+                %  What are designs that are commonly used, such as common
+                % arithmetic operations that will be helpful in the design of our
+                % system? What is and isn't allowed in VHDL in order for it to be
+                % synthesizable? What are some important specifications to look
+                % at when shopping for an FPGA? What are specifications do we
+                % need of our FPGA to meet our requirements?
+
+                \paragraph{External Devices} \leavevmode \\~\\ The team shall
+                conduct research to address the following inquiries regarding
+                external devices interfacing the FPGA development board.
+
+                \begin{enumerate}
+                    \item The team shall identify the external devices suitable
+                    for interfacing the GFAU.
+                    \item The team shall identify hardware specifications to
+                    meet the requirements detailed in the System Requirements
+                    Specifications.
+                \end{enumerate}
+
+                % What are some
+                % external devices that we will need to use? How will the GFAU
+                % communicate with these devices? What specifications are
+                % required of these devices to meet our system requirements?
 
         \subsection{Design}
 
-            \subsubsection{System Boundary} A system boundary diagram detailing
-            the functions, inputs and outputs of our system shall be developed.
-            Additional diagrams elaborating on various hierarchies or the
-            project shall also be developed, including the functional flow and
-            data flow diagrams.
+            \subsubsection{System Boundary} The team shall design a system
+            boundary diagram detailing the functions, inputs and outputs of the
+            system. The team shall also develop and maintain additional
+            diagrams elaborating on various hierarchies of the project,
+            including the functional flow and data flow diagrams.
 
-            \subsubsection{Schematics} Several schematics for the project may
-            be developed and utilized during the development phase. A high-
-            level schematic consisting of all the modules in the system shall
-            be developed for the final product. The schematic shall be divided
-            into segments to be elaborated on a lower level by individual
-            members.
+            \subsubsection{Schematics} The team shall develop 
+            schematics and other documentation necessary for the development
+            phase. For the final product, the team shall develop a high-level
+            schematic consisting of all the modules in the system. The
+            schematic shall be divided into segments to be elaborated on a
+            lower level by individual members.
 
         \subsection{Software Implementation}
 
             \subsubsection{Design in VHSIC Hardware Description Language
-            (VHDL)} Each of the operations in the GFAU: addition, subtraction,
-            multiplication, division and logarithm, shall be implemented with
-            independent and discrete VHDL modules. The source code shall be
-            written and comprehensively documented using the best practices and
-            standards imposed by the "IEEE Standard VHDL Language Reference
-            Manual".
+            (VHDL)} The team shall implement independent and discrete VHDL
+            modules for each of the operations in the GFAU. The source
+            code shall be written and comprehensively documented using the best
+            practices and standards imposed by the \textit{IEEE Standard VHDL
+            Language Reference Manual} (2009).
 
-            \subsubsection{Simulation and Synthesis in VHDL} In order to ensure
-            that the source code is functional, testing shall be performed
-            after the completion of each module The modules shall be completed
-            using standards for synthesis. Each modules shall be independently
-            synthesized to ensure they match the intended schematics and
-            designs. All simulations and software testing are expected to be
-            completed by the end of November.
+            \subsubsection{Simulation and Synthesis in VHDL} The team shall
+            test each module after completion to minimize syntax and
+            implementation warnings and errors. Individual test benches shall
+            accompany their corresponding module for every modules in the
+            system. The modules shall be completed using standards for
+            synthesis. Each modules shall be independently synthesized to
+            ensure they match the intended schematics and designs. All
+            simulations and software testing are expected to be completed by
+            the end of December.
 
-            \subsubsection{External Devices} External devices such as memory
-            may be required in our project. Should they be needed, their
-            behavior shall be abstracted in VHDL so we can integrate and test
-            our code to make sure it will work with the external devices. Any
-            code written to describe the behavior of external devices does not
-            have to be synthesizable, however.
+            \subsubsection{External Devices} The system may required external
+            devices, such as memory. The team shall abstract and simulate their
+            behavior in VHDL before the physical integration to validate their
+            functionality. The VHDL code written to describe the behavior of
+            external devices does not necessarily have to be synthesizable.
 
-        \subsection{Purchases} An external memory chip suitable for storing the
-        lookup tables created during the polynomial term generation shall be
-        researched extensively before purchase. Research on the external memory
+        \subsection{Purchases} Before purchase, the team shall conduct research
+        on external memory chips suitable for storing the lookup tables created
+        during the polynomial term generation. Research on the external memory
         interface includes simulation and testing of its truth tables using
-        VHDL. A development board shall be researched on concurrently before
-        being purchased for prototyping the implementation. The board shall
+        VHDL. The team shall concurrently research on a development board
+        before its purchase to prototype the implementation. The board shall
         comply with the constraints detailed in the System Requirement
         Specifications.
 
         \subsection{Hardware}
 
-            \subsubsection{Integration} The system shall be integrated with an
-            FPGA board bounded by the constraints detained in the Systems
-            Requirement Specifications. The board shall successfully
+            \subsubsection{Integration} The team shall integrate the system
+            with an FPGA board bounded by the constraints detailed in the
+            Systems Requirement Specifications. The board shall successfully
             communicate with a microcontroller for user interface and its
-            external memories. The hardware integration shall be completed by
-            mid-semester during spring after all purchases are made final.
+            external memories. The team shall complete the hardware integration
+            phases by mid-spring after all final purchases.
 
-            \subsubsection{Hardware Testing} Extensive testing on the FPGA
-            board and its external components shall be conducted before, during
-            and after the integration with the VHDL system modules. The testing
-            of the hardware in the system shall server as the final milestone
-            for the project during the end of the spring semester.
+            \subsubsection{Hardware Testing} The team shall continuously test
+            on the FPGA board and its external components before, during and
+            after the integration with the VHDL system modules. The testing of
+            the hardware in the system shall serve as the final milestone for
+            the project during the end of the spring semester.
 
     \newpage
-    \section{Deliverables} Table 1 detail the expected deliverables throughout
+    \section{Deliverables} Table 1 details the expected deliverables throughout
     the project and shall be completed concurrently with the project
-    development:
+    development.
 
     \begin{table}[h]
 
@@ -224,31 +256,33 @@
         \caption{Deliverables}
         \centering
 
-        \begin{tabular}{ | p{5cm} | p{7cm} | l | p{5cm} |}
+        \begin{tabular}{ | p{10em} | p{16em} | l |}
 
             \hline \textbf{Deliverable} & \textbf{Description} &
             \textbf{Deadline} \\
 
-            \hline System Specification Requirements & A detailed specification
-            of the unit shall be developed including both hardware and software
-            requirements, and any of the constraints that needed to be met. The
-            System Specification Requirements also detailed all the inputs and
-            outputs of the GFAU. & October 18, 2017 \\
+            \hline \textbf{System Specification Requirements} & The team shall
+            develop a detailed specification of the unit. The specification
+            document shall include both hardware and software requirements and
+            constraints. The System Specification Requirements also detailed
+            all the inputs and outputs of the GFAU. & November 22nd, 2017 \\
 
-            \hline Weekly Team Status Reports & Weekly status reports by the
-            GFAU team shall be submitted to Dr. LaBerge discussing the
-            completed tasks and issues encountered for the current period. They
-            shall also include planned tasks for the next period & Weekly \\
+            \hline \textbf{Weekly Team Status Reports} & The team shall deliver
+            bimonthly status reports to Dr. LaBerge discussing the completed
+            tasks and issues encountered during the period. They shall also
+            include planned tasks for the next period. & Bimonthly \\
 
-            \hline Preliminary Design Review & A Preliminary Design Review of
-            the project shall be reviewed by Dr. LaBerge in the first week of
-            December. & First week of December \\
+            \hline \textbf{Preliminary Design Review} & The team shall present
+            a Preliminary Design Review of the project to Dr. LaBerge in the
+            first week of December. & December 6th, 2017 \\
 
-            \hline Completed Design Review & A final review of the GFAU shall
-            be reviewed by Dr. LaBerge in May, 2018. & May, 2018 \\
+            \hline \textbf{Completed Design Review} & The team shall present a
+            final review of the GFAU to Dr. LaBerge and others in May, 2018. &
+            May, 2018 \\
 
-            \hline Demo & A fully functional GFAU shall be presented in May,
-            2018 to Dr. LaBerge. & May, 2018 \\
+            \hline \textbf{Demo} & The team shall present a fully functional
+            demo of the GFAU to Dr. LaBerge and others in May, 2018. & May,
+            2018 \\
 
             \hline
 
@@ -271,13 +305,12 @@
         Wolfram Math World, "Finite Field." \textit{Wolfram Math World},
         2017. [Online document]. Availble:
               http://mathworld.wolfram.com/FiniteField.html. [Accessed:
-              Nov. 21, 2017].
+              \today].
 
-        \bibitem{crc} 
-        N. Matloff , "Cyclic Redundancy Checking." \textit{University of
-           California at Davis}, 2001. [Online]. Availble: http://heather.c
-           s.ucdavis.edu/~matloff/Networks/CRC/Old/ErrChkCorr.html.
-           [Accessed: Nov. 21, 2017].
+        \bibitem{ieeemanual}
+        Design Automation Standards Committee of IEEE Computer Society,
+        \textit{IEEE Standard VHDL Language Reference Manual}, IEEE Computer
+        Society, 2009.
     \end{thebibliography}
 
 \end{document}
