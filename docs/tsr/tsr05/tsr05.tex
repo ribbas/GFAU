@@ -1,0 +1,94 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contract LaTeX Template Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+%
+% Original author: Brandon Fryslie With extensive modifications by: Vel
+% (vel@latextemplates.com)
+%
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors: Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\input{../../../template/structure.tex} % specifies the document layout and style
+
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+%----------------------------------------------------------------------------------------
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l} #1 \\ #2 \\ #3 \\ #4 \\ #5 \\
+                \end{tabular} \\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing} }
+    \end{centering} }
+
+\begin{document}
+
+    \documentinfo{\textbf{MEMO:} TSR-03}{\textbf{DATE: }{\today}}{\textbf{TO: }
+    EFC LaBerge}{\textbf{FROM: }\Sabbir, \Jeffrey, \Howard,
+    \Brian}{\textbf{SUBJECT: } Team Status Report}
+    \vspace{-0.3in}
+
+    \section{Introduction} The Galois Field Arithmetic Unit will accept inputs
+    to determine n, and to establish the field generating polynomial. The unit
+    would serve as a computation engine for a relatively low-powered
+    microcontroller, and would enable complex code and encryption algorithms.
+    Project will include implementation of a Reed Solomon encoder and decoder
+    using the GFAU. The purpose of this report is to detail the progress of the
+    GFAU in the period of November 17, 2017 through December 6, 2017. This is
+    the fifth and final status report for the first semester for the GFAU
+    team.
+
+    \section{Completed Tasks} During this work period, the team has continued
+    to make progress on the GFAU. Including the following achievements:
+    \begin{enumerate}[label=\alph*)]
+
+        \item A final high level data flow diagram has been completed.
+
+        \item Our preliminary design review was presented on Wednesday 6th. 
+
+        \item Multiplication module is completed.
+
+        \item Division module is nearing completion.
+
+        \item Term generation low level design is completed.
+
+        \item Incremental progress on the remaining modules has been made.
+
+    \end{enumerate}
+
+    \section{Planned Tasks}
+    Before returning from break, our team will:
+    \begin{enumerate}[label=\alph*)]
+
+
+        \item Complete all VHDL code.
+
+        \item Write test benches for all major modules to verify their 
+        functionality.
+
+        \item Make a more concrete plan for the the hardware section of our 
+        implementation to make sure the second semester goes smoothly.
+
+    \end{enumerate}
+
+    \section{Current Issues} No issues in team dynamics or lack of resources,
+    exist in the team so far, however we are behind schedule. This should not
+    be an issue however, as we will catch up over winter break, and our work
+    load in other classes will be lighter next semester.
+   
+\end{document}
