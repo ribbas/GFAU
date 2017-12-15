@@ -7,7 +7,8 @@ entity mul16 is
         i       : in std_logic_vector (15 downto 0);    -- first element
         j       : in std_logic_vector (15 downto 0);    -- second element
         n       : in integer range 0 to 15;             -- size of element
-        prod    : out std_logic_vector (15 downto 0)    -- product of elements
+        prod    : out std_logic_vector (15 downto 0);   -- product of elements
+        rdy    : out std_logic:= '0'                    -- ready signal
     );
 end mul16;
 
@@ -30,6 +31,7 @@ architecture structural of mul16 is
 
 begin
 
+    -- sum(i, j)
     cla1    :   claadder16 port map(
                     i,              -- first element
                     j,              -- second element
@@ -38,6 +40,7 @@ begin
                     c1              -- not sure yet
                 );
 
+    -- sum(i, j, 1)
     cla2    :   claadder16 port map(
                     sumij,          -- sum of i and j
                     one16,          -- 16-bit 1
@@ -49,11 +52,11 @@ begin
     process (sumij, sumij1)
     begin
 
-        -- if (MSB(i + j) or MSB(i + j + 1) == 0)
+        -- if (OF(i + j) or OF(i + j + 1) == 0)
         if ((sumij(n) or sumij1(n)) = '0') then
-            prod <= sumij;  -- prod = i + j
+            prod <= sumij;          -- prod = i + j
         else
-            prod <= sumij1;  -- prod = i + j + 1
+            prod <= sumij1;         -- prod = i + j + 1
         end if;
 
         prod(n) <= '0';  -- set (n + 1)st bit of prod to 0
