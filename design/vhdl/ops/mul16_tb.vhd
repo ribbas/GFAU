@@ -25,7 +25,7 @@ architecture behavioral of mul16_tb is
     signal prod     : std_logic_vector(15 downto 0);
     signal rdy      : std_logic;
 
-    -- architecture declarative part
+    -- testbench clocks
     constant nums   : integer := 320;
     signal clk      : std_ulogic := '1';
 
@@ -42,14 +42,14 @@ begin
 
     -- architecture statement part
     clk_proc: process
-        begin
+    begin
+
         for i in 1 to nums loop
-            clk <= not clk;
-            wait for 20 ns;
             clk <= not clk;
             wait for 20 ns;
             -- clock period = 50 MHz
         end loop;
+
     end process;
 
     -- stimulus process

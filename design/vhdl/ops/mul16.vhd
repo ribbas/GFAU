@@ -8,7 +8,7 @@ entity mul16 is
         j       : in std_logic_vector (15 downto 0);    -- second element
         n       : in integer range 0 to 15;             -- size of element
         prod    : out std_logic_vector (15 downto 0);   -- product of elements
-        rdy    : out std_logic:= '0'                    -- ready signal
+        rdy    : out std_logic                          -- ready signal
     );
 end mul16;
 
@@ -30,6 +30,8 @@ architecture structural of mul16 is
             sumij1  : std_logic_vector(15 downto 0);
 
 begin
+
+    rdy <= '0';
 
     -- sum(i, j)
     cla1    :   claadder16 port map(
@@ -59,7 +61,7 @@ begin
             prod <= sumij1;         -- prod = i + j + 1
         end if;
 
-        prod(n) <= '0';  -- set (n + 1)st bit of prod to 0
+        prod(n) <= '0';             -- set (n + 1)st bit of prod to 0
 
     end process;
 
