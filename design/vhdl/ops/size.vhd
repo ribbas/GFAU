@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity size is
     port(
         poly_bcd    : in std_logic_vector (15 downto 0);  -- BCD polynomial
-        n           : out std_logic_vector(3 downto 0)   -- size of element
+        n           : out std_logic_vector(3 downto 0)    -- size of element
    );
 end size;
 
@@ -27,7 +27,6 @@ begin
             "0100" when (poly_bcd(4) = '1') else   -- 4
             "0011" when (poly_bcd(3) = '1') else   -- 3
             "0010" when (poly_bcd(2) = '1') else   -- 2
-            "0001" when (poly_bcd(1) = '1') else   -- 1
-            "0000";                                -- 0
+            "XXXX";                                -- under 2
 
 end structural;

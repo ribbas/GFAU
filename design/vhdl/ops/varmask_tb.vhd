@@ -1,24 +1,24 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity twoscmp_tb is
-end twoscmp_tb;
+entity varmask_tb is
+end varmask_tb;
 
-architecture behavioral of twoscmp_tb is
+architecture behavioral of varmask_tb is
 
     -- component declaration for the unit under test (uut)     
-    component twoscmp
+    component varmask
         port(
-            num     : in  std_logic_vector(15 downto 0);
-            tcnum   : out  std_logic_vector(15 downto 0)
+            poly_bcd    : in  std_logic_vector(15 downto 0);
+            mask        : out std_logic_vector(15 downto 0)
         );
     end component;
 
     -- inputs
-    signal num      : std_logic_vector(15 downto 0) := (others => '0');
+    signal poly_bcd : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal tcnum    : std_logic_vector(15 downto 0);
+    signal mask    : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -40,9 +40,9 @@ begin
 
 
     -- instantiate the unit under test (uut)
-    uut: twoscmp port map(
-        num => num,
-        tcnum => tcnum
+    uut: varmask port map(
+        poly_bcd => poly_bcd,
+        mask => mask
     );
 
     -- stimulus process
@@ -52,24 +52,16 @@ begin
         -- hold reset state for 100 ns.
         wait for 40 ns;
 
-        -- 3
-        num <= "0000000000000101";
+        -- x^2
+        poly_bcd <= "0000000000000101";
         wait for 40 ns;
 
-        -- 65535
-        num <= "1111111111111111";
+        -- x^11
+        poly_bcd <= "0000100000000101";
         wait for 40 ns;
 
-        -- 65535
-        num <= "0000000000000001";
-        wait for 40 ns;
-
-        -- 65535
-        num <= "0000000000000011";
-        wait for 40 ns;
-
-        -- 0
-        num <= "0000000000000000";
+        -- x^15
+        poly_bcd <= "1111111111111111";
 
         wait for 40 ns;
 

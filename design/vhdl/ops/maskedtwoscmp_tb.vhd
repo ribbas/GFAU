@@ -1,24 +1,26 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity twoscmp_tb is
-end twoscmp_tb;
+entity maskedtwoscmp_tb is
+end maskedtwoscmp_tb;
 
-architecture behavioral of twoscmp_tb is
+architecture behavioral of maskedtwoscmp_tb is
 
     -- component declaration for the unit under test (uut)     
-    component twoscmp
+    component maskedtwoscmp
         port(
-            num     : in  std_logic_vector(15 downto 0);
-            tcnum   : out  std_logic_vector(15 downto 0)
+            num         : in  std_logic_vector(15 downto 0);
+            mask        : in  std_logic_vector(15 downto 0);
+            maskedtc    : out  std_logic_vector(15 downto 0)
         );
     end component;
 
     -- inputs
-    signal num      : std_logic_vector(15 downto 0) := (others => '0');
+    signal num  : std_logic_vector(15 downto 0) := (others => '0');
+    signal mask : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal tcnum    : std_logic_vector(15 downto 0);
+    signal maskedtc    : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -38,11 +40,11 @@ begin
 
     end process;
 
-
     -- instantiate the unit under test (uut)
-    uut: twoscmp port map(
+    uut: maskedtwoscmp port map(
         num => num,
-        tcnum => tcnum
+        mask => mask,
+        maskedtc => maskedtc
     );
 
     -- stimulus process
@@ -51,6 +53,7 @@ begin
 
         -- hold reset state for 100 ns.
         wait for 40 ns;
+        mask <= "0000000000000111";
 
         -- 3
         num <= "0000000000000101";
