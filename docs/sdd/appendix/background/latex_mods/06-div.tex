@@ -21,17 +21,16 @@ underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
     Galois division requires multiple binary additions and condition checks. To
     find the quotient of $\alpha^{i}$ and $\alpha^{j}$, the two's complement of
     $j$ has to first be summed with $i$. Converting to two's complement may be
-    done with parallel inverters and a carry-lookahead adder. The most
-    significant bit of the sum will then be used as a control signal to a
-    multiplexer. If activated, the multiplexer will add the two's complement of
-    a binary $1$ to the sum.
+    done with parallel inverters and a carry-lookahead adder. The overflow bit
+    of the sum will then be used as a control signal to a multiplexer. If
+    activated, the multiplexer will add the two's complement of a binary $1$ to
+    the sum.
 \begin{align*}
     \alpha^{i} / \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} / \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
     & \Longrightarrow \text{Let } n = |i| = |j| \\
     & = \begin{cases}
-            \alpha^{(i + j_{2's})} & \text{if $\overline{(i+j_{2's})[n+1]}=0$} \\
-            \alpha^{(i + j_{2's} + 1_{2's})} & \text{if
-            $\overline{(i+j_{2's})[n+1]}=1$}
+            \alpha^{(i + j_{2's})} & \text{if $(i+j_{2's})[n+1]=1$} \\
+            \alpha^{(i + j_{2's} + 1_{2's})} & \text{if $(i+j_{2's})[n+1]=0$}
         \end{cases}
 \end{align*}

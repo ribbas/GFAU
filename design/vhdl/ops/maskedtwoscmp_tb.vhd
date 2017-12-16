@@ -9,9 +9,9 @@ architecture behavioral of maskedtwoscmp_tb is
     -- component declaration for the unit under test (uut)     
     component maskedtwoscmp
         port(
-            num         : in  std_logic_vector(15 downto 0);
-            mask        : in  std_logic_vector(15 downto 0);
-            maskedtc    : out  std_logic_vector(15 downto 0)
+            num         : in std_logic_vector(15 downto 0);
+            mask        : in std_logic_vector(15 downto 0);
+            maskedtc    : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -20,7 +20,7 @@ architecture behavioral of maskedtwoscmp_tb is
     signal mask : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal maskedtc    : std_logic_vector(15 downto 0);
+    signal maskedtc : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
