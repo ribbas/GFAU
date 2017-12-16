@@ -4,11 +4,10 @@ use ieee.numeric_std.all;
 
 entity mul16 is
     port(
-        i       : in std_logic_vector (15 downto 0);    -- first element
-        j       : in std_logic_vector (15 downto 0);    -- second element
-        n       : in integer range 0 to 15;             -- size of element
-        prod    : out std_logic_vector (15 downto 0);   -- product of elements
-        rdy    : out std_logic                          -- ready signal
+        i       : in std_logic_vector(15 downto 0); -- first element
+        j       : in std_logic_vector(15 downto 0); -- second element
+        n       : in std_logic_vector(15 downto 0); -- size of element
+        prod    : out std_logic_vector(15 downto 0) -- product of elements
     );
 end mul16;
 
@@ -16,10 +15,10 @@ architecture structural of mul16 is
 
     component claadder16
         port(
-            a       : in std_logic_vector (15 downto 0);
-            b       : in std_logic_vector (15 downto 0);
+            a       : in std_logic_vector(15 downto 0);
+            b       : in std_logic_vector(15 downto 0);
             cin     : in std_logic;
-            s       : out std_logic_vector (15 downto 0);
+            s       : out std_logic_vector(15 downto 0);
             cout    : out std_logic
         );
     end component;
@@ -30,8 +29,6 @@ architecture structural of mul16 is
             sumij1  : std_logic_vector(15 downto 0);
 
 begin
-
-    rdy <= '0';
 
     -- sum(i, j)
     cla1    :   claadder16 port map(
@@ -55,13 +52,15 @@ begin
     begin
 
         -- if (OF(i + j) or OF(i + j + 1) == 0)
-        if ((sumij(n) or sumij1(n)) = '0') then
+        if ((sumij(to_integer(unsigned(n))) or 
+            sumij1(to_integer(unsigned(n)))) = '0') then
             prod <= sumij;          -- prod = i + j
         else
             prod <= sumij1;         -- prod = i + j + 1
         end if;
 
-        prod(n) <= '0';             -- set (n + 1)st bit of prod to 0
+        -- set (n + 1)st bit of prod to 0
+        prod(to_integer(unsigned(n))) <= '0';
 
     end process;
 

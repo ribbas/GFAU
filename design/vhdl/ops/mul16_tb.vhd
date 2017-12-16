@@ -11,19 +11,17 @@ architecture behavioral of mul16_tb is
         port(
             i       : in std_logic_vector (15 downto 0);
             j       : in std_logic_vector (15 downto 0);
-            n       : in integer;
-            prod    : out std_logic_vector (15 downto 0);
-            rdy     : out std_logic
+            n       : in std_logic_vector (15 downto 0);
+            prod    : out std_logic_vector (15 downto 0)
         );
     end component;
 
     -- inputs
     signal i, j     : std_logic_vector(15 downto 0) := (others => '0');
-    signal n        : integer range 0 to 15;
+    signal n        : std_logic_vector (15 downto 0);
 
     -- outputs
     signal prod     : std_logic_vector(15 downto 0);
-    signal rdy      : std_logic;
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -36,11 +34,10 @@ begin
         i => i,
         j => j,
         n => n,
-        prod => prod,
-        rdy => rdy
+        prod => prod
     );
 
-    -- architecture statement part
+    -- clock process
     clk_proc: process
     begin
 
@@ -56,46 +53,46 @@ begin
     stim_proc: process
     begin
 
-        n <= 3;
-        report "n" & integer'image(n);
+        n <= "0000000000000011";
+        --report "n" & integer'image(n);
 
         -- hold reset state for 20 ns.
-        wait for 20 ns;
+        wait for 40 ns;
 
         -- (2 * 3) = (2 + 3) mod 7 = 5
         i <= "0000000000000010";
         j <= "0000000000000011";
 
-        -- hold reset state for 20 ns.
-        wait for 20 ns;
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
 
         -- (6 * 6) = (6 + 5) mod 7 = 4
         i <= "0000000000000110";
         j <= "0000000000000101";
 
-        -- hold reset state for 20 ns.
-        wait for 20 ns;
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
 
         -- (0 * 6) = (0 + 6) mod 7 = 6
         i <= "0000000000000000";
         j <= "0000000000000110";
 
-        -- hold reset state for 20 ns.
-        wait for 20 ns;
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
 
         -- (1 * 6) = (1 + 6) mod 7 = 0
         i <= "0000000000000110";
         j <= "0000000000000001";
 
-        -- hold reset state for 20 ns.
-        wait for 20 ns;
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
 
         -- (11 * 12) = (11 + 12) mod 15 = 8
-        n <= 4;
+        n <= "0000000000000100";
         i <= "0000000000001011";
         j <= "0000000000001100";
 
-        wait for 20 ns;
+        wait for 40 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
