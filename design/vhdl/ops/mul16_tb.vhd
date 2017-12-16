@@ -11,14 +11,14 @@ architecture behavioral of mul16_tb is
         port(
             i       : in std_logic_vector (15 downto 0);
             j       : in std_logic_vector (15 downto 0);
-            n       : in std_logic_vector (15 downto 0);
+            n       : in std_logic_vector (3 downto 0);
             prod    : out std_logic_vector (15 downto 0)
         );
     end component;
 
     -- inputs
     signal i, j     : std_logic_vector(15 downto 0) := (others => '0');
-    signal n        : std_logic_vector (15 downto 0);
+    signal n        : std_logic_vector (3 downto 0);
 
     -- outputs
     signal prod     : std_logic_vector(15 downto 0);
@@ -53,7 +53,7 @@ begin
     stim_proc: process
     begin
 
-        n <= "0000000000000011";
+        n <= "0011";
         --report "n" & integer'image(n);
 
         -- hold reset state for 20 ns.
@@ -88,7 +88,7 @@ begin
         wait for 40 ns;
 
         -- (11 * 12) = (11 + 12) mod 15 = 8
-        n <= "0000000000000100";
+        n <= "0100";
         i <= "0000000000001011";
         j <= "0000000000001100";
 

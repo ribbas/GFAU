@@ -6,7 +6,7 @@ entity mul16 is
     port(
         i       : in std_logic_vector(15 downto 0); -- first element
         j       : in std_logic_vector(15 downto 0); -- second element
-        n       : in std_logic_vector(15 downto 0); -- size of element
+        n       : in std_logic_vector(3 downto 0); -- size of element
         prod    : out std_logic_vector(15 downto 0) -- product of elements
     );
 end mul16;

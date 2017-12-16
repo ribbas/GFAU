@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity twoscmp is
     port(
         num     : in  std_logic_vector(15 downto 0);
-        n       : in std_logic_vector(15 downto 0);
+        n       : in std_logic_vector(3 downto 0);
         tcnum   : out  std_logic_vector(15 downto 0)
    );
 end twoscmp;
