@@ -1,23 +1,23 @@
-library STD;
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.std_logic_textio.all;
-use STD.textio.all;
+library std;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_textio.all;
+use std.textio.all;
 
-entity reducable16_test is
+entity reducable16_tb is
+end reducable16_tb;
 
-end reducable16_test;
+architecture test of reducable16_tb is
 
-architecture test of reducable16_test is
+    component reducable16 is
+        port (
+            inp     :   in  std_logic_vector(15 downto 0);
+            out1    :   out std_logic
+        );
+    end component;
 
-component reducable16 is
-port (
-    inp     :   in  std_logic_vector(15 downto 0);
-    out1    :   out std_logic);
-end component;
-
-signal s_inp    :   std_logic_vector(15 downto 0);
-signal s_out1   :   std_logic;
+    signal s_inp    :   std_logic_vector(15 downto 0);
+    signal s_out1   :   std_logic;
 
 begin
 
@@ -45,6 +45,7 @@ begin
 
         end loop;
         wait;
+
     end process;
+
 end test;
- 

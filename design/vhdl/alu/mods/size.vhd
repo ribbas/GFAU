@@ -18,7 +18,7 @@ begin
             "1101" when (poly_bcd(13) = '1') else  -- 13
             "1100" when (poly_bcd(12) = '1') else  -- 12
             "1011" when (poly_bcd(11) = '1') else  -- 11
-            "1011" when (poly_bcd(10) = '1') else  -- 10
+            "1010" when (poly_bcd(10) = '1') else  -- 10
             "1001" when (poly_bcd(9) = '1') else   -- 9
             "1000" when (poly_bcd(8) = '1') else   -- 8
             "0111" when (poly_bcd(7) = '1') else   -- 7
