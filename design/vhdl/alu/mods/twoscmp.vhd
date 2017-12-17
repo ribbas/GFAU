@@ -29,22 +29,13 @@ architecture structural of twoscmp is
 
 begin
 
-    process (num)
-    begin
-        for i in 15 downto 0 loop
-            inv(i) <= not num(i);
-        end loop;
-    end process;
-
-    cla16:  claadder16 port map(
+    inv <= not num;  -- invert all bits
+    cla16:  claadder16 port map(  -- add 1
                 inv,
                 one16,
                 '0',
                 tcnum,
                 carry
             );
-
-    --mask <= shift_right(unsigned(all_hi), (16 - n));
-    --tcnum <= std_logic_vector(mask);
 
 end structural;
