@@ -70,8 +70,13 @@ begin
         operand <= "0000000000000000";
         wait for 40 ns;
 
-        -- 65535
+        -- 65534
         operand <= "1111111111111110";
+
+        wait for 40 ns;
+
+        -- 65535
+        operand <= "1111111111111111";
 
         wait for 40 ns;
 

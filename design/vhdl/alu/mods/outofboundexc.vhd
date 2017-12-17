@@ -12,16 +12,8 @@ end outofboundexc;
 
 architecture structural of outofboundexc is
 
-    signal operand_mask: std_logic_vector(15 downto 0) := (others => '0');
-    signal operand_in: std_logic_vector(15 downto 0) := (others => '0');
-    signal operand_mask_wire: std_logic_vector(15 downto 0) := (others => '0');
-    signal r_Signed_R   : unsigned(15 downto 0);
-    component varmask
-        port(
-            poly_bcd    : in std_logic_vector(15 downto 0);
-            mask        : out std_logic_vector(15 downto 0)
-        );
-    end component;
+    signal or_mask: std_logic_vector(15 downto 0) := (others => '0');
+    signal xnor_mask: std_logic_vector(15 downto 0) := (others => '0');
 
     function unary_and(vect : in std_logic_vector(15 downto 0))
     return std_logic is
@@ -35,21 +27,9 @@ architecture structural of outofboundexc is
 
 begin
 
-    --operand_in <= std_logic_vector(shift_left(unsigned(operand), 1));
+    or_mask <= operand or mask;
+    xnor_mask <= or_mask xnor mask;
 
-    --mask1:  varmask port map(
-    --    operand_in,
-    --    operand_mask
-    --);
-
-    --operand_mask_wire <= mask xnor operand_mask;
-
-    --process (operand_mask, mask, operand_mask_wire)
-    --begin
-    --    for i in 15 downto 0 loop
-    --        report std_logic'image(operand_mask(i))& std_logic'image(mask(i)) & std_logic'image(operand_mask_wire(i));
-    --    end loop;
-    --end process;
-    outofbound <= unary_and(not mask or operand);
+    outofbound <= not unary_and(xnor_mask) or unary_and(not mask or operand);
 
 end structural;
