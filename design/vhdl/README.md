@@ -44,5 +44,5 @@
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/alu/mods/size.vhd)
 - [ ] Zero Exception
     - [ ] 16-bits
-- [ ] Out-of-bound Exception
-    - [ ] 16-bits
+- [x] Out-of-bound Exception
+    - [x] 16-bits

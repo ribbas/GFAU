@@ -22,16 +22,13 @@ architecture structural of twoscmp is
     end component;
 
     signal carry: std_logic; 
-    signal inv, tc: std_logic_vector(15 downto 0);
+    signal tc: std_logic_vector(15 downto 0);
     signal one16: std_logic_vector(15 downto 0) := "0000000000000001";
-    signal all_hi: std_logic_vector(15 downto 0) := "1111111111111111";
-    signal mask: unsigned(15 downto 0) := "0000000000000000";
 
 begin
 
-    inv <= not num;  -- invert all bits
     cla16:  claadder16 port map(  -- add 1
-                inv,
+                not num,
                 one16,
                 '0',
                 tcnum,

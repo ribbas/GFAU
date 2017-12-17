@@ -63,7 +63,6 @@ begin
                     c1              -- not sure yet
                 );
 
-
     cla2    :   claadder16 port map(
                     sumij,          -- sum of i and j
                     neg_one16,      -- negative 16-bit 1

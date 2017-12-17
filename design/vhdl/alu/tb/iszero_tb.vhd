@@ -1,30 +1,28 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity outofboundexc_tb is
-end outofboundexc_tb;
+entity iszero_tb is
+end iszero_tb;
 
-architecture behavioral of outofboundexc_tb is
+architecture behavioral of iszero_tb is
 
     -- component declaration for the unit under test (uut)     
-    component outofboundexc
+    component isbounded
         port(
             operand     : in  std_logic_vector(15 downto 0);
-            mask        : in  std_logic_vector(15 downto 0);
-            outofbound  : out std_logic
+            is_zero_flag: out std_logic
         );
     end component;
 
     -- inputs
-    signal operand  : std_logic_vector(15 downto 0) := (others => '0');
-    signal mask     : std_logic_vector(15 downto 0) := (others => '0');
+    signal operand      : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal outofbound   : std_logic;
+    signal is_zero_flag : std_logic;
 
     -- testbench clocks
-    constant nums   : integer := 320;
-    signal clk      : std_ulogic := '1';
+    constant nums       : integer := 320;
+    signal clk          : std_ulogic := '1';
 
 begin
 
@@ -41,18 +39,14 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: outofboundexc port map(
+    uut: isbounded port map(
         operand => operand,
-        mask => mask,
-        outofbound => outofbound
+        is_zero_flag => is_zero_flag
     );
 
     -- stimulus process
     stim_proc: process
     begin
-
-        -- 3-bit mask
-        mask <= "0000000000000111";
 
         -- 5
         operand <= "0000000000000101";
@@ -62,8 +56,8 @@ begin
         operand <= "0000000000000011";
         wait for 40 ns;
 
-        -- 7
-        operand <= "0000000000000111";
+        -- 0
+        operand <= "1111111111111111";
         wait for 40 ns;
 
         -- 0
@@ -72,11 +66,6 @@ begin
 
         -- 65534
         operand <= "1111111111111110";
-
-        wait for 40 ns;
-
-        -- 65535
-        operand <= "1111111111111111";
 
         wait for 40 ns;
 
