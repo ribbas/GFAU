@@ -13,8 +13,6 @@
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/ops/mods/mul16.vhd)
 - [x] Division
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/ops/mods/div16.vhd)
-- [ ] Logarithm
-    - [ ] 16-bits
 
 ## Control Units
 - [ ] Opcode Control Unit
