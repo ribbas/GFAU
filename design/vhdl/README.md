@@ -45,4 +45,4 @@
 - [ ] Zero Exception
     - [ ] 16-bits
 - [x] Out-of-bound Exception
-    - [x] 16-bits
+    - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/alu/mods/isbounded.vhd)
