@@ -99,6 +99,13 @@ begin
 
         wait for 40 ns;
 
+        mask <= "0111111111111111";
+        n <= "1111";
+        i <= "0111111111111110";
+        j <= "0111111111111101";
+
+        wait for 40 ns;
+
         -- stop simulation
         assert false report "simulation ended" severity failure;
 

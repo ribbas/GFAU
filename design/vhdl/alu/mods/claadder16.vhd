@@ -5,9 +5,7 @@ entity claadder16 is
     port(
         a       : in std_logic_vector (15 downto 0);
         b       : in std_logic_vector (15 downto 0);
-        cin     : in std_logic;
-        s       : out std_logic_vector (15 downto 0);
-        cout    : out std_logic
+        s       : out std_logic_vector (15 downto 0)
     );
 end claadder16;
 
@@ -30,7 +28,7 @@ begin
     cla1    :   claadder4 port map(
                     a(3 downto 0),
                     b(3 downto 0),
-                    cin,
+                    '0',
                     s(3 downto 0),
                     c1
                 );
@@ -56,7 +54,7 @@ begin
                     b(15 downto 12),
                     c3,
                     s(15 downto 12),
-                    cout
+                    open
                 );
 
 end structural;

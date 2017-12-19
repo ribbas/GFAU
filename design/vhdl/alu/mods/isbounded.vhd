@@ -13,7 +13,7 @@ end isbounded;
 architecture structural of isbounded is
 
     signal issamemask: std_logic;
-    signal outofboundw1: std_logic;
+    signal isbelowbound: std_logic;
 
     component unary_and16 is
         port(
@@ -26,7 +26,7 @@ begin
 
     unary_and1: unary_and16 port map(
             not operand or mask,
-            outofboundw0
+            issamemask
         );
 
     unary_and2: unary_and16 port map(
@@ -34,6 +34,6 @@ begin
             isbelowbound
         );
 
-    isoutofbound <= not outofboundw0 or outofboundw1;
+    isoutofbound <= not issamemask or isbelowbound;
 
 end structural;
