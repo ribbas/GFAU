@@ -53,8 +53,11 @@
     \section{Algorithms} Input polynomials will be represented as 16 bit zero-
     base arrays. For example, the polynomial \examplepoly~ will be represented
     as
-
-        \[ <0000 \ 0000 \ 0000 \ 1101> (3rd, \ 2nd, \ and \ 0th \ bits) \]
+        \begin{equation*}
+            \begin{split}
+                <0000 \ 0000 \ 0000 \ 1101> & \text{  (3rd, 2nd, and 0th bits)}
+            \end{split}
+        \end{equation*}
 
         \input{latex_mods/02-irreducible}
 
@@ -71,14 +74,10 @@
         \subsection{Arithmetic Exceptions}
 
         \input{latex_mods/08-zero}
-        \input{latex_mods/09-infinity}
+        \input{latex_mods/09-upperbound}
 
-        \begin{thebibliography}{9}
-            \bibitem{wolfdef} 
-            Weisstein, Eric W. "Finite Field." From \textit{MathWorld}--A
-            Wolfram Web Resource.
-            \texttt{http://mathworld.wolfram.com/FiniteField.html}
-        \end{thebibliography}
+        \bibliographystyle{abbrv}
+        \bibliography{wolfdef}
 
     \iffalse
     \section{Example}

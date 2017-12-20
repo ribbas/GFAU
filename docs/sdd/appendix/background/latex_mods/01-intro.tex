@@ -5,7 +5,7 @@ prime power there exists exactly one finite field. The binary field $GF(2)$ is
 the most frequently used Galois field. \cite{wolfdef}
 
     \subsection{Purpose and Scope} The Galois Field Arithmetic Unit
-    operates in fields of $q^n$, where $2 \leq n \leq 16$. This document
+    operates in fields of $q^n$, where $2 \leq n \leq 15$. This document
     will demonstrate the functionality of the unit by deriving all its
     functionality through mathematical approaches. The mathematical
     algorithms will be followed by their corresponding implementations in
@@ -16,8 +16,7 @@ the most frequently used Galois field. \cite{wolfdef}
         \subsubsection{Input Primitive Polynomials} Input primitive
         polynomials in the Galois Field are represented as:
 
-        \[ c_{n}x^{n}+\ldots+c_{2}x^{2}+c_{1}x^{1}+c_{0}x^{0}, \ where \
-        c,x \ \epsilon \ GF(2)=\{0,1\} \]
+        \[ c_{n}x^{n}+\ldots+c_{2}x^{2}+c_{1}x^{1}+c_{0}x^{0}, \text{ where } c,x \in GF(2)=\{0,1\} \]
 
         For convenience and simplicity, all the examples provided will
         refer to the following polynomial: \examplepoly~.
@@ -72,26 +71,26 @@ the most frequently used Galois field. \cite{wolfdef}
 
             \textbf{Notation} & \textbf{Definition} \\
             \hline
-            $a \ + \ b$ & Arithmetic Addition of $a$ and $b$\\
-            $a \ - \ b$ & Arithmetic Subtraction of $a$ and $b$\\
-            $a \ \cdot \ b$ & Arithmetic Multiplication of $a$ and $b$\\
+            $a \ + \ b$ & Arithmetic addition of $a$ and $b$\\
+            $a \ - \ b$ & Arithmetic subtraction of $a$ and $b$\\
+            $a \ \cdot \ b$ & Arithmetic multiplication of $a$ and $b$\\
             $a \ / \ b$ & Arithmetic Division of $a$ and $b$\\
-            $a \ \wedge \ b$ & Logical AND of $a$ and $b$\\
-            $a \ \vee \ b$ & Logical OR of $a$ and $b$\\
-            $a \ \oplus \ b$ & Logical XOR of $a$ and $b$\\
-            $a \ \ll \ b$ & Logical Shift-Left $a$ by $b$ Bits\\
-            $\overline{a}$ & Bitwise Inversion of $a$\\
-            $a_{2's}$ & Two's Complement of $a$\\
-            $|a|$ & Number of Bits in $a$\\
-            $<x_{n}, \ x_{n-1}, \ \ldots \ x_{0}>$ & Ordered Array of Size $n$
+            $a \ \wedge \ b$ & Logical conjunction of $a$ and $b$\\
+            $a \ \vee \ b$ & Logical disjunction of $a$ and $b$\\
+            $a \ \oplus \ b$ & Logical exclusive disjunction of $a$ and $b$\\
+            $\overline{a}$ & Logical complement of $a$\\
+            $a \ \ll \ b$ & Logical shift-left $a$ by $b$ Bits\\
+            $a_{2's}$ & Two's complement of $a$\\
+            $|a|$ & Number of bits in $a$\\
+            $<x_{n}, \ x_{n-1}, \ \ldots \ x_{0}>$ & Ordered array of size $n$
             \\
-            $\{x_{n}, \ x_{n-1}, \ \ldots \ x_{0}\}$ & Unordered Set of Size
+            $\{x_{n}, \ x_{n-1}, \ \ldots \ x_{0}\}$ & Unordered set of size
             $n$ \\
             $< x_{m}, \ \ \overleftarrow{0_{m-1}, \ \ldots \ 0_{n}}, x_{n-1}, \
-            \ldots \ x_{0} >$ & Zero-Padding Between the $(m-1)$th and $n$th
-            Bits \\
-            $A[i]$ & $i$th Bit of Array $A$ \\
-            $A[i:j]$ & Subarray of Array $A$ from its $i$th to $j$th index
+            \ldots \ x_{0} >$ & Zero-padding between the $(m-1)$th and $n$th
+            bits \\
+            $A[i]$ & $i$th bit of array $A$ \\
+            $A[i:j]$ & Subarray of array $A$ from its $i$th to $j$th index
             inclusive; where $i > j$ \\
 
             \end{tabular*}
