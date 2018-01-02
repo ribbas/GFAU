@@ -4,11 +4,11 @@ use ieee.numeric_std.all;
 
 entity div16 is
     port(
-        i       : in std_logic_vector (15 downto 0);  -- first element
-        j       : in std_logic_vector (15 downto 0);  -- second element
-        n       : in std_logic_vector(3 downto 0);    -- size of element
-        mask    : in std_logic_vector(15 downto 0);   -- mask register
-        quot    : out std_logic_vector (15 downto 0)  -- quotient of elements
+        i       : in std_logic_vector(15 downto 0); -- first element
+        j       : in std_logic_vector(15 downto 0); -- second element
+        n       : in std_logic_vector(3 downto 0);  -- size of element
+        mask    : in std_logic_vector(15 downto 0); -- mask register
+        quot    : out std_logic_vector(15 downto 0) -- quotient of elements
     );
 end div16;
 
