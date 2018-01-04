@@ -15,9 +15,9 @@ architecture structural of mul16 is
 
     component claadder16
         port(
-            a       : in std_logic_vector(15 downto 0);
-            b       : in std_logic_vector(15 downto 0);
-            s       : out std_logic_vector(15 downto 0)
+            a   : in std_logic_vector(15 downto 0);
+            b   : in std_logic_vector(15 downto 0);
+            s   : out std_logic_vector(15 downto 0)
         );
     end component;
  
@@ -28,18 +28,18 @@ architecture structural of mul16 is
 begin
 
     -- sum(i, j)
-    cla1    :   claadder16 port map(
-                    i,              -- first element
-                    j,              -- second element
-                    sumij           -- sum of i and j
-                );
+    cla1:   claadder16 port map(
+                i,              -- first element
+                j,              -- second element
+                sumij           -- sum of i and j
+            );
 
     -- sum(i, j, 1)
-    cla2    :   claadder16 port map(
-                    sumij,          -- sum of i and j
-                    one16,          -- 16-bit 1
-                    sumij1          -- sum of i and j and 1
-                );
+    cla2:   claadder16 port map(
+                sumij,          -- sum of i and j
+                one16,          -- 16-bit 1
+                sumij1          -- sum of i and j and 1
+            );
 
     process (sumij, sumij1)
     begin
