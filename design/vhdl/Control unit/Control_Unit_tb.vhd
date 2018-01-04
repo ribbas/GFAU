@@ -1,30 +1,4 @@
---------------------------------------------------------------------------------
--- Company: 
--- Engineer:
---
--- Create Date:   14:36:17 12/17/2017
--- Design Name:   
--- Module Name:   C:/Users/howar/Desktop/Unit_Control/Control_Unit_tb.vhd
--- Project Name:  Unit_Control
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
--- VHDL Test Bench Created by ISE for module: Control_Unit
--- 
--- Dependencies:
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
---
--- Notes: 
--- This testbench has been automatically generated using types std_logic and
--- std_logic_vector for the ports of the unit under test.  Xilinx recommends
--- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
--- simulation model.
---------------------------------------------------------------------------------
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 use IEEE.std_logic_textio.all;
@@ -108,7 +82,7 @@ signal s_nCE    :   std_logic;
 signal s_nCE2   :   std_logic;
 signal s_CE2    :   std_logic;
 signal s_nOE    :   std_logic;
-signal s_DQ     :   std_logic_vector(31 downto 0);
+signal s_DQ     :   std_logic_vector(31 downto 0):="00000000000000000000000000000000";
 signal s_MODE   :   std_logic;
 signal s_ZZ     :   std_logic;
  
@@ -131,11 +105,15 @@ BEGIN
         );
 
  
-   clock : process 
+
+    clock : process
 	 begin
 
-       s_clk <= not s_clk after 10 ns;
-
+       clk <= '0';
+		 wait for 50 ns;
+		 clk<='1';
+		 wait for 50 ns;
+		
     end process;
 
    -- Stimulus process
@@ -162,14 +140,51 @@ BEGIN
         variable counter    :   integer := 0;
 
    begin		
+	
   
   
  
   
-  wait until rising_edge (s_clk);
+  
+	
+	s_clk <= clk;
+	s_A <= "0000000000000000";
+	s_nADSP <= '1';
+	s_nCE <= '0';
+	s_nCE2 <= '0';
+	s_CE2 <= '1';
+	s_ZZ <= '0';
+	s_nADSC <= '0';
+	s_nBWE <= '0';
+	--s_DQ <= "11111111111111111111111111111111";
+	
+	
+	--mem : mem1 port map(s_A,s_clk,s_nADSP,s_nADSC,s_nADV,s_nBW,s_nBWE,s_nGW,s_nCE,s_nCE2,s_CE2,s_nOE,s_DQ,s_MODE,s_ZZ);
+		--for i in 0 to 65535 loop
+		--s_A <= std_logic_vector(to_unsigned(i,16));
+		--mem : mem1 port map(s_A,s_clk,s_nADSP,s_nADSC,s_nADV,s_nBW,s_nBWE,s_nGW,s_nCE,s_nCE2,s_CE2,s_nOE,s_DQ,s_MODE,s_ZZ);
+		
+	--end loop;
+
+
+	for i in 0 to 65535 loop
+		
+		wait until rising_edge (clk);
+		s_DQ <= std_logic_vector(to_unsigned(i,32));
+		
+		write(buf,s_DQ);
+		writeline(outfile,buf);
+	
+	end loop;
+		
+
 	
 		
+	end process;
 		
-   end process;
+		
+  
+	
+	
 
 END;
