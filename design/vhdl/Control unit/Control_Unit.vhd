@@ -2,6 +2,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
+use IEEE.std_logic_unsigned.all;
 
 
 
@@ -38,48 +39,6 @@ end Control_Unit;
 
 architecture structural of Control_Unit is
 
-	component mem1
-		port(
-				A       :   in      std_logic_vector(15 downto 0);
-        clk     :   in      std_logic;
-        nADSP   :   in      std_logic;
-        nADSC   :   in      std_logic;
-        nADV    :   in      std_logic;
-        nBW     :   in      std_logic_vector(3 downto 0);
-        nBWE    :   in      std_logic;
-        nGW     :   in      std_logic;
-        nCE     :   in      std_logic;
-        nCE2    :   in      std_logic;
-        CE2     :   in      std_logic;
-        nOE     :   in      std_logic;
-        DQ      :   inout   std_logic_vector(31 downto 0);
-        MODE    :   in      std_logic;
-        ZZ      :   in      std_logic
-
-			);
-	end component;
-	
-	component mem2
-		port(
-				A       :   in      std_logic_vector(15 downto 0);
-        clk     :   in      std_logic;
-        nADSP   :   in      std_logic;
-        nADSC   :   in      std_logic;
-        nADV    :   in      std_logic;
-        nBW     :   in      std_logic_vector(3 downto 0);
-        nBWE    :   in      std_logic;
-        nGW     :   in      std_logic;
-        nCE     :   in      std_logic;
-        nCE2    :   in      std_logic;
-        CE2     :   in      std_logic;
-        nOE     :   in      std_logic;
-        DQ      :   inout   std_logic_vector(31 downto 0);
-        MODE    :   in      std_logic;
-        ZZ      :   in      std_logic
-
-			);
-	end component;
-
 signal s_A      :   std_logic_vector(15 downto 0);
 signal s_clk    :   std_logic := '0';
 signal s_nADSP  :   std_logic;
@@ -96,10 +55,7 @@ signal s_DQ     :   std_logic_vector(31 downto 0);
 signal s_MODE   :   std_logic;
 signal s_ZZ     :   std_logic;
 
-
-
-
-
+signal counter : std_logic_vector(0 to 2):="000";
 
 begin
 
@@ -109,76 +65,104 @@ begin
 	
 	
 	
-	
-	gen_term <= '0';
-	enable <= '0';
-	
-	main : process(op,clk)
-	variable counter : STD_LOGIC := '0';
-	begin
-	
+	process(op,clk) begin
+	--variable counter : STD_LOGIC := '0';
+
 	if(rising_edge(clk))then
+	
+	
 		counter <= counter + 1;
 	end if;
 	
 	
-	case op (5 downto 3) is 
 	
-		when "000" => gen_term <= '1';
+	case op (5 downto 3) is 
 		
-		when "001" | "010" | "011" | "100" => 
-			enable <= '1';
+		
 			
-			if counter < 6 then 
-				if op(2) = '0' then 
-					sel <= '0';
+		
+		when "000" => 
+		
+		gen_term <= '1';
+		
+		m<="UUUUUUUUUUUUUUUU";
+		
+		
+		when "001" | "010" | "011" | "100" => --add,sub,mul,div
+		
+	
+			
+		if counter = "100" then -- reset counter 
+				counter <= "000";
+		end if;
+			
+			-- memory control signal for write 
+		nCE <= '0';
+		nCE2 <= '0';
+		CE2 <= '1';
+		ZZ <= '0';
+		nADSP <= '1';
+		nADSC <= '0';
+		nBWE <= '0';
+			
+			
+		enable <= '1';--enable MUX
+			gen_term <= '0';
+			
+			if counter = 1 then -- set output m1_out to converted value  
+					m1_out <= m;
+				else
+					m1_out <= "UUUUUUUUUUUUUUUU";
+				
+				end if;
+				
+			if counter = 3 then -- set ouput m2_out to conerted value
+					m2_out <= m;
+				else
+					m2_out <= "UUUUUUUUUUUUUUUU";
+				
 				end if;
 			
-			else 
-				if op(1) = '0' then 
-					sel <= '0';
-				end if;
-			end if;
+			
+			
+			
+			
+			if (counter = 0) or (counter = 1) or (counter = 4) then-- first two cycles for m1 
+			
 				
 			
+				m <= m1;
+				if op(2) = '0' then -- If m1 is in exponent form 
+					sel <= '0'; -- select mem1 to convert from exponent to polynomial 
+					
+				
+				else
+					sel <= '1'; -- select mem2 to convert from polynomial to exponent 
+					
+				end if;
+			
+			elsif (counter = 2) or (counter = 3) then -- second two cycles for m2 
+				
+				
+			
+				m <= m2;
+				if op(1) = '0' then -- If m2 is in exponent form  
+					sel <= '0'; -- select mem2 to convert from exponent to polynomial 
+				else 
+					sel <= '1'; -- select mem1 to convert from polynomial to exponent 
+				end if;
+			end if;
+			
 			
 		
-		when others => gen_term <= '0';
-
+		when others => 
+		gen_term <= '0';
+		enable <= '0';
+		m<="UUUUUUUUUUUUUUUU";
 	
 	end case;
+	
 	end process;
---	case op (5 downto 3)  is
---
---		when "000" => gen_term <= '1'; -- op[5:3] = 000 
---		when "001" => -- op[5:3] = 001, add/sub
---			if op(2) = '0' then
---				
---				--mem1 : mem1 port map(A(m1),clk(clk),nADSP(1),nADSC(0),nADV(),nBW(000),nBWE(0),nGW(0),nCE(0),nCE2(0),CE2(1),nOE(0),DQ(0),MODE(0),ZZ(0));
---
---				--enable <= '1';
---				--sel <= '0';
---			end if;
---		when "010" => -- op[5:3] = 010, mul
---			if op(2) = '1' then 
---				enable <= '1';
---				sel <= '1';
---			end if;
---		when "011" => -- op[5:3] = 011, div 
---			if op(2) = '1' then 
---				enable <= '1';
---				sel <= '1';
---			end if;
---		when "100" => -- op[5:3] = 100, log 
---			if op(2) = '1' then
---				enable <= '1';
---				sel <= '1';
---			end if;
---
---
---		when others => gen_term <= '0';
---
---	end case;
 
 
 	

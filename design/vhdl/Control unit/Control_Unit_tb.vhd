@@ -1,9 +1,6 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
-use IEEE.std_logic_textio.all;
-use IEEE.numeric_std.all;
-use STD.textio.all;
 
  
 -- Uncomment the following library declaration if using
@@ -28,30 +25,23 @@ ARCHITECTURE behavior OF Control_Unit_tb IS
          enable : OUT  std_logic;
          sel : OUT  std_logic;
          m1_out : OUT  std_logic_vector(15 downto 0);
-         m2_out : OUT  std_logic_vector(15 downto 0)
+         m2_out : OUT  std_logic_vector(15 downto 0);
+         A : OUT  std_logic_vector(15 downto 0);
+         nADSP : OUT  std_logic;
+         nADSC : OUT  std_logic;
+         nADV : OUT  std_logic;
+         nBW : OUT  std_logic_vector(3 downto 0);
+         nBWE : OUT  std_logic;
+         nGW : OUT  std_logic;
+         nCE : OUT  std_logic;
+         nCE2 : OUT  std_logic;
+         CE2 : OUT  std_logic;
+         nOE : OUT  std_logic;
+         DQ : INOUT  std_logic_vector(31 downto 0);
+         MODE : OUT  std_logic;
+         ZZ : OUT  std_logic
         );
     END COMPONENT;
-	 
-	 component mem1
-		port(
-				A       :   in      std_logic_vector(15 downto 0);
-        clk     :   in      std_logic;
-        nADSP   :   in      std_logic;
-        nADSC   :   in      std_logic;
-        nADV    :   in      std_logic;
-        nBW     :   in      std_logic_vector(3 downto 0);
-        nBWE    :   in      std_logic;
-        nGW     :   in      std_logic;
-        nCE     :   in      std_logic;
-        nCE2    :   in      std_logic;
-        CE2     :   in      std_logic;
-        nOE     :   in      std_logic;
-        DQ      :   inout   std_logic_vector(31 downto 0);
-        MODE    :   in      std_logic;
-        ZZ      :   in      std_logic
-
-			);
-	end component;
     
 
    --Inputs
@@ -62,6 +52,7 @@ ARCHITECTURE behavior OF Control_Unit_tb IS
 
 	--BiDirs
    signal m : std_logic_vector(15 downto 0);
+   signal DQ : std_logic_vector(31 downto 0);
 
  	--Outputs
    signal gen_term : std_logic;
@@ -69,24 +60,22 @@ ARCHITECTURE behavior OF Control_Unit_tb IS
    signal sel : std_logic;
    signal m1_out : std_logic_vector(15 downto 0);
    signal m2_out : std_logic_vector(15 downto 0);
-   
-	signal s_A      :   std_logic_vector(15 downto 0);
-signal s_clk    :   std_logic := '0';
-signal s_nADSP  :   std_logic;
-signal s_nADSC  :   std_logic;
-signal s_nADV   :   std_logic;
-signal s_nBW    :   std_logic_vector(3 downto 0);
-signal s_nBWE   :   std_logic;
-signal s_nGW    :   std_logic;
-signal s_nCE    :   std_logic;
-signal s_nCE2   :   std_logic;
-signal s_CE2    :   std_logic;
-signal s_nOE    :   std_logic;
-signal s_DQ     :   std_logic_vector(31 downto 0):="00000000000000000000000000000000";
-signal s_MODE   :   std_logic;
-signal s_ZZ     :   std_logic;
- 
- 
+   signal A : std_logic_vector(15 downto 0);
+   signal nADSP : std_logic;
+   signal nADSC : std_logic;
+   signal nADV : std_logic;
+   signal nBW : std_logic_vector(3 downto 0);
+   signal nBWE : std_logic;
+   signal nGW : std_logic;
+   signal nCE : std_logic;
+   signal nCE2 : std_logic;
+   signal CE2 : std_logic;
+   signal nOE : std_logic;
+   signal MODE : std_logic;
+   signal ZZ : std_logic;
+
+   -- Clock period definitions
+   --constant clk_period : time := 10 ns;
  
 BEGIN
  
@@ -101,90 +90,55 @@ BEGIN
           enable => enable,
           sel => sel,
           m1_out => m1_out,
-          m2_out => m2_out
+          m2_out => m2_out,
+          A => A,
+          nADSP => nADSP,
+          nADSC => nADSC,
+          nADV => nADV,
+          nBW => nBW,
+          nBWE => nBWE,
+          nGW => nGW,
+          nCE => nCE,
+          nCE2 => nCE2,
+          CE2 => CE2,
+          nOE => nOE,
+          DQ => DQ,
+          MODE => MODE,
+          ZZ => ZZ
         );
 
- 
-
-    clock : process
-	 begin
-
-       clk <= '0';
-		 wait for 50 ns;
-		 clk<='1';
-		 wait for 50 ns;
+   -- Clock process definitions
+   clock :process
+   begin
+		clk <= '0';
 		
-    end process;
+		wait for 50 ns;
+		clk <= '1';
+		wait for 50 ns;
+   end process;
+ 
 
    -- Stimulus process
-   test: process
-	
-        --file infile         :   text is in "input.txt";
-        file outfile        :   text is out "output.txt";
-        variable buf        :   line;
-        variable v_A        :   std_logic_vector(15 downto 0);
-        variable v_clk      :   std_logic;
-        variable v_nADSP    :   std_logic;
-        variable v_nADSC    :   std_logic;
-        variable v_nADV     :   std_logic;
-        variable v_nBW      :   std_logic_vector(3 downto 0);
-        variable v_nBWE     :   std_logic;
-        variable v_nGW      :   std_logic;
-        variable v_nCE      :   std_logic;
-        variable v_nCE2     :   std_logic;
-        variable v_CE2      :   std_logic;
-        variable v_nOE      :   std_logic;
-        variable v_DQ       :   std_logic_vector(31 downto 0);
-        variable v_MODE     :   std_logic;
-        variable v_ZZ       :   std_logic;
-        variable counter    :   integer := 0;
-
+  test: process
    begin		
 	
-  
-  
- 
-  
-  
 	
-	s_clk <= clk;
-	s_A <= "0000000000000000";
-	s_nADSP <= '1';
-	s_nCE <= '0';
-	s_nCE2 <= '0';
-	s_CE2 <= '1';
-	s_ZZ <= '0';
-	s_nADSC <= '0';
-	s_nBWE <= '0';
-	--s_DQ <= "11111111111111111111111111111111";
-	
-	
-	--mem : mem1 port map(s_A,s_clk,s_nADSP,s_nADSC,s_nADV,s_nBW,s_nBWE,s_nGW,s_nCE,s_nCE2,s_CE2,s_nOE,s_DQ,s_MODE,s_ZZ);
-		--for i in 0 to 65535 loop
-		--s_A <= std_logic_vector(to_unsigned(i,16));
-		--mem : mem1 port map(s_A,s_clk,s_nADSP,s_nADSC,s_nADV,s_nBW,s_nBWE,s_nGW,s_nCE,s_nCE2,s_CE2,s_nOE,s_DQ,s_MODE,s_ZZ);
+     --op <= "000000"; -- generate terms
+     --wait for 400 ns;	
 		
-	--end loop;
+	  op <= "001010"; -- add/sub, m1, m2 exponent  
+	  m1 <= "1010101010101010";
+	  m2 <= "0101010101010101";
+	  wait for 400 ns;
+	  
+	  op <= "010000";
+	  m1 <= "1111111111111111";
+	  m2 <= "0000000000000000";
+	  wait for 400 ns;
+	  
+		wait;
+	  
 
-
-	for i in 0 to 65535 loop
-		
-		wait until rising_edge (clk);
-		s_DQ <= std_logic_vector(to_unsigned(i,32));
-		
-		write(buf,s_DQ);
-		writeline(outfile,buf);
-	
-	end loop;
-		
-
-	
-		
-	end process;
-		
-		
-  
-	
-	
+   end process;
 
 END;
