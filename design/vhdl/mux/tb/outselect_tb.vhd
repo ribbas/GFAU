@@ -9,23 +9,26 @@ architecture behavioral of outselect_tb is
     -- component declaration for the unit under test (uut)     
     component outselect
         port( 
-			  op          : in std_logic_vector (5 downto 0);
-			  addsubop    : in std_logic_vector (15 downto 0);
-			  mulop       : in std_logic_vector (15 downto 0);
-			  divop       : in std_logic_vector (15 downto 0);
-			  logop       : in std_logic_vector (15 downto 0);
-			  sel         : out  std_logic_vector (15 downto 0);
-			  convert     : out std_logic
-	     );
+            op          : in std_logic_vector (5 downto 0);
+            addsubop    : in std_logic_vector (15 downto 0);
+            mulop       : in std_logic_vector (15 downto 0);
+            divop       : in std_logic_vector (15 downto 0);
+            logop       : in std_logic_vector (15 downto 0);
+            sel         : out std_logic_vector (15 downto 0);
+            convert     : out std_logic
+        );
     end component;
 
     -- inputs
-	 signal op: std_logic_vector(5 downto 0) := (others => '0');
-    signal addsubop, mulop, divop, logop: std_logic_vector(15 downto 0) := (others => '0');
+    signal op       : std_logic_vector(5 downto 0) := (others => '0');
+    signal  addsubop,
+            mulop,
+            divop,
+            logop   : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal sel   : std_logic_vector(15 downto 0);
-	 signal convert   : std_logic;
+    signal sel      : std_logic_vector(15 downto 0);
+    signal convert  : std_logic;
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -37,10 +40,10 @@ begin
     uut: outselect port map(
         op => op,
         addsubop => addsubop,
-		  mulop => mulop,
-		  divop => divop,
-		  logop => logop,
-		  sel => sel,
+        mulop => mulop,
+        divop => divop,
+        logop => logop,
+        sel => sel,
         convert => convert
     );
 
@@ -66,9 +69,9 @@ begin
         -- addsub
         op <= "001010";
         addsubop <= "1111111111111111";
-		  mulop    <= "0111111111111111";
-		  divop    <= "0011111111111111";
-		  logop    <= "0001111111111111";
+        mulop <= "0111111111111111";
+        divop <= "0011111111111111";
+        logop <= "0001111111111111";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;

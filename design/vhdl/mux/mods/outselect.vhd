@@ -9,7 +9,7 @@ entity outselect is
         mulop       : in std_logic_vector (15 downto 0);
         divop       : in std_logic_vector (15 downto 0);
         logop       : in std_logic_vector (15 downto 0);
-        sel         : out  std_logic_vector (15 downto 0);
+        sel         : out std_logic_vector (15 downto 0);
         convert     : out std_logic
     );
 end outselect;
@@ -18,45 +18,45 @@ architecture structural of outselect is
 
     component and3
         port(
-            in1     :   in  std_logic;
-            in2     :   in  std_logic;
-            in3     :   in  std_logic;
-            out1    :   out std_logic
+            in1     : in std_logic;
+            in2     : in std_logic;
+            in3     : in std_logic;
+            out1    : out std_logic
         );
     end component;
 
     component or2
         port(
-            in1     :   in  std_logic;
-            in2     :   in  std_logic;
-            out1    :   out std_logic
+            in1     : in std_logic;
+            in2     : in std_logic;
+            out1    : out std_logic
         );
     end component;
 
     component and4
         port(
-            in1     :   in  std_logic;
-            in2     :   in  std_logic;
-            in3     :   in  std_logic;
-            in4     :   in  std_logic;
-            out1    :   out std_logic
+            in1     : in std_logic;
+            in2     : in std_logic;
+            in3     : in std_logic;
+            in4     : in std_logic;
+            out1    : out std_logic
         );
     end component;
 
     component or4
         port(
-            in1     :   in  std_logic;
-            in2     :   in  std_logic;
-            in3     :   in  std_logic;
-            in4     :   in  std_logic;
-            out1    :   out std_logic
+            in1     : in std_logic;
+            in2     : in std_logic;
+            in3     : in std_logic;
+            in4     : in std_logic;
+            out1    : out std_logic
         );
     end component;
 
     component inverter
         port(
-            in1     :   in  std_logic;
-            out1    :   out std_logic
+            in1     : in std_logic;
+            out1    : out std_logic
         );
     end component;
 
