@@ -1,36 +1,42 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity mul16_tb is
-end mul16_tb;
+entity poly_gen_tb is
+end poly_gen_tb;
 
-architecture behavioral of mul16_tb is
+architecture behavioral of poly_gen_tb is
 
     -- component declaration for the unit under test (uut)     
-    component mul16
+    component poly_gen
         port(
-            i       : in std_logic_vector(15 downto 0);
-            j       : in std_logic_vector(15 downto 0);
-            n       : in std_logic_vector(3 downto 0);
-            prod    : out std_logic_vector(15 downto 0)
+            clk     : in std_logic;
+            rst     : in std_logic;
+            i       : in std_logic_vector (15 downto 0);
+            j       : in std_logic_vector (15 downto 0);
+            n       : in std_logic_vector (3 downto 0);
+            prod    : out std_logic_vector (15 downto 0)
         );
     end component;
 
     -- inputs
-    signal i, j     : std_logic_vector(15 downto 0) := (others => '0');
+    signal i        : std_logic_vector(15 downto 0);
+    signal j        : std_logic_vector(15 downto 0);
     signal n        : std_logic_vector (3 downto 0);
 
     -- outputs
     signal prod     : std_logic_vector(15 downto 0);
 
     -- testbench clocks
-    constant nums   : integer := 320;
-    signal clk      : std_ulogic := '1';
+    constant nums   : integer := 640;
+    signal clk      : std_logic := '1';
+    signal rst      : std_logic := '1';
 
 begin
 
     -- instantiate the unit under test (uut)
-    uut: mul16 port map(
+    uut: poly_gen port map(
+        clk => clk,
+        rst => rst,
         i => i,
         j => j,
         n => n,
@@ -56,48 +62,52 @@ begin
         n <= "0011";
 
         -- hold reset state for 20 ns.
-        wait for 40 ns;
+        wait for 20 ns;
+
+        rst <= '0';
+        -- hold reset state for 20 ns.
+        --wait for 160 ns;
 
         -- (2 * 3) = (2 + 3) mod 7 = 5
         i <= "0000000000000010";
         j <= "0000000000000011";
 
-        -- hold reset state for 40 ns.
-        wait for 40 ns;
+        -- hold reset state for 160 ns.
+        wait for 100 ns;
 
         -- (6 * 5) = (6 + 5) mod 7 = 4
         i <= "0000000000000110";
         j <= "0000000000000101";
 
-        -- hold reset state for 40 ns.
-        wait for 40 ns;
+        -- hold reset state for 100 ns.
+        wait for 100 ns;
 
         -- (0 * 6) = (0 + 6) mod 7 = 6
         i <= "0000000000000000";
         j <= "0000000000000110";
 
-        -- hold reset state for 40 ns.
-        wait for 40 ns;
+        -- hold reset state for 100 ns.
+        wait for 100 ns;
 
         -- (6 * 1) = (6 + 1) mod 7 = 0
         i <= "0000000000000110";
         j <= "0000000000000001";
 
-        -- hold reset state for 40 ns.
-        wait for 40 ns;
+        -- hold reset state for 100 ns.
+        wait for 100 ns;
 
         -- (11 * 12) = (11 + 12) mod 15 = 8
         n <= "0100";
         i <= "0000000000001011";
         j <= "0000000000001100";
 
-        wait for 40 ns;
+        wait for 100 ns;
 
         n <= "1111";
         i <= "0111111111111110";
         j <= "0111111111111110";
 
-        wait for 40 ns;
+        wait for 200 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
