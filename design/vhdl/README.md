@@ -1,7 +1,9 @@
 # Modules
 
 ## Symbols
-- [ ] Generation
+- [ ] Automatic Symbol Generator
+    - [ ] 16-bits
+- [ ] Symbol Generator
     - [ ] 16-bits
 - [x] Irreduciblity
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/gen/mods/reducable16.vhd)
@@ -18,11 +20,19 @@
 - [ ] Opcode Control Unit
     - [ ] 6-bits
 
+## Memory
+- [ ] Memory Wrapper
+    - [ ] 16-bits
+
 ## Multiplexers
+- [ ] Data Bus Width
+    - [ ] ?-bits
 - [ ] Memory Lookup
     - [ ] 16-bits
 - [x] Output Select
     - [x] [6-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/mux/mods/outselect.vhd)
+- [ ] Output Converter
+    - [ ] 16-bits
 
 ## Binary Arithmetic Logic Units
 - [x] Partial Full Adder (PFA)
@@ -36,8 +46,6 @@
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/alu/mods/varmask.vhd)
 - [x] Masked Two's Complement
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/alu/mods/maskedtwoscmp.vhd)
-- [ ] Overflow Bit Calculator
-    - [ ] 16-bits
 - [x] Degree of Polynomial
     - [x] [16-bits](https://github.com/sabbirahm3d/GFAU/blob/master/design/vhdl/alu/mods/size.vhd)
 - [ ] Zero Exception
