@@ -33,14 +33,14 @@ architecture structural of mul16 is
             sumij1of: std_logic;
 
     type state_type is (init, addij, addij1, mux);  -- define the states
-    signal state : state_type; 
+    signal state : state_type;
 
 begin
 
     adder   :   claadder16 port map(
                     in1,              -- first element
                     in2,              -- second element
-                    sum              -- sum of i and j
+                    sum               -- sum of i and j
                 );
 
     process (clk, rst) 

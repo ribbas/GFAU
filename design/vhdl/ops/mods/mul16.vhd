@@ -52,9 +52,6 @@ begin
             prod <= sumij1;         -- prod = i + j + 1
         end if;
 
-        -- set (n + 1)st bit of prod to 0
-        --prod(to_integer(unsigned(n))) <= '0';
-
     end process;
 
 end structural;

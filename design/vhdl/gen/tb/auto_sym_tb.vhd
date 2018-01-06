@@ -1,15 +1,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity auto_gen_tb is
-end auto_gen_tb;
+entity auto_sym_tb is
+end auto_sym_tb;
 
-architecture behavioral of auto_gen_tb is
+architecture behavioral of auto_sym_tb is
 
     -- component declaration for the unit under test (uut)     
-    component auto_gen
+    component auto_sym
         port(
-            clk     : in std_logic;
             rst     : in std_logic;
             data    : out std_logic_vector(15 downto 0)
         );
@@ -26,8 +25,7 @@ architecture behavioral of auto_gen_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: auto_gen port map(
-        clk => clk,
+    uut: auto_sym port map(
         rst => rst,
         data => data
     );

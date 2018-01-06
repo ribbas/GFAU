@@ -67,8 +67,6 @@ begin
             quot <= sumij1; -- quot = i + two's-cmp(j) + two's-cmp(1)
         end if;
 
-        --quot(to_integer(unsigned(n))) <= '0'; -- set (n + 1)st bit of quot to 0
-
     end process;
 
 end structural;
