@@ -11,14 +11,14 @@ architecture behavioral of gen_sym_tb is
         port(
             clk         : in std_logic;
             rst         : in std_logic;
-            n           : in std_logic_vector(3 downto 0);  -- size of element
+            msb         : in std_logic_vector(3 downto 0);  -- size of element
             nth_term    : in std_logic_vector(15 downto 0);
             cur_term    : out std_logic_vector(15 downto 0)
         );
     end component;
 
     -- inputs
-    signal n        : std_logic_vector(3 downto 0);
+    signal msb : std_logic_vector(3 downto 0);
     --signal prev_term : std_logic_vector(15 downto 0);
     signal nth_term : std_logic_vector(15 downto 0);
 
@@ -26,9 +26,9 @@ architecture behavioral of gen_sym_tb is
     signal cur_term : std_logic_vector(15 downto 0);
 
     -- testbench clocks
-    constant nums   : integer := 640;
-    signal clk      : std_logic := '1';
-    signal rst      : std_logic := '1';
+    constant nums : integer := 640;
+    signal clk : std_logic := '1';
+    signal rst : std_logic := '1';
 
 begin
 
@@ -36,7 +36,7 @@ begin
     uut: gen_sym port map(
         clk => clk,
         rst => rst,
-        n => n,
+        msb => msb,
         nth_term => nth_term,
         cur_term => cur_term
     );
@@ -57,15 +57,15 @@ begin
     stim_proc: process
     begin
 
-        n <= "0010";
-        nth_term <= "0000000000000101";
+        msb <= "0011";
+        nth_term <= "0000000000011001";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for 20 ns;
 
         rst <= '0';
 
-        wait for 1000 ns;
+        wait for 450 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

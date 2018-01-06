@@ -4,7 +4,7 @@
 if __name__ == "__main__":
 
     max_deg = 15
-    with open("primitive_polynomials_GF2.txt") as poly_file:
+    with open("raw_primitive_polynomials.txt") as poly_file:
         for line in poly_file:
             bit_vect = ["1"] + ["0"] * max_deg
             polynomial = line[:-3].replace("D^", "").split("+")
