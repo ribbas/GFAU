@@ -55,8 +55,12 @@ begin
         poly_bcd <= "0000000000001101";
         wait for 40 ns;
 
-        -- x^11 + x^2 + x^0
-        poly_bcd <= "0000100000000101";
+        -- x^4 + x^2 + x^1
+        poly_bcd <= "0000000000010110";
+        wait for 40 ns;
+
+        -- x^4 + x^3 + x^2 + x^1
+        poly_bcd <= "0000000000011110";
         wait for 40 ns;
 
         -- x^2 + x^0
