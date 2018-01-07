@@ -25,9 +25,9 @@ architecture structural of maskedtwoscmp is
 begin
 
     tc: twoscmp port map(
-            num,
-            tcnum
-        );
+        num,
+        tcnum
+    );
 
     maskedtc <= std_logic_vector(mask) and tcnum;
 

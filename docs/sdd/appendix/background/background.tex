@@ -59,7 +59,7 @@
             \end{split}
         \end{equation*}
 
-        \input{latex_mods/02-irreducible}
+        \input{latex_mods/02-primitive}
 
         \input{latex_mods/03-symbols}
         \subsection{Operations} Operations in the Galois Field Arithmetic Unit
@@ -77,105 +77,6 @@
         \input{latex_mods/09-upperbound}
 
         \bibliographystyle{abbrv}
-        \bibliography{wolfdef}
-
-    \iffalse
-    \section{Example}
-
-        \newpage
-        \subsection{Generate the addition (bitwise XOR) and multiplication
-        tables for the implementation of $GF(2)[x]$}
-
-            \begin{table}[h]
-                \def\arraystretch{1.5}
-                \caption{Addition Table for \examplepoly~ in $GF(2)[x]$}
-                \centering
-                \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c | c c c c c c
-                c c}
-
-                    $\bm{+}$ & $\bm{0}$ & $\bm{\beta^{0}}$ & $\bm{\beta^{1}}$ &
-                    $\bm{\beta^{2}}$ & $\bm{\beta^{3}}$ & $\bm{\beta^{4}}$ &
-                    $\bm{\beta^{5}}$ & $\bm{\beta^{6}}$ \\
-                    \hline
-
-                    $\bm{0}$ & $0$ & $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ &
-                    $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ \\
-
-                    $\bm{\beta^{0}}$ & $\beta^{0}$ & $0$ & $\beta^{5}$ &
-                    $\beta^{3}$ & $\beta^{2}$ & $\beta^{6}$ & $\beta^{1}$ &
-                    $\beta^{4}$ \\
-
-                    $\bm{\beta^{1}}$ & $\beta^{1}$ & $\beta^{5}$ & $0$ &
-                    $\beta^{6}$ & $\beta^{4}$ & $\beta^{3}$ & $\beta^{0}$ &
-                    $\beta^{2}$ \\
-
-                    $\bm{\beta^{2}}$ & $\beta^{2}$ & $\beta^{3}$ & $\beta^{6}$
-                    & $0$ & $\beta^{0}$ & $\beta^{5}$ & $\beta^{4}$ &
-                    $\beta^{1}$ \\
-
-                    $\bm{\beta^{3}}$ & $\beta^{3}$ & $\beta^{2}$ & $\beta^{4}$
-                    & $\beta^{0}$ & $0$ & $\beta^{1}$ & $\beta^{6}$ &
-                    $\beta^{5}$ \\
-
-                    $\bm{\beta^{4}}$ & $\beta^{4}$ & $\beta^{6}$ & $\beta^{3}$
-                    & $\beta^{5}$ & $\beta^{1}$ & $0$ & $\beta^{2}$ &
-                    $\beta^{0}$ \\
-
-                    $\bm{\beta^{5}}$ & $\beta^{5}$ & $\beta^{1}$ & $\beta^{0}$
-                    & $\beta^{4}$ & $\beta^{6}$ & $\beta^{2}$ & $0$ &
-                    $\beta^{3}$ \\
-
-                    $\bm{\beta^{6}}$ & $\beta^{6}$ & $\beta^{4}$ & $\beta^{2}$
-                    & $\beta^{1}$ & $\beta^{5}$ & $\beta^{0}$ & $\beta^{3}$ &
-                    $0$ \\
-
-                \end{tabular*}
-            \end{table}
-
-            \begin{table}[h]
-                \def\arraystretch{1.5}
-                \caption{Multiplication Table for \examplepoly~ in $GF(2)[x]$}
-                \centering
-                \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c | c c c c c c
-                c c}
-
-                    \bm{$\times$} & $\bm{0}$ & $\bm{\beta^{0}}$ &
-                    $\bm{\beta^{1}}$ & $\bm{\beta^{2}}$ & $\bm{\beta^{3}}$ &
-                    $\bm{\beta^{4}}$ & $\bm{\beta^{5}}$ & $\bm{\beta^{6}}$ \\
-                    \hline
-
-                    $\bm{0}$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ \\
-
-                    $\bm{\beta^{0}}$ & $0$ & $\beta^{0}$ & $\beta^{1}$ &
-                    $\beta^{2}$ & $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ &
-                    $\beta^{6}$ \\
-
-                    $\bm{\beta^{1}}$ & $0$ & $\beta^{1}$ & $\beta^{2}$ &
-                    $\beta^{3}$ & $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ &
-                    $\beta^{0}$ \\
-
-                    $\bm{\beta^{2}}$ & $0$ & $\beta^{2}$ & $\beta^{3}$ &
-                    $\beta^{4}$ & $\beta^{5}$ & $\beta^{6}$ & $\beta^{0}$ &
-                    $\beta^{1}$ \\
-
-                    $\bm{\beta^{3}}$ & $0$ & $\beta^{3}$ & $\beta^{4}$ &
-                    $\beta^{5}$ & $\beta^{6}$ & $\beta^{0}$ & $\beta^{1}$ &
-                    $\beta^{2}$ \\
-
-                    $\bm{\beta^{4}}$ & $0$ & $\beta^{4}$ & $\beta^{5}$ &
-                    $\beta^{6}$ & $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ &
-                    $\beta^{3}$ \\
-
-                    $\bm{\beta^{5}}$ & $0$ & $\beta^{5}$ & $\beta^{6}$ &
-                    $\beta^{0}$ & $\beta^{1}$ & $\beta^{2}$ & $\beta^{3}$ &
-                    $\beta^{4}$ \\
-
-                    $\bm{\beta^{6}}$ & $0$ & $\beta^{6}$ & $\beta^{0}$ &
-                    $\beta^{1}$ & $\beta^{2}$ & $\beta^{3}$ & $\beta^{4}$ &
-                    $\beta^{5}$ \\
-
-                \end{tabular*}
-            \end{table}
-            \fi
+        \bibliography{finitefield,primitive}
 
 \end{document}
