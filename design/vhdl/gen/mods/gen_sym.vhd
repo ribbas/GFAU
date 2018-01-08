@@ -24,11 +24,9 @@ begin
         if (rst = '1') then
 
             temp_sym <= nth_sym;
-            report "n";
 
         elsif rising_edge(clk) then  -- if there is a rising edge
 
-            report "n + 1";
             if (temp_sym(to_integer(unsigned(msb))) = '1') then
                 temp_sym <= std_logic_vector(
                                 shift_left(unsigned(temp_sym), 1)

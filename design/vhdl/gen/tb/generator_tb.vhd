@@ -85,7 +85,7 @@ begin
 
         rst <= '0';
 
-        wait for 1000 ns;
+        wait for 680 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

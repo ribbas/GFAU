@@ -59,7 +59,7 @@ architecture fsm of generator is
     signal temp_auto : std_logic_vector(15 downto 0);
     signal temp_gen : std_logic_vector(15 downto 0);
     signal counter : std_logic_vector(15 downto 0);
-    type state_type is (init, init1, ready);  -- define the states
+    type state_type is (auto_sym_state, gen_sym_state, ready);  -- define the states
     signal state: state_type;
 
 begin
@@ -95,25 +95,53 @@ begin
                 nth_sym <= poly_bcd and mask;
                 addr <= "0000000000000000";
                 data <= "0000000000000000";
+                state <= auto_sym_state;
 
             elsif rising_edge(clk) then  -- if there is a rising edge
 
-                rst_auto <= '0';
-                counter <= sum;
+            case state is
 
-                if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
+                when auto_sym_state =>
 
-                    data <= temp_auto and mask;
+                    rst_auto <= '0';
+                    counter <= sum;
 
-                else
+                    if (rst_gen = '1' and temp_auto(to_integer(unsigned(msb))) = '1') then
 
-                    report "on " & std_logic'image(rst_gen)& std_logic'image(rst_auto);
+                        rst_gen <= '0';
+
+                    end if;
+
+                    if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
+
+                        data <= temp_auto and mask;
+                        state <= auto_sym_state;
+
+                    else
+
+                        --report "on " & std_logic'image(rst_gen)& std_logic'image(rst_auto);
+                        data <= nth_sym and mask;
+                        state <= gen_sym_state;
+
+                    end if;
+
+                    addr <= counter;
+
+                when gen_sym_state =>
+
+                    counter <= sum;
+
                     data <= temp_gen and mask;
-                    rst_gen <= '0';
+                    addr <= counter;
 
-                end if;
+                    state <= gen_sym_state;
 
-                addr <= counter;
+                when others =>
+
+                    state <= auto_sym_state;
+
+            end case;
+
 
             end if;
 
