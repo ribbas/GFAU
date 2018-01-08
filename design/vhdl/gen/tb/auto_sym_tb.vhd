@@ -9,13 +9,14 @@ architecture behavioral of auto_sym_tb is
     -- component declaration for the unit under test (uut)     
     component auto_sym
         port(
-            rst     : in std_logic;
-            data    : out std_logic_vector(15 downto 0)
+            clk         : in std_logic;
+            rst         : in std_logic;
+            cur_term    : out std_logic_vector(15 downto 0)
         );
     end component;
 
     -- outputs
-    signal data : std_logic_vector(15 downto 0);
+    signal cur_term : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums   : integer := 640;
@@ -26,8 +27,9 @@ begin
 
     -- instantiate the unit under test (uut)
     uut: auto_sym port map(
+        clk => clk,
         rst => rst,
-        data => data
+        cur_term => cur_term
     );
 
     -- clock process

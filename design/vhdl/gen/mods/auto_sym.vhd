@@ -4,31 +4,33 @@ use ieee.numeric_std.all;
 
 entity auto_sym is
     port(
+        clk     : in std_logic;
         rst     : in std_logic;
-        data    : out std_logic_vector(15 downto 0)
+        sym     : out std_logic_vector(15 downto 0)
     );
 end auto_sym;
 
 architecture behavioral of auto_sym is
- 
-    signal temp_data    : std_logic_vector(15 downto 0);
+
+    signal one16 : std_logic_vector(15 downto 0) := "0000000000000001";
+    signal temp_sym : std_logic_vector(15 downto 0);
 
 begin
 
-    process (rst) 
+    process (clk, rst)
     begin
 
         if (rst = '1') then
 
-            temp_data <= "0000000000000001";
+            temp_sym <= one16;
 
-        else -- if there is a rising edge
+        elsif rising_edge(clk) then  -- if there is a rising edge
 
-            temp_data <= std_logic_vector(shift_left(unsigned(temp_data), 1));
+            temp_sym <= std_logic_vector(shift_left(unsigned(temp_sym), 1));
 
         end if;
 
-        data <= temp_data;
+        sym <= temp_sym;
 
     end process;
 

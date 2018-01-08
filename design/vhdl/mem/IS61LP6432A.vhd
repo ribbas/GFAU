@@ -3,10 +3,28 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+-- read:
+--  nCE     = 0
+--  nCE2    = 0
+--  CE2     = 1
+--  ZZ      = 0
+--  nADSP   = 0
+--  nOE     = 0
+
+-- write:
+--  nCE     = 0
+--  nCE2    = 0
+--  CE2     = 1
+--  ZZ      = 0
+--  nADSP   = 1
+--  nADSC   = 0
+--  nWRITE  = 0
+
+
 entity IS61LP6432A is
 
     port(
-        A       : in std_logic_vector(15 downto 0);
+        A       : in std_logic_vector(15 downto 0);  -- address
         clk     : in std_logic;
         nADSP   : in std_logic;
         nADSC   : in std_logic;
@@ -18,7 +36,7 @@ entity IS61LP6432A is
         nCE2    : in std_logic;
         CE2     : in std_logic;
         nOE     : in std_logic;
-        DQ      : inout std_logic_vector(31 downto 0);
+        DQ      : inout std_logic_vector(31 downto 0);  -- data
         MODE    : in std_logic;
         ZZ      : in std_logic
     );
@@ -64,19 +82,19 @@ begin
                 nADSP = '0' and nOE = '0' then
                 DQ <= MEM(to_integer(unsigned(A)));
 
-            elsif nCE = '0' and nCE2='0' and CE2='1' and ZZ = '0' and
+            elsif nCE = '0' and nCE2 = '0' and CE2 = '1' and ZZ = '0' and
                 nADSP = '0' and nOE = '1' then
                 DQ <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 
-            elsif nCE = '0' and nCE2='0' and CE2='1' and ZZ = '0' and 
+            elsif nCE = '0' and nCE2 = '0' and CE2 = '1' and ZZ = '0' and 
                 nADSP = '1' and nADSC = '0' and nWRITE = '0' then
                 MEM(to_integer(unsigned(A))) <= DQ;
 
-            elsif nCE = '0' and nCE2='0' and CE2='1' and ZZ = '0' and 
+            elsif nCE = '0' and nCE2 = '0' and CE2 = '1' and ZZ = '0' and 
                 nADSP = '1' and nADSC = '0' and nWRITE = '1' and nOE = '0' then
                 DQ <= MEM(to_integer(unsigned(A)));
 
-            elsif nCE = '0' and nCE2='0' and CE2='1' and ZZ = '0' and 
+            elsif nCE = '0' and nCE2 = '0' and CE2 = '1' and ZZ = '0' and 
                 nADSP = '1' and nADSC = '0' and nWRITE = '1' and nOE = '1' then
                 DQ <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"; 
 

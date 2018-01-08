@@ -26,7 +26,7 @@ architecture structural of mul16 is
     signal  one16   : std_logic_vector(15 downto 0) := "0000000000000001";
     signal  in1,
             in2,
-            sum    : std_logic_vector(15 downto 0);
+            sum     : std_logic_vector(15 downto 0);
     signal  sumij,
             sumij1  : std_logic_vector(15 downto 0);
     signal  sumijof,
