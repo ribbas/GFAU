@@ -1,19 +1,21 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity gen_sym_tb is
-end gen_sym_tb;
+entity gen_sym_parallel_tb is
+end gen_sym_parallel_tb;
 
-architecture behavioral of gen_sym_tb is
+architecture behavioral of gen_sym_parallel_tb is
 
     -- component declaration for the unit under test (uut)     
-    component gen_sym
+    component gen_sym_parallel
         port(
-            clk         : in std_logic;
-            rst         : in std_logic;
-            msb         : in std_logic_vector(3 downto 0);  -- size of element
-            nth_sym    : in std_logic_vector(15 downto 0);
-            sym    : out std_logic_vector(15 downto 0)
+            clk     : in std_logic;
+            rst     : in std_logic;
+            nth_sym : in std_logic_vector(15 downto 0);
+            cur_sym : in std_logic_vector(15 downto 0);
+            msb     : in std_logic_vector(3 downto 0);  -- size of element
+            sym1    : out std_logic_vector(15 downto 0);
+            sym2    : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -21,9 +23,11 @@ architecture behavioral of gen_sym_tb is
     signal msb : std_logic_vector(3 downto 0);
     --signal prev_term : std_logic_vector(15 downto 0);
     signal nth_sym : std_logic_vector(15 downto 0);
+    signal cur_sym : std_logic_vector(15 downto 0);
 
     -- outputs
-    signal sym : std_logic_vector(15 downto 0);
+    signal sym1 : std_logic_vector(15 downto 0);
+    signal sym2 : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -33,12 +37,14 @@ architecture behavioral of gen_sym_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: gen_sym port map(
+    uut: gen_sym_parallel port map(
         clk => clk,
         rst => rst,
         msb => msb,
         nth_sym => nth_sym,
-        sym => sym
+        cur_sym => sym2,
+        sym1 => sym1,
+        sym2 => sym2
     );
 
     -- clock process
@@ -64,6 +70,7 @@ begin
         wait for 20 ns;
 
         rst <= '0';
+        --cur_sym <= "0000000000011001";
 
         wait for 450 ns;
 
