@@ -59,7 +59,8 @@ architecture fsm of generator is
     signal temp_auto : std_logic_vector(15 downto 0);
     signal temp_gen : std_logic_vector(15 downto 0);
     signal counter : std_logic_vector(15 downto 0);
-    type state_type is (auto_sym_state, gen_sym_state, ready);  -- define the states
+
+    type state_type is (auto_sym_state, gen_sym_state);  -- define the states
     signal state: state_type;
 
 begin
@@ -99,53 +100,52 @@ begin
 
             elsif rising_edge(clk) then  -- if there is a rising edge
 
-            case state is
+                case state is
 
-                when auto_sym_state =>
+                    when auto_sym_state =>
 
-                    rst_auto <= '0';
-                    counter <= sum;
+                        rst_auto <= '0';
+                        counter <= sum;
 
-                    if (rst_gen = '1' and temp_auto(to_integer(unsigned(msb))) = '1') then
+                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(msb))) = '1') then
 
-                        rst_gen <= '0';
+                            rst_gen <= '0';
 
-                    end if;
+                        end if;
 
-                    if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
+                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
 
-                        data <= temp_auto and mask;
-                        state <= auto_sym_state;
+                            data <= temp_auto and mask;
+                            state <= auto_sym_state;
 
-                    else
+                        else
 
-                        --report "on " & std_logic'image(rst_gen)& std_logic'image(rst_auto);
-                        data <= nth_sym and mask;
+                            --report "on " & std_logic'image(rst_gen)& std_logic'image(rst_auto);
+                            data <= nth_sym and mask;
+                            state <= gen_sym_state;
+
+                        end if;
+
+                        addr <= counter;
+
+                    when gen_sym_state =>
+
+                        counter <= sum;
+
+                        data <= temp_gen and mask;
+                        addr <= counter;
+
                         state <= gen_sym_state;
 
-                    end if;
+                    when others =>
 
-                    addr <= counter;
+                        state <= auto_sym_state;
 
-                when gen_sym_state =>
+                end case;
 
-                    counter <= sum;
+            end if;  -- rst
 
-                    data <= temp_gen and mask;
-                    addr <= counter;
-
-                    state <= gen_sym_state;
-
-                when others =>
-
-                    state <= auto_sym_state;
-
-            end case;
-
-
-            end if;
-
-        end if;
+        end if;  -- en
 
     end process;
 

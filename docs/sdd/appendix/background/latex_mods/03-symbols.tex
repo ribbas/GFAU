@@ -170,9 +170,8 @@
         \end{minipage}
         \newpage
 
-        \paragraph{Digital Logic} \leavevmode \\ \textbf{ELABORATE MORE}
-        Generating the rest of the symbols may be implemented with a linear
-        feedback shift register (LFSR), using the following recursive equation:
+        \paragraph{Digital Logic} \leavevmode \\ Generating the rest of the
+        symbols may be implemented using the following recurrence relation:
         \begin{equation*}
             \begin{split}
                 \alpha^{n+m} & =\alpha^{n+(m-1)}\times \alpha^{n} \\
@@ -184,3 +183,26 @@
                     \end{cases}
             \end{split}
         \end{equation*}
+
+        \begin{table}[h]
+            \def\arraystretch{1.5}
+            \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
+
+            \centering
+            \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
+
+            \textbf{Element} & \textbf{Symbol} & \textbf{Polynomial Form} &
+            \textbf{Symbol} \\
+            \hline
+            $0$         & {\scriptsize [1]} & $0+0+0$               & 000\\
+            $\beta^{0}$ & 000 & $0 + 0 + \beta^{0}$                 & 001\\
+            $\beta^{1}$ & 001 & $0 + \beta^{1} + 0$                 & 010\\
+            $\beta^{2}$ & 010 & $\beta^{2} + 0 + 0$                 & 100\\
+            $\beta^{3}$ & 011 & $\beta^{2} + 0 + \beta^{0}$         & 101\\
+            $\beta^{4}$ & 100 & $\beta^{2} + \beta^{1} + \beta^{0}$ & 111\\
+            $\beta^{5}$ & 101 & $0 + \beta^{1} + \beta^{0}$         & 011\\
+            $\beta^{6}$ & 110 & $\beta^{2} + \beta^{1} + 0$         & 110\\
+            $\beta^{7}$ & {\scriptsize [2]} & $0 + 0 + \beta^{0}$   & 001\\
+            \end{tabular*}
+        \end{table}
+
