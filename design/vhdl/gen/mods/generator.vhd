@@ -54,11 +54,9 @@ architecture fsm of generator is
 
     signal rst_auto : std_logic := '1';
     signal rst_gen : std_logic := '1';
-    signal init_gen : std_logic;
 
     signal nth_sym : std_logic_vector(15 downto 0);
     signal temp_auto : std_logic_vector(15 downto 0);
-    signal temp_gen : std_logic_vector(15 downto 0);
     signal temp_gen : std_logic_vector(15 downto 0);
     signal counter : std_logic_vector(15 downto 0);
 
@@ -90,12 +88,13 @@ begin
     process (clk, en, rst, poly_bcd, mask)
     begin
 
+        nth_sym <= poly_bcd and mask;
+
         if (en = '1') then
 
             if (rst = '1') then
 
                 counter <= "0000000000000000";
-                nth_sym <= poly_bcd and mask;
                 addr <= "0000000000000000";
                 term1 <= "0000000000000000";
                 state <= auto_sym_state;

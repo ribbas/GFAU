@@ -21,7 +21,7 @@ architecture behavioral of gen_sym_parallel is
 
 begin
 
-    process (clk, rst, temp_sym1, temp_sym2, cur_sym)
+    process (clk, rst, temp_sym1, cur_sym)
     begin
 
         if (rst = '1') then
@@ -44,7 +44,7 @@ begin
 
         elsif rising_edge(clk) then  -- if there is a rising edge
 
-            report "reset" & std_logic'image(cur_sym(15));
+            report std_logic'image(cur_sym(15)) & " " & std_logic'image(cur_sym(0));
 
             if (cur_sym(to_integer(unsigned(msb))) = '1') then
                 temp_sym1 <= std_logic_vector(
