@@ -7,7 +7,7 @@ entity gen_sym is
         clk     : in std_logic;
         rst     : in std_logic;
         nth_sym : in std_logic_vector(15 downto 0);
-        msb     : in std_logic_vector(3 downto 0);  -- size of element
+        m       : in std_logic_vector(3 downto 0);  -- size of element
         sym     : out std_logic_vector(15 downto 0)
     );
 end gen_sym;
@@ -27,7 +27,7 @@ begin
 
         elsif rising_edge(clk) then  -- if there is a rising edge
 
-            if (temp_sym(to_integer(unsigned(msb))) = '1') then
+            if (temp_sym(to_integer(unsigned(m))) = '1') then
                 temp_sym <= std_logic_vector(
                                 shift_left(unsigned(temp_sym), 1)
                             ) xor nth_sym;

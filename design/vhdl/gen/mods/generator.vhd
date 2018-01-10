@@ -11,8 +11,8 @@ entity generator is
         -- polynomial data
         poly_bcd    : in std_logic_vector(15 downto 0);
         mask        : in std_logic_vector(15 downto 0);
-        msb         : in std_logic_vector(3 downto 0);
-        size        : in std_logic_vector(3 downto 0);
+        m           : in std_logic_vector(3 downto 0);
+        n           : in std_logic_vector(3 downto 0);
 
         -- memory signals
         write_en    : out std_logic;
@@ -45,7 +45,7 @@ architecture fsm of generator is
         port(
             clk     : in std_logic;
             rst     : in std_logic;
-            msb     : in std_logic_vector(3 downto 0);  -- size of element
+            m       : in std_logic_vector(3 downto 0);  -- n of element
             nth_sym : in std_logic_vector(15 downto 0);
             sym     : out std_logic_vector(15 downto 0)
         );
@@ -78,7 +78,7 @@ begin
     gen : gen_sym port map(
         clk => clk,
         rst => rst_gen,
-        msb => msb,
+        m => m,
         nth_sym => nth_sym,
         sym => temp_gen
     );
@@ -112,13 +112,13 @@ begin
                         rst_auto <= '0';
                         counter <= sum;
 
-                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(msb))) = '1') then
+                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(m))) = '1') then
 
                             rst_gen <= '0';
 
                         end if;
 
-                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
+                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(n))) = '0') then
 
                             sym1 <= temp_auto and mask;
                             state <= auto_sym_state;

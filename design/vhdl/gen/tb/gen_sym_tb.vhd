@@ -11,14 +11,14 @@ architecture behavioral of gen_sym_tb is
         port(
             clk         : in std_logic;
             rst         : in std_logic;
-            msb         : in std_logic_vector(3 downto 0);  -- size of element
+            m         : in std_logic_vector(3 downto 0);  -- size of element
             nth_sym    : in std_logic_vector(15 downto 0);
             sym    : out std_logic_vector(15 downto 0)
         );
     end component;
 
     -- inputs
-    signal msb : std_logic_vector(3 downto 0);
+    signal m : std_logic_vector(3 downto 0);
     --signal prev_term : std_logic_vector(15 downto 0);
     signal nth_sym : std_logic_vector(15 downto 0);
 
@@ -36,7 +36,7 @@ begin
     uut: gen_sym port map(
         clk => clk,
         rst => rst,
-        msb => msb,
+        m => m,
         nth_sym => nth_sym,
         sym => sym
     );
@@ -57,7 +57,7 @@ begin
     stim_proc: process
     begin
 
-        msb <= "0011";
+        m <= "0011";
         nth_sym <= "0000000000011001";
 
         -- hold reset state for 40 ns.

@@ -13,11 +13,11 @@ architecture test of generator_tb is
             en          : in std_logic;
             rst         : in std_logic;
 
-            -- register
+            -- polynomial data
             poly_bcd    : in std_logic_vector(15 downto 0);
             mask        : in std_logic_vector(15 downto 0);
-            msb         : in std_logic_vector(3 downto 0);
-            size        : in std_logic_vector(3 downto 0);
+            m           : in std_logic_vector(3 downto 0);
+            n           : in std_logic_vector(3 downto 0);
 
             -- memory signals
             write_en    : out std_logic;
@@ -30,8 +30,8 @@ architecture test of generator_tb is
     -- inputs
     signal poly_bcd : std_logic_vector(15 downto 0);
     signal mask : std_logic_vector(15 downto 0);
-    signal msb : std_logic_vector(3 downto 0);
-    signal size : std_logic_vector(3 downto 0);
+    signal m : std_logic_vector(3 downto 0);
+    signal n : std_logic_vector(3 downto 0);
 
     -- outputs
     signal write_en : std_logic;
@@ -54,8 +54,8 @@ begin
         en => en,
         poly_bcd => poly_bcd,
         mask => mask,
-        msb => msb,
-        size => size,
+        m => m,
+        n => n,
         write_en => write_en,
         addr => addr,
         sym1 => sym1,
@@ -79,8 +79,8 @@ begin
     begin
 
         mask <= "0000000000001111";
-        msb <= "0011";
-        size <= "0100";
+        m <= "0011";
+        n <= "0100";
         poly_bcd <= "0000000000011001";
 
         -- hold reset state for 40 ns.
