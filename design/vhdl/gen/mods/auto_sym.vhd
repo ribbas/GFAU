@@ -6,6 +6,7 @@ entity auto_sym is
     port(
         clk     : in std_logic;
         rst     : in std_logic;
+        en      : in std_logic;
         sym     : out std_logic_vector(15 downto 0)
     );
 end auto_sym;
@@ -17,20 +18,26 @@ architecture behavioral of auto_sym is
 
 begin
 
-    process (clk, rst)
+    process (clk, en, rst)
     begin
 
-        if (rst = '1') then
+        if (en = '1') then
 
-            temp_sym <= one16;
+            if (rst = '1') then
 
-        elsif rising_edge(clk) then  -- if there is a rising edge
+                temp_sym <= one16;
 
-            temp_sym <= std_logic_vector(shift_left(unsigned(temp_sym), 1));
+            elsif rising_edge(clk) then  -- if there is a rising edge
+
+                temp_sym <= std_logic_vector(
+                                shift_left(unsigned(temp_sym), 1)
+                            );
+
+            end if;
+
+            sym <= temp_sym;
 
         end if;
-
-        sym <= temp_sym;
 
     end process;
 

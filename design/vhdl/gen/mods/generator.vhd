@@ -17,8 +17,8 @@ entity generator is
         -- memory signals
         write_en    : out std_logic;
         addr        : out std_logic_vector(15 downto 0);
-        term1        : out std_logic_vector(15 downto 0);
-        term2        : out std_logic_vector(15 downto 0)
+        sym1        : out std_logic_vector(15 downto 0);
+        sym2        : out std_logic_vector(15 downto 0)
     );
 end generator;
 
@@ -36,6 +36,7 @@ architecture fsm of generator is
         port(
             clk     : in std_logic;
             rst     : in std_logic;
+            en      : in std_logic;
             sym     : out std_logic_vector(15 downto 0)
         );
     end component;
@@ -53,11 +54,13 @@ architecture fsm of generator is
     signal sum : std_logic_vector(15 downto 0);
 
     signal rst_auto : std_logic := '1';
+    signal en_auto : std_logic := '1';
+    signal temp_auto : std_logic_vector(15 downto 0);
+
     signal rst_gen : std_logic := '1';
+    signal temp_gen : std_logic_vector(15 downto 0);
 
     signal nth_sym : std_logic_vector(15 downto 0);
-    signal temp_auto : std_logic_vector(15 downto 0);
-    signal temp_gen : std_logic_vector(15 downto 0);
     signal counter : std_logic_vector(15 downto 0);
 
     type state_type is (auto_sym_state, gen_sym_state);  -- define the states
@@ -68,6 +71,7 @@ begin
     auto : auto_sym port map(
         clk => clk,
         rst => rst_auto,
+        en => en_auto,
         sym => temp_auto
     );
 
@@ -96,7 +100,7 @@ begin
 
                 counter <= "0000000000000000";
                 addr <= "0000000000000000";
-                term1 <= "0000000000000000";
+                sym1 <= "0000000000000000";
                 state <= auto_sym_state;
 
             elsif rising_edge(clk) then  -- if there is a rising edge
@@ -116,14 +120,15 @@ begin
 
                         if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
 
-                            term1 <= temp_auto and mask;
+                            sym1 <= temp_auto and mask;
                             state <= auto_sym_state;
 
                         else
 
                             --report "on " & std_logic'image(rst_gen)& std_logic'image(rst_auto);
-                            term1 <= nth_sym and mask;
+                            sym1 <= nth_sym and mask;
                             state <= gen_sym_state;
+                            en_auto <= '0';
 
                         end if;
 
@@ -133,7 +138,7 @@ begin
 
                         counter <= sum;
 
-                        term1 <= temp_gen and mask;
+                        sym1 <= temp_gen and mask;
                         addr <= counter;
 
                         state <= gen_sym_state;

@@ -22,8 +22,8 @@ architecture test of generator_tb is
             -- memory signals
             write_en    : out std_logic;
             addr        : out std_logic_vector(15 downto 0);
-            term1        : out std_logic_vector(15 downto 0);
-            term2        : out std_logic_vector(15 downto 0)
+            sym1        : out std_logic_vector(15 downto 0);
+            sym2        : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -36,8 +36,8 @@ architecture test of generator_tb is
     -- outputs
     signal write_en : std_logic;
     signal addr : std_logic_vector(15 downto 0);
-    signal term1 : std_logic_vector(15 downto 0);
-    signal term2 : std_logic_vector(15 downto 0);
+    signal sym1 : std_logic_vector(15 downto 0);
+    signal sym2 : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -58,8 +58,8 @@ begin
         size => size,
         write_en => write_en,
         addr => addr,
-        term1 => term1,
-        term2 => term2
+        sym1 => sym1,
+        sym2 => sym2
     );
 
     -- clock process
