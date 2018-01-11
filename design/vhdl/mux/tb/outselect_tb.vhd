@@ -9,41 +9,42 @@ architecture behavioral of outselect_tb is
     -- component declaration for the unit under test (uut)     
     component outselect
         port( 
-            op          : in std_logic_vector (5 downto 0);
-            addsubop    : in std_logic_vector (15 downto 0);
-            mulop       : in std_logic_vector (15 downto 0);
-            divop       : in std_logic_vector (15 downto 0);
-            logop       : in std_logic_vector (15 downto 0);
-            sel         : out std_logic_vector (15 downto 0);
+            opcode      : in std_logic_vector(5 downto 0);
+            addsubop    : in std_logic_vector(15 downto 0);
+            mulop       : in std_logic_vector(15 downto 0);
+            divop       : in std_logic_vector(15 downto 0);
+            logop       : in std_logic_vector(15 downto 0);
+            sel_out     : out std_logic_vector(15 downto 0);
+            memselect   : out std_logic;
             convert     : out std_logic
         );
     end component;
 
     -- inputs
-    signal op       : std_logic_vector(5 downto 0) := (others => '0');
-    signal  addsubop,
-            mulop,
-            divop,
-            logop   : std_logic_vector(15 downto 0) := (others => '0');
+    signal opcode : std_logic_vector(5 downto 0) := (others => '0');
+    signal addsubop : std_logic_vector(15 downto 0) := (others => '0');
+    signal mulop : std_logic_vector(15 downto 0) := (others => '0');
+    signal divop : std_logic_vector(15 downto 0) := (others => '0');
+    signal logop : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal sel      : std_logic_vector(15 downto 0);
-    signal convert  : std_logic;
+    signal sel_out : std_logic_vector(15 downto 0);
+    signal convert : std_logic;
 
     -- testbench clocks
-    constant nums   : integer := 320;
-    signal clk      : std_ulogic := '1';
+    constant nums : integer := 320;
+    signal clk : std_ulogic := '1';
 
 begin
 
     -- instantiate the unit under test (uut)
     uut: outselect port map(
-        op => op,
+        opcode => opcode,
         addsubop => addsubop,
         mulop => mulop,
         divop => divop,
         logop => logop,
-        sel => sel,
+        sel_out => sel_out,
         convert => convert
     );
 
@@ -67,7 +68,7 @@ begin
         wait for 40 ns;
 
         -- addsub
-        op <= "001010";
+        opcode <= "001010";
         addsubop <= "1111111111111111";
         mulop <= "0111111111111111";
         divop <= "0011111111111111";
@@ -77,25 +78,25 @@ begin
         wait for 40 ns;
 
         -- mul
-        op <= "010010";
+        opcode <= "010010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- div
-        op <= "011010";
+        opcode <= "011010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- log
-        op <= "100010";
+        opcode <= "100010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- convert
-        op <= "000111";
+        opcode <= "000111";
 
         wait for 40 ns;
 
