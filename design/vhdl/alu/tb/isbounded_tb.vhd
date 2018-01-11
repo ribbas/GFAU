@@ -11,7 +11,7 @@ architecture behavioral of isbounded_tb is
         port(
             operand     : in  std_logic_vector(15 downto 0);
             mask        : in  std_logic_vector(15 downto 0);
-            isoutofbound: out std_logic
+            is_out_bd: out std_logic
         );
     end component;
 
@@ -20,7 +20,7 @@ architecture behavioral of isbounded_tb is
     signal mask         : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal isoutofbound : std_logic;
+    signal is_out_bd : std_logic;
 
     -- testbench clocks
     constant nums       : integer := 320;
@@ -44,7 +44,7 @@ begin
     uut: isbounded port map(
         operand => operand,
         mask => mask,
-        isoutofbound => isoutofbound
+        is_out_bd => is_out_bd
     );
 
     -- stimulus process

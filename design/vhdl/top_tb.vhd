@@ -15,6 +15,8 @@ architecture behavior of top_tb is
             opcode      : in std_logic_vector(5 downto 0);
 
             ------------ TEMPORARY - JUST FOR TB ------------
+            t_rst_gen    : in std_logic;
+
             -- universal registers
             t_n         : out std_logic_vector(3 downto 0);
             t_m         : out std_logic_vector(3 downto 0);
@@ -23,7 +25,11 @@ architecture behavior of top_tb is
             -- operation outputs
             t_bitxor    : out std_logic_vector(15 downto 0);
             t_prod      : out std_logic_vector(15 downto 0);
-            t_quot      : out std_logic_vector(15 downto 0)
+            t_quot      : out std_logic_vector(15 downto 0);
+
+            -- generated terms
+            t_addr      : out std_logic_vector(15 downto 0);
+            t_sym       : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -34,6 +40,8 @@ architecture behavior of top_tb is
     signal j : std_logic_vector(15 downto 0);
 
     ------------ TEMPORARY - JUST FOR TB ------------
+    signal t_rst_gen : std_logic;
+
     -- universal registers
     signal t_n : std_logic_vector(3 downto 0);
     signal t_m : std_logic_vector(3 downto 0);
@@ -43,6 +51,9 @@ architecture behavior of top_tb is
     signal t_bitxor : std_logic_vector(15 downto 0);
     signal t_prod : std_logic_vector(15 downto 0);
     signal t_quot : std_logic_vector(15 downto 0);
+
+    signal t_addr : std_logic_vector(15 downto 0);
+    signal t_sym : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -57,12 +68,15 @@ begin
         i => i,
         j => j,
         opcode => opcode,
+        t_rst_gen => t_rst_gen,
         t_n => t_n,
         t_m => t_m,
         t_mask => t_mask,
         t_bitxor => t_bitxor,
         t_prod => t_prod,
-        t_quot => t_quot
+        t_quot => t_quot,
+        t_addr => t_addr,
+        t_sym => t_sym
     );
 
     -- clock process
@@ -80,15 +94,18 @@ begin
     -- stimulus process
     stim_proc: process
         begin    
-        -- hold reset state for 100 ns.
-        wait for 100 ns;
 
         poly_bcd <= "0000000000011001";
+        t_rst_gen <= '1';
 
         i <= "0000000000001011";
         j <= "0000000000001000";
 
-        wait for 500 ns;
+        wait for 60 ns;
+
+        t_rst_gen <= '0';
+
+        wait for 680 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

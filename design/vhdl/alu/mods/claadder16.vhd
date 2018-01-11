@@ -21,40 +21,40 @@ architecture structural of claadder16 is
         );
     end component;
  
-    signal  c1, c2, c3: std_logic;
+    signal c1, c2, c3: std_logic;
 
 begin
 
-    cla1    :   claadder4 port map(
-                    a(3 downto 0),
-                    b(3 downto 0),
-                    '0',
-                    s(3 downto 0),
-                    c1
-                );
+    cla1 : claadder4 port map(
+        a(3 downto 0),
+        b(3 downto 0),
+        '0',
+        s(3 downto 0),
+        c1
+    );
 
-    cla2    :   claadder4 port map(
-                    a(7 downto 4),
-                    b(7 downto 4),
-                    c1,
-                    s(7 downto 4),
-                    c2
-                );
+    cla2 : claadder4 port map(
+        a(7 downto 4),
+        b(7 downto 4),
+        c1,
+        s(7 downto 4),
+        c2
+    );
 
-    cla3    :   claadder4 port map(
-                    a(11 downto 8),
-                    b(11 downto 8),
-                    c2,
-                    s(11 downto 8),
-                    c3
-                );
+    cla3 : claadder4 port map(
+        a(11 downto 8),
+        b(11 downto 8),
+        c2,
+        s(11 downto 8),
+        c3
+    );
 
-    cla4    :   claadder4 port map(
-                    a(15 downto 12),
-                    b(15 downto 12),
-                    c3,
-                    s(15 downto 12),
-                    open
-                );
+    cla4 : claadder4 port map(
+        a(15 downto 12),
+        b(15 downto 12),
+        c3,
+        s(15 downto 12),
+        open
+    );
 
 end structural;

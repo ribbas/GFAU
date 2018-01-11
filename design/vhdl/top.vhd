@@ -12,6 +12,8 @@ entity top is
         opcode      : in std_logic_vector(5 downto 0);
 
         ------------ TEMPORARY - JUST FOR TB ------------
+        t_rst_gen    : in std_logic;
+
         -- universal registers
         t_n         : out std_logic_vector(3 downto 0);
         t_m         : out std_logic_vector(3 downto 0);
@@ -20,7 +22,11 @@ entity top is
         -- operation outputs
         t_bitxor    : out std_logic_vector(15 downto 0);
         t_prod      : out std_logic_vector(15 downto 0);
-        t_quot      : out std_logic_vector(15 downto 0)
+        t_quot      : out std_logic_vector(15 downto 0);
+
+        -- generated terms
+        t_addr      : out std_logic_vector(15 downto 0);
+        t_sym       : out std_logic_vector(15 downto 0)
     );
 end top;
 
@@ -138,7 +144,7 @@ architecture behavioral of top is
         );
     end component;
 
-    signal en_gen : std_logic;  -- generator enable
+    signal en_gen : std_logic := '1';  -- generator enable
     signal write_en : std_logic;  -- write enable
 
     signal rst_gen : std_logic;  -- generator enable
@@ -207,7 +213,7 @@ begin
     -- generator controller
     generator_uut: generator port map(
         clk => clk,
-        rst => rst_gen,
+        rst => t_rst_gen,
         en => en_gen,
         poly_bcd => poly_bcd,
         mask => mask,
@@ -293,5 +299,7 @@ begin
     t_bitxor <= bitxor and mask;
     t_prod <= prod and mask;
     t_quot <= quot and mask;
+    t_addr <= addr;
+    t_sym <= sym1;
 
 end behavioral;

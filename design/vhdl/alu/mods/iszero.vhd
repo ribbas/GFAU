@@ -21,8 +21,8 @@ architecture structural of iszero is
 begin
 
     unary_and1: unary_and16 port map(
-            operand,
-            is_zero_flag
-        );
+        operand,
+        is_zero_flag
+    );
 
 end structural;
