@@ -11,10 +11,16 @@ entity top is
         j           : in std_logic_vector(15 downto 0);
         opcode      : in std_logic_vector(5 downto 0);
 
-        -- TEMPORARY - JUST FOR TB
-        size_reg    : out std_logic_vector(3 downto 0);
-        msb_reg     : out std_logic_vector(3 downto 0);
-        mask_reg    : out std_logic_vector(15 downto 0)
+        ------------ TEMPORARY - JUST FOR TB ------------
+        -- universal registers
+        t_n         : out std_logic_vector(3 downto 0);
+        t_m         : out std_logic_vector(3 downto 0);
+        t_mask      : out std_logic_vector(15 downto 0);
+
+        -- operation outputs
+        t_bitxor    : out std_logic_vector(15 downto 0);
+        t_prod      : out std_logic_vector(15 downto 0);
+        t_quot      : out std_logic_vector(15 downto 0)
     );
 end top;
 
@@ -43,6 +49,15 @@ architecture behavioral of top is
         port(
             poly_bcd    : in  std_logic_vector(15 downto 0);
             mask        : out std_logic_vector(15 downto 0)
+        );
+    end component;
+
+    -- two's complement
+    component maskedtwoscmp
+        port(
+            num         : in std_logic_vector(15 downto 0);
+            mask        : in std_logic_vector(15 downto 0);
+            maskedtc    : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -96,7 +111,6 @@ architecture behavioral of top is
             i       : in std_logic_vector (15 downto 0);
             j       : in std_logic_vector (15 downto 0);
             n       : in std_logic_vector (3 downto 0);
-            mask    : in std_logic_vector (15 downto 0);
             quot    : out std_logic_vector (15 downto 0)
         );
     end component;
@@ -143,6 +157,7 @@ architecture behavioral of top is
     signal mask : std_logic_vector(15 downto 0);  -- mask
     signal m : std_logic_vector(3 downto 0);  -- msb
     signal n : std_logic_vector(3 downto 0);  -- size
+    signal neg_j : std_logic_vector(15 downto 0);  -- two's complement of j
 
     signal A : std_logic_vector(15 downto 0);
     signal nADSP : std_logic;
@@ -166,21 +181,26 @@ begin
     -- size
     size_uut: size port map(
         poly_bcd => poly_bcd,
-        n => size_reg
+        n => n
     );
 
     -- most significant bit
     msb_uut: msb port map(
         poly_bcd => poly_bcd,
-        m => msb_reg
+        m => m
     );
 
     -- mask
     varmask_uut: varmask port map(
         poly_bcd => poly_bcd,
-        mask => mask_reg
+        mask => mask
     );
 
+    maskedtwoscmp_uut: maskedtwoscmp port map(
+        num => j,
+        mask => mask,
+        maskedtc => neg_j
+    );
 
     ---------------- symbol generator ----------------
 
@@ -261,10 +281,17 @@ begin
     -- division
     div_uut: div16 port map(
         i => i,
-        j => j,
+        j => neg_j,
         n => n,
-        mask => mask,
         quot => quot
     );
+
+    ---------------- TEMPORARY OUTPUTS ----------------
+    t_m <= m;
+    t_n <= n;
+    t_mask <= mask;
+    t_bitxor <= bitxor and mask;
+    t_prod <= prod and mask;
+    t_quot <= quot and mask;
 
 end behavioral;

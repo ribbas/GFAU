@@ -13,10 +13,17 @@ architecture behavior of top_tb is
             i           : in std_logic_vector(15 downto 0);
             j           : in std_logic_vector(15 downto 0);
             opcode      : in std_logic_vector(5 downto 0);
-            -- TEMPORARY - JUST FOR TB
-            size_reg    : out std_logic_vector(3 downto 0);
-            msb_reg     : out std_logic_vector(3 downto 0);
-            mask_reg    : out std_logic_vector(15 downto 0)
+
+            ------------ TEMPORARY - JUST FOR TB ------------
+            -- universal registers
+            t_n         : out std_logic_vector(3 downto 0);
+            t_m         : out std_logic_vector(3 downto 0);
+            t_mask      : out std_logic_vector(15 downto 0);
+
+            -- operation outputs
+            t_bitxor    : out std_logic_vector(15 downto 0);
+            t_prod      : out std_logic_vector(15 downto 0);
+            t_quot      : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -26,9 +33,16 @@ architecture behavior of top_tb is
     signal i : std_logic_vector(15 downto 0);
     signal j : std_logic_vector(15 downto 0);
 
-    signal size_reg : std_logic_vector(3 downto 0);
-    signal msb_reg : std_logic_vector(3 downto 0);
-    signal mask_reg : std_logic_vector(15 downto 0);
+    ------------ TEMPORARY - JUST FOR TB ------------
+    -- universal registers
+    signal t_n : std_logic_vector(3 downto 0);
+    signal t_m : std_logic_vector(3 downto 0);
+    signal t_mask : std_logic_vector(15 downto 0);
+
+    -- operation outputs
+    signal t_bitxor : std_logic_vector(15 downto 0);
+    signal t_prod : std_logic_vector(15 downto 0);
+    signal t_quot : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -43,9 +57,12 @@ begin
         i => i,
         j => j,
         opcode => opcode,
-        size_reg => size_reg,
-        msb_reg => msb_reg,
-        mask_reg => mask_reg
+        t_n => t_n,
+        t_m => t_m,
+        t_mask => t_mask,
+        t_bitxor => t_bitxor,
+        t_prod => t_prod,
+        t_quot => t_quot
     );
 
     -- clock process
@@ -67,6 +84,9 @@ begin
         wait for 100 ns;
 
         poly_bcd <= "0000000000011001";
+
+        i <= "0000000000001011";
+        j <= "0000000000001000";
 
         wait for 500 ns;
 

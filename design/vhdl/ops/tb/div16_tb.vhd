@@ -12,7 +12,6 @@ architecture behavioral of div16_tb is
             i       : in std_logic_vector (15 downto 0);
             j       : in std_logic_vector (15 downto 0);
             n       : in std_logic_vector (3 downto 0);
-            mask    : in std_logic_vector (15 downto 0);
             quot    : out std_logic_vector (15 downto 0)
         );
     end component;
@@ -20,7 +19,6 @@ architecture behavioral of div16_tb is
     -- inputs
     signal i, j : std_logic_vector(15 downto 0) := (others => '0');
     signal n    : std_logic_vector (3 downto 0) := (others => '0');
-    signal mask : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
     signal quot : std_logic_vector(15 downto 0);
@@ -36,7 +34,6 @@ begin
         i => i,
         j => j,
         n => n,
-        mask => mask,
         quot => quot
     );
 
@@ -65,28 +62,28 @@ begin
 
         -- (2 / 3) = (2 - 3) mod 7 = 6
         i <= "0000000000000010";
-        j <= "0000000000000011";
+        j <= "0000000000000101";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 / 5) = (6 - 5) mod 7 = 1
         i <= "0000000000000110";
-        j <= "0000000000000101";
+        j <= "0000000000000011";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (0 / 6) = (0 - 6) mod 7 = 1
         i <= "0000000000000000";
-        j <= "0000000000000110";
+        j <= "0000000000000010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 / 1) = (6 - 1) mod 7 = 5
         i <= "0000000000000110";
-        j <= "0000000000000001";
+        j <= "0000000000000111";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
@@ -95,14 +92,14 @@ begin
         mask <= "0000000000001111";
         n <= "0100";
         i <= "0000000000001011";
-        j <= "0000000000001100";
+        j <= "0000000000000100";
 
         wait for 40 ns;
 
         mask <= "0111111111111111";
         n <= "1111";
         i <= "0111111111111110";
-        j <= "0111111111111101";
+        j <= "0000000000000011";
 
         wait for 40 ns;
 
