@@ -11,18 +11,16 @@ entity top is
         j           : in std_logic_vector(15 downto 0);
         opcode      : in std_logic_vector(5 downto 0);
 
+        -- operation outputs
+        FINALOUTPUT : out std_logic_vector(15 downto 0); -- selected output
+
         ------------ TEMPORARY - JUST FOR TB ------------
-        t_rst_gen    : in std_logic;
+        t_rst_gen   : in std_logic;
 
         -- universal registers
         t_n         : out std_logic_vector(3 downto 0);
         t_m         : out std_logic_vector(3 downto 0);
         t_mask      : out std_logic_vector(15 downto 0);
-
-        -- operation outputs
-        t_bitxor    : out std_logic_vector(15 downto 0);
-        t_prod      : out std_logic_vector(15 downto 0);
-        t_quot      : out std_logic_vector(15 downto 0);
 
         -- generated terms
         t_addr      : out std_logic_vector(15 downto 0);
@@ -58,15 +56,6 @@ architecture behavioral of top is
         );
     end component;
 
-    -- two's complement
-    component maskedtwoscmp
-        port(
-            num         : in std_logic_vector(15 downto 0);
-            mask        : in std_logic_vector(15 downto 0);
-            maskedtc    : out std_logic_vector(15 downto 0)
-        );
-    end component;
-
     ---------------- symbol generator ----------------
 
     -- generator controller
@@ -92,32 +81,14 @@ architecture behavioral of top is
 
     ---------------- Galois operators ----------------
 
-    -- addition / subtraction
-    component addsub16
-        port(
-            i       : in std_logic_vector (15 downto 0);
-            j       : in std_logic_vector (15 downto 0);
-            bitxor  : out std_logic_vector (15 downto 0)
-        );
-    end component;
-
-    -- multiplication
-    component mul16
-        port(
-            i       : in std_logic_vector(15 downto 0);
-            j       : in std_logic_vector(15 downto 0);
-            n       : in std_logic_vector(3 downto 0);
-            prod    : out std_logic_vector(15 downto 0)
-        );
-    end component;
-
-    -- division
-    component div16
-        port(
-            i       : in std_logic_vector (15 downto 0);
-            j       : in std_logic_vector (15 downto 0);
-            n       : in std_logic_vector (3 downto 0);
-            quot    : out std_logic_vector (15 downto 0)
+    component operators
+        port( 
+            opcode      : in std_logic_vector(5 downto 0);  -- opcode
+            i           : in std_logic_vector(15 downto 0); -- first element
+            j           : in std_logic_vector(15 downto 0); -- second element
+            n           : in std_logic_vector(3 downto 0);  -- size
+            mask        : in std_logic_vector(15 downto 0);  -- mask
+            FINALOUTPUT : out std_logic_vector(15 downto 0) -- selected output
         );
     end component;
 
@@ -154,16 +125,10 @@ architecture behavioral of top is
     signal sym1 : std_logic_vector(15 downto 0);
     signal sym2 : std_logic_vector(15 downto 0);
 
-    -- operation outputs
-    signal bitxor : std_logic_vector(15 downto 0);
-    signal prod : std_logic_vector(15 downto 0);
-    signal quot : std_logic_vector(15 downto 0);
-
     -- constants
     signal mask : std_logic_vector(15 downto 0);  -- mask
     signal m : std_logic_vector(3 downto 0);  -- msb
     signal n : std_logic_vector(3 downto 0);  -- size
-    signal neg_j : std_logic_vector(15 downto 0);  -- two's complement of j
 
     signal A : std_logic_vector(15 downto 0);
     signal nADSP : std_logic;
@@ -185,33 +150,27 @@ begin
     ---------------- universal registers and constants ----------------
 
     -- size
-    size_uut: size port map(
+    size_unit: size port map(
         poly_bcd => poly_bcd,
         n => n
     );
 
     -- most significant bit
-    msb_uut: msb port map(
+    msb_unit: msb port map(
         poly_bcd => poly_bcd,
         m => m
     );
 
     -- mask
-    varmask_uut: varmask port map(
+    varmask_unit: varmask port map(
         poly_bcd => poly_bcd,
         mask => mask
-    );
-
-    maskedtwoscmp_uut: maskedtwoscmp port map(
-        num => j,
-        mask => mask,
-        maskedtc => neg_j
     );
 
     ---------------- symbol generator ----------------
 
     -- generator controller
-    generator_uut: generator port map(
+    generator_unit: generator port map(
         clk => clk,
         rst => t_rst_gen,
         en => en_gen,
@@ -269,36 +228,19 @@ begin
 
     ---------------- Galois operators ----------------
 
-    -- addition / subtraction
-    addsub_uut: addsub16 port map(
-        i => i,
-        j => j,
-        bitxor => bitxor
-    );
-
-    -- multiplication
-    mul_uut: mul16 port map(
+    operators_unit: operators port map(
+        opcode => opcode,
         i => i,
         j => j,
         n => n,
-        prod => prod
-    );
-
-    -- division
-    div_uut: div16 port map(
-        i => i,
-        j => neg_j,
-        n => n,
-        quot => quot
+        mask => mask,
+        FINALOUTPUT => FINALOUTPUT
     );
 
     ---------------- TEMPORARY OUTPUTS ----------------
     t_m <= m;
     t_n <= n;
     t_mask <= mask;
-    t_bitxor <= bitxor and mask;
-    t_prod <= prod and mask;
-    t_quot <= quot and mask;
     t_addr <= addr;
     t_sym <= sym1;
 

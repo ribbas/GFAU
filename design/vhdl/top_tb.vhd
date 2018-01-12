@@ -14,18 +14,16 @@ architecture behavior of top_tb is
             j           : in std_logic_vector(15 downto 0);
             opcode      : in std_logic_vector(5 downto 0);
 
+            -- operation outputs
+            FINALOUTPUT : out std_logic_vector(15 downto 0); -- selected output
+
             ------------ TEMPORARY - JUST FOR TB ------------
-            t_rst_gen    : in std_logic;
+            t_rst_gen   : in std_logic;
 
             -- universal registers
             t_n         : out std_logic_vector(3 downto 0);
             t_m         : out std_logic_vector(3 downto 0);
             t_mask      : out std_logic_vector(15 downto 0);
-
-            -- operation outputs
-            t_bitxor    : out std_logic_vector(15 downto 0);
-            t_prod      : out std_logic_vector(15 downto 0);
-            t_quot      : out std_logic_vector(15 downto 0);
 
             -- generated terms
             t_addr      : out std_logic_vector(15 downto 0);
@@ -48,9 +46,7 @@ architecture behavior of top_tb is
     signal t_mask : std_logic_vector(15 downto 0);
 
     -- operation outputs
-    signal t_bitxor : std_logic_vector(15 downto 0);
-    signal t_prod : std_logic_vector(15 downto 0);
-    signal t_quot : std_logic_vector(15 downto 0);
+    signal FINALOUTPUT : std_logic_vector(15 downto 0);
 
     signal t_addr : std_logic_vector(15 downto 0);
     signal t_sym : std_logic_vector(15 downto 0);
@@ -72,9 +68,7 @@ begin
         t_n => t_n,
         t_m => t_m,
         t_mask => t_mask,
-        t_bitxor => t_bitxor,
-        t_prod => t_prod,
-        t_quot => t_quot,
+        FINALOUTPUT => FINALOUTPUT,
         t_addr => t_addr,
         t_sym => t_sym
     );
@@ -98,14 +92,44 @@ begin
         poly_bcd <= "0000000000011001";
         t_rst_gen <= '1';
 
-        i <= "0000000000001011";
-        j <= "0000000000001000";
+        i <= "0000000000001001";
+        j <= "0000000000001100";
 
         wait for 60 ns;
 
         t_rst_gen <= '0';
 
-        wait for 680 ns;
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
+
+        -- add/sub
+        opcode <= "001010";
+
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
+
+        -- mul
+        opcode <= "010010";
+
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
+
+        -- div
+        opcode <= "011010";
+
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
+
+        -- log
+        opcode <= "100010";
+
+        -- hold reset state for 40 ns.
+        wait for 40 ns;
+
+        -- convert
+        opcode <= "000111";
+
+        wait for 40 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
