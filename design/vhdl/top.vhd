@@ -5,8 +5,8 @@ use ieee.numeric_std.all;
 
 entity top is
     port(
-        clk         : in std_logic;
-        poly_bcd    : in std_logic_vector(15 downto 0);
+        CLK         : in std_logic;
+        POLYBCD     : in std_logic_vector(15 downto 0);
         i           : in std_logic_vector(15 downto 0);
         j           : in std_logic_vector(15 downto 0);
         opcode      : in std_logic_vector(5 downto 0);
@@ -73,6 +73,7 @@ architecture behavioral of top is
 
             -- memory signals
             write_en    : out std_logic;
+            rdy         : out std_logic;
             addr        : out std_logic_vector(15 downto 0);
             sym1        : out std_logic_vector(15 downto 0);
             sym2        : out std_logic_vector(15 downto 0)
@@ -116,6 +117,7 @@ architecture behavioral of top is
     end component;
 
     signal en_gen : std_logic := '1';  -- generator enable
+    signal rdy_gen : std_logic := '1';  -- generator enable
     signal write_en : std_logic;  -- write enable
 
     signal rst_gen : std_logic;  -- generator enable
@@ -151,19 +153,19 @@ begin
 
     -- size
     size_unit: size port map(
-        poly_bcd => poly_bcd,
+        poly_bcd => POLYBCD,
         n => n
     );
 
     -- most significant bit
     msb_unit: msb port map(
-        poly_bcd => poly_bcd,
+        poly_bcd => POLYBCD,
         m => m
     );
 
     -- mask
     varmask_unit: varmask port map(
-        poly_bcd => poly_bcd,
+        poly_bcd => POLYBCD,
         mask => mask
     );
 
@@ -174,11 +176,12 @@ begin
         clk => clk,
         rst => t_rst_gen,
         en => en_gen,
-        poly_bcd => poly_bcd,
+        poly_bcd => POLYBCD,
         mask => mask,
         m => m,
         n => n,
         write_en => write_en,
+        rdy => rdy_gen,
         addr => addr,
         sym1 => sym1,
         sym2 => sym2

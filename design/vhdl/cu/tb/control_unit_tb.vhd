@@ -13,6 +13,7 @@ architecture behavior of control_unit_tb is
             clk         : in std_logic;
             rst         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
+            poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
             op1         : in std_logic_vector(15 downto 0);   -- operand 1
             op2         : in std_logic_vector(15 downto 0);   -- operand 2
             en_gen      : out std_logic;  -- polynomial generator enable
@@ -26,9 +27,14 @@ architecture behavior of control_unit_tb is
     end component;
 
     signal rst : std_logic;
+
+    -- inputs
     signal opcode : std_logic_vector(5 downto 0);   -- op code
+    signal poly_bcd : std_logic_vector(15 downto 0);   -- op code
     signal op1 : std_logic_vector(15 downto 0);   -- op code
     signal op2 : std_logic_vector(15 downto 0);   -- op code
+
+    -- outputs
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(15 downto 0);  -- address in memory
     signal j : std_logic_vector(15 downto 0);  -- address in memory
@@ -48,6 +54,7 @@ begin
         clk => clk,
         rst => rst,
         opcode => opcode,
+        poly_bcd => poly_bcd,
         op1 => op1,
         op2 => op2,
         en_gen => en_gen,
@@ -78,6 +85,7 @@ begin
         --wait for 400 ns; 
 
         opcode <= "001000"; -- add/sub, m1, m2 exponent  
+        poly_bcd <= "0000000000010011";
         op1 <= "0000000000001001";
         op2 <= "0000000000001100";
         mem_data <= "0000000000000001";

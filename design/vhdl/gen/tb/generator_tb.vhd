@@ -21,6 +21,7 @@ architecture test of generator_tb is
 
             -- memory signals
             write_en    : out std_logic;
+            rdy         : out std_logic;
             addr        : out std_logic_vector(15 downto 0);
             sym1        : out std_logic_vector(15 downto 0);
             sym2        : out std_logic_vector(15 downto 0)
@@ -34,6 +35,7 @@ architecture test of generator_tb is
     signal n : std_logic_vector(3 downto 0);
 
     -- outputs
+    signal rdy : std_logic;
     signal write_en : std_logic;
     signal addr : std_logic_vector(15 downto 0);
     signal sym1 : std_logic_vector(15 downto 0);
@@ -57,6 +59,7 @@ begin
         m => m,
         n => n,
         write_en => write_en,
+        rdy => rdy,
         addr => addr,
         sym1 => sym1,
         sym2 => sym2

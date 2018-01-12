@@ -8,8 +8,8 @@ architecture behavior of top_tb is
  
     component top
         port(
-            clk         : in std_logic;
-            poly_bcd    : in std_logic_vector(15 downto 0);
+            CLK         : in std_logic;
+            POLYBCD     : in std_logic_vector(15 downto 0);
             i           : in std_logic_vector(15 downto 0);
             j           : in std_logic_vector(15 downto 0);
             opcode      : in std_logic_vector(5 downto 0);
@@ -33,7 +33,7 @@ architecture behavior of top_tb is
 
     --inputs
     signal opcode : std_logic_vector(5 downto 0) := (others => '0');
-    signal poly_bcd : std_logic_vector(15 downto 0);
+    signal POLYBCD : std_logic_vector(15 downto 0);
     signal i : std_logic_vector(15 downto 0);
     signal j : std_logic_vector(15 downto 0);
 
@@ -53,14 +53,14 @@ architecture behavior of top_tb is
 
     -- testbench clocks
     constant nums : integer := 320;
-    signal clk : std_ulogic := '1';
+    signal CLK : std_ulogic := '1';
  
 begin
  
     -- instantiate the unit under test (uut)
     uut: top port map (
-        clk => clk,
-        poly_bcd => poly_bcd,
+        CLK => CLK,
+        POLYBCD => POLYBCD,
         i => i,
         j => j,
         opcode => opcode,
@@ -78,7 +78,7 @@ begin
     begin
 
         for i in 1 to nums loop
-            clk <= not clk;
+            CLK <= not CLK;
             wait for 20 ns;
             -- clock period = 50 MHz
         end loop;
@@ -89,7 +89,7 @@ begin
     stim_proc: process
         begin    
 
-        poly_bcd <= "0000000000011001";
+        POLYBCD <= "0000000000011001";
         t_rst_gen <= '1';
 
         i <= "0000000000001001";
@@ -129,7 +129,7 @@ begin
         -- convert
         opcode <= "000111";
 
-        wait for 40 ns;
+        wait for 1000 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

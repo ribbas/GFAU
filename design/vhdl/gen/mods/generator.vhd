@@ -16,6 +16,7 @@ entity generator is
 
         -- memory signals
         write_en    : out std_logic;
+        rdy         : out std_logic;
         addr        : out std_logic_vector(15 downto 0);
         sym1        : out std_logic_vector(15 downto 0);
         sym2        : out std_logic_vector(15 downto 0)
@@ -57,6 +58,7 @@ architecture fsm of generator is
     signal en_auto : std_logic := '1';
     signal temp_auto : std_logic_vector(15 downto 0);
 
+    signal rdy_gen : std_logic := '1';
     signal rst_gen : std_logic := '1';
     signal temp_gen : std_logic_vector(15 downto 0);
 
@@ -111,6 +113,7 @@ begin
 
                         rst_auto <= '0';
                         counter <= sum;
+                        rdy <= '0';
 
                         if (rst_gen = '1' and temp_auto(to_integer(unsigned(m))) = '1') then
 
@@ -125,21 +128,34 @@ begin
 
                         else
 
-                            --report "on " & std_logic'image(rst_gen)& std_logic'image(rst_auto);
                             sym1 <= nth_sym and mask;
                             state <= gen_sym_state;
                             en_auto <= '0';
 
                         end if;
 
+                        write_en <= '1';
                         addr <= counter;
 
                     when gen_sym_state =>
 
                         counter <= sum;
 
-                        sym1 <= temp_gen and mask;
-                        addr <= counter;
+                        if (((temp_gen and mask) xnor "0000000000000001") = "1111111111111111") then
+
+                            sym1 <= "XXXXXXXXXXXXXXXX";
+                            addr <= "XXXXXXXXXXXXXXXX";
+                            rdy <= '1';
+                            write_en <= '0';
+
+                        else
+
+                            sym1 <= temp_gen and mask;
+                            addr <= counter;
+                            rdy <= '0';
+                            write_en <= '1';
+
+                        end if;
 
                         state <= gen_sym_state;
 

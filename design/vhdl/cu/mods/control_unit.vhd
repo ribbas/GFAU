@@ -9,6 +9,7 @@ entity control_unit is
         clk         : in std_logic;
         rst         : in std_logic;
         opcode      : in std_logic_vector(5 downto 0);   -- op code
+        poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
         op1         : in std_logic_vector(15 downto 0);   -- operand 1
         op2         : in std_logic_vector(15 downto 0);   -- operand 2
 

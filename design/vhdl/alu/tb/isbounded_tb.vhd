@@ -11,7 +11,7 @@ architecture behavioral of isbounded_tb is
         port(
             operand     : in  std_logic_vector(15 downto 0);
             mask        : in  std_logic_vector(15 downto 0);
-            is_out_bd: out std_logic
+            is_out_bd   : out std_logic
         );
     end component;
 
