@@ -21,7 +21,7 @@ begin
 
     process (opcode) begin
 
-        case opcode(2 downto 0) is
+        case opcode(2 downto 0) is  -- last 3 bits
 
             when "000" | "111" =>
                 convert <= '1';
@@ -31,7 +31,7 @@ begin
 
         end case;
 
-        case opcode(5 downto 3) is
+        case opcode(5 downto 3) is  -- first 3 bits
 
             when "001" =>
                 sel_out <= addsubop;
