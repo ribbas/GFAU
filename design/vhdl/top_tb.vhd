@@ -13,9 +13,9 @@ architecture behavior of top_tb is
             OPAND1      : in std_logic_vector(15 downto 0);
             OPAND2      : in std_logic_vector(15 downto 0);
             OPCODE      : in std_logic_vector(5 downto 0);
-
-            -- operation outputs
-            FINALOUTPUT : out std_logic_vector(15 downto 0); -- selected output
+            FINALOUTPUT : out std_logic_vector(15 downto 0);
+            ERRB        : out std_logic;
+            ERRZ        : out std_logic;
 
             ------------ TEMPORARY - JUST FOR TB ------------
             t_rst_gen   : in std_logic;
@@ -37,6 +37,9 @@ architecture behavior of top_tb is
     signal POLYBCD : std_logic_vector(15 downto 0);
     signal OPAND1 : std_logic_vector(15 downto 0);
     signal OPAND2 : std_logic_vector(15 downto 0);
+
+    signal ERRB : std_logic;
+    signal ERRZ : std_logic;
 
     ------------ TEMPORARY - JUST FOR TB ------------
     signal t_rst_gen : std_logic;
@@ -67,6 +70,8 @@ begin
         OPAND2 => OPAND2,
         OPCODE => OPCODE,
         FINALOUTPUT => FINALOUTPUT,
+        ERRB => ERRB,
+        ERRZ => ERRZ,
         t_rst_gen => t_rst_gen,
         t_rdy_gen => t_rdy_gen,
         t_n => t_n,

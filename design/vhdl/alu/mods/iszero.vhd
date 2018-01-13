@@ -16,6 +16,7 @@ architecture structural of iszero is
     component unary_and16 is
         port(
             in1     :   in std_logic_vector(15 downto 0);
+            in2     :   in std_logic_vector(15 downto 0);
             out1    :   out std_logic
         );
     end component;
@@ -25,8 +26,9 @@ architecture structural of iszero is
 begin
 
     unary_and1: unary_and16 port map(
-        operand,
-        uand
+        in1 => operand,
+        in2 => operand,
+        out1 => uand
     );
 
     is_zero_flag <= (uand xor mem_t) and en;

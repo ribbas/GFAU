@@ -7,6 +7,7 @@ use ieee.std_logic_1164.all;
 entity unary_and16 is
     port(
         in1     :   in std_logic_vector(15 downto 0);
+        in2     :   in std_logic_vector(15 downto 0);
         out1    :   out std_logic
     );
 end unary_and16;
@@ -25,6 +26,6 @@ architecture structural of unary_and16 is
 
 begin
 
-    out1 <= unary_and(in1);
+    out1 <= unary_and(in1 or in2);
 
 end structural;

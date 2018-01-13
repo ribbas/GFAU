@@ -47,6 +47,7 @@ architecture structural of control_unit is
 
     component iszero
         port(
+            en              : in std_logic;
             operand         : in std_logic_vector(15 downto 0);
             mem_t           : in std_logic;
             is_zero_flag    : out std_logic
@@ -54,7 +55,7 @@ architecture structural of control_unit is
     end component;
 
     signal is_out_bd : std_logic;
-    signal fake : std_logic;
+    signal en_zero : std_logic;
     signal is_zero_flag : std_logic;
     signal zero_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
     signal bd_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
@@ -72,6 +73,7 @@ begin
     );
 
     iszero_unit: iszero port map(
+        en => en_zero,
         operand => zero_opand,
         mem_t => mem_t,
         is_zero_flag => err_z
@@ -90,26 +92,30 @@ begin
                     en_gen <= '1';
 
                     -- disable memory lookup
-                    mem_t <= 'U';
+                    mem_t <= 'X';
                     mem_rd <= '0';
-                    mem_addr <= "UUUUUUUUUUUUUUUU";
+                    mem_addr <= "XXXXXXXXXXXXXXXX";
 
-                when "001" =>  -- add/sub
+                -- add/sub
+                when "001" =>
 
                     -- disable generator
                     en_gen <= '0';
+
+                    -- disable zero exception
+                    en_zero <= '0';
 
                     case state is
 
                         when op1_state =>
 
-                            -- if input1 is in element form
+                            -- if operand 1 is in element form
                             if (opcode(2) = '0') then
 
                                 -- i is converted to polynomial
                                 i <= mem_data;
 
-                            -- if input1 is in polynomial form
+                            -- if operand 1 is in polynomial form
                             else
 
                                 -- i is the user input
@@ -132,13 +138,13 @@ begin
 
                         when op2_state =>
 
-                            -- if input2 is in element form
+                            -- if operand 2 is in element form
                             if (opcode(1) = '0') then
 
                                 -- j is converted to polynomial
                                 j <= mem_data;
 
-                            -- if input1 is in polynomial form
+                            -- if operand 1 is in polynomial form
                             else
 
                                 -- i is the user input
@@ -166,22 +172,26 @@ begin
 
                     end case;
 
-                when "010" =>  -- mul
+                -- mul
+                when "010" =>
 
                     -- disable generator
                     en_gen <= '0';
+
+                    -- disable zero exception
+                    en_zero <= '0';
 
                     case state is
 
                         when op1_state =>
 
-                            -- if input1 is in polynomial form
+                            -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
 
                                 -- i is converted to element
                                 i <= mem_data;
 
-                            -- if input1 is in element form
+                            -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
@@ -204,13 +214,13 @@ begin
 
                         when op2_state =>
 
-                            -- if input2 is in polynomial form
+                            -- if operand 2 is in polynomial form
                             if (opcode(1) = '1') then
 
                                 -- j is converted to element
                                 j <= mem_data;
 
-                            -- if input1 is in element form
+                            -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
@@ -238,7 +248,8 @@ begin
 
                     end case;
 
-                when "011" =>  -- div
+                -- div
+                when "011" =>
 
                     -- disable generator
                     en_gen <= '0';
@@ -247,13 +258,13 @@ begin
 
                         when op1_state =>
 
-                            -- if input1 is in polynomial form
+                            -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
 
                                 -- i is converted to element
                                 i <= mem_data;
 
-                            -- if input1 is in element form
+                            -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
@@ -269,6 +280,9 @@ begin
                             -- mem2, addr = element, data = polynomial
                             mem_t <= '0';
 
+                            -- disable zero exception
+                            en_zero <= '0';
+
                             -- address = element
                             mem_addr <= opand2;
 
@@ -276,13 +290,16 @@ begin
 
                         when op2_state =>
 
-                            -- if input2 is in polynomial form
+                            -- if operand 2 is in polynomial form
                             if (opcode(1) = '1') then
 
                                 -- j is converted to element
                                 j <= mem_data;
 
-                            -- if input1 is in element form
+                                -- disable zero exception
+                                en_zero <= '0';
+
+                            -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
@@ -290,6 +307,9 @@ begin
                                 bd_opand <= opand2;
                                 zero_opand <= opand2;
 
+                                -- enable zero exception
+                                en_zero <= '1';
+
                             end if;
 
                             state <= op1_state;
@@ -311,7 +331,8 @@ begin
 
                     end case;
 
-                when "100" =>  -- log
+                -- log
+                when "100" =>
 
                     -- disable generator
                     en_gen <= '0';
@@ -320,19 +341,22 @@ begin
 
                         when op1_state =>
 
-                            -- if input1 is in polynomial form
+                            -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
 
                                 -- i is converted to element
                                 i <= mem_data;
 
-                            -- if input1 is in element form
+                            -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
                                 i <= opand1;
                                 bd_opand <= opand1;
                                 zero_opand <= opand1;
+
+                                -- enable zero exception
+                                en_zero <= '1';
 
                             end if;
 
@@ -343,28 +367,6 @@ begin
                             -- mem2, addr = element, data = polynomial
                             mem_t <= '0';
 
-                            -- address = element
-                            mem_addr <= opand2;
-
-                            state <= op2_state;
-
-                        when op2_state =>
-
-                            -- if input2 is in polynomial form
-                            if (opcode(1) = '1') then
-
-                                -- j is converted to element
-                                j <= mem_data;
-
-                            -- if input1 is in element form
-                            else
-
-                                -- i is the user input
-                                j <= opand2;
-                                bd_opand <= opand2;
-
-                            end if;
-
                             state <= op1_state;
 
                         when others =>
@@ -384,25 +386,27 @@ begin
 
                     end case;
 
-                when "101" =>  -- reset
+                -- reset
+                when "101" =>
 
                     -- disable generator
                     en_gen <= '0';
 
                     -- disable memory lookup
-                    mem_t <= 'U';
+                    mem_t <= 'X';
                     mem_rd <= '0';
-                    mem_addr <= "UUUUUUUUUUUUUUUU";
+                    mem_addr <= "XXXXXXXXXXXXXXXX";
 
-                when "110" =>  -- mode
+                -- mode
+                when "110" =>
 
                     -- disable generator
                     en_gen <= '0';
 
                     -- disable memory lookup
-                    mem_t <= 'U';
+                    mem_t <= 'X';
                     mem_rd <= '0';
-                    mem_addr <= "UUUUUUUUUUUUUUUU";
+                    mem_addr <= "XXXXXXXXXXXXXXXX";
 
                 when "111" =>  -- nop
 
@@ -410,9 +414,9 @@ begin
                     en_gen <= '0';
 
                     -- disable memory lookup
-                    mem_t <= 'U';
+                    mem_t <= 'X';
                     mem_rd <= '0';
-                    mem_addr <= "UUUUUUUUUUUUUUUU";
+                    mem_addr <= "XXXXXXXXXXXXXXXX";
 
                 when others =>
 
@@ -420,9 +424,9 @@ begin
                     en_gen <= '0';
 
                     -- disable memory lookup
-                    mem_t <= 'U';
+                    mem_t <= 'X';
                     mem_rd <= '0';
-                    mem_addr <= "UUUUUUUUUUUUUUUU";
+                    mem_addr <= "XXXXXXXXXXXXXXXX";
 
             end case;
 

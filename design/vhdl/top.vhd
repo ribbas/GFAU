@@ -10,7 +10,9 @@ entity top is
         OPAND1      : in std_logic_vector(15 downto 0);
         OPAND2      : in std_logic_vector(15 downto 0);
         OPCODE      : in std_logic_vector(5 downto 0);
-        FINALOUTPUT : out std_logic_vector(15 downto 0); -- selected output
+        FINALOUTPUT : out std_logic_vector(15 downto 0);
+        ERRB        : out std_logic;
+        ERRZ        : out std_logic;
 
         ------------ TEMPORARY - JUST FOR TB ------------
         t_rst_gen   : in std_logic;
@@ -61,15 +63,28 @@ architecture behavioral of top is
             rst         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
             poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
-            op1         : in std_logic_vector(15 downto 0);   -- operand 1
-            op2         : in std_logic_vector(15 downto 0);   -- operand 2
+            opand1      : in std_logic_vector(15 downto 0);   -- operand 1
+            opand2      : in std_logic_vector(15 downto 0);   -- operand 2
+
+            -- registers
+            mask        : in  std_logic_vector(15 downto 0);
+
+            -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
+
+            -- operation signals
             i           : out std_logic_vector(15 downto 0);  -- i
             j           : out std_logic_vector(15 downto 0);  -- j
-            mem_t       : out std_logic;  -- which memory
-            mem_rd      : out std_logic;  -- read signal to memory
+
+            -- memory signals
+            mem_data    : in std_logic_vector(15 downto 0);  -- mem data
             mem_addr    : out std_logic_vector(15 downto 0);  -- mem address
-            mem_data    : in std_logic_vector(15 downto 0)  -- mem data
+            mem_t       : inout std_logic;  -- which memory
+            mem_rd      : out std_logic;  -- read signal to memory
+
+            -- exceptions
+            err_b       : out std_logic;  -- out of bound exception
+            err_z       : out std_logic  -- zero exception
         );
     end component;
 
@@ -195,19 +210,22 @@ begin
     );
 
     cu: control_unit port map(
-        clk => CLK,
+        clk => clk,
         rst => t_rst_gen,
         opcode => OPCODE,
         poly_bcd => POLYBCD,
-        op1 => OPAND1,
-        op2 => OPAND2,
+        opand1 => OPAND1,
+        opand2 => OPAND2,
+        mask => mask,
         en_gen => en_gen,
         i => i,
         j => j,
         mem_t => mem_t,
         mem_rd => mem_rd,
         mem_addr => mem_addr,
-        mem_data => mem_data
+        mem_data => mem_data,
+        err_b => ERRB,
+        err_z => ERRZ
     );
 
     ---------------- symbol generator ----------------
