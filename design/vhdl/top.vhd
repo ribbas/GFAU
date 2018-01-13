@@ -14,6 +14,7 @@ entity top is
 
         ------------ TEMPORARY - JUST FOR TB ------------
         t_rst_gen   : in std_logic;
+        t_rdy_gen   : out std_logic;
 
         -- universal registers
         t_n         : out std_logic_vector(3 downto 0);
@@ -54,6 +55,24 @@ architecture behavioral of top is
         );
     end component;
 
+    component control_unit
+        port(
+            clk         : in std_logic;
+            rst         : in std_logic;
+            opcode      : in std_logic_vector(5 downto 0);   -- op code
+            poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
+            op1         : in std_logic_vector(15 downto 0);   -- operand 1
+            op2         : in std_logic_vector(15 downto 0);   -- operand 2
+            en_gen      : out std_logic;  -- polynomial generator enable
+            i           : out std_logic_vector(15 downto 0);  -- i
+            j           : out std_logic_vector(15 downto 0);  -- j
+            mem_t       : out std_logic;  -- which memory
+            mem_rd      : out std_logic;  -- read signal to memory
+            mem_addr    : out std_logic_vector(15 downto 0);  -- mem address
+            mem_data    : in std_logic_vector(15 downto 0)  -- mem data
+        );
+    end component;
+
     ---------------- symbol generator ----------------
 
     -- generator controller
@@ -71,6 +90,7 @@ architecture behavioral of top is
 
             -- memory signals
             write_en    : out std_logic;
+            rdy         : out std_logic;
             addr        : out std_logic_vector(15 downto 0);
             sym1        : out std_logic_vector(15 downto 0);
             sym2        : out std_logic_vector(15 downto 0)
@@ -113,20 +133,29 @@ architecture behavioral of top is
         );
     end component;
 
-    signal en_gen : std_logic := '1';  -- generator enable
-    signal write_en : std_logic;  -- write enable
-
-    signal rst_gen : std_logic;  -- generator enable
+    -- constants
+    signal mask : std_logic_vector(15 downto 0);  -- mask
+    signal m : std_logic_vector(3 downto 0);  -- msb
+    signal n : std_logic_vector(3 downto 0);  -- size
 
     -- generator data signals
     signal addr : std_logic_vector(15 downto 0);
     signal sym1 : std_logic_vector(15 downto 0);
     signal sym2 : std_logic_vector(15 downto 0);
 
-    -- constants
-    signal mask : std_logic_vector(15 downto 0);  -- mask
-    signal m : std_logic_vector(3 downto 0);  -- msb
-    signal n : std_logic_vector(3 downto 0);  -- size
+    -- generator control signals
+    signal en_gen : std_logic := '1';  -- enable
+    signal rst_gen : std_logic;  -- reset
+
+    signal i : std_logic_vector(15 downto 0);
+    signal j : std_logic_vector(15 downto 0);
+
+    -- memory control signals
+    signal mem_t : std_logic;  -- memory type
+    signal mem_wr : std_logic;  -- write enable
+    signal mem_rd : std_logic;  -- read enable
+    signal mem_addr : std_logic_vector(15 downto 0);  -- mask
+    signal mem_data : std_logic_vector(15 downto 0);  -- mask
 
     signal A : std_logic_vector(15 downto 0);
     signal nADSP : std_logic;
@@ -165,6 +194,21 @@ begin
         mask => mask
     );
 
+    cu: control_unit port map(
+        clk => CLK,
+        rst => t_rst_gen,
+        opcode => OPCODE,
+        poly_bcd => POLYBCD,
+        op1 => OPAND1,
+        op2 => OPAND2,
+        en_gen => en_gen,
+        i => i,
+        j => j,
+        mem_t => mem_t,
+        mem_rd => mem_rd,
+        mem_addr => mem_addr,
+        mem_data => mem_data
+    );
 
     ---------------- symbol generator ----------------
 
@@ -173,11 +217,12 @@ begin
         clk => clk,
         rst => t_rst_gen,
         en => en_gen,
+        rdy => t_rdy_gen,
         poly_bcd => POLYBCD,
         mask => mask,
         m => m,
         n => n,
-        write_en => write_en,
+        write_en => mem_wr,
         addr => addr,
         sym1 => sym1,
         sym2 => sym2
@@ -229,8 +274,8 @@ begin
 
     operators_unit: operators port map(
         opcode => OPCODE,
-        i => OPAND1,
-        j => OPAND2,
+        i => i,
+        j => j,
         n => n,
         mask => mask,
         FINALOUTPUT => FINALOUTPUT

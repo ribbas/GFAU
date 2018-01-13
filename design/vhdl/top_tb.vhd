@@ -19,6 +19,7 @@ architecture behavior of top_tb is
 
             ------------ TEMPORARY - JUST FOR TB ------------
             t_rst_gen   : in std_logic;
+            t_rdy_gen   : out std_logic;
 
             -- universal registers
             t_n         : out std_logic_vector(3 downto 0);
@@ -32,13 +33,14 @@ architecture behavior of top_tb is
     end component;
 
     --inputs
-    signal OPCODE : std_logic_vector(5 downto 0) := (others => '0');
+    signal OPCODE : std_logic_vector(5 downto 0);
     signal POLYBCD : std_logic_vector(15 downto 0);
     signal OPAND1 : std_logic_vector(15 downto 0);
     signal OPAND2 : std_logic_vector(15 downto 0);
 
     ------------ TEMPORARY - JUST FOR TB ------------
     signal t_rst_gen : std_logic;
+    signal t_rdy_gen : std_logic;
 
     -- universal registers
     signal t_n : std_logic_vector(3 downto 0);
@@ -66,6 +68,7 @@ begin
         OPCODE => OPCODE,
         FINALOUTPUT => FINALOUTPUT,
         t_rst_gen => t_rst_gen,
+        t_rdy_gen => t_rdy_gen,
         t_n => t_n,
         t_m => t_m,
         t_mask => t_mask,
@@ -103,31 +106,37 @@ begin
         wait for 40 ns;
 
         -- add/sub
-        OPCODE <= "001010";
+        OPCODE <= "001110";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for 60 ns;
 
         -- mul
-        OPCODE <= "010010";
+        OPCODE <= "010000";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for 60 ns;
 
         -- div
-        OPCODE <= "011010";
+        OPCODE <= "011000";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for 60 ns;
 
         -- log
-        OPCODE <= "100010";
+        OPCODE <= "100000";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for 60 ns;
 
         -- convert
         OPCODE <= "000111";
+
+        -- hold reset state for 40 ns.
+        wait for 160 ns;
+
+        -- convert
+        OPCODE <= "111111";
 
         wait for 1000 ns;
 

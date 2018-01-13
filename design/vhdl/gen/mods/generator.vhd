@@ -167,6 +167,12 @@ begin
 
             end if;  -- rst
 
+        else
+
+            counter <= "0000000000000000";
+            addr <= "UUUUUUUUUUUUUUUU";
+            sym1 <= "UUUUUUUUUUUUUUUU";
+
         end if;  -- en
 
     end process;
