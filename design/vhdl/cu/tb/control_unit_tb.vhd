@@ -30,7 +30,7 @@ architecture behavior of control_unit_tb is
             -- memory signals
             mem_data    : in std_logic_vector(15 downto 0);  -- memory data
             mem_addr    : out std_logic_vector(15 downto 0);  -- memory addr
-            mem_t       : out std_logic;  -- which memory
+            mem_t       : inout std_logic;  -- which memory
             mem_rd      : out std_logic;  -- read signal to memory
 
             -- exceptions
@@ -103,28 +103,29 @@ begin
 
         --wait for 400 ns; 
 
-        opcode <= "001000"; -- add/sub, m1, m2 exponent  
+        opcode <= "011100"; -- add/sub, operands in element
         mask <= "0000000000001111";
         poly_bcd <= "0000000000010011";
 
-        opand1 <= "0000000000001001";
-        opand2 <= "0000000000001100";
+        opand1 <= "0000000000011001";
+        --opand2 <= "0000000000001100";
+        opand2 <= "1111111111111111";
 
         mem_data <= "0000000000000001";
         wait for 60 ns;
 
         mem_data <= "0000000000000010";
-        wait for 40 ns;
+        --wait for 40 ns;
 
-        opcode <= "010000"; -- add/sub, m1, m2 exponent  
-        mem_data <= "0000000000000011";
+        --opcode <= "010000"; -- add/sub, m1, m2 exponent  
+        --mem_data <= "0000000000000011";
 
         wait for 100 ns;
 
         opcode <= "000111"; -- add/sub, m1, m2 exponent  
         mem_data <= "0000000000000011";
 
-        wait for 1000 ns;
+        wait for 500 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
