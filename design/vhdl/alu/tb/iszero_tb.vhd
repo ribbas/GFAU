@@ -7,22 +7,24 @@ end iszero_tb;
 architecture behavioral of iszero_tb is
 
     -- component declaration for the unit under test (uut)     
-    component isbounded
+    component iszero
         port(
-            operand     : in  std_logic_vector(15 downto 0);
-            is_zero_flag: out std_logic
+            operand         : in std_logic_vector(15 downto 0);
+            mem_t           : in std_logic;
+            is_zero_flag    : out std_logic
         );
     end component;
 
     -- inputs
-    signal operand      : std_logic_vector(15 downto 0) := (others => '0');
+    signal operand : std_logic_vector(15 downto 0);
+    signal mem_t : std_logic;
 
     -- outputs
     signal is_zero_flag : std_logic;
 
     -- testbench clocks
-    constant nums       : integer := 320;
-    signal clk          : std_ulogic := '1';
+    constant nums : integer := 320;
+    signal clk : std_ulogic := '1';
 
 begin
 
@@ -39,8 +41,9 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: isbounded port map(
+    uut: iszero port map(
         operand => operand,
+        mem_t => mem_t,
         is_zero_flag => is_zero_flag
     );
 
@@ -48,25 +51,24 @@ begin
     stim_proc: process
     begin
 
-        -- 5
-        operand <= "0000000000000101";
-        wait for 40 ns;
+        mem_t <= '0';  -- mem1
 
-        -- 3
-        operand <= "0000000000000011";
-        wait for 40 ns;
-
-        -- 0
+        -- null in mem1
         operand <= "1111111111111111";
         wait for 40 ns;
 
-        -- 0
+        -- null in mem2, 0 in mem1
         operand <= "0000000000000000";
         wait for 40 ns;
 
-        -- 65534
-        operand <= "1111111111111110";
+        mem_t <= '1';  -- mem2
 
+        -- null in mem1
+        operand <= "1111111111111111";
+        wait for 40 ns;
+
+        -- null in mem2, 0 in mem1
+        operand <= "0000000000000000";
         wait for 40 ns;
 
         -- stop simulation

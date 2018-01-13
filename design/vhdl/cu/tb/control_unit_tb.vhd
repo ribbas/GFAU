@@ -14,15 +14,28 @@ architecture behavior of control_unit_tb is
             rst         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
             poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
-            op1         : in std_logic_vector(15 downto 0);   -- operand 1
-            op2         : in std_logic_vector(15 downto 0);   -- operand 2
+            opand1      : in std_logic_vector(15 downto 0);   -- operand 1
+            opand2      : in std_logic_vector(15 downto 0);   -- operand 2
+
+            -- registers
+            mask        : in  std_logic_vector(15 downto 0);
+
+            -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
+
+            -- operation signals
             i           : out std_logic_vector(15 downto 0);  -- i
             j           : out std_logic_vector(15 downto 0);  -- j
+
+            -- memory signals
+            mem_data    : in std_logic_vector(15 downto 0);  -- memory data
+            mem_addr    : out std_logic_vector(15 downto 0);  -- memory addr
             mem_t       : out std_logic;  -- which memory
             mem_rd      : out std_logic;  -- read signal to memory
-            mem_addr    : out std_logic_vector(15 downto 0);  -- mem address
-            mem_data    : in std_logic_vector(15 downto 0)  -- mem data
+
+            -- exceptions
+            err_b       : out std_logic;  -- out of bound exception
+            err_z       : out std_logic  -- zero exception
         );
     end component;
 
@@ -31,10 +44,13 @@ architecture behavior of control_unit_tb is
     -- inputs
     signal opcode : std_logic_vector(5 downto 0);   -- op code
     signal poly_bcd : std_logic_vector(15 downto 0);   -- op code
-    signal op1 : std_logic_vector(15 downto 0);   -- op code
-    signal op2 : std_logic_vector(15 downto 0);   -- op code
+    signal opand1 : std_logic_vector(15 downto 0);   -- op code
+    signal opand2 : std_logic_vector(15 downto 0);   -- op code
+    signal mask : std_logic_vector(15 downto 0);   -- op code
 
     -- outputs
+    signal err_b : std_logic;
+    signal err_z : std_logic;
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(15 downto 0);  -- address in memory
     signal j : std_logic_vector(15 downto 0);  -- address in memory
@@ -55,15 +71,18 @@ begin
         rst => rst,
         opcode => opcode,
         poly_bcd => poly_bcd,
-        op1 => op1,
-        op2 => op2,
+        opand1 => opand1,
+        opand2 => opand2,
+        mask => mask,
         en_gen => en_gen,
         i => i,
         j => j,
         mem_t => mem_t,
         mem_rd => mem_rd,
         mem_addr => mem_addr,
-        mem_data => mem_data
+        mem_data => mem_data,
+        err_b => err_b,
+        err_z => err_z
     );
 
     -- clock process
@@ -85,9 +104,12 @@ begin
         --wait for 400 ns; 
 
         opcode <= "001000"; -- add/sub, m1, m2 exponent  
+        mask <= "0000000000001111";
         poly_bcd <= "0000000000010011";
-        op1 <= "0000000000001001";
-        op2 <= "0000000000001100";
+
+        opand1 <= "0000000000001001";
+        opand2 <= "0000000000001100";
+
         mem_data <= "0000000000000001";
         wait for 60 ns;
 

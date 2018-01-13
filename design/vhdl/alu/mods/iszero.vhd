@@ -5,6 +5,7 @@ use ieee.std_logic_1164.all;
 entity iszero is
     port(
         operand         : in std_logic_vector(15 downto 0);  -- operand
+        mem_t           : in std_logic;
         is_zero_flag    : out std_logic
    );
 end iszero;
@@ -18,11 +19,15 @@ architecture structural of iszero is
         );
     end component;
 
+    signal uand : std_logic;
+
 begin
 
     unary_and1: unary_and16 port map(
         operand,
         is_zero_flag
     );
+
+    --is_zero_flag <= uand xor mem_t;
 
 end structural;

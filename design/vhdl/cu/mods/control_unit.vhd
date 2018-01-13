@@ -10,8 +10,11 @@ entity control_unit is
         rst         : in std_logic;
         opcode      : in std_logic_vector(5 downto 0);   -- op code
         poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
-        op1         : in std_logic_vector(15 downto 0);   -- operand 1
-        op2         : in std_logic_vector(15 downto 0);   -- operand 2
+        opand1      : in std_logic_vector(15 downto 0);   -- operand 1
+        opand2      : in std_logic_vector(15 downto 0);   -- operand 2
+
+        -- registers
+        mask        : in  std_logic_vector(15 downto 0);
 
         -- generation signals
         en_gen      : out std_logic;  -- polynomial generator enable
@@ -24,17 +27,55 @@ entity control_unit is
         mem_data    : in std_logic_vector(15 downto 0);  -- data from memory
         mem_addr    : out std_logic_vector(15 downto 0);  -- address in memory
         mem_t       : out std_logic;  -- which memory - 0 for elem, 1 for poly
-        mem_rd      : out std_logic  -- read signal to memory
+        mem_rd      : out std_logic;  -- read signal to memory
+
+        -- exceptions
+        err_b       : out std_logic;  -- out of bound exception
+        err_z       : out std_logic  -- zero exception
     );
 end control_unit;
 
 architecture structural of control_unit is
+
+    component isbounded
+        port(
+            operand     : in  std_logic_vector(15 downto 0);
+            mask        : in  std_logic_vector(15 downto 0);
+            is_out_bd   : out std_logic
+        );
+    end component;
+
+    component iszero
+        port(
+            operand         : in std_logic_vector(15 downto 0);
+            mem_t           : in std_logic;
+            is_zero_flag    : out std_logic
+        );
+    end component;
+
+    signal is_out_bd : std_logic;
+    signal fake : std_logic;
+    signal is_zero_flag : std_logic;
+    signal zero_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
+    signal bd_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
 
     type state_type is (op1_state, op2_state);  -- define the states
     signal state : state_type;
     signal temp_data : std_logic_vector(15 downto 0);  -- mem_data from memory
 
 begin
+
+    isbounded_unit: isbounded port map(
+        operand => bd_opand,
+        mask => mask,
+        is_out_bd => err_b
+    );
+
+    iszero_unit: iszero port map(
+        operand => zero_opand,
+        mem_t => fake,
+        is_zero_flag => err_z
+    );
 
     process (clk, opcode) begin
 
@@ -72,7 +113,8 @@ begin
                             else
 
                                 -- i is the user input
-                                i <= op1;
+                                i <= opand1;
+                                bd_opand <= opand1;
 
                             end if;
 
@@ -84,7 +126,7 @@ begin
                             mem_t <= '1';
 
                             -- address = element
-                            mem_addr <= op2;
+                            mem_addr <= opand2;
 
                             state <= op2_state;
 
@@ -100,7 +142,8 @@ begin
                             else
 
                                 -- i is the user input
-                                j <= op2;
+                                j <= opand2;
+                                bd_opand <= opand2;
 
                             end if;
 
@@ -116,7 +159,7 @@ begin
                             mem_t <= '1';
 
                             -- address = element
-                            mem_addr <= op1;
+                            mem_addr <= opand1;
 
                             -- state initializes to op1_state
                             state <= op1_state;
@@ -142,7 +185,8 @@ begin
                             else
 
                                 -- i is the user input
-                                i <= op1;
+                                i <= opand1;
+                                bd_opand <= opand1;
 
                             end if;
 
@@ -154,7 +198,7 @@ begin
                             mem_t <= '0';
 
                             -- address = element
-                            mem_addr <= op2;
+                            mem_addr <= opand2;
 
                             state <= op2_state;
 
@@ -170,7 +214,8 @@ begin
                             else
 
                                 -- i is the user input
-                                j <= op2;
+                                j <= opand2;
+                                bd_opand <= opand2;
 
                             end if;
 
@@ -186,7 +231,7 @@ begin
                             mem_t <= '0';
 
                             -- address = polynomial
-                            mem_addr <= op1;
+                            mem_addr <= opand1;
 
                             -- state initializes to op1_state
                             state <= op1_state;
