@@ -7,11 +7,9 @@ entity top is
     port(
         CLK         : in std_logic;
         POLYBCD     : in std_logic_vector(15 downto 0);
-        i           : in std_logic_vector(15 downto 0);
-        j           : in std_logic_vector(15 downto 0);
-        opcode      : in std_logic_vector(5 downto 0);
-
-        -- operation outputs
+        OPAND1      : in std_logic_vector(15 downto 0);
+        OPAND2      : in std_logic_vector(15 downto 0);
+        OPCODE      : in std_logic_vector(5 downto 0);
         FINALOUTPUT : out std_logic_vector(15 downto 0); -- selected output
 
         ------------ TEMPORARY - JUST FOR TB ------------
@@ -73,7 +71,6 @@ architecture behavioral of top is
 
             -- memory signals
             write_en    : out std_logic;
-            rdy         : out std_logic;
             addr        : out std_logic_vector(15 downto 0);
             sym1        : out std_logic_vector(15 downto 0);
             sym2        : out std_logic_vector(15 downto 0)
@@ -117,7 +114,6 @@ architecture behavioral of top is
     end component;
 
     signal en_gen : std_logic := '1';  -- generator enable
-    signal rdy_gen : std_logic := '1';  -- generator enable
     signal write_en : std_logic;  -- write enable
 
     signal rst_gen : std_logic;  -- generator enable
@@ -169,6 +165,7 @@ begin
         mask => mask
     );
 
+
     ---------------- symbol generator ----------------
 
     -- generator controller
@@ -181,7 +178,6 @@ begin
         m => m,
         n => n,
         write_en => write_en,
-        rdy => rdy_gen,
         addr => addr,
         sym1 => sym1,
         sym2 => sym2
@@ -193,7 +189,7 @@ begin
     -- element memory
     mem1 : IS61LP6432A port map(
         A => A,
-        clk => clk,
+        clk => CLK,
         nADSP => nADSP,
         nADSC => nADSC,
         nADV => nADV,
@@ -212,7 +208,7 @@ begin
     -- polynomial memory
     mem2 : IS61LP6432A port map(
         A => A,
-        clk => clk,
+        clk => CLK,
         nADSP => nADSP,
         nADSC => nADSC,
         nADV => nADV,
@@ -232,13 +228,14 @@ begin
     ---------------- Galois operators ----------------
 
     operators_unit: operators port map(
-        opcode => opcode,
-        i => i,
-        j => j,
+        opcode => OPCODE,
+        i => OPAND1,
+        j => OPAND2,
         n => n,
         mask => mask,
         FINALOUTPUT => FINALOUTPUT
     );
+
 
     ---------------- TEMPORARY OUTPUTS ----------------
     t_m <= m;
@@ -246,5 +243,6 @@ begin
     t_mask <= mask;
     t_addr <= addr;
     t_sym <= sym1;
+
 
 end behavioral;

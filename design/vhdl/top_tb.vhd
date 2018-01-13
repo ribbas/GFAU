@@ -10,9 +10,9 @@ architecture behavior of top_tb is
         port(
             CLK         : in std_logic;
             POLYBCD     : in std_logic_vector(15 downto 0);
-            i           : in std_logic_vector(15 downto 0);
-            j           : in std_logic_vector(15 downto 0);
-            opcode      : in std_logic_vector(5 downto 0);
+            OPAND1      : in std_logic_vector(15 downto 0);
+            OPAND2      : in std_logic_vector(15 downto 0);
+            OPCODE      : in std_logic_vector(5 downto 0);
 
             -- operation outputs
             FINALOUTPUT : out std_logic_vector(15 downto 0); -- selected output
@@ -32,10 +32,10 @@ architecture behavior of top_tb is
     end component;
 
     --inputs
-    signal opcode : std_logic_vector(5 downto 0) := (others => '0');
+    signal OPCODE : std_logic_vector(5 downto 0) := (others => '0');
     signal POLYBCD : std_logic_vector(15 downto 0);
-    signal i : std_logic_vector(15 downto 0);
-    signal j : std_logic_vector(15 downto 0);
+    signal OPAND1 : std_logic_vector(15 downto 0);
+    signal OPAND2 : std_logic_vector(15 downto 0);
 
     ------------ TEMPORARY - JUST FOR TB ------------
     signal t_rst_gen : std_logic;
@@ -61,20 +61,20 @@ begin
     uut: top port map (
         CLK => CLK,
         POLYBCD => POLYBCD,
-        i => i,
-        j => j,
-        opcode => opcode,
+        OPAND1 => OPAND1,
+        OPAND2 => OPAND2,
+        OPCODE => OPCODE,
+        FINALOUTPUT => FINALOUTPUT,
         t_rst_gen => t_rst_gen,
         t_n => t_n,
         t_m => t_m,
         t_mask => t_mask,
-        FINALOUTPUT => FINALOUTPUT,
         t_addr => t_addr,
         t_sym => t_sym
     );
 
     -- clock process
-    clk_proc: process
+    CLK_proc: process
     begin
 
         for i in 1 to nums loop
@@ -92,8 +92,8 @@ begin
         POLYBCD <= "0000000000011001";
         t_rst_gen <= '1';
 
-        i <= "0000000000001001";
-        j <= "0000000000001100";
+        OPAND1 <= "0000000000001001";
+        OPAND2 <= "0000000000001100";
 
         wait for 60 ns;
 
@@ -103,31 +103,31 @@ begin
         wait for 40 ns;
 
         -- add/sub
-        opcode <= "001010";
+        OPCODE <= "001010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- mul
-        opcode <= "010010";
+        OPCODE <= "010010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- div
-        opcode <= "011010";
+        OPCODE <= "011010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- log
-        opcode <= "100010";
+        OPCODE <= "100010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- convert
-        opcode <= "000111";
+        OPCODE <= "000111";
 
         wait for 1000 ns;
 

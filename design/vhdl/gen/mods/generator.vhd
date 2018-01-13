@@ -143,8 +143,8 @@ begin
 
                         if (((temp_gen and mask) xnor "0000000000000001") = "1111111111111111") then
 
-                            sym1 <= "XXXXXXXXXXXXXXXX";
-                            addr <= "XXXXXXXXXXXXXXXX";
+                            sym1 <= "UUUUUUUUUUUUUUUU";
+                            addr <= "UUUUUUUUUUUUUUUU";
                             rdy <= '1';
                             write_en <= '0';
 
