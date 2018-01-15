@@ -1,3 +1,10 @@
+
+-- inverter.vhd
+
+-- Sabbir Ahmed
+-- 2018-01-14
+
+
 --inverter.vhd
 
 library STD;

@@ -1,3 +1,10 @@
+
+-- mem_test.vhd
+
+-- Sabbir Ahmed
+-- 2018-01-14
+
+
 library STD;
 library IEEE;
 use IEEE.std_logic_1164.all;

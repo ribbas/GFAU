@@ -1,3 +1,10 @@
+
+-- and4.vhd
+
+-- Sabbir Ahmed
+-- 2018-01-14
+
+
 --and4.vhd
 
 library STD;

@@ -1,3 +1,10 @@
+
+-- or4.vhd
+
+-- Sabbir Ahmed
+-- 2018-01-14
+
+
 --or4.vhd
 
 library STD;

@@ -1,3 +1,10 @@
+
+-- outselect.vhd
+
+-- Sabbir Ahmed
+-- 2018-01-14
+
+
 library std;
 library ieee;
 use ieee.std_logic_1164.all;
