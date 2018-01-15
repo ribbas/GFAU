@@ -23,10 +23,12 @@ architecture structural of twoscmp is
 
 begin
 
+    tc <= not num;
+
     cla16:  claadder16 port map(  -- add 1
-                not num,
-                "0000000000000001",
-                tcnum
-            );
+        tc,
+        "0000000000000001",
+        tcnum
+    );
 
 end structural;

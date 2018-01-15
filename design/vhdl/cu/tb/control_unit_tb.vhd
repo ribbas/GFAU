@@ -22,6 +22,7 @@ architecture behavior of control_unit_tb is
 
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
+            rst_gen     : out std_logic;  -- polynomial generator reset
 
             -- operation signals
             i           : out std_logic_vector(15 downto 0);  -- i
@@ -75,6 +76,7 @@ begin
         opand2 => opand2,
         mask => mask,
         en_gen => en_gen,
+        rst_gen => rst_gen,
         i => i,
         j => j,
         mem_t => mem_t,

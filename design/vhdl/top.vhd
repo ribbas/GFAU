@@ -5,18 +5,18 @@ use ieee.numeric_std.all;
 
 entity top is
     port(
-        CLK         : in std_logic;
-        POLYBCD     : in std_logic_vector(15 downto 0);
-        OPAND1      : in std_logic_vector(15 downto 0);
-        OPAND2      : in std_logic_vector(15 downto 0);
-        OPCODE      : in std_logic_vector(5 downto 0);
-        FINALOUTPUT : out std_logic_vector(15 downto 0);
-        ERRB        : out std_logic;
-        ERRZ        : out std_logic;
+        CLK     : in std_logic;
+        POLYBCD : in std_logic_vector(15 downto 0);
+        OPCODE  : in std_logic_vector(5 downto 0);
+        OPAND1  : in std_logic_vector(15 downto 0);
+        OPAND2  : in std_logic_vector(15 downto 0);
+        RESULT  : out std_logic_vector(15 downto 0);
+        RDYGEN  : out std_logic;
+        ERRB    : out std_logic;
+        ERRZ    : out std_logic;
 
         ------------ TEMPORARY - JUST FOR TB ------------
         t_rst_gen   : in std_logic;
-        t_rdy_gen   : out std_logic;
 
         -- universal registers
         t_n         : out std_logic_vector(3 downto 0);
@@ -71,6 +71,7 @@ architecture behavioral of top is
 
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
+            rst_gen     : out std_logic;  -- polynomial generator reset
 
             -- operation signals
             i           : out std_logic_vector(15 downto 0);  -- i
@@ -116,37 +117,37 @@ architecture behavioral of top is
 
     component operators
         port( 
-            opcode      : in std_logic_vector(5 downto 0);  -- opcode
-            i           : in std_logic_vector(15 downto 0); -- first element
-            j           : in std_logic_vector(15 downto 0); -- second element
-            n           : in std_logic_vector(3 downto 0);  -- size
-            mask        : in std_logic_vector(15 downto 0);  -- mask
-            FINALOUTPUT : out std_logic_vector(15 downto 0) -- selected output
+            opcode  : in std_logic_vector(5 downto 0);  -- opcode
+            i       : in std_logic_vector(15 downto 0); -- first element
+            j       : in std_logic_vector(15 downto 0); -- second element
+            n       : in std_logic_vector(3 downto 0);  -- size
+            mask    : in std_logic_vector(15 downto 0);  -- mask
+            result  : out std_logic_vector(15 downto 0) -- selected output
         );
     end component;
 
     ---------------- memory ----------------
 
-    -- IS61LP6432A
-    component IS61LP6432A is
-        port(
-            A       : in std_logic_vector(15 downto 0);
-            clk     : in std_logic;
-            nADSP   : in std_logic;
-            nADSC   : in std_logic;
-            nADV    : in std_logic;
-            nBW     : in std_logic_vector(3 downto 0);
-            nBWE    : in std_logic;
-            nGW     : in std_logic;
-            nCE     : in std_logic;
-            nCE2    : in std_logic;
-            CE2     : in std_logic;
-            nOE     : in std_logic;
-            DQ      : inout std_logic_vector(31 downto 0);
-            MODE    : in std_logic;
-            ZZ      : in std_logic
-        );
-    end component;
+    ---- IS61LP6432A
+    --component IS61LP6432A is
+    --    port(
+    --        A       : in std_logic_vector(15 downto 0);
+    --        clk     : in std_logic;
+    --        nADSP   : in std_logic;
+    --        nADSC   : in std_logic;
+    --        nADV    : in std_logic;
+    --        nBW     : in std_logic_vector(3 downto 0);
+    --        nBWE    : in std_logic;
+    --        nGW     : in std_logic;
+    --        nCE     : in std_logic;
+    --        nCE2    : in std_logic;
+    --        CE2     : in std_logic;
+    --        nOE     : in std_logic;
+    --        DQ      : inout std_logic_vector(31 downto 0);
+    --        MODE    : in std_logic;
+    --        ZZ      : in std_logic
+    --    );
+    --end component;
 
     -- constants
     signal mask : std_logic_vector(15 downto 0);  -- mask
@@ -162,6 +163,7 @@ architecture behavioral of top is
     signal en_gen : std_logic := '1';  -- enable
     signal rst_gen : std_logic;  -- reset
 
+    -- internal operation signals
     signal i : std_logic_vector(15 downto 0);
     signal j : std_logic_vector(15 downto 0);
 
@@ -169,23 +171,23 @@ architecture behavioral of top is
     signal mem_t : std_logic;  -- memory type
     signal mem_wr : std_logic;  -- write enable
     signal mem_rd : std_logic;  -- read enable
-    signal mem_addr : std_logic_vector(15 downto 0);  -- mask
-    signal mem_data : std_logic_vector(15 downto 0);  -- mask
+    signal mem_addr : std_logic_vector(15 downto 0);  -- memory address
+    signal mem_data : std_logic_vector(15 downto 0);  -- memory data
 
-    signal A : std_logic_vector(15 downto 0);
-    signal nADSP : std_logic;
-    signal nADSC : std_logic;
-    signal nADV : std_logic;
-    signal nBW : std_logic_vector(3 downto 0);
-    signal nBWE : std_logic;
-    signal nGW : std_logic;
-    signal nCE : std_logic;
-    signal nCE2 : std_logic;
-    signal CE2 : std_logic;
-    signal nOE : std_logic;
-    signal DQ : std_logic_vector(31 downto 0);
-    signal MODE : std_logic;
-    signal ZZ : std_logic;
+    --signal A : std_logic_vector(15 downto 0);
+    --signal nADSP : std_logic;
+    --signal nADSC : std_logic;
+    --signal nADV : std_logic;
+    --signal nBW : std_logic_vector(3 downto 0);
+    --signal nBWE : std_logic;
+    --signal nGW : std_logic;
+    --signal nCE : std_logic;
+    --signal nCE2 : std_logic;
+    --signal CE2 : std_logic;
+    --signal nOE : std_logic;
+    --signal DQ : std_logic_vector(31 downto 0);
+    --signal MODE : std_logic;
+    --signal ZZ : std_logic;
 
 begin
 
@@ -218,6 +220,7 @@ begin
         opand2 => OPAND2,
         mask => mask,
         en_gen => en_gen,
+        rst_gen => rst_gen,
         i => i,
         j => j,
         mem_t => mem_t,
@@ -233,9 +236,9 @@ begin
     -- generator controller
     generator_unit: generator port map(
         clk => clk,
-        rst => t_rst_gen,
+        rst => rst_gen,
         en => en_gen,
-        rdy => t_rdy_gen,
+        rdy => RDYGEN,
         poly_bcd => POLYBCD,
         mask => mask,
         m => m,
@@ -247,45 +250,45 @@ begin
     );
 
 
-    ---------------- memories ----------------
+    ------------------ memories ----------------
 
-    -- element memory
-    mem1 : IS61LP6432A port map(
-        A => A,
-        clk => CLK,
-        nADSP => nADSP,
-        nADSC => nADSC,
-        nADV => nADV,
-        nBW => nBW,
-        nBWE => nBWE,
-        nGW => nGW,
-        nCE => nCE,
-        nCE2 => nCE2,
-        CE2 => CE2,
-        nOE => nOE,
-        DQ  => DQ,
-        MODE => MODE,
-        ZZ  => ZZ
-    );
+    ---- element memory
+    --mem1 : IS61LP6432A port map(
+    --    A => A,
+    --    clk => CLK,
+    --    nADSP => nADSP,
+    --    nADSC => nADSC,
+    --    nADV => nADV,
+    --    nBW => nBW,
+    --    nBWE => nBWE,
+    --    nGW => nGW,
+    --    nCE => nCE,
+    --    nCE2 => nCE2,
+    --    CE2 => CE2,
+    --    nOE => nOE,
+    --    DQ  => DQ,
+    --    MODE => MODE,
+    --    ZZ  => ZZ
+    --);
 
-    -- polynomial memory
-    mem2 : IS61LP6432A port map(
-        A => A,
-        clk => CLK,
-        nADSP => nADSP,
-        nADSC => nADSC,
-        nADV => nADV,
-        nBW => nBW,
-        nBWE => nBWE,
-        nGW => nGW,
-        nCE => nCE,
-        nCE2 => nCE2,
-        CE2 => CE2,
-        nOE => nOE,
-        DQ  => DQ,
-        MODE => MODE,
-        ZZ  => ZZ
-    );
+    ---- polynomial memory
+    --mem2 : IS61LP6432A port map(
+    --    A => A,
+    --    clk => CLK,
+    --    nADSP => nADSP,
+    --    nADSC => nADSC,
+    --    nADV => nADV,
+    --    nBW => nBW,
+    --    nBWE => nBWE,
+    --    nGW => nGW,
+    --    nCE => nCE,
+    --    nCE2 => nCE2,
+    --    CE2 => CE2,
+    --    nOE => nOE,
+    --    DQ  => DQ,
+    --    MODE => MODE,
+    --    ZZ  => ZZ
+    --);
 
 
     ---------------- Galois operators ----------------
@@ -296,7 +299,7 @@ begin
         j => j,
         n => n,
         mask => mask,
-        FINALOUTPUT => FINALOUTPUT
+        result => RESULT
     );
 
 

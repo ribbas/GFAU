@@ -18,6 +18,7 @@ entity control_unit is
 
         -- generation signals
         en_gen      : out std_logic;  -- polynomial generator enable
+        rst_gen     : out std_logic;  -- polynomial generator reset
 
         -- operation signals
         i           : out std_logic_vector(15 downto 0);  -- i
@@ -26,7 +27,7 @@ entity control_unit is
         -- memory signals
         mem_data    : in std_logic_vector(15 downto 0);  -- data from memory
         mem_addr    : out std_logic_vector(15 downto 0);  -- address in memory
-        mem_t       : inout std_logic;  -- which memory - 0 for elem, 1 for poly
+        mem_t       : inout std_logic;  -- which memory
         mem_rd      : out std_logic;  -- read signal to memory
 
         -- exceptions

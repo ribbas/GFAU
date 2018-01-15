@@ -4,12 +4,12 @@ use ieee.numeric_std.all;
 
 entity operators is
     port(
-        opcode      : in std_logic_vector(5 downto 0);  -- opcode
-        i           : in std_logic_vector(15 downto 0); -- first element
-        j           : in std_logic_vector(15 downto 0); -- second element
-        n           : in std_logic_vector(3 downto 0);  -- size of polynomial
-        mask        : in std_logic_vector(15 downto 0);  -- mask
-        FINALOUTPUT : out std_logic_vector(15 downto 0) -- selected output
+        opcode  : in std_logic_vector(5 downto 0);  -- opcode
+        i       : in std_logic_vector(15 downto 0); -- first element
+        j       : in std_logic_vector(15 downto 0); -- second element
+        n       : in std_logic_vector(3 downto 0);  -- size of polynomial
+        mask    : in std_logic_vector(15 downto 0);  -- mask
+        result  : out std_logic_vector(15 downto 0) -- selected output
     );
 end operators;
 
@@ -126,7 +126,7 @@ begin
         convert => convert
     );
 
-    FINALOUTPUT <= sel_out and mask;
+    result <= sel_out and mask;
 
     -- output converter
 

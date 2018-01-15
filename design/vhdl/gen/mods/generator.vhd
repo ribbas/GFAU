@@ -100,6 +100,7 @@ begin
 
             if (rst = '1') then
 
+                rdy <= '0';
                 counter <= "0000000000000000";
                 addr <= "0000000000000000";
                 sym1 <= "0000000000000000";
@@ -161,6 +162,7 @@ begin
 
                     when others =>
 
+                        rdy <= '0';
                         state <= auto_sym_state;
 
                 end case;
@@ -169,6 +171,7 @@ begin
 
         else
 
+            rdy <= '0';
             counter <= "0000000000000000";
             addr <= "XXXXXXXXXXXXXXXX";
             sym1 <= "XXXXXXXXXXXXXXXX";

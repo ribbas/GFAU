@@ -1,6 +1,7 @@
 library ieee;
 use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
 
 entity iszero is
     port(
@@ -13,24 +14,11 @@ end iszero;
 
 architecture structural of iszero is
 
-    component unary_and16 is
-        port(
-            in1     :   in std_logic_vector(15 downto 0);
-            in2     :   in std_logic_vector(15 downto 0);
-            out1    :   out std_logic
-        );
-    end component;
-
-    signal uand : std_logic;
+    signal is_zero_flag_uand : std_ulogic;
 
 begin
 
-    unary_and1: unary_and16 port map(
-        in1 => operand,
-        in2 => operand,
-        out1 => uand
-    );
-
-    is_zero_flag <= (uand xor mem_t) and en;
+    is_zero_flag_uand <= '1' when not operand = 0 else '0';    
+    is_zero_flag <= (is_zero_flag_uand xor mem_t) and en;
 
 end structural;

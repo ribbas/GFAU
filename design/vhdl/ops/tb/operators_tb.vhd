@@ -14,7 +14,7 @@ architecture behavioral of operators_tb is
             j           : in std_logic_vector(15 downto 0); -- second element
             n           : in std_logic_vector(3 downto 0);  -- size
             mask        : in std_logic_vector(15 downto 0);  -- mask
-            FINALOUTPUT : out std_logic_vector(15 downto 0) -- selected output
+            result  : out std_logic_vector(15 downto 0) -- selected output
         );
     end component;
 
@@ -26,7 +26,7 @@ architecture behavioral of operators_tb is
     signal mask : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal FINALOUTPUT : std_logic_vector(15 downto 0);
+    signal result : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -41,7 +41,7 @@ begin
         j => j,
         n => n,
         mask => mask,
-        FINALOUTPUT => FINALOUTPUT
+        result => result
     );
 
     -- clock process

@@ -8,18 +8,18 @@ architecture behavior of top_tb is
  
     component top
         port(
-            CLK         : in std_logic;
-            POLYBCD     : in std_logic_vector(15 downto 0);
-            OPAND1      : in std_logic_vector(15 downto 0);
-            OPAND2      : in std_logic_vector(15 downto 0);
-            OPCODE      : in std_logic_vector(5 downto 0);
-            FINALOUTPUT : out std_logic_vector(15 downto 0);
-            ERRB        : out std_logic;
-            ERRZ        : out std_logic;
+            CLK     : in std_logic;
+            POLYBCD : in std_logic_vector(15 downto 0);
+            OPCODE  : in std_logic_vector(5 downto 0);
+            OPAND1  : in std_logic_vector(15 downto 0);
+            OPAND2  : in std_logic_vector(15 downto 0);
+            RESULT  : out std_logic_vector(15 downto 0);
+            RDYGEN  : out std_logic;
+            ERRB    : out std_logic;
+            ERRZ    : out std_logic;
 
             ------------ TEMPORARY - JUST FOR TB ------------
             t_rst_gen   : in std_logic;
-            t_rdy_gen   : out std_logic;
 
             -- universal registers
             t_n         : out std_logic_vector(3 downto 0);
@@ -33,32 +33,32 @@ architecture behavior of top_tb is
     end component;
 
     --inputs
-    signal OPCODE : std_logic_vector(5 downto 0);
+    signal CLK     : std_ulogic := '1';
     signal POLYBCD : std_logic_vector(15 downto 0);
-    signal OPAND1 : std_logic_vector(15 downto 0);
-    signal OPAND2 : std_logic_vector(15 downto 0);
+    signal OPCODE  : std_logic_vector(5 downto 0);
+    signal OPAND1  : std_logic_vector(15 downto 0);
+    signal OPAND2  : std_logic_vector(15 downto 0);
 
-    signal ERRB : std_logic;
-    signal ERRZ : std_logic;
+    -- outputs
+    signal RESULT  : std_logic_vector(15 downto 0);
+    signal RDYGEN  : std_logic;
+    signal ERRB    : std_logic;
+    signal ERRZ    : std_logic;
 
     ------------ TEMPORARY - JUST FOR TB ------------
     signal t_rst_gen : std_logic;
-    signal t_rdy_gen : std_logic;
 
     -- universal registers
     signal t_n : std_logic_vector(3 downto 0);
     signal t_m : std_logic_vector(3 downto 0);
     signal t_mask : std_logic_vector(15 downto 0);
 
-    -- operation outputs
-    signal FINALOUTPUT : std_logic_vector(15 downto 0);
-
+    -- memory signals
     signal t_addr : std_logic_vector(15 downto 0);
     signal t_sym : std_logic_vector(15 downto 0);
 
     -- testbench clocks
     constant nums : integer := 320;
-    signal CLK : std_ulogic := '1';
  
 begin
  
@@ -66,14 +66,14 @@ begin
     uut: top port map (
         CLK => CLK,
         POLYBCD => POLYBCD,
+        OPCODE => OPCODE,
         OPAND1 => OPAND1,
         OPAND2 => OPAND2,
-        OPCODE => OPCODE,
-        FINALOUTPUT => FINALOUTPUT,
+        RESULT => RESULT,
+        RDYGEN => RDYGEN,
         ERRB => ERRB,
         ERRZ => ERRZ,
         t_rst_gen => t_rst_gen,
-        t_rdy_gen => t_rdy_gen,
         t_n => t_n,
         t_m => t_m,
         t_mask => t_mask,
@@ -87,7 +87,7 @@ begin
 
         for i in 1 to nums loop
             CLK <= not CLK;
-            wait for 20 ns;
+            wait for 10 ns;
             -- clock period = 50 MHz
         end loop;
 
@@ -103,12 +103,18 @@ begin
         OPAND1 <= "0000000000001001";
         OPAND2 <= "0000000000001100";
 
-        wait for 60 ns;
+        wait for 20 ns;
 
         t_rst_gen <= '0';
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
+
+        -- add/sub
+        OPCODE <= "111110";
+
+        -- hold reset state for 40 ns.
+        wait for 60 ns;
 
         -- add/sub
         OPCODE <= "001110";
