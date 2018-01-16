@@ -1,3 +1,9 @@
+-- mem_test.vhd
+--
+-- Brian Weber
+-- 2018-01-16
+--
+
 library STD;
 library IEEE;
 use IEEE.std_logic_1164.all;

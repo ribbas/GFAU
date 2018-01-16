@@ -1,3 +1,11 @@
+-- pfadder.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- 1-bit partial full adder.
+--
+
 library ieee;
 use ieee.std_logic_1164.all;
 

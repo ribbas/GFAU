@@ -1,3 +1,11 @@
+-- claadder4.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- 4-bit carry lookahead adder.
+--
+
 library ieee;
 use ieee.std_logic_1164.all;
 

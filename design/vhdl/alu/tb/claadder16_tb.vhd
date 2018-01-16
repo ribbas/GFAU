@@ -1,3 +1,9 @@
+-- claadder16_tb.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+
 library ieee;
 use ieee.std_logic_1164.all;
 
@@ -9,9 +15,9 @@ architecture behavioral of claadder16_tb is
     -- component declaration for the unit under test (uut)     
     component claadder16
         port(
-            a       : in std_logic_vector(15 downto 0);
-            b       : in std_logic_vector(15 downto 0);
-            s       : out std_logic_vector(15 downto 0)
+            a   : in std_logic_vector(15 downto 0);
+            b   : in std_logic_vector(15 downto 0);
+            s   : out std_logic_vector(15 downto 0)
         );
     end component;
 

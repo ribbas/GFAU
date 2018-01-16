@@ -1,3 +1,11 @@
+-- isbounded.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- Generates the out-of-bound flags when the operand is greater than 2^n-2.
+--
+
 library ieee;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;

@@ -1,3 +1,11 @@
+-- iszero.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- Generates the zero flag, when enabled.
+--
+
 library ieee;
 use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;

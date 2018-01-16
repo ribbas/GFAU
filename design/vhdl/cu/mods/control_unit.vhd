@@ -1,4 +1,11 @@
--- control_unit
+-- control_unit.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- Control unit to parse the opcode and validate operands.
+--
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;

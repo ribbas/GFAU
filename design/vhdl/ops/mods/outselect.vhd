@@ -1,3 +1,11 @@
+-- outselect.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- Multiplexer to select the operator's output as the result.
+--
+
 library std;
 library ieee;
 use ieee.std_logic_1164.all;

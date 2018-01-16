@@ -1,3 +1,11 @@
+-- or2.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+--
+--
+
 --and.vhd
 
 library std;

@@ -1,3 +1,11 @@
+-- size.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+-- Generates the index of the size. 
+--
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;

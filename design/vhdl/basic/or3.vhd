@@ -1,3 +1,11 @@
+-- or3.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+--
+--
+
 --or3.vhd
 
 library std;

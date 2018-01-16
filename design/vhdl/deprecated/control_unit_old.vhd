@@ -1,3 +1,11 @@
+-- control_unit_old.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+--
+--
+
 -- control_unit
 library ieee;
 use ieee.std_logic_1164.all;

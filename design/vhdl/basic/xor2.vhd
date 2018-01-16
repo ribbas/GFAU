@@ -1,3 +1,11 @@
+-- xor2.vhd
+--
+-- Sabbir Ahmed
+-- 2018-01-16
+--
+--
+--
+
 library std;
 library ieee;
 use ieee.std_logic_1164.all;
