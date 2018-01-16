@@ -1,30 +1,9 @@
 -- demux.vhd
 --
--- Sabbir Ahmed
+-- Howard To
 -- 2018-01-16
 --
---
---
 
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    22:48:31 11/05/2017 
--- Design Name: 
--- Module Name:    demux - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 

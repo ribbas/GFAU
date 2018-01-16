@@ -1,9 +1,7 @@
 -- reducible.vhd
 --
--- Sabbir Ahmed
+-- Brian Weber
 -- 2018-01-16
---
---
 --
 
 library std;

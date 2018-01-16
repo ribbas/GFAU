@@ -1,6 +1,6 @@
 -- outselect.vhd
 --
--- Sabbir Ahmed
+-- Sabbir Ahmed, Jeffrey Osazuwa
 -- 2018-01-16
 --
 -- Multiplexer to select the operator's output as the result.

@@ -3,6 +3,14 @@
 -- Sabbir Ahmed
 -- 2018-01-16
 --
+=======
+
+-- maskedtwoscmp_tb.vhd
+
+-- Sabbir Ahmed
+-- 2018-01-14
+
+>>>>>>> c125a238a164ff81320452241e60ebeb2d6923c8
 
 library ieee;
 use ieee.std_logic_1164.all;

@@ -1,6 +1,6 @@
 -- addsub16.vhd
 --
--- Sabbir Ahmed
+-- Jeffrey Osazuwa, Sabbir Ahmed
 -- 2018-01-16
 --
 -- Computes the Galois addition / subtraction of two symbols.

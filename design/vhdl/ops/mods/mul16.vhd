@@ -1,6 +1,6 @@
 -- mul16.vhd
 --
--- Sabbir Ahmed
+-- Sabbir Ahmed, Jeffrey Osazuwa
 -- 2018-01-16
 --
 -- Computes the Galois multiplication of two symbols.

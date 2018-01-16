@@ -1,6 +1,6 @@
 -- outselect_tb.vhd
 --
--- Sabbir Ahmed
+-- Sabbir Ahmed, Jeffrey Osazuwa
 -- 2018-01-16
 --
 
