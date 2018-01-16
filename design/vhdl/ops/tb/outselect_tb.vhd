@@ -21,7 +21,7 @@ architecture behavioral of outselect_tb is
             divop       : in std_logic_vector(15 downto 0);
             logop       : in std_logic_vector(15 downto 0);
             sel_out     : out std_logic_vector(15 downto 0);
-            memselect   : out std_logic;
+            mem_t       : out std_logic;
             convert     : out std_logic
         );
     end component;

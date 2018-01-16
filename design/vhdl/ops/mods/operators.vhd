@@ -12,6 +12,7 @@ use ieee.numeric_std.all;
 
 entity operators is
     port(
+        clk     : in std_logic;
         opcode  : in std_logic_vector(5 downto 0);  -- opcode
         i       : in std_logic_vector(15 downto 0); -- first element
         j       : in std_logic_vector(15 downto 0); -- second element
@@ -63,6 +64,22 @@ architecture structural of operators is
         );
     end component;
 
+    ---------------- memory ----------------
+
+    -- IS61LP6432A chips wrapper
+    component memory is
+        port(
+            clk         : in std_logic;
+            mem_t       : in std_logic;
+            mem_rd      : in std_logic;
+            mem_wr      : in std_logic;
+            addr_in     : in std_logic_vector(15 downto 0);
+            addr_out    : in std_logic_vector(15 downto 0);
+            data_in     : in std_logic_vector(15 downto 0);
+            data_out    : out std_logic_vector(15 downto 0)
+        );
+    end component;
+
     ---------------- output multiplexers ----------------
 
     -- output select
@@ -74,8 +91,19 @@ architecture structural of operators is
             divop       : in std_logic_vector(15 downto 0);
             logop       : in std_logic_vector(15 downto 0);
             sel_out     : out std_logic_vector(15 downto 0);
-            memselect   : out std_logic;
+            mem_t       : out std_logic;
             convert     : out std_logic
+        );
+    end component;
+
+    -- output select
+    component outconvert
+        port( 
+            convert : in std_logic;
+            mask    : in std_logic_vector(15 downto 0);
+            sel_out : in std_logic_vector(15 downto 0);
+            mem_out : in std_logic_vector(15 downto 0);
+            result  : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -86,7 +114,8 @@ architecture structural of operators is
     signal quot : std_logic_vector(15 downto 0);
 
     signal sel_out : std_logic_vector(15 downto 0);
-    signal memselect : std_logic;
+    signal mem_out : std_logic_vector(15 downto 0);
+    signal mem_t : std_logic;
     signal convert : std_logic;
 
 begin
@@ -123,23 +152,36 @@ begin
     );
 
     -- output selector
-    outselect_uut: outselect port map(
+    outselect_unit: outselect port map(
         opcode => opcode,
         addsubop => bitxor,
         mulop => prod,
         divop => quot,
         logop => i,
         sel_out => sel_out,
-        memselect => memselect,
+        mem_t => mem_t,
         convert => convert
     );
 
-    result <= sel_out and mask;
+    -- memory wrapper
+    mem : memory port map(
+        clk => clk,
+        mem_t => mem_t,
+        mem_rd => convert,
+        mem_wr => '0',
+        addr_in => "XXXXXXXXXXXXXXXX",
+        addr_out => sel_out,
+        data_in => "XXXXXXXXXXXXXXXX",
+        data_out => mem_out
+    );
 
     -- output converter
-
-
-
-
+    outconvert_unit : outconvert port map(
+        convert => convert,
+        mask => mask,
+        sel_out => sel_out,
+        mem_out => mem_out,
+        result => result
+    );
 
 end structural;

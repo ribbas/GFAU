@@ -124,10 +124,11 @@ architecture behavioral of top is
 
     component operators
         port( 
+            clk     : in std_logic;
             opcode  : in std_logic_vector(5 downto 0);  -- opcode
             i       : in std_logic_vector(15 downto 0); -- first element
             j       : in std_logic_vector(15 downto 0); -- second element
-            n       : in std_logic_vector(3 downto 0);  -- size
+            n       : in std_logic_vector(3 downto 0);  -- size of polynomial
             mask    : in std_logic_vector(15 downto 0);  -- mask
             result  : out std_logic_vector(15 downto 0) -- selected output
         );
@@ -255,6 +256,7 @@ begin
     ---------------- Galois operators ----------------
 
     operators_unit: operators port map(
+        clk => CLK,
         opcode => OPCODE,
         i => i,
         j => j,

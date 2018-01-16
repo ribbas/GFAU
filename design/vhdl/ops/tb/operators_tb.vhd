@@ -15,11 +15,12 @@ architecture behavioral of operators_tb is
     -- component declaration for the unit under test (uut)     
     component operators
         port( 
-            opcode      : in std_logic_vector(5 downto 0);  -- opcode
-            i           : in std_logic_vector(15 downto 0); -- first element
-            j           : in std_logic_vector(15 downto 0); -- second element
-            n           : in std_logic_vector(3 downto 0);  -- size
-            mask        : in std_logic_vector(15 downto 0);  -- mask
+            clk     : in std_logic;
+            opcode  : in std_logic_vector(5 downto 0);  -- opcode
+            i       : in std_logic_vector(15 downto 0); -- first element
+            j       : in std_logic_vector(15 downto 0); -- second element
+            n       : in std_logic_vector(3 downto 0);  -- size of polynomial
+            mask    : in std_logic_vector(15 downto 0);  -- mask
             result  : out std_logic_vector(15 downto 0) -- selected output
         );
     end component;
@@ -42,6 +43,7 @@ begin
 
     -- instantiate the unit under test (uut)
     uut: operators port map(
+        clk => clk,
         opcode => opcode,
         i => i,
         j => j,
@@ -75,7 +77,7 @@ begin
         wait for 40 ns;
 
         -- add/sub
-        opcode <= "001010";
+        opcode <= "001011";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
