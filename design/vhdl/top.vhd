@@ -13,6 +13,7 @@ use ieee.numeric_std.all;
 entity top is
     port(
         CLK     : in std_logic;
+        RST     : in std_logic;
         POLYBCD : in std_logic_vector(15 downto 0);
         OPCODE  : in std_logic_vector(5 downto 0);
         OPAND1  : in std_logic_vector(15 downto 0);
@@ -20,19 +21,18 @@ entity top is
         RESULT  : out std_logic_vector(15 downto 0);
         RDYGEN  : out std_logic;
         ERRB    : out std_logic;
-        ERRZ    : out std_logic;
+        ERRZ    : out std_logic
 
-        ------------ TEMPORARY - JUST FOR TB ------------
-        t_rst_gen   : in std_logic;
+        -------------- TEMPORARY - JUST FOR TB ------------
 
-        -- universal registers
-        t_n         : out std_logic_vector(3 downto 0);
-        t_m         : out std_logic_vector(3 downto 0);
-        t_mask      : out std_logic_vector(15 downto 0);
+        ---- universal registers
+        --t_n         : out std_logic_vector(3 downto 0);
+        --t_m         : out std_logic_vector(3 downto 0);
+        --t_mask      : out std_logic_vector(15 downto 0);
 
-        -- generated terms
-        t_addr      : out std_logic_vector(15 downto 0);
-        t_sym       : out std_logic_vector(15 downto 0)
+        ---- generated terms
+        --t_addr      : out std_logic_vector(15 downto 0);
+        --t_sym       : out std_logic_vector(15 downto 0)
     );
 end top;
 
@@ -135,26 +135,19 @@ architecture behavioral of top is
 
     ---------------- memory ----------------
 
-    ---- IS61LP6432A
-    --component IS61LP6432A is
-    --    port(
-    --        A       : in std_logic_vector(15 downto 0);
-    --        clk     : in std_logic;
-    --        nADSP   : in std_logic;
-    --        nADSC   : in std_logic;
-    --        nADV    : in std_logic;
-    --        nBW     : in std_logic_vector(3 downto 0);
-    --        nBWE    : in std_logic;
-    --        nGW     : in std_logic;
-    --        nCE     : in std_logic;
-    --        nCE2    : in std_logic;
-    --        CE2     : in std_logic;
-    --        nOE     : in std_logic;
-    --        DQ      : inout std_logic_vector(31 downto 0);
-    --        MODE    : in std_logic;
-    --        ZZ      : in std_logic
-    --    );
-    --end component;
+    -- IS61LP6432A chips wrapper
+    component memory is
+        port(
+            clk         : in std_logic;
+            mem_t       : in std_logic;
+            mem_rd      : in std_logic;
+            mem_wr      : in std_logic;
+            addr_in     : in std_logic_vector(15 downto 0);
+            addr_out    : in std_logic_vector(15 downto 0);
+            data_in     : in std_logic_vector(15 downto 0);
+            data_out    : out std_logic_vector(15 downto 0)
+        );
+    end component;
 
     -- constants
     signal mask : std_logic_vector(15 downto 0);  -- mask
@@ -162,8 +155,8 @@ architecture behavioral of top is
     signal n : std_logic_vector(3 downto 0);  -- size
 
     -- generator data signals
-    signal addr : std_logic_vector(15 downto 0);
-    signal sym1 : std_logic_vector(15 downto 0);
+    --signal addr : std_logic_vector(15 downto 0);
+    --signal sym1 : std_logic_vector(15 downto 0);
     signal sym2 : std_logic_vector(15 downto 0);
 
     -- generator control signals
@@ -178,23 +171,10 @@ architecture behavioral of top is
     signal mem_t : std_logic;  -- memory type
     signal mem_wr : std_logic;  -- write enable
     signal mem_rd : std_logic;  -- read enable
-    signal mem_addr : std_logic_vector(15 downto 0);  -- memory address
-    signal mem_data : std_logic_vector(15 downto 0);  -- memory data
-
-    --signal A : std_logic_vector(15 downto 0);
-    --signal nADSP : std_logic;
-    --signal nADSC : std_logic;
-    --signal nADV : std_logic;
-    --signal nBW : std_logic_vector(3 downto 0);
-    --signal nBWE : std_logic;
-    --signal nGW : std_logic;
-    --signal nCE : std_logic;
-    --signal nCE2 : std_logic;
-    --signal CE2 : std_logic;
-    --signal nOE : std_logic;
-    --signal DQ : std_logic_vector(31 downto 0);
-    --signal MODE : std_logic;
-    --signal ZZ : std_logic;
+    signal mem_addr_in : std_logic_vector(15 downto 0);  -- memory address
+    signal mem_addr_out : std_logic_vector(15 downto 0);  -- memory address
+    signal mem_data_in : std_logic_vector(15 downto 0);  -- memory data in
+    signal mem_data_out : std_logic_vector(15 downto 0);  -- memory data out
 
 begin
 
@@ -220,7 +200,7 @@ begin
 
     cu: control_unit port map(
         clk => clk,
-        rst => t_rst_gen,
+        rst => RST,
         opcode => OPCODE,
         poly_bcd => POLYBCD,
         opand1 => OPAND1,
@@ -232,8 +212,8 @@ begin
         j => j,
         mem_t => mem_t,
         mem_rd => mem_rd,
-        mem_addr => mem_addr,
-        mem_data => mem_data,
+        mem_addr => mem_addr_out,
+        mem_data => mem_data_out,
         err_b => ERRB,
         err_z => ERRZ
     );
@@ -251,51 +231,25 @@ begin
         m => m,
         n => n,
         write_en => mem_wr,
-        addr => addr,
-        sym1 => sym1,
+        addr => mem_addr_in,
+        sym1 => mem_data_in,
         sym2 => sym2
     );
 
 
-    ------------------ memories ----------------
+    ---------------- memories ----------------
 
-    ---- element memory
-    --mem1 : IS61LP6432A port map(
-    --    A => A,
-    --    clk => CLK,
-    --    nADSP => nADSP,
-    --    nADSC => nADSC,
-    --    nADV => nADV,
-    --    nBW => nBW,
-    --    nBWE => nBWE,
-    --    nGW => nGW,
-    --    nCE => nCE,
-    --    nCE2 => nCE2,
-    --    CE2 => CE2,
-    --    nOE => nOE,
-    --    DQ  => DQ,
-    --    MODE => MODE,
-    --    ZZ  => ZZ
-    --);
-
-    ---- polynomial memory
-    --mem2 : IS61LP6432A port map(
-    --    A => A,
-    --    clk => CLK,
-    --    nADSP => nADSP,
-    --    nADSC => nADSC,
-    --    nADV => nADV,
-    --    nBW => nBW,
-    --    nBWE => nBWE,
-    --    nGW => nGW,
-    --    nCE => nCE,
-    --    nCE2 => nCE2,
-    --    CE2 => CE2,
-    --    nOE => nOE,
-    --    DQ  => DQ,
-    --    MODE => MODE,
-    --    ZZ  => ZZ
-    --);
+    -- memory wrapper
+    mem : memory port map(
+        clk => CLK,
+        mem_t => mem_t,
+        mem_rd => mem_rd,
+        mem_wr => mem_wr,
+        addr_in => mem_addr_in,
+        addr_out => mem_addr_out,
+        data_in => mem_data_in,
+        data_out => mem_data_out
+    );
 
 
     ---------------- Galois operators ----------------
@@ -311,11 +265,10 @@ begin
 
 
     ---------------- TEMPORARY OUTPUTS ----------------
-    t_m <= m;
-    t_n <= n;
-    t_mask <= mask;
-    t_addr <= addr;
-    t_sym <= sym1;
-
+    --t_m <= m;
+    --t_n <= n;
+    --t_mask <= mask;
+    --t_addr <= mem_addr;
+    --t_sym <= mem_data_in;
 
 end behavioral;

@@ -15,6 +15,7 @@ architecture behavior of top_tb is
     component top
         port(
             CLK     : in std_logic;
+            RST     : in std_logic;
             POLYBCD : in std_logic_vector(15 downto 0);
             OPCODE  : in std_logic_vector(5 downto 0);
             OPAND1  : in std_logic_vector(15 downto 0);
@@ -22,24 +23,24 @@ architecture behavior of top_tb is
             RESULT  : out std_logic_vector(15 downto 0);
             RDYGEN  : out std_logic;
             ERRB    : out std_logic;
-            ERRZ    : out std_logic;
+            ERRZ    : out std_logic
 
-            ------------ TEMPORARY - JUST FOR TB ------------
-            t_rst_gen   : in std_logic;
+            -------------- TEMPORARY - JUST FOR TB ------------
 
-            -- universal registers
-            t_n         : out std_logic_vector(3 downto 0);
-            t_m         : out std_logic_vector(3 downto 0);
-            t_mask      : out std_logic_vector(15 downto 0);
+            ---- universal registers
+            --t_n         : out std_logic_vector(3 downto 0);
+            --t_m         : out std_logic_vector(3 downto 0);
+            --t_mask      : out std_logic_vector(15 downto 0);
 
-            -- generated terms
-            t_addr      : out std_logic_vector(15 downto 0);
-            t_sym       : out std_logic_vector(15 downto 0)
+            ---- generated terms
+            --t_addr      : out std_logic_vector(15 downto 0);
+            --t_sym       : out std_logic_vector(15 downto 0)
         );
     end component;
 
     --inputs
     signal CLK     : std_ulogic := '1';
+    signal RST     : std_logic;
     signal POLYBCD : std_logic_vector(15 downto 0);
     signal OPCODE  : std_logic_vector(5 downto 0);
     signal OPAND1  : std_logic_vector(15 downto 0);
@@ -51,26 +52,26 @@ architecture behavior of top_tb is
     signal ERRB    : std_logic;
     signal ERRZ    : std_logic;
 
-    ------------ TEMPORARY - JUST FOR TB ------------
-    signal t_rst_gen : std_logic;
+    -------------- TEMPORARY - JUST FOR TB ------------
 
-    -- universal registers
-    signal t_n : std_logic_vector(3 downto 0);
-    signal t_m : std_logic_vector(3 downto 0);
-    signal t_mask : std_logic_vector(15 downto 0);
+    ---- universal registers
+    --signal t_n : std_logic_vector(3 downto 0);
+    --signal t_m : std_logic_vector(3 downto 0);
+    --signal t_mask : std_logic_vector(15 downto 0);
 
-    -- memory signals
-    signal t_addr : std_logic_vector(15 downto 0);
-    signal t_sym : std_logic_vector(15 downto 0);
+    ---- memory signals
+    --signal t_addr : std_logic_vector(15 downto 0);
+    --signal t_sym : std_logic_vector(15 downto 0);
 
     -- testbench clocks
-    constant nums : integer := 320;
+    constant t_nums : integer := 320;
  
 begin
  
     -- instantiate the unit under test (uut)
     uut: top port map (
         CLK => CLK,
+        RST => RST,
         POLYBCD => POLYBCD,
         OPCODE => OPCODE,
         OPAND1 => OPAND1,
@@ -78,20 +79,22 @@ begin
         RESULT => RESULT,
         RDYGEN => RDYGEN,
         ERRB => ERRB,
-        ERRZ => ERRZ,
-        t_rst_gen => t_rst_gen,
-        t_n => t_n,
-        t_m => t_m,
-        t_mask => t_mask,
-        t_addr => t_addr,
-        t_sym => t_sym
+        ERRZ => ERRZ
+
+        -- TEMPORARY SIGNALS
+        --RST => RST,
+        --t_n => t_n,
+        --t_m => t_m,
+        --t_mask => t_mask,
+        --t_addr => t_addr,
+        --t_sym => t_sym
     );
 
     -- clock process
     CLK_proc: process
     begin
 
-        for i in 1 to nums loop
+        for i in 1 to t_nums loop
             CLK <= not CLK;
             wait for 10 ns;
             -- clock period = 50 MHz
@@ -104,14 +107,14 @@ begin
         begin    
 
         POLYBCD <= "0000000000011001";
-        t_rst_gen <= '1';
+        RST <= '1';
 
         OPAND1 <= "0000000000001001";
         OPAND2 <= "0000000000001100";
 
         wait for 20 ns;
 
-        t_rst_gen <= '0';
+        RST <= '0';
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
@@ -135,13 +138,13 @@ begin
         wait for 60 ns;
 
         -- div
-        OPCODE <= "011000";
+        OPCODE <= "001110";
 
         -- hold reset state for 40 ns.
         wait for 60 ns;
 
         -- log
-        OPCODE <= "100000";
+        OPCODE <= "001000";
 
         -- hold reset state for 40 ns.
         wait for 60 ns;
