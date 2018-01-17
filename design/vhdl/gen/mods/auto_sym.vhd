@@ -21,19 +21,18 @@ end auto_sym;
 
 architecture behavioral of auto_sym is
 
-    signal one16 : std_logic_vector(15 downto 0) := "0000000000000001";
     signal temp_sym : std_logic_vector(15 downto 0);
 
 begin
 
-    process (clk, en, rst)
+    process (clk, en, rst, temp_sym)
     begin
 
         if (en = '1') then
 
             if (rst = '1') then
 
-                temp_sym <= one16;
+                temp_sym <= "0000000000000001";
 
             elsif rising_edge(clk) then  -- if there is a rising edge
 

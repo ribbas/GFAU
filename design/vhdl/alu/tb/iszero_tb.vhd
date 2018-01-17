@@ -15,17 +15,16 @@ architecture behavioral of iszero_tb is
     -- component declaration for the unit under test (uut)     
     component iszero
         port(
-            en              : in std_logic;
-            operand         : in std_logic_vector(15 downto 0);
+            opand           : in std_logic_vector(15 downto 0);  -- opand
             mem_t           : in std_logic;
             is_zero_flag    : out std_logic
         );
     end component;
 
     -- inputs
-    signal operand : std_logic_vector(15 downto 0);
+    signal opand : std_logic_vector(15 downto 0);
     signal mem_t : std_logic;
-    signal en : std_logic;
+    --signal en : std_logic;
 
     -- outputs
     signal is_zero_flag : std_logic;
@@ -50,8 +49,7 @@ begin
 
     -- instantiate the unit under test (uut)
     uut: iszero port map(
-        en => en,
-        operand => operand,
+        opand => opand,
         mem_t => mem_t,
         is_zero_flag => is_zero_flag
     );
@@ -61,24 +59,30 @@ begin
     begin
 
         mem_t <= '0';  -- mem1
-        en <= '1';  -- enable
+        --en <= '1';  -- enable
 
         -- null in mem1
-        operand <= "1111111111111111";
+        opand <= "1111111111111111";
         wait for 40 ns;
 
         -- null in mem2, 0 in mem1
-        operand <= "0000000000000000";
+        opand <= "0000000000000000";
         wait for 40 ns;
 
         mem_t <= '1';  -- mem2
 
         -- null in mem1
-        operand <= "1111111111111111";
+        opand <= "1111111111111111";
         wait for 40 ns;
 
         -- null in mem2, 0 in mem1
-        operand <= "0000000000000000";
+        opand <= "0000000000000000";
+        wait for 40 ns;
+
+        opand <= "0000000000001100";
+        wait for 40 ns;
+
+        mem_t <= '0';  -- mem2
         wait for 40 ns;
 
         -- stop simulation

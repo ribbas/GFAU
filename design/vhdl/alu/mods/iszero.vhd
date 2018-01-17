@@ -9,12 +9,10 @@
 library ieee;
 use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 
 entity iszero is
     port(
-        en              : in std_logic;
-        operand         : in std_logic_vector(15 downto 0);  -- operand
+        opand           : in std_logic_vector(15 downto 0);  -- opand
         mem_t           : in std_logic;
         is_zero_flag    : out std_logic
    );
@@ -22,17 +20,28 @@ end iszero;
 
 architecture structural of iszero is
 
-    signal is_zero_flag_uand : std_ulogic;
-
 begin
 
-    is_zero_flag_uand <= operand(15) and operand(14) and 
-                operand(13) and operand(12) and operand(11) and 
-                operand(10) and operand(9) and operand(8) and 
-                operand(7) and operand(6) and operand(5) and 
-                operand(4) and operand(3) and operand(2) and 
-                operand(1) and operand(0);
+    process(mem_t, opand)
+    begin
 
-    is_zero_flag <= (is_zero_flag_uand xor mem_t) and en;
+        if (mem_t = '0') then
+
+            is_zero_flag <= opand(15) and opand(14) and opand(13) and opand(12)
+                        and opand(11) and opand(10) and opand(9) and opand(8)
+                        and opand(7) and opand(6) and opand(5) and opand(4) and
+                        opand(3) and opand(2) and opand(1) and opand(0);
+
+        elsif (mem_t = '1') then
+
+            is_zero_flag <= not (opand(15) or opand(14) or opand(13) or
+                        opand(12) or opand(11) or opand(10) or opand(9)
+                        or opand(8) or opand(7) or opand(6) or opand(5)
+                        or opand(4) or opand(3) or opand(2) or opand(1)
+                        or opand(0));
+
+        end if;
+
+    end process;
 
 end structural;

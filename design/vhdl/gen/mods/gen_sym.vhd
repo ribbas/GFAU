@@ -26,7 +26,7 @@ architecture behavioral of gen_sym is
 
 begin
 
-    process (clk, rst)
+    process (clk, rst, nth_sym, temp_sym)
     begin
 
         if (rst = '1') then

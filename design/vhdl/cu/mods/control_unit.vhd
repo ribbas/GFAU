@@ -53,8 +53,7 @@ architecture structural of control_unit is
 
     component iszero
         port(
-            en              : in std_logic;
-            operand         : in std_logic_vector(15 downto 0);
+            opand           : in std_logic_vector(15 downto 0);
             mem_t           : in std_logic;
             is_zero_flag    : out std_logic
         );
@@ -76,8 +75,7 @@ begin
     );
 
     iszero_unit: iszero port map(
-        en => en_zero,
-        operand => zero_opand,
+        opand => zero_opand,
         mem_t => mem_t,
         is_zero_flag => err_z
     );
@@ -112,9 +110,15 @@ begin
                     en_gen <= '0';
                     rst_gen <= '0';
 
+                    -- read from memory to convert element to polynomial
+                    mem_rd <= '1';
+
+                    -- mem2, addr = element, data = polynomial
+                    mem_t <= '1';
+
                     -- disable zero exception
-                    en_zero <= '0';
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    --en_zero <= '1';
+                    --zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     case state is
 
@@ -128,6 +132,7 @@ begin
 
                                 -- check mem_data for out-of-bound exceptions
                                 bd_opand <= mem_data;
+                                zero_opand <= mem_data;
 
                             -- if operand 1 is in polynomial form
                             else
@@ -137,15 +142,9 @@ begin
 
                                 -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand1;
+                                zero_opand <= opand1;
 
                             end if;
-
-                            -- read from memory to convert element to
-                            -- polynomial
-                            mem_rd <= '1';
-
-                            -- mem2, addr = element, data = polynomial
-                            mem_t <= '1';
 
                             -- address = element
                             mem_addr <= opand2;
@@ -162,6 +161,7 @@ begin
 
                                 -- check mem_data for out-of-bound exceptions
                                 bd_opand <= mem_data;
+                                zero_opand <= mem_data;
 
                             -- if operand 2 is in polynomial form
                             else
@@ -171,19 +171,13 @@ begin
 
                                 -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand2;
+                                zero_opand <= opand2;
 
                             end if;
 
                             state <= op1_state;
 
                         when others =>
-
-                            -- read from memory to convert element to
-                            -- polynomial
-                            mem_rd <= '1';
-
-                            -- mem2, addr = element, data = polynomial
-                            mem_t <= '1';
 
                             -- address = element
                             mem_addr <= opand1;
