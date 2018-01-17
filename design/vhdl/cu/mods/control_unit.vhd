@@ -14,9 +14,7 @@ use ieee.std_logic_unsigned.all;
 entity control_unit is
     port(
         clk         : in std_logic;
-        rst         : in std_logic;
         opcode      : in std_logic_vector(5 downto 0);   -- op code
-        poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
         opand1      : in std_logic_vector(15 downto 0);   -- operand 1
         opand2      : in std_logic_vector(15 downto 0);   -- operand 2
 
@@ -47,8 +45,8 @@ architecture structural of control_unit is
 
     component isbounded
         port(
-            operand     : in  std_logic_vector(15 downto 0);
-            mask        : in  std_logic_vector(15 downto 0);
+            operand     : in std_logic_vector(15 downto 0);
+            mask        : in std_logic_vector(15 downto 0);
             is_out_bd   : out std_logic
         );
     end component;
@@ -62,15 +60,12 @@ architecture structural of control_unit is
         );
     end component;
 
-    signal is_out_bd : std_logic;
     signal en_zero : std_logic;
-    signal is_zero_flag : std_logic;
     signal zero_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
     signal bd_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
 
     type state_type is (op1_state, op2_state);  -- define the states
     signal state : state_type;
-    signal temp_data : std_logic_vector(15 downto 0);  -- mem_data from memory
 
 begin
 
@@ -98,6 +93,12 @@ begin
 
                     -- enable generator
                     en_gen <= '1';
+                    rst_gen <= '0';
+
+                    -- disable arithmetic exceptions
+                    bd_opand <= "XXXXXXXXXXXXXXXX";
+                    en_zero <= 'X';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -109,9 +110,11 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
 
                     -- disable zero exception
                     en_zero <= '0';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     case state is
 
@@ -123,11 +126,16 @@ begin
                                 -- i is converted to polynomial
                                 i <= mem_data;
 
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
+
                             -- if operand 1 is in polynomial form
                             else
 
                                 -- i is the user input
                                 i <= opand1;
+
+                                -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand1;
 
                             end if;
@@ -152,11 +160,16 @@ begin
                                 -- j is converted to polynomial
                                 j <= mem_data;
 
-                            -- if operand 1 is in polynomial form
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
+
+                            -- if operand 2 is in polynomial form
                             else
 
-                                -- i is the user input
+                                -- j is the user input
                                 j <= opand2;
+
+                                -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand2;
 
                             end if;
@@ -185,9 +198,11 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
 
                     -- disable zero exception
                     en_zero <= '0';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     case state is
 
@@ -199,11 +214,16 @@ begin
                                 -- i is converted to element
                                 i <= mem_data;
 
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
+
                             -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
                                 i <= opand1;
+
+                                -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand1;
 
                             end if;
@@ -228,11 +248,16 @@ begin
                                 -- j is converted to element
                                 j <= mem_data;
 
-                            -- if operand 1 is in element form
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
+
+                            -- if operand 2 is in element form
                             else
 
-                                -- i is the user input
+                                -- j is the user input
                                 j <= opand2;
+
+                                -- check operand 2 for out-of-bound exceptions
                                 bd_opand <= opand2;
 
                             end if;
@@ -261,6 +286,7 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
 
                     case state is
 
@@ -272,11 +298,16 @@ begin
                                 -- i is converted to element
                                 i <= mem_data;
 
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
+
                             -- if operand 1 is in element form
                             else
 
-                                -- i is the user input
+                                -- j is the user input
                                 i <= opand1;
+
+                                -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand1;
 
                             end if;
@@ -290,6 +321,7 @@ begin
 
                             -- disable zero exception
                             en_zero <= '0';
+                            zero_opand <= "XXXXXXXXXXXXXXXX";
 
                             -- address = element
                             mem_addr <= opand2;
@@ -298,25 +330,27 @@ begin
 
                         when op2_state =>
 
+                            -- enable zero exception
+                            en_zero <= '1';
+                            zero_opand <= opand2;
+
                             -- if operand 2 is in polynomial form
                             if (opcode(1) = '1') then
 
                                 -- j is converted to element
                                 j <= mem_data;
 
-                                -- disable zero exception
-                                en_zero <= '0';
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
 
-                            -- if operand 1 is in element form
+                            -- if operand 2 is in element form
                             else
 
-                                -- i is the user input
+                                -- j is the user input
                                 j <= opand2;
-                                bd_opand <= opand2;
-                                zero_opand <= opand2;
 
-                                -- enable zero exception
-                                en_zero <= '1';
+                                -- check operand 2 for out-of-bound exceptions
+                                bd_opand <= opand2;
 
                             end if;
 
@@ -344,10 +378,15 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
 
                     case state is
 
                         when op1_state =>
+
+                            -- enable zero exception
+                            en_zero <= '1';
+                            zero_opand <= opand1;
 
                             -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
@@ -355,16 +394,17 @@ begin
                                 -- i is converted to element
                                 i <= mem_data;
 
+                                -- check mem_data for out-of-bound exceptions
+                                bd_opand <= mem_data;
+
                             -- if operand 1 is in element form
                             else
 
                                 -- i is the user input
                                 i <= opand1;
-                                bd_opand <= opand1;
-                                zero_opand <= opand1;
 
-                                -- enable zero exception
-                                en_zero <= '1';
+                                -- check operand 1 for out-of-bound exceptions
+                                bd_opand <= opand1;
 
                             end if;
 
@@ -398,7 +438,13 @@ begin
                 when "101" =>
 
                     -- disable generator
-                    en_gen <= '0';
+                    en_gen <= '1';
+                    rst_gen <= '1';
+
+                    -- disable arithmetic exceptions
+                    bd_opand <= "XXXXXXXXXXXXXXXX";
+                    en_zero <= 'X';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -410,6 +456,12 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
+
+                    -- disable arithmetic exceptions
+                    bd_opand <= "XXXXXXXXXXXXXXXX";
+                    en_zero <= 'X';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -420,6 +472,12 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
+
+                    -- disable arithmetic exceptions
+                    bd_opand <= "XXXXXXXXXXXXXXXX";
+                    en_zero <= 'X';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -430,6 +488,12 @@ begin
 
                     -- disable generator
                     en_gen <= '0';
+                    rst_gen <= '0';
+
+                    -- disable arithmetic exceptions
+                    bd_opand <= "XXXXXXXXXXXXXXXX";
+                    en_zero <= 'X';
+                    zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';

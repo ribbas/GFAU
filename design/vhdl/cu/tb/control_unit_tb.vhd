@@ -6,6 +6,7 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity control_unit_tb is
 end control_unit_tb;
@@ -16,9 +17,7 @@ architecture behavior of control_unit_tb is
     component control_unit
         port(
             clk         : in std_logic;
-            rst         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
-            poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
             opand1      : in std_logic_vector(15 downto 0);   -- operand 1
             opand2      : in std_logic_vector(15 downto 0);   -- operand 2
 
@@ -26,8 +25,8 @@ architecture behavior of control_unit_tb is
             mask        : in  std_logic_vector(15 downto 0);
 
             -- generation signals
-            en_gen      : out std_logic;  -- polynomial generator enable
-            rst_gen     : out std_logic;  -- polynomial generator reset
+            en_gen      : out std_logic;  -- term generator enable
+            rst_gen     : out std_logic;  -- term generator reset
 
             -- operation signals
             i           : out std_logic_vector(15 downto 0);  -- i
@@ -45,14 +44,13 @@ architecture behavior of control_unit_tb is
         );
     end component;
 
-    signal rst : std_logic;
+    signal rst_gen : std_logic;
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 0);   -- op code
-    signal poly_bcd : std_logic_vector(15 downto 0);   -- op code
-    signal opand1 : std_logic_vector(15 downto 0);   -- op code
-    signal opand2 : std_logic_vector(15 downto 0);   -- op code
-    signal mask : std_logic_vector(15 downto 0);   -- op code
+    signal opand1 : std_logic_vector(15 downto 0);   -- operand 1
+    signal opand2 : std_logic_vector(15 downto 0);   -- operand 2
+    signal mask : std_logic_vector(15 downto 0);   -- mask
 
     -- outputs
     signal err_b : std_logic;
@@ -63,10 +61,10 @@ architecture behavior of control_unit_tb is
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal mem_rd : std_logic;  -- read signal to memory
     signal mem_addr : std_logic_vector(15 downto 0);  -- address in memory
-    signal mem_data : std_logic_vector(15 downto 0);  -- data from memory
+    signal mem_data : std_logic_vector(15 downto 0) := "0000000000000000";  -- data from memory
 
     -- testbench clocks
-    constant nums : integer := 320;
+    constant t_nums : integer := 320;
     signal clk : std_ulogic := '1';
 
 begin
@@ -74,9 +72,7 @@ begin
     -- instantiate the unit under test (uut)
     uut: control_unit port map(
         clk => clk,
-        rst => rst,
         opcode => opcode,
-        poly_bcd => poly_bcd,
         opand1 => opand1,
         opand2 => opand2,
         mask => mask,
@@ -96,8 +92,9 @@ begin
     clk_proc: process
     begin
 
-        for i in 1 to nums loop
+        for i in 1 to t_nums loop
             clk <= not clk;
+            mem_data <= std_logic_vector(unsigned(mem_data) + 1);
             wait for 20 ns;
             -- clock period = 50 MHz
         end loop;
@@ -108,31 +105,22 @@ begin
     test : process
     begin
 
-        --wait for 400 ns; 
-
-        opcode <= "011100"; -- add/sub, operands in element
         mask <= "0000000000001111";
-        poly_bcd <= "0000000000010011";
-
-        opand1 <= "0000000000011001";
+        opand1 <= "0000000000001001";
         --opand2 <= "0000000000001100";
-        opand2 <= "1111111111111111";
+        opand2 <= "1111111111111111";  -- zero in element
 
-        mem_data <= "0000000000000001";
-        wait for 60 ns;
-
-        mem_data <= "0000000000000010";
-        --wait for 40 ns;
-
-        --opcode <= "010000"; -- add/sub, m1, m2 exponent  
-        --mem_data <= "0000000000000011";
+        opcode <= "00100X";  -- add/sub, operands in element
 
         wait for 100 ns;
 
-        opcode <= "000111"; -- add/sub, m1, m2 exponent  
-        mem_data <= "0000000000000011";
+        opcode <= "00111X"; -- add/sub, m1, m2 exponent  
 
-        wait for 500 ns;
+        wait for 100 ns;
+
+        opcode <= "00101X"; -- add/sub, m1, m2 exponent  
+
+        wait for 100 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

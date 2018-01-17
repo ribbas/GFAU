@@ -65,7 +65,7 @@ begin
         wait for 40 ns;
 
         -- 3
-        operand <= "0000000000000011";
+        operand <= "UUUUUUUUUUUUUUUU";
         wait for 40 ns;
 
         -- 7

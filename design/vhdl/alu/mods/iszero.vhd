@@ -26,7 +26,13 @@ architecture structural of iszero is
 
 begin
 
-    is_zero_flag_uand <= '1' when not operand = 0 else '0';    
+    is_zero_flag_uand <= operand(15) and operand(14) and 
+                operand(13) and operand(12) and operand(11) and 
+                operand(10) and operand(9) and operand(8) and 
+                operand(7) and operand(6) and operand(5) and 
+                operand(4) and operand(3) and operand(2) and 
+                operand(1) and operand(0);
+
     is_zero_flag <= (is_zero_flag_uand xor mem_t) and en;
 
 end structural;
