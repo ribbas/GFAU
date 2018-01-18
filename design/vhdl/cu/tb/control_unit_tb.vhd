@@ -106,21 +106,21 @@ begin
     begin
 
         mask <= "0000000000001111";
-        opand2 <= "0000000000001001";
+        opand1 <= "0000000000001001";
         --opand2 <= "0000000000001100";
-        opand1 <= "0000000000000000";  -- zero in element
+        opand2 <= "1111111111111111";  -- zero in element
 
         opcode <= "00111X";  -- add/sub, operands in element
 
         wait for 100 ns;
 
-        opcode <= "00100X"; -- add/sub, m1, m2 exponent  
+        --opcode <= "00111X"; -- add/sub, m1, m2 exponent  
 
-        wait for 100 ns;
+        --wait for 100 ns;
 
-        opcode <= "00101X"; -- add/sub, m1, m2 exponent  
+        --opcode <= "00101X"; -- add/sub, m1, m2 exponent  
 
-        wait for 100 ns;
+        --wait for 100 ns;
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

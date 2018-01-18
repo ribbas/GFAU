@@ -59,11 +59,12 @@ architecture structural of control_unit is
         );
     end component;
 
-    signal en_zero : std_logic;
+    signal err_z_t : std_logic;
+    signal zero_mem_t : std_logic;
     signal zero_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
     signal bd_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
 
-    type state_type is (op1_state, op2_state);  -- define the states
+    type state_type is (op1_state, op2_state, rdy_state);  -- define the states
     signal state : state_type;
 
 begin
@@ -76,7 +77,7 @@ begin
 
     iszero_unit: iszero port map(
         opand => zero_opand,
-        mem_t => mem_t,
+        mem_t => zero_mem_t,
         is_zero_flag => err_z
     );
 
@@ -95,7 +96,6 @@ begin
 
                     -- disable arithmetic exceptions
                     bd_opand <= "XXXXXXXXXXXXXXXX";
-                    en_zero <= 'X';
                     zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
@@ -116,13 +116,13 @@ begin
                     -- mem2, addr = element, data = polynomial
                     mem_t <= '1';
 
-                    -- disable zero exception
-                    --en_zero <= '1';
-                    --zero_opand <= "XXXXXXXXXXXXXXXX";
-
+                    err_z <= err_z_t;
+                    report "add" & std_logic'image(err_z_t);
                     case state is
 
                         when op1_state =>
+
+                            zero_mem_t <= opcode(2);
 
                             -- if operand 1 is in element form
                             if (opcode(2) = '0') then
@@ -152,6 +152,8 @@ begin
                             state <= op2_state;
 
                         when op2_state =>
+
+                            zero_mem_t <= opcode(1);
 
                             -- if operand 2 is in element form
                             if (opcode(1) = '0') then
@@ -187,20 +189,24 @@ begin
 
                     end case;
 
-                -- mul
-                when "010" =>
+                -- mul / div / log
+                when "010" | "011" | "100" =>
 
                     -- disable generator
                     en_gen <= '0';
                     rst_gen <= '0';
 
-                    -- disable zero exception
-                    en_zero <= '0';
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    -- read from memory to convert polynomial to element
+                    mem_rd <= '1';
+
+                    -- mem2, addr = element, data = polynomial
+                    mem_t <= '0';
 
                     case state is
 
                         when op1_state =>
+
+                            zero_mem_t <= opcode(2);
 
                             -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
@@ -210,6 +216,7 @@ begin
 
                                 -- check mem_data for out-of-bound exceptions
                                 bd_opand <= mem_data;
+                                zero_opand <= mem_data;
 
                             -- if operand 1 is in element form
                             else
@@ -219,15 +226,30 @@ begin
 
                                 -- check operand 1 for out-of-bound exceptions
                                 bd_opand <= opand1;
+                                zero_opand <= opand1;
 
                             end if;
 
-                            -- read from memory to convert polynomial to
-                            -- element
-                            mem_rd <= '1';
+                            case opcode(5 downto 3) is
 
-                            -- mem2, addr = element, data = polynomial
-                            mem_t <= '0';
+                                when "010" =>
+
+                                    err_z <= err_z_t and '1';
+                                    report "mul" & std_logic'image(err_z_t);
+
+                                when "011" =>
+
+                                    report "div" & std_logic'image(err_z_t);
+
+                                when "100" =>
+
+                                    report "log" & std_logic'image(err_z_t);
+
+                                when others =>
+
+                                    report "na " & std_logic'image(err_z_t);
+
+                            end case;
 
                             -- address = element
                             mem_addr <= opand2;
@@ -235,6 +257,8 @@ begin
                             state <= op2_state;
 
                         when op2_state =>
+
+                            zero_mem_t <= opcode(1);
 
                             -- if operand 2 is in polynomial form
                             if (opcode(1) = '1') then
@@ -244,12 +268,14 @@ begin
 
                                 -- check mem_data for out-of-bound exceptions
                                 bd_opand <= mem_data;
+                                zero_opand <= mem_data;
 
                             -- if operand 2 is in element form
                             else
 
                                 -- j is the user input
                                 j <= opand2;
+                                zero_opand <= opand2;
 
                                 -- check operand 2 for out-of-bound exceptions
                                 bd_opand <= opand2;
@@ -260,13 +286,6 @@ begin
 
                         when others =>
 
-                            -- read from memory to convert polynomial to
-                            -- element
-                            mem_rd <= '1';
-
-                            -- mem1, addr = polynomial, data = element
-                            mem_t <= '0';
-
                             -- address = polynomial
                             mem_addr <= opand1;
 
@@ -275,158 +294,150 @@ begin
 
                     end case;
 
-                -- div
-                when "011" =>
+                ---- div
+                --when "011" =>
 
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
+                --    -- disable generator
+                --    en_gen <= '0';
+                --    rst_gen <= '0';
 
-                    case state is
+                --    -- read from memory to convert polynomial to element
+                --    mem_rd <= '1';
 
-                        when op1_state =>
+                --    -- mem2, addr = element, data = polynomial
+                --    mem_t <= '0';
 
-                            -- if operand 1 is in polynomial form
-                            if (opcode(2) = '1') then
+                --    case state is
 
-                                -- i is converted to element
-                                i <= mem_data;
+                --        when op1_state =>
 
-                                -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
+                --            zero_mem_t <= opcode(2);
 
-                            -- if operand 1 is in element form
-                            else
+                --            -- if operand 1 is in polynomial form
+                --            if (opcode(2) = '1') then
 
-                                -- j is the user input
-                                i <= opand1;
+                --                -- i is converted to element
+                --                i <= mem_data;
 
-                                -- check operand 1 for out-of-bound exceptions
-                                bd_opand <= opand1;
+                --                -- check mem_data for out-of-bound exceptions
+                --                bd_opand <= mem_data;
+                --                zero_opand <= mem_data;
 
-                            end if;
+                --            -- if operand 1 is in element form
+                --            else
 
-                            -- read from memory to convert polynomial to
-                            -- element
-                            mem_rd <= '1';
+                --                -- i is the user input
+                --                i <= opand1;
 
-                            -- mem2, addr = element, data = polynomial
-                            mem_t <= '0';
+                --                -- check operand 1 for out-of-bound exceptions
+                --                bd_opand <= opand1;
+                --                zero_opand <= opand1;
 
-                            -- disable zero exception
-                            en_zero <= '0';
-                            zero_opand <= "XXXXXXXXXXXXXXXX";
+                --            end if;
 
-                            -- address = element
-                            mem_addr <= opand2;
+                --            -- address = element
+                --            mem_addr <= opand2;
 
-                            state <= op2_state;
+                --            state <= op2_state;
 
-                        when op2_state =>
+                --        when op2_state =>
 
-                            -- enable zero exception
-                            en_zero <= '1';
-                            zero_opand <= opand2;
+                --            zero_mem_t <= opcode(1);
 
-                            -- if operand 2 is in polynomial form
-                            if (opcode(1) = '1') then
+                --            -- if operand 2 is in polynomial form
+                --            if (opcode(1) = '1') then
 
-                                -- j is converted to element
-                                j <= mem_data;
+                --                -- j is converted to element
+                --                j <= mem_data;
 
-                                -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
+                --                -- check mem_data for out-of-bound exceptions
+                --                bd_opand <= mem_data;
+                --                zero_opand <= mem_data;
 
-                            -- if operand 2 is in element form
-                            else
+                --            -- if operand 2 is in element form
+                --            else
 
-                                -- j is the user input
-                                j <= opand2;
+                --                -- j is the user input
+                --                j <= opand2;
 
-                                -- check operand 2 for out-of-bound exceptions
-                                bd_opand <= opand2;
+                --                -- check operand 2 for out-of-bound exceptions
+                --                bd_opand <= opand2;
+                --                zero_opand <= opand2;
 
-                            end if;
+                --            end if;
 
-                            state <= op1_state;
+                --            state <= op1_state;
 
-                        when others =>
+                --        when others =>
 
-                            -- read from memory to convert polynomial to
-                            -- element
-                            mem_rd <= '1';
+                --            -- address = polynomial
+                --            mem_addr <= opand1;
 
-                            -- mem1, addr = polynomial, data = element
-                            mem_t <= '0';
+                --            -- state initializes to op1_state
+                --            state <= op1_state;
 
-                            -- address = polynomial
-                            mem_addr <= opand1;
+                --    end case;
 
-                            -- state initializes to op1_state
-                            state <= op1_state;
+                ---- log
+                --when "100" =>
 
-                    end case;
+                --    -- disable generator
+                --    en_gen <= '0';
+                --    rst_gen <= '0';
 
-                -- log
-                when "100" =>
+                --    case state is
 
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
+                --        when op1_state =>
 
-                    case state is
+                --            -- enable zero exception
+                --            en_zero <= '1';
+                --            zero_opand <= opand1;
 
-                        when op1_state =>
+                --            -- if operand 1 is in polynomial form
+                --            if (opcode(2) = '1') then
 
-                            -- enable zero exception
-                            en_zero <= '1';
-                            zero_opand <= opand1;
+                --                -- i is converted to element
+                --                i <= mem_data;
 
-                            -- if operand 1 is in polynomial form
-                            if (opcode(2) = '1') then
+                --                -- check mem_data for out-of-bound exceptions
+                --                bd_opand <= mem_data;
 
-                                -- i is converted to element
-                                i <= mem_data;
+                --            -- if operand 1 is in element form
+                --            else
 
-                                -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
+                --                -- i is the user input
+                --                i <= opand1;
 
-                            -- if operand 1 is in element form
-                            else
+                --                -- check operand 1 for out-of-bound exceptions
+                --                bd_opand <= opand1;
 
-                                -- i is the user input
-                                i <= opand1;
+                --            end if;
 
-                                -- check operand 1 for out-of-bound exceptions
-                                bd_opand <= opand1;
+                --            -- read from memory to convert polynomial to
+                --            -- element
+                --            mem_rd <= '1';
 
-                            end if;
+                --            -- mem2, addr = element, data = polynomial
+                --            mem_t <= '0';
 
-                            -- read from memory to convert polynomial to
-                            -- element
-                            mem_rd <= '1';
+                --            state <= op1_state;
 
-                            -- mem2, addr = element, data = polynomial
-                            mem_t <= '0';
+                --        when others =>
 
-                            state <= op1_state;
+                --            -- read from memory to convert polynomial to
+                --            -- element
+                --            mem_rd <= '1';
 
-                        when others =>
+                --            -- mem1, addr = polynomial, data = element
+                --            mem_t <= '0';
 
-                            -- read from memory to convert polynomial to
-                            -- element
-                            mem_rd <= '1';
+                --            -- address = polynomial
+                --            mem_addr <= opand1;
 
-                            -- mem1, addr = polynomial, data = element
-                            mem_t <= '0';
+                --            -- state initializes to op1_state
+                --            state <= op1_state;
 
-                            -- address = polynomial
-                            mem_addr <= opand1;
-
-                            -- state initializes to op1_state
-                            state <= op1_state;
-
-                    end case;
+                --    end case;
 
                 -- reset
                 when "101" =>
@@ -437,7 +448,6 @@ begin
 
                     -- disable arithmetic exceptions
                     bd_opand <= "XXXXXXXXXXXXXXXX";
-                    en_zero <= 'X';
                     zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
@@ -454,7 +464,6 @@ begin
 
                     -- disable arithmetic exceptions
                     bd_opand <= "XXXXXXXXXXXXXXXX";
-                    en_zero <= 'X';
                     zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
@@ -470,7 +479,6 @@ begin
 
                     -- disable arithmetic exceptions
                     bd_opand <= "XXXXXXXXXXXXXXXX";
-                    en_zero <= 'X';
                     zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
@@ -486,7 +494,6 @@ begin
 
                     -- disable arithmetic exceptions
                     bd_opand <= "XXXXXXXXXXXXXXXX";
-                    en_zero <= 'X';
                     zero_opand <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
