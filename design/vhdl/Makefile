@@ -8,7 +8,7 @@ analyze:
 
 .PHONY: test
 test:
-	@ghdl 
+	@ghdl
 
 
 .PHONY: clean

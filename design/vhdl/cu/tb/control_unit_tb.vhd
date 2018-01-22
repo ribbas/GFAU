@@ -61,10 +61,11 @@ architecture behavior of control_unit_tb is
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal mem_rd : std_logic;  -- read signal to memory
     signal mem_addr : std_logic_vector(15 downto 0);  -- address in memory
-    signal mem_data : std_logic_vector(15 downto 0) := "0000000000000000";  -- data from memory
+    signal mem_data : std_logic_vector(15 downto 0) := "1111111111111100";  -- data from memory
 
     -- testbench clocks
     constant t_nums : integer := 320;
+    constant t_clk_per : time := 20 ns;
     signal clk : std_ulogic := '1';
 
 begin
@@ -95,7 +96,7 @@ begin
         for i in 1 to t_nums loop
             clk <= not clk;
             mem_data <= std_logic_vector(unsigned(mem_data) + 1);
-            wait for 20 ns;
+            wait for (t_clk_per / 2);
             -- clock period = 50 MHz
         end loop;
 
@@ -106,21 +107,12 @@ begin
     begin
 
         mask <= "0000000000001111";
-        opand1 <= "0000000000001001";
+        opand2 <= "1000000000001001";
         --opand2 <= "0000000000001100";
-        opand2 <= "1111111111111111";  -- zero in element
+        opand1 <= "1111111111111111";  -- zero in element
 
-        opcode <= "00111X";  -- add/sub, operands in element
-
-        wait for 100 ns;
-
-        --opcode <= "00111X"; -- add/sub, m1, m2 exponent  
-
-        --wait for 100 ns;
-
-        --opcode <= "00101X"; -- add/sub, m1, m2 exponent  
-
-        --wait for 100 ns;
+        opcode <= "00110X";  -- add/sub, operands in element
+        wait for (t_clk_per * 3);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

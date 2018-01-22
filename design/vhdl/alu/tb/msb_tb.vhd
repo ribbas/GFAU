@@ -12,7 +12,7 @@ end msb_tb;
 
 architecture behavioral of msb_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component msb
         port(
             poly_bcd    : in  std_logic_vector(15 downto 0);

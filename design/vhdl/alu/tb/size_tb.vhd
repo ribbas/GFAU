@@ -12,7 +12,7 @@ end size_tb;
 
 architecture behavioral of size_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component size
         port(
             poly_bcd    : in  std_logic_vector(15 downto 0);

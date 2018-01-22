@@ -12,7 +12,7 @@ end claadder16_tb;
 
 architecture behavioral of claadder16_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component claadder16
         port(
             a   : in std_logic_vector(15 downto 0);

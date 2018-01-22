@@ -12,7 +12,7 @@ end isbounded_tb;
 
 architecture behavioral of isbounded_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component isbounded
         port(
             operand     : in  std_logic_vector(15 downto 0);

@@ -81,7 +81,7 @@ begin
         is_zero_flag => err_z
     );
 
-    process (clk, opcode) begin
+    process (clk, opcode, opand1, opand2, mask, mem_data, mem_t) begin
 
         if (rising_edge(clk)) then
 
@@ -116,20 +116,19 @@ begin
                     -- mem2, addr = element, data = polynomial
                     mem_t <= '1';
 
-                    err_z <= err_z_t;
-                    report "add" & std_logic'image(err_z_t);
+                    --err_z <= err_z_t;
+                    --report "add" & std_logic'image(err_z_t);
                     case state is
 
                         when op1_state =>
 
-                            zero_mem_t <= opcode(2);
+                            zero_mem_t <= not opcode(2);
 
                             -- if operand 1 is in element form
                             if (opcode(2) = '0') then
 
                                 -- i is converted to polynomial
                                 i <= mem_data;
-
                                 -- check mem_data for out-of-bound exceptions
                                 bd_opand <= mem_data;
                                 zero_opand <= mem_data;
@@ -153,7 +152,7 @@ begin
 
                         when op2_state =>
 
-                            zero_mem_t <= opcode(1);
+                            zero_mem_t <= not opcode(1);
 
                             -- if operand 2 is in element form
                             if (opcode(1) = '0') then
@@ -230,26 +229,26 @@ begin
 
                             end if;
 
-                            case opcode(5 downto 3) is
+                            --case opcode(5 downto 3) is
 
-                                when "010" =>
+                            --    when "010" =>
 
-                                    err_z <= err_z_t and '1';
-                                    report "mul" & std_logic'image(err_z_t);
+                            --        --err_z <= err_z_t and '1';
+                            --        report "mul" & std_logic'image(err_z_t);
 
-                                when "011" =>
+                            --    when "011" =>
 
-                                    report "div" & std_logic'image(err_z_t);
+                            --        report "div" & std_logic'image(err_z_t);
 
-                                when "100" =>
+                            --    when "100" =>
 
-                                    report "log" & std_logic'image(err_z_t);
+                            --        report "log" & std_logic'image(err_z_t);
 
-                                when others =>
+                            --    when others =>
 
-                                    report "na " & std_logic'image(err_z_t);
+                            --        report "na " & std_logic'image(err_z_t);
 
-                            end case;
+                            --end case;
 
                             -- address = element
                             mem_addr <= opand2;
@@ -442,7 +441,7 @@ begin
                 -- reset
                 when "101" =>
 
-                    -- disable generator
+                    -- reset generator
                     en_gen <= '1';
                     rst_gen <= '1';
 
@@ -504,7 +503,7 @@ begin
             end case;
 
         end if;
-        
+
     end process;
 
 end structural;

@@ -28,7 +28,7 @@ architecture structural of claadder16 is
             cout    : out std_logic
         );
     end component;
- 
+
     signal c1, c2, c3: std_logic;
 
 begin

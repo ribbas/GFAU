@@ -12,7 +12,7 @@ end varmask_tb;
 
 architecture behavioral of varmask_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component varmask
         port(
             poly_bcd    : in  std_logic_vector(15 downto 0);
