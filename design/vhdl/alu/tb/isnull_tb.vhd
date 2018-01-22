@@ -1,4 +1,4 @@
--- iszero_tb.vhd
+-- isnull_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -7,27 +7,26 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity iszero_tb is
-end iszero_tb;
+entity isnull_tb is
+end isnull_tb;
 
-architecture behavioral of iszero_tb is
+architecture behavioral of isnull_tb is
 
     -- component declaration for the unit under test (uut)
-    component iszero
+    component isnull
         port(
-            opand           : in std_logic_vector(15 downto 0);  -- opand
-            mem_t           : in std_logic;
-            is_zero_flag    : out std_logic
+            opand   : in std_logic_vector(15 downto 0);  -- opand
+            mem_t   : in std_logic;
+            is_null : out std_logic
         );
     end component;
 
     -- inputs
     signal opand : std_logic_vector(15 downto 0);
     signal mem_t : std_logic;
-    --signal en : std_logic;
 
     -- outputs
-    signal is_zero_flag : std_logic;
+    signal is_null : std_logic;
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -48,10 +47,10 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: iszero port map(
+    uut: isnull port map(
         opand => opand,
         mem_t => mem_t,
-        is_zero_flag => is_zero_flag
+        is_null => is_null
     );
 
     -- stimulus process
@@ -59,7 +58,6 @@ begin
     begin
 
         mem_t <= '0';  -- mem1
-        --en <= '1';  -- enable
 
         -- null in mem1
         opand <= "1111111111111111";

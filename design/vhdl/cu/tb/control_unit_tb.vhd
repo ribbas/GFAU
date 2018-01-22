@@ -109,9 +109,9 @@ begin
         mask <= "0000000000001111";
         opand2 <= "1000000000001001";
         --opand2 <= "0000000000001100";
-        opand1 <= "1111111111111111";  -- zero in element
+        opand1 <= "0000000000000000";  -- zero in element
 
-        opcode <= "00110X";  -- add/sub, operands in element
+        opcode <= "00111X";  -- add/sub, operands in element
         wait for (t_clk_per * 3);
 
         -- stop simulation

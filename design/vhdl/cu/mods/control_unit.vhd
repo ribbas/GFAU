@@ -55,7 +55,7 @@ architecture structural of control_unit is
         port(
             opand           : in std_logic_vector(15 downto 0);
             mem_t           : in std_logic;
-            is_zero_flag    : out std_logic
+            is_null    : out std_logic
         );
     end component;
 
@@ -78,7 +78,7 @@ begin
     iszero_unit: iszero port map(
         opand => zero_opand,
         mem_t => zero_mem_t,
-        is_zero_flag => err_z
+        is_null => err_z
     );
 
     process (clk, opcode, opand1, opand2, mask, mem_data, mem_t) begin
@@ -116,19 +116,19 @@ begin
                     -- mem2, addr = element, data = polynomial
                     mem_t <= '1';
 
-                    --err_z <= err_z_t;
-                    --report "add" & std_logic'image(err_z_t);
                     case state is
 
                         when op1_state =>
 
-                            zero_mem_t <= not opcode(2);
+                            --err_z <= err_z_t;
+                            zero_mem_t <= opcode(2);
 
                             -- if operand 1 is in element form
                             if (opcode(2) = '0') then
 
                                 -- i is converted to polynomial
                                 i <= mem_data;
+
                                 -- check mem_data for out-of-bound exceptions
                                 bd_opand <= mem_data;
                                 zero_opand <= mem_data;
@@ -152,7 +152,8 @@ begin
 
                         when op2_state =>
 
-                            zero_mem_t <= not opcode(1);
+                            --err_z <= err_z_t;
+                            zero_mem_t <= opcode(1);
 
                             -- if operand 2 is in element form
                             if (opcode(1) = '0') then
@@ -205,7 +206,7 @@ begin
 
                         when op1_state =>
 
-                            zero_mem_t <= opcode(2);
+                            zero_mem_t <= not opcode(2);
 
                             -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
