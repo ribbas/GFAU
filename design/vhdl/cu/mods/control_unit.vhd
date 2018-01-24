@@ -62,7 +62,6 @@ architecture structural of control_unit is
 
     signal opand_b : std_logic_vector(15 downto 0);  -- mem_data from memory
 
-    --signal err_z_t : std_logic;
     signal mem_t_z1 : std_logic;
     signal mem_t_z2 : std_logic;
     signal opand_z1 : std_logic_vector(15 downto 0); -- zero flag for operand 1
@@ -131,7 +130,6 @@ begin
 
                         when op1_state =>
 
-                            --err_z <= err_z_t;
                             mem_t_z1 <= not opcode(2);
 
                             -- if operand 1 is in element form
@@ -163,7 +161,6 @@ begin
 
                         when op2_state =>
 
-                            --err_z <= err_z_t;
                             mem_t_z2 <= not opcode(1);
 
                             -- if operand 2 is in element form
@@ -200,17 +197,17 @@ begin
 
                     end case;
 
-                -- mul / div / log
-                when "010" | "011" | "100" =>
+                -- mul / div
+                when "010" | "011" =>
 
                     -- disable generator
                     en_gen <= '0';
                     rst_gen <= '0';
 
-                    -- read from memory to convert polynomial to element
+                    -- read from memory to convert element to polynomial
                     mem_rd <= '1';
 
-                    -- mem2, addr = element, data = polynomial
+                    -- mem1, addr = polynomial, data = element
                     mem_t <= '0';
 
                     case state is
@@ -241,35 +238,14 @@ begin
 
                             end if;
 
-                            --case opcode(5 downto 3) is
-
-                            --    when "010" =>
-
-                            --        --err_z <= err_z_t and '1';
-                            --        report "mul" & std_logic'image(err_z_t);
-
-                            --    when "011" =>
-
-                            --        report "div" & std_logic'image(err_z_t);
-
-                            --    when "100" =>
-
-                            --        report "log" & std_logic'image(err_z_t);
-
-                            --    when others =>
-
-                            --        report "na " & std_logic'image(err_z_t);
-
-                            --end case;
-
-                            -- address = element
+                            -- address = polynomial
                             mem_addr <= opand2;
 
                             state <= op2_state;
 
                         when op2_state =>
 
-                            mem_t_z1 <= opcode(1);
+                            mem_t_z2 <= opcode(1);
 
                             -- if operand 2 is in polynomial form
                             if (opcode(1) = '1') then
@@ -279,17 +255,17 @@ begin
 
                                 -- check mem_data for out-of-bound exceptions
                                 opand_b <= mem_data;
-                                opand_z1 <= mem_data;
+                                opand_z2 <= mem_data;
 
                             -- if operand 2 is in element form
                             else
 
                                 -- j is the user input
                                 j <= opand2;
-                                opand_z1 <= opand2;
 
-                                -- check operand 2 for out-of-bound exceptions
+                                -- check operand 1 for out-of-bound exceptions
                                 opand_b <= opand2;
+                                opand_z2 <= opand2;
 
                             end if;
 
@@ -305,150 +281,61 @@ begin
 
                     end case;
 
-                ---- div
-                --when "011" =>
+                -- log
+                when "100" =>
 
-                --    -- disable generator
-                --    en_gen <= '0';
-                --    rst_gen <= '0';
+                    -- disable generator
+                    en_gen <= '0';
+                    rst_gen <= '0';
 
-                --    -- read from memory to convert polynomial to element
-                --    mem_rd <= '1';
+                    -- read from memory to convert element to polynomial
+                    mem_rd <= '1';
 
-                --    -- mem2, addr = element, data = polynomial
-                --    mem_t <= '0';
+                    -- mem1, addr = polynomial, data = element
+                    mem_t <= '0';
 
-                --    case state is
+                    case state is
 
-                --        when op1_state =>
+                        when op1_state =>
 
-                --            mem_t_z1 <= opcode(2);
+                            mem_t_z1 <= opcode(2);
 
-                --            -- if operand 1 is in polynomial form
-                --            if (opcode(2) = '1') then
+                            -- if operand 1 is in polynomial form
+                            if (opcode(2) = '1') then
 
-                --                -- i is converted to element
-                --                i <= mem_data;
+                                -- i is converted to element
+                                i <= mem_data;
 
-                --                -- check mem_data for out-of-bound exceptions
-                --                opand_b <= mem_data;
-                --                opand_z1 <= mem_data;
+                                -- check mem_data for out-of-bound exceptions
+                                opand_b <= mem_data;
+                                opand_z1 <= mem_data;
 
-                --            -- if operand 1 is in element form
-                --            else
+                            -- if operand 1 is in element form
+                            else
 
-                --                -- i is the user input
-                --                i <= opand1;
+                                -- i is the user input
+                                i <= opand1;
 
-                --                -- check operand 1 for out-of-bound exceptions
-                --                opand_b <= opand1;
-                --                opand_z1 <= opand1;
+                                -- check operand 1 for out-of-bound exceptions
+                                opand_b <= opand1;
+                                opand_z1 <= opand1;
 
-                --            end if;
+                            end if;
 
-                --            -- address = element
-                --            mem_addr <= opand2;
+                            -- address = don't care
+                            mem_addr <= "XXXXXXXXXXXXXXXX";
 
-                --            state <= op2_state;
+                            state <= op1_state;
 
-                --        when op2_state =>
+                        when others =>
 
-                --            mem_t_z1 <= opcode(1);
+                            -- address = polynomial
+                            mem_addr <= opand1;
 
-                --            -- if operand 2 is in polynomial form
-                --            if (opcode(1) = '1') then
+                            -- state initializes to op1_state
+                            state <= op1_state;
 
-                --                -- j is converted to element
-                --                j <= mem_data;
-
-                --                -- check mem_data for out-of-bound exceptions
-                --                opand_b <= mem_data;
-                --                opand_z1 <= mem_data;
-
-                --            -- if operand 2 is in element form
-                --            else
-
-                --                -- j is the user input
-                --                j <= opand2;
-
-                --                -- check operand 2 for out-of-bound exceptions
-                --                opand_b <= opand2;
-                --                opand_z1 <= opand2;
-
-                --            end if;
-
-                --            state <= op1_state;
-
-                --        when others =>
-
-                --            -- address = polynomial
-                --            mem_addr <= opand1;
-
-                --            -- state initializes to op1_state
-                --            state <= op1_state;
-
-                --    end case;
-
-                ---- log
-                --when "100" =>
-
-                --    -- disable generator
-                --    en_gen <= '0';
-                --    rst_gen <= '0';
-
-                --    case state is
-
-                --        when op1_state =>
-
-                --            -- enable zero exception
-                --            en_zero <= '1';
-                --            opand_z1 <= opand1;
-
-                --            -- if operand 1 is in polynomial form
-                --            if (opcode(2) = '1') then
-
-                --                -- i is converted to element
-                --                i <= mem_data;
-
-                --                -- check mem_data for out-of-bound exceptions
-                --                opand_b <= mem_data;
-
-                --            -- if operand 1 is in element form
-                --            else
-
-                --                -- i is the user input
-                --                i <= opand1;
-
-                --                -- check operand 1 for out-of-bound exceptions
-                --                opand_b <= opand1;
-
-                --            end if;
-
-                --            -- read from memory to convert polynomial to
-                --            -- element
-                --            mem_rd <= '1';
-
-                --            -- mem2, addr = element, data = polynomial
-                --            mem_t <= '0';
-
-                --            state <= op1_state;
-
-                --        when others =>
-
-                --            -- read from memory to convert polynomial to
-                --            -- element
-                --            mem_rd <= '1';
-
-                --            -- mem1, addr = polynomial, data = element
-                --            mem_t <= '0';
-
-                --            -- address = polynomial
-                --            mem_addr <= opand1;
-
-                --            -- state initializes to op1_state
-                --            state <= op1_state;
-
-                --    end case;
+                    end case;
 
                 -- reset
                 when "101" =>
@@ -484,7 +371,8 @@ begin
                     mem_rd <= '0';
                     mem_addr <= "XXXXXXXXXXXXXXXX";
 
-                when "111" =>  -- nop
+                -- nop
+                when "111" =>
 
                     -- disable generator
                     en_gen <= '0';

@@ -114,7 +114,7 @@ begin
         --opand2 <= "0000000000001100";
         opand2 <= "0000000000000000";  -- zero in element
 
-        opcode <= "00100X";  -- add/sub, operands in element
+        opcode <= "01100X";  -- add/sub, operands in element
         wait for (t_clk_per * 3);
 
         -- stop simulation

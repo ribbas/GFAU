@@ -176,17 +176,17 @@ begin
         err_z => err_z
     );
 
-    ---- memory wrapper
-    --mem : memory port map(
-    --    clk => clk,
-    --    mem_t => mem_t,
-    --    mem_rd => convert,
-    --    mem_wr => '0',
-    --    addr_in => "XXXXXXXXXXXXXXXX",
-    --    addr_out => out_sel,
-    --    data_in => "XXXXXXXXXXXXXXXX",
-    --    data_out => mem_out
-    --);
+    -- memory wrapper
+    mem : memory port map(
+        clk => clk,
+        mem_t => mem_t,
+        mem_rd => convert,
+        mem_wr => '0',
+        addr_in => "XXXXXXXXXXXXXXXX",
+        addr_out => out_sel,
+        data_in => "XXXXXXXXXXXXXXXX",
+        data_out => mem_out
+    );
 
     -- output converter
     outconvert_unit : outconvert port map(
