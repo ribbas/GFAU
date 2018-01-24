@@ -37,7 +37,8 @@ entity control_unit is
 
         -- exceptions
         err_b       : out std_logic;  -- out of bound exception
-        err_z       : out std_logic  -- zero exception
+        opand1_null : out std_logic;  -- zero exception
+        opand2_null : out std_logic  -- zero exception
     );
 end control_unit;
 
@@ -51,7 +52,7 @@ architecture structural of control_unit is
         );
     end component;
 
-    component iszero
+    component isnull
         port(
             opand           : in std_logic_vector(15 downto 0);
             mem_t           : in std_logic;
@@ -59,10 +60,13 @@ architecture structural of control_unit is
         );
     end component;
 
-    signal err_z_t : std_logic;
-    signal zero_mem_t : std_logic;
-    signal zero_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
-    signal bd_opand : std_logic_vector(15 downto 0);  -- mem_data from memory
+    signal opand_b : std_logic_vector(15 downto 0);  -- mem_data from memory
+
+    --signal err_z_t : std_logic;
+    signal mem_t_z1 : std_logic;
+    signal mem_t_z2 : std_logic;
+    signal opand_z1 : std_logic_vector(15 downto 0); -- zero flag for operand 1
+    signal opand_z2 : std_logic_vector(15 downto 0); -- zero flag for operand 2
 
     type state_type is (op1_state, op2_state, rdy_state);  -- define the states
     signal state : state_type;
@@ -70,15 +74,21 @@ architecture structural of control_unit is
 begin
 
     isbounded_unit: isbounded port map(
-        operand => bd_opand,
+        operand => opand_b,
         mask => mask,
         is_out_bd => err_b
     );
 
-    iszero_unit: iszero port map(
-        opand => zero_opand,
-        mem_t => zero_mem_t,
-        is_null => err_z
+    iszero_unit1: isnull port map(
+        opand => opand_z1,
+        mem_t => mem_t_z1,
+        is_null => opand1_null
+    );
+
+    iszero_unit2: isnull port map(
+        opand => opand_z2,
+        mem_t => mem_t_z2,
+        is_null => opand2_null
     );
 
     process (clk, opcode, opand1, opand2, mask, mem_data, mem_t) begin
@@ -95,8 +105,9 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    bd_opand <= "XXXXXXXXXXXXXXXX";
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    opand_b <= "XXXXXXXXXXXXXXXX";
+                    opand_z1 <= "XXXXXXXXXXXXXXXX";
+                    opand_z2 <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -121,7 +132,7 @@ begin
                         when op1_state =>
 
                             --err_z <= err_z_t;
-                            zero_mem_t <= opcode(2);
+                            mem_t_z1 <= not opcode(2);
 
                             -- if operand 1 is in element form
                             if (opcode(2) = '0') then
@@ -130,8 +141,8 @@ begin
                                 i <= mem_data;
 
                                 -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
-                                zero_opand <= mem_data;
+                                opand_b <= mem_data;
+                                opand_z1 <= mem_data;
 
                             -- if operand 1 is in polynomial form
                             else
@@ -140,8 +151,8 @@ begin
                                 i <= opand1;
 
                                 -- check operand 1 for out-of-bound exceptions
-                                bd_opand <= opand1;
-                                zero_opand <= opand1;
+                                opand_b <= opand1;
+                                opand_z1 <= opand1;
 
                             end if;
 
@@ -153,7 +164,7 @@ begin
                         when op2_state =>
 
                             --err_z <= err_z_t;
-                            zero_mem_t <= opcode(1);
+                            mem_t_z2 <= not opcode(1);
 
                             -- if operand 2 is in element form
                             if (opcode(1) = '0') then
@@ -162,8 +173,8 @@ begin
                                 j <= mem_data;
 
                                 -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
-                                zero_opand <= mem_data;
+                                opand_b <= mem_data;
+                                opand_z2 <= mem_data;
 
                             -- if operand 2 is in polynomial form
                             else
@@ -172,8 +183,8 @@ begin
                                 j <= opand2;
 
                                 -- check operand 1 for out-of-bound exceptions
-                                bd_opand <= opand2;
-                                zero_opand <= opand2;
+                                opand_b <= opand2;
+                                opand_z2 <= opand2;
 
                             end if;
 
@@ -206,7 +217,7 @@ begin
 
                         when op1_state =>
 
-                            zero_mem_t <= not opcode(2);
+                            mem_t_z1 <= opcode(2);
 
                             -- if operand 1 is in polynomial form
                             if (opcode(2) = '1') then
@@ -215,8 +226,8 @@ begin
                                 i <= mem_data;
 
                                 -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
-                                zero_opand <= mem_data;
+                                opand_b <= mem_data;
+                                opand_z1 <= mem_data;
 
                             -- if operand 1 is in element form
                             else
@@ -225,8 +236,8 @@ begin
                                 i <= opand1;
 
                                 -- check operand 1 for out-of-bound exceptions
-                                bd_opand <= opand1;
-                                zero_opand <= opand1;
+                                opand_b <= opand1;
+                                opand_z1 <= opand1;
 
                             end if;
 
@@ -258,7 +269,7 @@ begin
 
                         when op2_state =>
 
-                            zero_mem_t <= opcode(1);
+                            mem_t_z1 <= opcode(1);
 
                             -- if operand 2 is in polynomial form
                             if (opcode(1) = '1') then
@@ -267,18 +278,18 @@ begin
                                 j <= mem_data;
 
                                 -- check mem_data for out-of-bound exceptions
-                                bd_opand <= mem_data;
-                                zero_opand <= mem_data;
+                                opand_b <= mem_data;
+                                opand_z1 <= mem_data;
 
                             -- if operand 2 is in element form
                             else
 
                                 -- j is the user input
                                 j <= opand2;
-                                zero_opand <= opand2;
+                                opand_z1 <= opand2;
 
                                 -- check operand 2 for out-of-bound exceptions
-                                bd_opand <= opand2;
+                                opand_b <= opand2;
 
                             end if;
 
@@ -311,7 +322,7 @@ begin
 
                 --        when op1_state =>
 
-                --            zero_mem_t <= opcode(2);
+                --            mem_t_z1 <= opcode(2);
 
                 --            -- if operand 1 is in polynomial form
                 --            if (opcode(2) = '1') then
@@ -320,8 +331,8 @@ begin
                 --                i <= mem_data;
 
                 --                -- check mem_data for out-of-bound exceptions
-                --                bd_opand <= mem_data;
-                --                zero_opand <= mem_data;
+                --                opand_b <= mem_data;
+                --                opand_z1 <= mem_data;
 
                 --            -- if operand 1 is in element form
                 --            else
@@ -330,8 +341,8 @@ begin
                 --                i <= opand1;
 
                 --                -- check operand 1 for out-of-bound exceptions
-                --                bd_opand <= opand1;
-                --                zero_opand <= opand1;
+                --                opand_b <= opand1;
+                --                opand_z1 <= opand1;
 
                 --            end if;
 
@@ -342,7 +353,7 @@ begin
 
                 --        when op2_state =>
 
-                --            zero_mem_t <= opcode(1);
+                --            mem_t_z1 <= opcode(1);
 
                 --            -- if operand 2 is in polynomial form
                 --            if (opcode(1) = '1') then
@@ -351,8 +362,8 @@ begin
                 --                j <= mem_data;
 
                 --                -- check mem_data for out-of-bound exceptions
-                --                bd_opand <= mem_data;
-                --                zero_opand <= mem_data;
+                --                opand_b <= mem_data;
+                --                opand_z1 <= mem_data;
 
                 --            -- if operand 2 is in element form
                 --            else
@@ -361,8 +372,8 @@ begin
                 --                j <= opand2;
 
                 --                -- check operand 2 for out-of-bound exceptions
-                --                bd_opand <= opand2;
-                --                zero_opand <= opand2;
+                --                opand_b <= opand2;
+                --                opand_z1 <= opand2;
 
                 --            end if;
 
@@ -391,7 +402,7 @@ begin
 
                 --            -- enable zero exception
                 --            en_zero <= '1';
-                --            zero_opand <= opand1;
+                --            opand_z1 <= opand1;
 
                 --            -- if operand 1 is in polynomial form
                 --            if (opcode(2) = '1') then
@@ -400,7 +411,7 @@ begin
                 --                i <= mem_data;
 
                 --                -- check mem_data for out-of-bound exceptions
-                --                bd_opand <= mem_data;
+                --                opand_b <= mem_data;
 
                 --            -- if operand 1 is in element form
                 --            else
@@ -409,7 +420,7 @@ begin
                 --                i <= opand1;
 
                 --                -- check operand 1 for out-of-bound exceptions
-                --                bd_opand <= opand1;
+                --                opand_b <= opand1;
 
                 --            end if;
 
@@ -447,8 +458,9 @@ begin
                     rst_gen <= '1';
 
                     -- disable arithmetic exceptions
-                    bd_opand <= "XXXXXXXXXXXXXXXX";
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    opand_b <= "XXXXXXXXXXXXXXXX";
+                    opand_z1 <= "XXXXXXXXXXXXXXXX";
+                    opand_z2 <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -463,8 +475,9 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    bd_opand <= "XXXXXXXXXXXXXXXX";
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    opand_b <= "XXXXXXXXXXXXXXXX";
+                    opand_z1 <= "XXXXXXXXXXXXXXXX";
+                    opand_z2 <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -478,8 +491,9 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    bd_opand <= "XXXXXXXXXXXXXXXX";
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    opand_b <= "XXXXXXXXXXXXXXXX";
+                    opand_z1 <= "XXXXXXXXXXXXXXXX";
+                    opand_z2 <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';
@@ -493,8 +507,9 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    bd_opand <= "XXXXXXXXXXXXXXXX";
-                    zero_opand <= "XXXXXXXXXXXXXXXX";
+                    opand_b <= "XXXXXXXXXXXXXXXX";
+                    opand_z1 <= "XXXXXXXXXXXXXXXX";
+                    opand_z2 <= "XXXXXXXXXXXXXXXX";
 
                     -- disable memory lookup
                     mem_t <= 'X';

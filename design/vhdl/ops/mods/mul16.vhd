@@ -29,7 +29,7 @@ architecture structural of mul16 is
             s   : out std_logic_vector(15 downto 0)
         );
     end component;
- 
+
     signal sumij : std_logic_vector(15 downto 0);
     signal sumij1 : std_logic_vector(15 downto 0);
 
@@ -49,15 +49,21 @@ begin
         sumij1              -- sum of i and j and 1
     );
 
-    process (sumij, sumij1)
+    process (n, sumij, sumij1)
     begin
 
         -- if (OF(i + j) or OF(i + j + 1) == 0)
-        if ((sumij(to_integer(unsigned(n))) or 
+        if ((sumij(to_integer(unsigned(n))) or
             sumij1(to_integer(unsigned(n)))) = '0') then
-            prod <= sumij;          -- prod = i + j
+
+            -- prod = i + j
+            prod <= sumij;
+
         else
-            prod <= sumij1;         -- prod = i + j + 1
+
+            -- prod = i + j + 1
+            prod <= sumij1;
+
         end if;
 
     end process;

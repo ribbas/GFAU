@@ -13,8 +13,7 @@ use ieee.std_logic_1164.all;
 entity outconvert is
     port(
         convert : in std_logic;
-        mask    : in std_logic_vector(15 downto 0);
-        sel_out : in std_logic_vector(15 downto 0);
+        out_sel : in std_logic_vector(15 downto 0);
         mem_out : in std_logic_vector(15 downto 0);
         result  : out std_logic_vector(15 downto 0)
     );
@@ -24,19 +23,19 @@ architecture behavioral of outconvert is
 
 begin
 
-    process (convert, sel_out, mem_out) begin
+    process (convert, out_sel, mem_out) begin
 
         if (convert = '1') then
 
-            result <= mem_out and mask;
+            result <= mem_out;
 
         else
 
-            result <= sel_out and mask;
+            result <= out_sel;
 
         end if;
 
     end process;
-     
+
 end behavioral;
 

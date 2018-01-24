@@ -16,9 +16,12 @@ entity operators is
         opcode  : in std_logic_vector(5 downto 0);  -- opcode
         i       : in std_logic_vector(15 downto 0); -- first element
         j       : in std_logic_vector(15 downto 0); -- second element
+        i_null  : in std_logic;
+        j_null  : in std_logic;
         n       : in std_logic_vector(3 downto 0);  -- size of polynomial
         mask    : in std_logic_vector(15 downto 0);  -- mask
-        result  : out std_logic_vector(15 downto 0) -- selected output
+        result  : out std_logic_vector(15 downto 0); -- selected output
+        err_z   : out std_logic -- zero exception
     );
 end operators;
 
@@ -40,6 +43,8 @@ architecture structural of operators is
         port(
             i       : in std_logic_vector (15 downto 0);
             j       : in std_logic_vector (15 downto 0);
+            i_null  : in std_logic;
+            j_null  : in std_logic;
             bitxor  : out std_logic_vector (15 downto 0)
         );
     end component;
@@ -82,26 +87,28 @@ architecture structural of operators is
 
     ---------------- output multiplexers ----------------
 
-    -- output select
     component outselect
-        port( 
-            opcode      : in std_logic_vector(5 downto 0);
-            addsubop    : in std_logic_vector(15 downto 0);
-            mulop       : in std_logic_vector(15 downto 0);
-            divop       : in std_logic_vector(15 downto 0);
-            logop       : in std_logic_vector(15 downto 0);
-            sel_out     : out std_logic_vector(15 downto 0);
-            mem_t       : out std_logic;
-            convert     : out std_logic
+        port(
+            opcode  : in std_logic_vector(5 downto 0);
+            out_as  : in std_logic_vector(15 downto 0);
+            out_m   : in std_logic_vector(15 downto 0);
+            out_d   : in std_logic_vector(15 downto 0);
+            out_l   : in std_logic_vector(15 downto 0);
+            mask    : in std_logic_vector(15 downto 0);
+            i_null  : in std_logic;
+            j_null  : in std_logic;
+            out_sel : out std_logic_vector(15 downto 0);
+            mem_t   : out std_logic;
+            convert : out std_logic;
+            err_z   : out std_logic
         );
     end component;
 
     -- output select
     component outconvert
-        port( 
+        port(
             convert : in std_logic;
-            mask    : in std_logic_vector(15 downto 0);
-            sel_out : in std_logic_vector(15 downto 0);
+            out_sel : in std_logic_vector(15 downto 0);
             mem_out : in std_logic_vector(15 downto 0);
             result  : out std_logic_vector(15 downto 0)
         );
@@ -113,7 +120,7 @@ architecture structural of operators is
     signal prod : std_logic_vector(15 downto 0);
     signal quot : std_logic_vector(15 downto 0);
 
-    signal sel_out : std_logic_vector(15 downto 0);
+    signal out_sel : std_logic_vector(15 downto 0);
     signal mem_out : std_logic_vector(15 downto 0);
     signal mem_t : std_logic;
     signal convert : std_logic;
@@ -132,6 +139,8 @@ begin
     addsub_unit: addsub16 port map(
         i => i,
         j => j,
+        i_null => i_null,
+        j_null => j_null,
         bitxor => bitxor
     );
 
@@ -154,32 +163,35 @@ begin
     -- output selector
     outselect_unit: outselect port map(
         opcode => opcode,
-        addsubop => bitxor,
-        mulop => prod,
-        divop => quot,
-        logop => i,
-        sel_out => sel_out,
+        out_as => bitxor,
+        out_m => prod,
+        out_d => quot,
+        out_l => i,
+        mask => mask,
+        i_null => i_null,
+        j_null => j_null,
+        out_sel => out_sel,
         mem_t => mem_t,
-        convert => convert
+        convert => convert,
+        err_z => err_z
     );
 
-    -- memory wrapper
-    mem : memory port map(
-        clk => clk,
-        mem_t => mem_t,
-        mem_rd => convert,
-        mem_wr => '0',
-        addr_in => "XXXXXXXXXXXXXXXX",
-        addr_out => sel_out,
-        data_in => "XXXXXXXXXXXXXXXX",
-        data_out => mem_out
-    );
+    ---- memory wrapper
+    --mem : memory port map(
+    --    clk => clk,
+    --    mem_t => mem_t,
+    --    mem_rd => convert,
+    --    mem_wr => '0',
+    --    addr_in => "XXXXXXXXXXXXXXXX",
+    --    addr_out => out_sel,
+    --    data_in => "XXXXXXXXXXXXXXXX",
+    --    data_out => mem_out
+    --);
 
     -- output converter
     outconvert_unit : outconvert port map(
         convert => convert,
-        mask => mask,
-        sel_out => sel_out,
+        out_sel => out_sel,
         mem_out => mem_out,
         result => result
     );

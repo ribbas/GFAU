@@ -12,30 +12,37 @@ end outselect_tb;
 
 architecture behavioral of outselect_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component outselect
-        port( 
-            opcode      : in std_logic_vector(5 downto 0);
-            addsubop    : in std_logic_vector(15 downto 0);
-            mulop       : in std_logic_vector(15 downto 0);
-            divop       : in std_logic_vector(15 downto 0);
-            logop       : in std_logic_vector(15 downto 0);
-            sel_out     : out std_logic_vector(15 downto 0);
-            mem_t       : out std_logic;
-            convert     : out std_logic
+        port(
+            opcode  : in std_logic_vector(5 downto 0);
+            out_as  : in std_logic_vector(15 downto 0);
+            out_m   : in std_logic_vector(15 downto 0);
+            out_d   : in std_logic_vector(15 downto 0);
+            out_l   : in std_logic_vector(15 downto 0);
+            i_null  : in std_logic;
+            j_null  : in std_logic;
+            out_sel : out std_logic_vector(15 downto 0);
+            mem_t   : out std_logic;
+            convert : out std_logic;
+            err_z   : out std_logic
         );
     end component;
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 0) := (others => '0');
-    signal addsubop : std_logic_vector(15 downto 0) := (others => '0');
-    signal mulop : std_logic_vector(15 downto 0) := (others => '0');
-    signal divop : std_logic_vector(15 downto 0) := (others => '0');
-    signal logop : std_logic_vector(15 downto 0) := (others => '0');
+    signal out_as : std_logic_vector(15 downto 0) := (others => '0');
+    signal out_m : std_logic_vector(15 downto 0) := (others => '0');
+    signal out_d : std_logic_vector(15 downto 0) := (others => '0');
+    signal out_l : std_logic_vector(15 downto 0) := (others => '0');
+    signal i_null : std_logic;
+    signal j_null : std_logic;
 
     -- outputs
-    signal sel_out : std_logic_vector(15 downto 0);
+    signal out_sel : std_logic_vector(15 downto 0);
     signal convert : std_logic;
+    signal mem_t : std_logic;
+    signal err_z : std_logic;
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -46,12 +53,16 @@ begin
     -- instantiate the unit under test (uut)
     uut: outselect port map(
         opcode => opcode,
-        addsubop => addsubop,
-        mulop => mulop,
-        divop => divop,
-        logop => logop,
-        sel_out => sel_out,
-        convert => convert
+        out_as => out_as,
+        out_m => out_m,
+        out_d => out_d,
+        out_l => out_l,
+        i_null => i_null,
+        j_null => j_null,
+        out_sel => out_sel,
+        mem_t => mem_t,
+        convert => convert,
+        err_z => err_z
     );
 
     -- clock process
@@ -67,7 +78,7 @@ begin
     end process;
 
     -- stimulus process
-    stim_proc: process
+    stim_proc : process
     begin
 
         -- hold reset state for 20 ns.
@@ -75,10 +86,12 @@ begin
 
         -- addsub
         opcode <= "001010";
-        addsubop <= "1111111111111111";
-        mulop <= "0111111111111111";
-        divop <= "0011111111111111";
-        logop <= "0001111111111111";
+        out_as <= "1111111111111110";
+        out_m <= "0111111111111111";
+        out_d <= "0011111111111111";
+        out_l <= "0001111111111111";
+        i_null <= '1';
+        j_null <= '1';
 
         -- hold reset state for 40 ns.
         wait for 40 ns;

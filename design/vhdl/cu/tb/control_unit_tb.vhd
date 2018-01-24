@@ -40,7 +40,8 @@ architecture behavior of control_unit_tb is
 
             -- exceptions
             err_b       : out std_logic;  -- out of bound exception
-            err_z       : out std_logic  -- zero exception
+            opand1_null : out std_logic;  -- zero exception
+            opand2_null : out std_logic  -- zero exception
         );
     end component;
 
@@ -54,7 +55,8 @@ architecture behavior of control_unit_tb is
 
     -- outputs
     signal err_b : std_logic;
-    signal err_z : std_logic;
+    signal opand1_null : std_logic;
+    signal opand2_null : std_logic;
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(15 downto 0);  -- address in memory
     signal j : std_logic_vector(15 downto 0);  -- address in memory
@@ -86,7 +88,8 @@ begin
         mem_addr => mem_addr,
         mem_data => mem_data,
         err_b => err_b,
-        err_z => err_z
+        opand1_null => opand1_null,
+        opand2_null => opand2_null
     );
 
     -- clock process
@@ -107,11 +110,11 @@ begin
     begin
 
         mask <= "0000000000001111";
-        opand2 <= "1000000000001001";
+        opand1 <= "1000000000001001";
         --opand2 <= "0000000000001100";
-        opand1 <= "0000000000000000";  -- zero in element
+        opand2 <= "0000000000000000";  -- zero in element
 
-        opcode <= "00111X";  -- add/sub, operands in element
+        opcode <= "00100X";  -- add/sub, operands in element
         wait for (t_clk_per * 3);
 
         -- stop simulation

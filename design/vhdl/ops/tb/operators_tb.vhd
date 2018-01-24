@@ -12,16 +12,19 @@ end operators_tb;
 
 architecture behavioral of operators_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component operators
-        port( 
+        port(
             clk     : in std_logic;
             opcode  : in std_logic_vector(5 downto 0);  -- opcode
             i       : in std_logic_vector(15 downto 0); -- first element
             j       : in std_logic_vector(15 downto 0); -- second element
+            i_null  : in std_logic;
+            j_null  : in std_logic;
             n       : in std_logic_vector(3 downto 0);  -- size of polynomial
             mask    : in std_logic_vector(15 downto 0);  -- mask
-            result  : out std_logic_vector(15 downto 0) -- selected output
+            result  : out std_logic_vector(15 downto 0); -- selected output
+            err_z   : out std_logic -- zero exception
         );
     end component;
 
@@ -29,11 +32,14 @@ architecture behavioral of operators_tb is
     signal opcode : std_logic_vector(5 downto 0) := (others => '0');
     signal i : std_logic_vector(15 downto 0) := (others => '0');
     signal j : std_logic_vector(15 downto 0) := (others => '0');
+    signal i_null : std_logic;
+    signal j_null : std_logic;
     signal n : std_logic_vector(3 downto 0) := (others => '0');
     signal mask : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
     signal result : std_logic_vector(15 downto 0);
+    signal err_z : std_logic;
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -47,9 +53,12 @@ begin
         opcode => opcode,
         i => i,
         j => j,
+        i_null => i_null,
+        j_null => j_null,
         n => n,
         mask => mask,
-        result => result
+        result => result,
+        err_z => err_z
     );
 
     -- clock process
@@ -70,6 +79,8 @@ begin
 
         i <= "0000000000001001";
         j <= "0000000000001100";
+        i_null <= '0';
+        j_null <= '1';
         n <= "0100";
         mask <= "0000000000001111";
 

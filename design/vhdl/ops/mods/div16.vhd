@@ -24,9 +24,9 @@ architecture structural of div16 is
     -- CLA adder component
     component claadder16
         port(
-            a       : in std_logic_vector (15 downto 0);
-            b       : in std_logic_vector (15 downto 0);
-            s       : out std_logic_vector (15 downto 0)
+            a   : in std_logic_vector (15 downto 0);
+            b   : in std_logic_vector (15 downto 0);
+            s   : out std_logic_vector (15 downto 0)
         );
     end component;
 
@@ -49,14 +49,20 @@ begin
         sumij1              -- sum of i and j and 1
     );
 
-    process (j, sumij, sumij1)
+    process (n, sumij, sumij1)
     begin
 
         -- if OF(i + two's-comp(j)) == 1
         if (sumij(to_integer(unsigned(n))) = '1') then
-            quot <= sumij;  -- quot = i + two's-cmp(j)
+
+            -- quot = i + two's-cmp(j)
+            quot <= sumij;
+
         else
-            quot <= sumij1; -- quot = i + two's-cmp(j) + two's-cmp(1)
+
+            -- quot = i + two's-cmp(j) + two's-cmp(1)
+            quot <= sumij1;
+
         end if;
 
     end process;
