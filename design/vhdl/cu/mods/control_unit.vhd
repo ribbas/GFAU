@@ -54,8 +54,8 @@ architecture structural of control_unit is
 
     component isnull
         port(
-            opand           : in std_logic_vector(15 downto 0);
-            mem_t           : in std_logic;
+            opand      : in std_logic_vector(15 downto 0);
+            mem_t      : in std_logic;
             is_null    : out std_logic
         );
     end component;
@@ -67,7 +67,7 @@ architecture structural of control_unit is
     signal opand_z1 : std_logic_vector(15 downto 0); -- zero flag for operand 1
     signal opand_z2 : std_logic_vector(15 downto 0); -- zero flag for operand 2
 
-    type state_type is (op1_state, op2_state, rdy_state);  -- define the states
+    type state_type is (op1_state, op2_state);  -- define the states
     signal state : state_type;
 
 begin

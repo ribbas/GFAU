@@ -25,14 +25,26 @@ begin
     process (i, j, i_null, j_null)
     begin
 
+        -- if operand 1 is null
         if (i_null = '1' and j_null = '0') then
+
             bitxor <= j;
+
+        -- if operand 2 is null
         elsif (i_null = '0' and j_null = '1') then
+
             bitxor <= i;
+
+        -- if both operands are null
         elsif (i_null = '1' and j_null = '1') then
+
             bitxor <= "0000000000000000";
+
+        -- if both operands are non-null
         else
+
             bitxor <= i xor j;
+
         end if;
 
     end process;

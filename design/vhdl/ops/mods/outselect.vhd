@@ -17,7 +17,6 @@ entity outselect is
         out_m   : in std_logic_vector(15 downto 0);
         out_d   : in std_logic_vector(15 downto 0);
         out_l   : in std_logic_vector(15 downto 0);
-        mask    : in std_logic_vector(15 downto 0);
         i_null  : in std_logic;
         j_null  : in std_logic;
         out_sel : out std_logic_vector(15 downto 0);
@@ -39,7 +38,7 @@ begin
             when "001" =>
 
                 -- add / sub output is selected
-                out_sel <= out_as and mask;
+                out_sel <= out_as;
 
                 -- add / sub never throws a zero exception
                 err_z <= '0';
@@ -68,7 +67,7 @@ begin
                 if (i_null = '0' and j_null = '0') then
 
                     -- mul output is selected
-                    out_sel <= out_m and mask;
+                    out_sel <= out_m;
 
                     -- if output is requested in polynomial form
                     if (opcode(0) = '1') then
@@ -99,7 +98,7 @@ begin
                 if (i_null = '0' and j_null = '0') then
 
                     -- div output is selected
-                    out_sel <= out_d and mask;
+                    out_sel <= out_d;
                     err_z <= '0';
 
                     -- if output is requested in polynomial form
@@ -138,7 +137,7 @@ begin
                 if (i_null <= '0') then
 
                     -- log output is selected
-                    out_sel <= out_l and mask;
+                    out_sel <= out_l;
                     err_z <= '0';
 
                     -- if output is requested in polynomial form

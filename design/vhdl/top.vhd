@@ -67,9 +67,7 @@ architecture behavioral of top is
     component control_unit
         port(
             clk         : in std_logic;
-            rst         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
-            poly_bcd    : in std_logic_vector(15 downto 0);   -- BCD polynomial
             opand1      : in std_logic_vector(15 downto 0);   -- operand 1
             opand2      : in std_logic_vector(15 downto 0);   -- operand 2
 
@@ -85,14 +83,15 @@ architecture behavioral of top is
             j           : out std_logic_vector(15 downto 0);  -- j
 
             -- memory signals
-            mem_data    : in std_logic_vector(15 downto 0);  -- mem data
-            mem_addr    : out std_logic_vector(15 downto 0);  -- mem address
+            mem_data    : in std_logic_vector(15 downto 0);  -- data
+            mem_addr    : out std_logic_vector(15 downto 0);  -- address
             mem_t       : inout std_logic;  -- which memory
             mem_rd      : out std_logic;  -- read signal to memory
 
             -- exceptions
             err_b       : out std_logic;  -- out of bound exception
-            err_z       : out std_logic  -- zero exception
+            opand1_null : out std_logic;  -- zero exception
+            opand2_null : out std_logic  -- zero exception
         );
     end component;
 
@@ -123,14 +122,19 @@ architecture behavioral of top is
     ---------------- Galois operators ----------------
 
     component operators
-        port( 
+        port(
             clk     : in std_logic;
             opcode  : in std_logic_vector(5 downto 0);  -- opcode
-            i       : in std_logic_vector(15 downto 0); -- first element
-            j       : in std_logic_vector(15 downto 0); -- second element
+            i       : in std_logic_vector(15 downto 0); -- first opand
+            j       : in std_logic_vector(15 downto 0); -- second opand
+            i_null  : in std_logic;  -- opand 1 null flag
+            j_null  : in std_logic;  -- opand 2 null flag
             n       : in std_logic_vector(3 downto 0);  -- size of polynomial
             mask    : in std_logic_vector(15 downto 0);  -- mask
-            result  : out std_logic_vector(15 downto 0) -- selected output
+            out_sel : out std_logic_vector(15 downto 0); -- selected output
+            convert : out std_logic; -- convert flag
+            mem_t   : out std_logic; -- memory type
+            err_z   : out std_logic -- zero exception
         );
     end component;
 
