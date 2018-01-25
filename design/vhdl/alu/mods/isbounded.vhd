@@ -13,9 +13,9 @@ use ieee.std_logic_1164.all;
 
 entity isbounded is
     port(
-        operand         : in std_logic_vector(15 downto 0);  -- operand
-        mask            : in std_logic_vector(15 downto 0);  -- mask
-        is_out_bd       : out std_logic
+        operand     : in std_logic_vector(15 downto 0);  -- operand
+        mask        : in std_logic_vector(15 downto 0);  -- mask
+        is_out_bd   : out std_logic
    );
 end isbounded;
 
