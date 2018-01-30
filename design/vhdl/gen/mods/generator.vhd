@@ -43,10 +43,10 @@ architecture fsm of generator is
 
     component auto_sym
         port(
-            clk     : in std_logic;
-            rst     : in std_logic;
-            en      : in std_logic;
-            sym     : out std_logic_vector(15 downto 0)
+            clk : in std_logic;
+            rst : in std_logic;
+            en  : in std_logic;
+            sym : out std_logic_vector(15 downto 0)
         );
     end component;
 
