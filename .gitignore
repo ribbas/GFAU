@@ -12,7 +12,12 @@
 # Xilinx files
 xilinx_tb/
 
-# Vim tmp files
+# CLion temp files
+.idea/
+cmake-build-debug/
+CMakeLists.txt
+
+# Vim temp files
 *.swp
 
 # other binaries and compressed files
