@@ -1,1 +1,38 @@
-\subsubsection{Zero}
+\subsubsection{Zero} Zero, or the null symbol, is the numerical zero used to
+fulfill its role as the additive identity in the Galois field. The following
+operations demonstrate the characteristics of zero in the Galois field.
+
+    \begin{table}[h]
+        \def\arraystretch{1.5}
+        \caption{Operations with $\bm{0}$ in $GF(2)[x]$}
+
+        \centering
+        \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
+
+        \textbf{Operand 1} & \textbf{Operation} & \textbf{Operand 2} &
+        \textbf{Output} \\
+        \hline
+        $\bm{0}$ & $+/-$ & $\beta^{x}$ & $\beta^{x}$ \\
+        $\beta^{x}$ & $+/-$ & $\bm{0}$ & $\beta^{x}$ \\
+        $\bm{0}$ & $\times$ & $\beta^{x}$ & $\bm{0}$ \\
+        $\beta^{x}$ & $\times$ & $\bm{0}$ & $\bm{0}$ \\
+        $\bm{0}$ & $\div$ & $\beta^{x}$ & $\bm{0}$ \\
+        $\beta^{x}$ & $\div$ & $\bm{0}$ & ERROR \\
+        $\bm{0}$ & $\log_{GF(2)}$ & - & ERROR \\
+        \end{tabular*}
+    \end{table}
+
+    \paragraph{{\small Digital Design}} \leavevmode \\ To handle zero,
+    multiplexers are used to decode the intended operation to determine the
+    forms if the inputs. Once the form is determined, the module raises a
+    \texttt{zero flag} which is handled by individual operations to raise
+    exceptions.
+\begin{align*}
+    \texttt{zero flag} & = \begin{cases}
+        \text{$\wedge$\big(operand\big),} & \text{if operation $\in$
+        \{addition, subtraction\} } \\
+        \text{$\vee$\big(operand\big),} & \text{if operation $\in$
+        \{multiplication, division, logarithm\} } \\
+    \end{cases}
+\end{align*}
+\newpage
