@@ -17,13 +17,15 @@ architecture behavioral of operators_tb is
         port(
             clk     : in std_logic;
             opcode  : in std_logic_vector(5 downto 0);  -- opcode
-            i       : in std_logic_vector(15 downto 0); -- first element
-            j       : in std_logic_vector(15 downto 0); -- second element
-            i_null  : in std_logic;
-            j_null  : in std_logic;
+            i       : in std_logic_vector(15 downto 0); -- first opand
+            j       : in std_logic_vector(15 downto 0); -- second opand
+            i_null  : in std_logic;  -- opand 1 null flag
+            j_null  : in std_logic;  -- opand 2 null flag
             n       : in std_logic_vector(3 downto 0);  -- size of polynomial
             mask    : in std_logic_vector(15 downto 0);  -- mask
-            result  : out std_logic_vector(15 downto 0); -- selected output
+            out_sel : out std_logic_vector(15 downto 0); -- selected output
+            convert : out std_logic; -- convert flag
+            mem_t   : out std_logic; -- memory type
             err_z   : out std_logic -- zero exception
         );
     end component;
@@ -38,7 +40,9 @@ architecture behavioral of operators_tb is
     signal mask : std_logic_vector(15 downto 0) := (others => '0');
 
     -- outputs
-    signal result : std_logic_vector(15 downto 0);
+    signal out_sel : std_logic_vector(15 downto 0);
+    signal convert : std_logic;
+    signal mem_t : std_logic;
     signal err_z : std_logic;
 
     -- testbench clocks
@@ -57,7 +61,9 @@ begin
         j_null => j_null,
         n => n,
         mask => mask,
-        result => result,
+        out_sel => out_sel,
+        convert => convert,
+        mem_t=> mem_t,
         err_z => err_z
     );
 
