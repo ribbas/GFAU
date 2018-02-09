@@ -93,7 +93,7 @@ begin
         poly_bcd <= "0000000000011001";
 
         -- hold reset state for 40 ns.
-        wait for 60 ns;
+        wait for 30 ns;
 
         rst <= '0';
 

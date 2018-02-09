@@ -66,7 +66,6 @@ architecture fsm of generator is
     signal en_auto : std_logic := '1';
     signal temp_auto : std_logic_vector(15 downto 0);
 
-    signal rdy_gen : std_logic := '1';
     signal rst_gen : std_logic := '1';
     signal temp_gen : std_logic_vector(15 downto 0);
 
@@ -103,6 +102,7 @@ begin
     begin
 
         nth_sym <= poly_bcd and mask;
+        write_en <= en;
 
         if (en = '1') then
 
@@ -143,7 +143,6 @@ begin
 
                         end if;
 
-                        write_en <= '1';
                         addr <= counter;
 
                     when gen_sym_state =>
@@ -155,14 +154,12 @@ begin
                             sym1 <= "XXXXXXXXXXXXXXXX";
                             addr <= "XXXXXXXXXXXXXXXX";
                             rdy <= '1';
-                            write_en <= '0';
 
                         else
 
                             sym1 <= temp_gen and mask;
                             addr <= counter;
                             rdy <= '0';
-                            write_en <= '1';
 
                         end if;
 
