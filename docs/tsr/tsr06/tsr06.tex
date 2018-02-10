@@ -13,6 +13,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[paper=usletter, fontsize=12pt]{article}
+\usepackage{graphicx}
 \input{structure.tex} % specifies the document layout and style
 
 \newcommand{\team}{Galois Field Arithmetic Unit}
@@ -57,10 +58,8 @@
     \begin{enumerate}[label=\alph*)]
 
         \item Most VHDL coding is done with issues detail in the Current Issues section of this document. 
-        \item Updated system block diagram. 
-        \item Attempt to check whether polynomial is primitive. 
+        \item Updated system block diagram (see Figure 1 below). 
         \item Completed breakout board design. 
-
         
     \end{enumerate}
 
@@ -80,10 +79,16 @@
 		\item Need to receive testing instruments from Dr. LaBerge to verify design. 
 		\item Timing issue with zero and the zeroth term and their memory address.
 		\item Timing issue with generating polynomials.		
-		\item Generate one symbol per clock cycle.
+		\item Problem generating one symbol per clock cycle.
 		\item Not sure how to simulate memory and IO with VHDL.
 	\end{enumerate}
-    
+	
+	%\includegraphics[scale=0.17]{system_block_diagram}
+  	\begin{figure}[h!]
+  		
+  		\includegraphics[scale=0.16]{system_block_diagram}
+  		\caption{Figure 1. System block diagram}
+  	\end{figure}
    
    
 \end{document}
