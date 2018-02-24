@@ -6,7 +6,7 @@
  * Checks if an n-degree polynomial is primitive.
  *
  * Usage:
- *      is_primitive("primitive15.txt", "1111111011111111", 16)
+ *      is_primitive("primitivebcd15.txt", "1111111011111111", 16)
  *
  * Copyright (c) 2018 Sabbir Ahmed
  *
@@ -100,10 +100,10 @@ char *read_line(FILE *fstream, int buf_size) {
  *
  * Inputs:
  *
- *      file_name <char*> : path of file containing all n-degree primitive
- *                          polynomials
- *      polynomial <char*> : BCD polynomial
- *      num_bits <int> : number of bits representing the BCD polynomial
+ *      file_name <char*>   : path of file containing all n-degree primitive
+ *                            polynomials
+ *      polynomial <char*>  : BCD polynomial
+ *      num_bits <int>      : number of bits representing the BCD polynomial
  *
  * Outputs:
  *
