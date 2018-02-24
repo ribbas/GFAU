@@ -21,7 +21,7 @@ RAW = ../raw_primitive_polynomials.txt
 
 .PHONY: run
 run:
-	./${EXE} -sa 2 ${n}
+	./${EXE} -a 2 ${n}
 
 .PHONY: build
 build: ${EXE}

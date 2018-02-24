@@ -1,4 +1,4 @@
-./primpoly.o -sa 2 15
+./primpoly.o -a 2 15
 
 Primpoly Version 13.0 - A Program for Computing Primitive Polynomials.
 Copyright (C) 1999-2018 by Sean Erik O'Connor.  All Rights Reserved.
@@ -7,10 +7,6 @@ Primpoly comes with ABSOLUTELY NO WARRANTY; for details see the
 GNU General Public License.  This is free software, and you are welcome
 to redistribute it under certain conditions; see the GNU General Public License
 for details.
-
-
-Factoring r = 32767 into
-    7 31 151 
 
 Total number of primitive polynomials = 1800.  Begin testing...
 
@@ -14334,15 +14330,3 @@ Primitive polynomial 1800 of 1800 modulo 2 of degree 15
 
 
 
-+--------- Statistics -----------------------------------------------------------------
-|
-| Total num. degree  15 polynomials mod   2 :    32768
-| Actually tested :                              32769
-| Const. coeff. was primitive root :           16384
-| Free of linear factors :                      8192
-| Irreducible or irred. to power :              2190
-| Had order r (x^r = integer) :                 2182
-| Passed const. coeff. test :                   2182
-| Had order m (x^m != integer) :                1800
-|
-+--------------------------------------------------------------------------------------
