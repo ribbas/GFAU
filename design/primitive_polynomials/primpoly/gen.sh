@@ -29,6 +29,6 @@ done
 
 # convert raw output to bit vectors
 echo -n "Converting polynomial strings to binary-coded decimals... "
-python ../polytobcd.py $MAXDEG $RAW > FINALOUT
+python ../polytobcd.py $MAXDEG $RAW > $FINALOUT
 echo "Done"
 echo "Polynomials generated:" $(cat $FINALOUT | wc -l)
