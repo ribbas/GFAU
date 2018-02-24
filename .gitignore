@@ -15,7 +15,6 @@ xilinx_tb/
 # CLion temp files
 .idea/
 cmake-build-debug/
-CMakeLists.txt
 
 # Vim temp files
 *.swp
