@@ -1,3 +1,5 @@
+# Custom Makefile to build and run primpoly
+
 # define the C compiler to use
 CC = gcc
 
@@ -13,6 +15,13 @@ OBJS = ${SRCS:.c=.o}
 
 # define the executable file
 EXE = primpoly.o
+
+# raw primitive polynomials dump file
+RAW = ../raw_primitive_polynomials.txt
+
+.PHONY: run
+run:
+	./${EXE} -sa 2 ${n}
 
 .PHONY: build
 build: ${EXE}
@@ -34,3 +43,4 @@ val:
 clean:
 	# clean out cache and temporary files
 	@find . \( -name "*.o" -o -name ${EXE} \) -type f -delete
+	@> ${RAW}
