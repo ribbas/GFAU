@@ -21,7 +21,7 @@ entity operators is
         n       : in std_logic_vector(3 downto 0);  -- size of polynomial
         mask    : in std_logic_vector(15 downto 0);  -- mask
         out_sel : out std_logic_vector(15 downto 0); -- selected output
-        convert : out std_logic; -- convert flag
+        --convert : out std_logic; -- convert flag
         mem_t   : out std_logic; -- memory type
         err_z   : out std_logic -- zero exception
     );
@@ -162,20 +162,20 @@ begin
         quot => quot
     );
 
-    -- output selector
-    outselect_unit: outselect port map(
-        opcode => opcode,
-        out_as => bitxor,
-        out_m => prod,
-        out_d => quot,
-        out_l => i,
-        i_null => i_null,
-        j_null => j_null,
-        out_sel => out_sel,
-        mem_t => mem_t,
-        convert => convert,
-        err_z => err_z
-    );
+    ---- output selector
+    --outselect_unit: outselect port map(
+    --    opcode => opcode,
+    --    out_as => bitxor,
+    --    out_m => prod,
+    --    out_d => quot,
+    --    out_l => i,
+    --    i_null => i_null,
+    --    j_null => j_null,
+    --    out_sel => out_sel,
+    --    mem_t => mem_t,
+    --    convert => convert,
+    --    err_z => err_z
+    --);
 
     ---- memory wrapper
     --mem : memory port map(

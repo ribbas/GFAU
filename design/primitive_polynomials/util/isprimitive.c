@@ -1,7 +1,6 @@
 /*
  * isprimitive.c
  * Galois Field Arithmetic Unit: External IO Library
- * Sabbir Ahmed
  *
  * Checks if an n-degree polynomial is primitive.
  *
