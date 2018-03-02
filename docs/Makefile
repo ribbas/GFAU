@@ -2,12 +2,11 @@
 
 all: convert
 
-
 .PHONY: convert convert1 convert2
 convert: convert1 convert2
 convert1 convert2:
 	# convert LaTex file to PDF
-	@pdflatex ${DOC}
+	pdflatex -output-directory=$(dir ${DOC}) ${DOC} 
 
 
 .PHONY: clean
