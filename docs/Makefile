@@ -6,10 +6,9 @@ all: convert
 convert: convert1 convert2
 convert1 convert2:
 	# convert LaTex file to PDF
-	pdflatex -output-directory=$(dir ${DOC}) ${DOC} 
-
+	pdflatex -output-directory=$(dir ${DOC}) ${DOC}
 
 .PHONY: clean
 clean:
 	# clean out cache and temporary files
-	@find . -regex '.*\.\(aux\|log\)' -delete
+	@find . \( -name '*.log' -o -name '*.aux' \) -delete
