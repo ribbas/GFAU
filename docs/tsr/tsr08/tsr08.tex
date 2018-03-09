@@ -1,0 +1,114 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contract
+% LaTeX Template
+% Version 1.0 (December 8 2014)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brandon Fryslie
+% With extensive modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Authors:
+% Sabbir Ahmed, Jeffrey Osazuwa, Howard To, Brian Weber
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=usletter, fontsize=12pt]{article}
+\usepackage{amssymb}
+\input{structure.tex} % specifies the document layout and style
+
+\newcommand{\team}{Galois Field Arithmetic Unit}
+\newcommand{\Sabbir}{Sabbir Ahmed}
+\newcommand{\Jeffrey}{Jeffrey Osazuwa}
+\newcommand{\Howard}{Howard To}
+\newcommand{\Brian}{Brian Weber}
+
+%----------------------------------------------------------------------------------------
+
+% document info command
+\newcommand{\documentinfo}[5]{
+    \begin{centering}
+        \parbox{6.8in}{
+        \begin{spacing}{1}
+            \begin{flushleft}
+                \begin{tabular}{l l}
+                    #1 \\
+                    #2 \\
+                    #3 \\
+                    #4 \\
+                    #5 \\
+                \end{tabular} \\
+                \rule{\textwidth}{1pt}
+            \end{flushleft}
+        \end{spacing}
+        }
+    \end{centering}
+}
+
+\begin{document}
+
+    \documentinfo{\textbf{MEMO:} TSR-02}{\textbf{DATE: }{\today}}{\textbf{TO: } EFC LaBerge}{\textbf{FROM: }\Sabbir, \Jeffrey, \Howard, \Brian}{\textbf{SUBJECT: } Team Status Report}
+
+    \vspace{-0.3in}
+    \section{Introduction}
+   The  Galois  Field  Arithmetic  Unit  will  accept  two  inputs  a  and  b  and  determine  the  desired arithmetic result n, and to establish the field generating polynomial.  The unit would serve as a computation engine for a relatively low-powered microcontroller, and would enable complex code and encryption algorithms.  Project will include implementation of a Reed Solomon en-coder and decoder using the GFAU. The purpose of this report is to detail the progress of the GFAU in the period of February 9, 2017 through March 9, 2018. This is the second status report for the second semester for the GFAU team.
+
+
+    \section{Completed Tasks}
+    During this work period, the team has continued to make progress on the GFAU. Including the following achievements:
+    \begin{enumerate}
+
+        \item Ordered and received all necessary hardware.
+        \item Started to interface FPGA with memory. 
+        \item Finish designing I/O handler 
+ 
+
+    \end{enumerate}
+
+
+    \section{Planned Tasks}
+    \begin{enumerate}
+
+        \item Finish interfacing FPGA with memory 
+        \item Finalize all VHDL modules.
+        \item Interface FPGA with IO. 
+
+    \end{enumerate}
+
+
+    \section{Current Issues}
+  No issues, whether team dynamics or lack of resources. 
+
+
+   \newpage
+   \textbf{The following content is an attempt to solve the engineering economic problem shown in slide 11 of Lecture 7.} \\
+  
+   The following Assumptions were made:  
+   \begin{enumerate}
+		\item Pay back at end of each year with all the profit made during the year.   
+		\item Prevailing interest rate of 5\% apply at the end of each year after yearly payment.
+		\item Let x be the selling price of each unit.
+   \end{enumerate}
+   
+  The following calculations show the amount of money owe after money is begin paid back at the end of each year.  Amount of money not being paid at the end of each year will carry to the following year:\\ \\
+   Year 1: $y_1=(30M - 100,000x) * 1.05 \Rightarrow 31,500,000 - 105,000x$ \\
+   Year 2: $y_2 = ((7M - 100020x + y_1 ))*1.05 \Rightarrow 40,425,000 - 215,271x$\\
+   Year 3: $y_3 = ((9M - 100040x + y_2)*1.05 \Rightarrow 51,896,250 - 331,076.56x$\\
+   Year 4: $y_4 = ((11M - 100060x + y_3))*1.05 \Rightarrow 66,041,062.5 - 452,693.3775x$\\
+   Year 5: $y_5 = ((13M - 100080x + y_4))*1.05 \Rightarrow 82,993,115.625 - 580,412.046375x$\\
+   
+   
+   Because the goal is to break even after 5 years; therefor y5 is set equal to 0:
+   
+   $(82,993,115.625 - 580,412.046375x) = 0$\\
+   $x = \$142.99$\\
+   
+   $\therefore$ The selling price of each uPhone has to be $\$142.99$ to break even.
+   
+\end{document}
