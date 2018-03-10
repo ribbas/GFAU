@@ -13,7 +13,7 @@ use ieee.std_logic_misc.all;
 
 entity isnull is
     port(
-        opand   : in std_logic_vector(15 downto 0);  -- opand
+        opand   : in std_logic_vector(8 downto 0);  -- opand
         mem_t   : in std_logic;
         is_null : out std_logic
    );

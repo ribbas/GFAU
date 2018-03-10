@@ -18,23 +18,23 @@ architecture behavior of control_unit_tb is
         port(
             clk         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
-            opand1      : in std_logic_vector(15 downto 0);   -- operand 1
-            opand2      : in std_logic_vector(15 downto 0);   -- operand 2
+            opand1      : in std_logic_vector(8 downto 0);   -- operand 1
+            opand2      : in std_logic_vector(8 downto 0);   -- operand 2
 
             -- registers
-            mask        : in  std_logic_vector(15 downto 0);
+            mask        : in  std_logic_vector(8 downto 0);
 
             -- generation signals
             en_gen      : out std_logic;  -- term generator enable
             rst_gen     : out std_logic;  -- term generator reset
 
             -- operation signals
-            i           : out std_logic_vector(15 downto 0);  -- i
-            j           : out std_logic_vector(15 downto 0);  -- j
+            i           : out std_logic_vector(8 downto 0);  -- i
+            j           : out std_logic_vector(8 downto 0);  -- j
 
             -- memory signals
-            mem_data    : in std_logic_vector(15 downto 0);  -- memory data
-            mem_addr    : out std_logic_vector(15 downto 0);  -- memory addr
+            mem_data    : in std_logic_vector(8 downto 0);  -- memory data
+            mem_addr    : out std_logic_vector(8 downto 0);  -- memory addr
             mem_t       : inout std_logic;  -- which memory
             mem_rd      : out std_logic;  -- read signal to memory
 
@@ -49,21 +49,21 @@ architecture behavior of control_unit_tb is
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 0);   -- op code
-    signal opand1 : std_logic_vector(15 downto 0);   -- operand 1
-    signal opand2 : std_logic_vector(15 downto 0);   -- operand 2
-    signal mask : std_logic_vector(15 downto 0);   -- mask
+    signal opand1 : std_logic_vector(8 downto 0);   -- operand 1
+    signal opand2 : std_logic_vector(8 downto 0);   -- operand 2
+    signal mask : std_logic_vector(8 downto 0);   -- mask
 
     -- outputs
     signal err_b : std_logic;
     signal opand1_null : std_logic;
     signal opand2_null : std_logic;
     signal en_gen : std_logic;  -- poly generation
-    signal i : std_logic_vector(15 downto 0);  -- address in memory
-    signal j : std_logic_vector(15 downto 0);  -- address in memory
+    signal i : std_logic_vector(8 downto 0);  -- address in memory
+    signal j : std_logic_vector(8 downto 0);  -- address in memory
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal mem_rd : std_logic;  -- read signal to memory
-    signal mem_addr : std_logic_vector(15 downto 0);  -- address in memory
-    signal mem_data : std_logic_vector(15 downto 0) := "1111111111111100";  -- data from memory
+    signal mem_addr : std_logic_vector(8 downto 0);  -- address in memory
+    signal mem_data : std_logic_vector(8 downto 0) := "111111100";  -- data from memory
 
     -- testbench clocks
     constant t_nums : integer := 320;
@@ -109,10 +109,10 @@ begin
     test : process
     begin
 
-        mask <= "0000000000001111";
-        opand1 <= "1000000000001001";
+        mask <= "000001111";
+        opand1 <= "000001001";
         --opand2 <= "0000000000001100";
-        opand2 <= "0000000000000000";  -- zero in element
+        opand2 <= "000000000";  -- zero in element
 
         opcode <= "01100X";  -- add/sub, operands in element
         wait for (t_clk_per * 3);
