@@ -12,9 +12,9 @@ use ieee.numeric_std.all;
 
 entity maskedtwoscmp is
     port(
-        num         : in std_logic_vector(15 downto 0);
-        mask        : in std_logic_vector(15 downto 0);
-        maskedtc    : out std_logic_vector(15 downto 0)
+        num         : in std_logic_vector(8 downto 0);
+        mask        : in std_logic_vector(8 downto 0);
+        maskedtc    : out std_logic_vector(8 downto 0)
    );
 end maskedtwoscmp;
 
@@ -23,12 +23,12 @@ architecture structural of maskedtwoscmp is
     -- twoscmp component
     component twoscmp
         port(
-            num     : in  std_logic_vector(15 downto 0);
-            tcnum   : out  std_logic_vector(15 downto 0)
+            num     : in  std_logic_vector(8 downto 0);
+            tcnum   : out  std_logic_vector(8 downto 0)
         );
     end component;
 
-    signal tcnum: std_logic_vector(15 downto 0);
+    signal tcnum: std_logic_vector(8 downto 0);
 
 begin
 

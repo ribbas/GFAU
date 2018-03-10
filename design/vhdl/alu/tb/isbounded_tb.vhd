@@ -15,15 +15,15 @@ architecture behavioral of isbounded_tb is
     -- component declaration for the unit under test (uut)
     component isbounded
         port(
-            operand     : in  std_logic_vector(15 downto 0);
-            mask        : in  std_logic_vector(15 downto 0);
+            operand     : in  std_logic_vector(8 downto 0);
+            mask        : in  std_logic_vector(8 downto 0);
             is_out_bd   : out std_logic
         );
     end component;
 
     -- inputs
-    signal operand      : std_logic_vector(15 downto 0) := (others => '0');
-    signal mask         : std_logic_vector(15 downto 0) := (others => '0');
+    signal operand      : std_logic_vector(8 downto 0) := (others => '0');
+    signal mask         : std_logic_vector(8 downto 0) := (others => '0');
 
     -- outputs
     signal is_out_bd : std_logic;
@@ -58,44 +58,44 @@ begin
     begin
 
         -- 3-bit mask
-        mask <= "0000000000000111";
+        mask <= "000000111";
 
         -- 5
-        operand <= "0000000000000101";
+        operand <= "000000101";
         wait for 40 ns;
 
         -- 3
-        operand <= "0000000000000011";
+        operand <= "000000011";
         wait for 40 ns;
 
         -- 7
-        operand <= "0000000000000111";
+        operand <= "000000111";
         wait for 40 ns;
 
         -- 0
-        operand <= "0000000000000000";
+        operand <= "000000000";
         wait for 40 ns;
 
         -- 65534
-        operand <= "1111111111111110";
+        operand <= "111111110";
 
         wait for 40 ns;
 
         -- 65535
-        operand <= "1111111111111111";
+        operand <= "111111111";
 
         wait for 40 ns;
 
         -- 4-bit mask
-        mask <= "0000000000001111";
+        mask <= "000001111";
 
         -- 7
-        operand <= "0000000000000111";
+        operand <= "000000111";
 
         wait for 40 ns;
 
         -- 65534
-        operand <= "1111111111111110";
+        operand <= "111111110";
 
         wait for 40 ns;
 
