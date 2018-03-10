@@ -15,13 +15,13 @@ entity auto_sym is
         clk     : in std_logic;
         rst     : in std_logic;
         en      : in std_logic;
-        sym     : out std_logic_vector(15 downto 0)
+        sym     : out std_logic_vector(8 downto 0)
     );
 end auto_sym;
 
 architecture behavioral of auto_sym is
 
-    signal temp_sym : std_logic_vector(15 downto 0);
+    signal temp_sym : std_logic_vector(8 downto 0);
 
 begin
 
@@ -32,7 +32,7 @@ begin
 
             if (rst = '1') then
 
-                temp_sym <= "0000000000000001";
+                temp_sym <= (0 => '1', others => '0');
 
             elsif rising_edge(clk) then  -- if there is a rising edge
 
@@ -43,6 +43,10 @@ begin
             end if;
 
             sym <= temp_sym;
+
+        else
+
+            sym <= "---------";
 
         end if;
 

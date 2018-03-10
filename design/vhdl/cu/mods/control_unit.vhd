@@ -92,7 +92,7 @@ begin
 
     process (clk, opcode, opand1, opand2, mask, mem_data, mem_t)
 
-        constant DCAREVEC : std_logic_vector(8 downto 0) := (others => 'X');
+        constant DCAREVEC : std_logic_vector(8 downto 0) := (others => '-');
 
     begin
 
@@ -113,7 +113,7 @@ begin
                     opand_z2 <= DCAREVEC;
 
                     -- disable memory lookup
-                    mem_t <= 'X';
+                    mem_t <= '-';
                     mem_rd <= '0';
                     mem_addr <= DCAREVEC;
 
@@ -354,7 +354,7 @@ begin
                     opand_z2 <= DCAREVEC;
 
                     -- disable memory lookup
-                    mem_t <= 'X';
+                    mem_t <= '-';
                     mem_rd <= '0';
                     mem_addr <= DCAREVEC;
 
@@ -371,7 +371,7 @@ begin
                     opand_z2 <= DCAREVEC;
 
                     -- disable memory lookup
-                    mem_t <= 'X';
+                    mem_t <= '-';
                     mem_rd <= '0';
                     mem_addr <= DCAREVEC;
 
@@ -388,7 +388,7 @@ begin
                     opand_z2 <= DCAREVEC;
 
                     -- disable memory lookup
-                    mem_t <= 'X';
+                    mem_t <= '-';
                     mem_rd <= '0';
                     mem_addr <= DCAREVEC;
 
@@ -404,7 +404,7 @@ begin
                     opand_z2 <= DCAREVEC;
 
                     -- disable memory lookup
-                    mem_t <= 'X';
+                    mem_t <= '-';
                     mem_rd <= '0';
                     mem_addr <= DCAREVEC;
 

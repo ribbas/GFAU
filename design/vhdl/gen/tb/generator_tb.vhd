@@ -12,7 +12,7 @@ end generator_tb;
 
 architecture test of generator_tb is
 
-    -- component declaration for the unit under test (uut)     
+    -- component declaration for the unit under test (uut)
     component generator
         port(
             clk         : in std_logic;
@@ -20,32 +20,30 @@ architecture test of generator_tb is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(15 downto 0);
-            mask        : in std_logic_vector(15 downto 0);
-            m           : in std_logic_vector(3 downto 0);
-            n           : in std_logic_vector(3 downto 0);
+            poly_bcd    : in std_logic_vector(8 downto 0);
+            mask        : in std_logic_vector(8 downto 0);
+            msb         : in std_logic_vector(3 downto 0);
+            size        : in std_logic_vector(3 downto 0);
 
             -- memory signals
-            write_en    : out std_logic;
+            wr_en       : out std_logic;
             rdy         : out std_logic;
-            addr        : out std_logic_vector(15 downto 0);
-            sym1        : out std_logic_vector(15 downto 0);
-            sym2        : out std_logic_vector(15 downto 0)
+            addr        : out std_logic_vector(8 downto 0);
+            sym         : out std_logic_vector(8 downto 0)
         );
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(15 downto 0);
-    signal mask : std_logic_vector(15 downto 0);
-    signal m : std_logic_vector(3 downto 0);
-    signal n : std_logic_vector(3 downto 0);
+    signal poly_bcd : std_logic_vector(8 downto 0);
+    signal mask : std_logic_vector(8 downto 0);
+    signal msb : std_logic_vector(3 downto 0);
+    signal size : std_logic_vector(3 downto 0);
 
     -- outputs
     signal rdy : std_logic;
-    signal write_en : std_logic;
-    signal addr : std_logic_vector(15 downto 0);
-    signal sym1 : std_logic_vector(15 downto 0);
-    signal sym2 : std_logic_vector(15 downto 0);
+    signal wr_en : std_logic;
+    signal addr : std_logic_vector(8 downto 0);
+    signal sym : std_logic_vector(8 downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -62,13 +60,12 @@ begin
         en => en,
         poly_bcd => poly_bcd,
         mask => mask,
-        m => m,
-        n => n,
-        write_en => write_en,
+        msb => msb,
+        size => size,
+        wr_en => wr_en,
         rdy => rdy,
         addr => addr,
-        sym1 => sym1,
-        sym2 => sym2
+        sym => sym
     );
 
     -- clock process
@@ -87,10 +84,10 @@ begin
     stim_proc: process
     begin
 
-        mask <= "0000000000001111";
-        m <= "0011";
-        n <= "0100";
-        poly_bcd <= "0000000000011001";
+        mask <= "000000111";
+        msb <= "0010";
+        size <= "0011";
+        poly_bcd <= "000001101";
 
         -- hold reset state for 40 ns.
         wait for 30 ns;
