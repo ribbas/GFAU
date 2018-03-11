@@ -1,4 +1,4 @@
--- addsub16_tb.vhd
+-- addsub_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -7,25 +7,32 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity addsub16_tb is
-end addsub16_tb;
+entity addsub_tb is
+end addsub_tb;
 
-architecture behavioral of addsub16_tb is
+architecture behavioral of addsub_tb is
 
-    -- component declaration for the unit under test (uut)     
-    component addsub16
+    -- component declaration for the unit under test (uut)
+    component addsub
+        generic(
+            n       : positive
+        );
         port(
-            i       : in std_logic_vector (15 downto 0);
-            j       : in std_logic_vector (15 downto 0);
-            bitxor  : out std_logic_vector (15 downto 0)
+            i       : in std_logic_vector (8 downto 0);
+            j       : in std_logic_vector (8 downto 0);
+            i_null  : in std_logic;
+            j_null  : in std_logic;
+            bitxor  : out std_logic_vector (8 downto 0)
         );
     end component;
 
     -- inputs
-    signal i, j     : std_logic_vector(15 downto 0) := (others => '0');
+    signal i, j     : std_logic_vector(8 downto 0) := (others => '0');
+    signal i_null   : std_logic;
+    signal j_null   : std_logic;
 
     -- outputs
-    signal bitxor   : std_logic_vector(15 downto 0);
+    signal bitxor   : std_logic_vector(8 downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -34,9 +41,15 @@ architecture behavioral of addsub16_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: addsub16 port map(
+    uut: addsub
+    generic map(
+        n => 8
+    )
+    port map(
         i => i,
         j => j,
+        i_null => i_null,
+        j_null => j_null,
         bitxor => bitxor
     );
 
@@ -59,37 +72,40 @@ begin
         -- hold reset state for 20 ns.
         wait for 40 ns;
 
+        i_null <= '0';
+        j_null <= '0';
+
         -- (2 ^ 3) = 1
-        i <= "0000000000000010";
-        j <= "0000000000000011";
+        i <= "000000010";
+        j <= "000000011";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 ^ 5) = 3
-        i <= "0000000000000110";
-        j <= "0000000000000101";
+        i <= "000000110";
+        j <= "000000101";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (0 ^ 6) = 6
-        i <= "0000000000000000";
-        j <= "0000000000000110";
+        i <= "000000000";
+        j <= "000000110";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 ^ 1) = 7
-        i <= "0000000000000110";
-        j <= "0000000000000001";
+        i <= "000000110";
+        j <= "000000001";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (11 ^ 12) = 7
-        i <= "0000000000001011";
-        j <= "0000000000001100";
+        i <= "000001011";
+        j <= "000001100";
 
         wait for 40 ns;
 

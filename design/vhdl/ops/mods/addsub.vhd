@@ -1,4 +1,4 @@
--- addsub16.vhd
+-- addsub.vhd
 --
 -- Jeffrey Osazuwa, Sabbir Ahmed
 -- 2018-01-16
@@ -9,20 +9,26 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity addsub16 is
-    port (
-        i       : in std_logic_vector (15 downto 0);
-        j       : in std_logic_vector (15 downto 0);
+entity addsub is
+    generic(
+        n       : positive := 8
+    );
+    port(
+        i       : in std_logic_vector(n downto 0);
+        j       : in std_logic_vector(n downto 0);
         i_null  : in std_logic;
         j_null  : in std_logic;
-        bitxor  : out std_logic_vector (15 downto 0)
+        bitxor  : out std_logic_vector(n downto 0)
     );
-end addsub16;
+end addsub;
 
-architecture structural of addsub16 is
+architecture structural of addsub is
 begin
 
     process (i, j, i_null, j_null)
+
+        constant ZEROVEC : std_logic_vector(n downto 0) := (others => '0');
+
     begin
 
         -- if operand 1 is null
@@ -38,7 +44,7 @@ begin
         -- if both operands are null
         elsif (i_null = '1' and j_null = '1') then
 
-            bitxor <= "0000000000000000";
+            bitxor <= ZEROVEC;
 
         -- if both operands are non-null
         else

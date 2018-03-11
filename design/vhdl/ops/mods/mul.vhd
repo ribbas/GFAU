@@ -1,4 +1,4 @@
--- mul16.vhd
+-- mul.vhd
 --
 -- Sabbir Ahmed, Jeffrey Osazuwa
 -- 2018-01-16
@@ -10,16 +10,16 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mul16 is
+entity mul is
     port(
         i       : in std_logic_vector(15 downto 0); -- first element
         j       : in std_logic_vector(15 downto 0); -- second element
         n       : in std_logic_vector(3 downto 0);  -- size of element
         prod    : out std_logic_vector(15 downto 0) -- product of elements
     );
-end mul16;
+end mul;
 
-architecture structural of mul16 is
+architecture structural of mul is
 
     -- CLA adder component
     component claadder16

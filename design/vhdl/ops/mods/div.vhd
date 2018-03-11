@@ -1,4 +1,4 @@
--- div16.vhd
+-- div.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -10,28 +10,32 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity div16 is
-    port(
-        i       : in std_logic_vector(15 downto 0); -- first element
-        j       : in std_logic_vector(15 downto 0); -- second element
-        n       : in std_logic_vector(3 downto 0);  -- size of element
-        quot    : out std_logic_vector(15 downto 0) -- quotient of elements
+entity div is
+    generic(
+        n       : positive := 8,
+        ceillgn : positive := 3
     );
-end div16;
+    port(
+        i       : in std_logic_vector(n downto 0); -- first element
+        j       : in std_logic_vector(n downto 0); -- second element
+        size    : in std_logic_vector(ceillgn downto 0);  -- size of element
+        quot    : out std_logic_vector(n downto 0) -- quotient of elements
+    );
+end div;
 
-architecture structural of div16 is
+architecture structural of div is
 
     -- CLA adder component
     component claadder16
         port(
-            a   : in std_logic_vector (15 downto 0);
-            b   : in std_logic_vector (15 downto 0);
-            s   : out std_logic_vector (15 downto 0)
+            a   : in std_logic_vector (n downto 0);
+            b   : in std_logic_vector (n downto 0);
+            s   : out std_logic_vector (n downto 0)
         );
     end component;
 
-    signal sumij : std_logic_vector(15 downto 0);
-    signal sumij1 : std_logic_vector(15 downto 0);
+    signal sumij : std_logic_vector(n downto 0);
+    signal sumij1 : std_logic_vector(n downto 0);
 
 begin
 
@@ -49,11 +53,11 @@ begin
         sumij1              -- sum of i and j and 1
     );
 
-    process (n, sumij, sumij1)
+    process (size, sumij, sumij1)
     begin
 
         -- if OF(i + two's-comp(j)) == 1
-        if (sumij(to_integer(unsigned(n))) = '1') then
+        if (sumij(to_integer(unsigned(size))) = '1') then
 
             -- quot = i + two's-cmp(j)
             quot <= sumij;
