@@ -13,28 +13,33 @@ end control_unit_tb;
 
 architecture behavior of control_unit_tb is
 
+    constant n : positive := 8;
+
     -- component declaration for the unit under test (uut)
     component control_unit
+        generic(
+            n           : positive
+        );
         port(
             clk         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
-            opand1      : in std_logic_vector(8 downto 0);   -- operand 1
-            opand2      : in std_logic_vector(8 downto 0);   -- operand 2
+            opand1      : in std_logic_vector(n downto 0);   -- operand 1
+            opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
             -- registers
-            mask        : in  std_logic_vector(8 downto 0);
+            mask        : in  std_logic_vector(n downto 0);
 
             -- generation signals
             en_gen      : out std_logic;  -- term generator enable
             rst_gen     : out std_logic;  -- term generator reset
 
             -- operation signals
-            i           : out std_logic_vector(8 downto 0);  -- i
-            j           : out std_logic_vector(8 downto 0);  -- j
+            i           : out std_logic_vector(n downto 0);  -- i
+            j           : out std_logic_vector(n downto 0);  -- j
 
             -- memory signals
-            mem_data    : in std_logic_vector(8 downto 0);  -- memory data
-            mem_addr    : out std_logic_vector(8 downto 0);  -- memory addr
+            mem_data    : in std_logic_vector(n downto 0);  -- memory data
+            mem_addr    : out std_logic_vector(n downto 0);  -- memory addr
             mem_t       : inout std_logic;  -- which memory
             mem_rd      : out std_logic;  -- read signal to memory
 
@@ -49,21 +54,21 @@ architecture behavior of control_unit_tb is
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 0);   -- op code
-    signal opand1 : std_logic_vector(8 downto 0);   -- operand 1
-    signal opand2 : std_logic_vector(8 downto 0);   -- operand 2
-    signal mask : std_logic_vector(8 downto 0);   -- mask
+    signal opand1 : std_logic_vector(n downto 0);   -- operand 1
+    signal opand2 : std_logic_vector(n downto 0);   -- operand 2
+    signal mask : std_logic_vector(n downto 0);   -- mask
 
     -- outputs
     signal err_b : std_logic;
     signal opand1_null : std_logic;
     signal opand2_null : std_logic;
     signal en_gen : std_logic;  -- poly generation
-    signal i : std_logic_vector(8 downto 0);  -- address in memory
-    signal j : std_logic_vector(8 downto 0);  -- address in memory
+    signal i : std_logic_vector(n downto 0);  -- address in memory
+    signal j : std_logic_vector(n downto 0);  -- address in memory
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal mem_rd : std_logic;  -- read signal to memory
-    signal mem_addr : std_logic_vector(8 downto 0);  -- address in memory
-    signal mem_data : std_logic_vector(8 downto 0) := "111111100";  -- data from memory
+    signal mem_addr : std_logic_vector(n downto 0);  -- address in memory
+    signal mem_data : std_logic_vector(n downto 0) := "111111100";  -- data from memory
 
     -- testbench clocks
     constant t_nums : integer := 320;
@@ -73,7 +78,11 @@ architecture behavior of control_unit_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: control_unit port map(
+    uut: control_unit
+    generic map(
+        n => 8
+    )
+    port map(
         clk => clk,
         opcode => opcode,
         opand1 => opand1,

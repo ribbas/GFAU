@@ -1,4 +1,4 @@
--- size.vhd
+-- indices.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -10,17 +10,22 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity size is
+entity indices is
+    generic(
+        n           : positive := 8;
+        ceillgn     : positive := 3;  -- ceil(log2(n))
+        ceillgn1    : positive := 2   -- ceil(log2(n - 1))
+    );
     port(
-        poly_bcd    : in std_logic_vector(8 downto 0);  -- BCD polynomial
-        n           : out std_logic_vector(3 downto 0);    -- size of element
-        m           : out std_logic_vector(2 downto 0)    -- size of element
+        poly_bcd: in std_logic_vector(n downto 0);  -- BCD polynomial
+        size    : out std_logic_vector(ceillgn downto 0); -- size of element
+        msb     : out std_logic_vector(ceillgn1 downto 0)    -- size of element
    );
-end size;
+end indices;
 
-architecture structural of size is
+architecture structural of indices is
 
-    signal prio_enc : std_logic_vector(3 downto 0) := (others => '-');
+    signal prio_enc : std_logic_vector(ceillgn downto 0) := (others => '-');
 
 begin
 
@@ -33,7 +38,7 @@ begin
             "0010" when (poly_bcd(2) = '1') else   -- 2
             "----";                                -- under 2
 
-    n <= prio_enc;
-    m <= std_logic_vector(unsigned(prio_enc(3 downto 0)) - 1);
+    size <= prio_enc;
+    msb <= std_logic_vector(unsigned(prio_enc(ceillgn1 downto 0)) - 1);
 
 end structural;

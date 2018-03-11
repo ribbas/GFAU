@@ -12,26 +12,29 @@ use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
 
 entity control_unit is
+    generic(
+        n           : positive := 8
+    );
     port(
         clk         : in std_logic;
         opcode      : in std_logic_vector(5 downto 0);   -- op code
-        opand1      : in std_logic_vector(8 downto 0);   -- operand 1
-        opand2      : in std_logic_vector(8 downto 0);   -- operand 2
+        opand1      : in std_logic_vector(n downto 0);   -- operand 1
+        opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
         -- registers
-        mask        : in  std_logic_vector(8 downto 0);
+        mask        : in  std_logic_vector(n downto 0);
 
         -- generation signals
         en_gen      : out std_logic;  -- polynomial generator enable
         rst_gen     : out std_logic;  -- polynomial generator reset
 
         -- operation signals
-        i           : out std_logic_vector(8 downto 0);  -- i
-        j           : out std_logic_vector(8 downto 0);  -- j
+        i           : out std_logic_vector(n downto 0);  -- i
+        j           : out std_logic_vector(n downto 0);  -- j
 
         -- memory signals
-        mem_data    : in std_logic_vector(8 downto 0);  -- data from memory
-        mem_addr    : out std_logic_vector(8 downto 0);  -- address in memory
+        mem_data    : in std_logic_vector(n downto 0);  -- data from memory
+        mem_addr    : out std_logic_vector(n downto 0);  -- address in memory
         mem_t       : inout std_logic;  -- which memory
         mem_rd      : out std_logic;  -- read signal to memory
 
@@ -45,46 +48,64 @@ end control_unit;
 architecture structural of control_unit is
 
     component isbounded
+        generic(
+            n           : positive := 8
+        );
         port(
-            operand     : in std_logic_vector(8 downto 0);
-            mask        : in std_logic_vector(8 downto 0);
+            operand     : in std_logic_vector(n downto 0);
+            mask        : in std_logic_vector(n downto 0);
             is_out_bd   : out std_logic
         );
     end component;
 
     component isnull
+        generic(
+            n          : positive := 8
+        );
         port(
-            opand      : in std_logic_vector(8 downto 0);
+            opand      : in std_logic_vector(n downto 0);
             mem_t      : in std_logic;
             is_null    : out std_logic
         );
     end component;
 
-    signal opand_b : std_logic_vector(8 downto 0);  -- mem_data from memory
+    signal opand_b : std_logic_vector(n downto 0);  -- mem_data from memory
 
     signal mem_t_z1 : std_logic;
     signal mem_t_z2 : std_logic;
-    signal opand_z1 : std_logic_vector(8 downto 0); -- zero flag for operand 1
-    signal opand_z2 : std_logic_vector(8 downto 0); -- zero flag for operand 2
+    signal opand_z1 : std_logic_vector(n downto 0); -- zero flag for operand 1
+    signal opand_z2 : std_logic_vector(n downto 0); -- zero flag for operand 2
 
     type state_type is (op1_state, op2_state);  -- define the states
     signal state : state_type;
 
 begin
 
-    isbounded_unit: isbounded port map(
+    isbounded_unit: isbounded
+    generic map(
+        n => 8
+    )
+    port map(
         operand => opand_b,
         mask => mask,
         is_out_bd => err_b
     );
 
-    iszero_unit1: isnull port map(
+    iszero_unit1: isnull
+    generic map(
+        n => 8
+    )
+    port map(
         opand => opand_z1,
         mem_t => mem_t_z1,
         is_null => opand1_null
     );
 
-    iszero_unit2: isnull port map(
+    iszero_unit2: isnull
+    generic map(
+        n => 8
+    )
+    port map(
         opand => opand_z2,
         mem_t => mem_t_z2,
         is_null => opand2_null
@@ -92,7 +113,7 @@ begin
 
     process (clk, opcode, opand1, opand2, mask, mem_data, mem_t)
 
-        constant DCAREVEC : std_logic_vector(8 downto 0) := (others => '-');
+        constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
 
     begin
 

@@ -13,9 +13,12 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_misc.all;
 
 entity isbounded is
+    generic(
+        n           : positive := 8
+    );
     port(
-        operand     : in std_logic_vector(8 downto 0);  -- operand
-        mask        : in std_logic_vector(8 downto 0);  -- mask
+        operand     : in std_logic_vector(n downto 0);  -- operand
+        mask        : in std_logic_vector(n downto 0);  -- mask
         is_out_bd   : out std_logic
    );
 end isbounded;

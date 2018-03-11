@@ -12,8 +12,11 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_misc.all;
 
 entity isnull is
+    generic(
+        n       : positive := 8
+    );
     port(
-        opand   : in std_logic_vector(8 downto 0);  -- opand
+        opand   : in std_logic_vector(n downto 0);  -- opand
         mem_t   : in std_logic;
         is_null : out std_logic
    );

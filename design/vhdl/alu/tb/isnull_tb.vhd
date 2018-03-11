@@ -14,15 +14,18 @@ architecture behavioral of isnull_tb is
 
     -- component declaration for the unit under test (uut)
     component isnull
+        generic(
+            n       : positive := 8
+        );
         port(
-            opand   : in std_logic_vector(15 downto 0);  -- opand
+            opand   : in std_logic_vector(n downto 0);  -- opand
             mem_t   : in std_logic;
             is_null : out std_logic
         );
     end component;
 
     -- inputs
-    signal opand : std_logic_vector(15 downto 0);
+    signal opand : std_logic_vector(n downto 0);
     signal mem_t : std_logic;
 
     -- outputs
@@ -47,7 +50,11 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: isnull port map(
+    uut: isnull
+    generic map(
+        n => 8
+    )
+    port map(
         opand => opand,
         mem_t => mem_t,
         is_null => is_null
@@ -60,24 +67,24 @@ begin
         mem_t <= '0';  -- mem1
 
         -- null in mem1
-        opand <= "1111111111111111";
+        opand <= "111111111";
         wait for 40 ns;
 
         -- null in mem2, 0 in mem1
-        opand <= "0000000000000000";
+        opand <= "000000000";
         wait for 40 ns;
 
         mem_t <= '1';  -- mem2
 
         -- null in mem1
-        opand <= "1111111111111111";
+        opand <= "111111111";
         wait for 40 ns;
 
         -- null in mem2, 0 in mem1
-        opand <= "0000000000000000";
+        opand <= "000000000";
         wait for 40 ns;
 
-        opand <= "0000000000001100";
+        opand <= "000001100";
         wait for 40 ns;
 
         mem_t <= '0';  -- mem2

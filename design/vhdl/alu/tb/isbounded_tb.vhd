@@ -14,16 +14,19 @@ architecture behavioral of isbounded_tb is
 
     -- component declaration for the unit under test (uut)
     component isbounded
+        generic(
+            n           : positive := 8
+        );
         port(
-            operand     : in  std_logic_vector(8 downto 0);
-            mask        : in  std_logic_vector(8 downto 0);
+            operand     : in  std_logic_vector(n downto 0);
+            mask        : in  std_logic_vector(n downto 0);
             is_out_bd   : out std_logic
         );
     end component;
 
     -- inputs
-    signal operand      : std_logic_vector(8 downto 0) := (others => '0');
-    signal mask         : std_logic_vector(8 downto 0) := (others => '0');
+    signal operand      : std_logic_vector(n downto 0) := (others => '0');
+    signal mask         : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
     signal is_out_bd : std_logic;
@@ -47,7 +50,11 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: isbounded port map(
+    uut: isbounded
+    generic map(
+        n => 8
+    )
+    port map(
         operand => operand,
         mask => mask,
         is_out_bd => is_out_bd
