@@ -16,9 +16,9 @@ entity isnull is
         n       : positive := 8
     );
     port(
-        opand   : in std_logic_vector(n downto 0);  -- opand
-        mem_t   : in std_logic;
-        is_null : out std_logic
+        opand   : in std_logic_vector(n downto 0);  -- term to check
+        mem_t   : in std_logic;                     -- memory type flag
+        is_null : out std_logic                     -- is_null flag
    );
 end isnull;
 

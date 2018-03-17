@@ -22,7 +22,7 @@ end varmask;
 
 architecture structural of varmask is
 
-    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-')
+    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
 
 begin
 
