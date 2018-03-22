@@ -13,19 +13,19 @@ use ieee.numeric_std.all;
 entity indices is
     generic(
         n           : positive := 8;
-        ceillgn     : positive := 3;  -- ceil(log2(n))
-        ceillgn1    : positive := 2   -- ceil(log2(n - 1))
+        clgn        : positive := 3;  -- ceil(log2(n))
+        clgn1       : positive := 2   -- ceil(log2(n - 1))
     );
     port(
         poly_bcd    : in std_logic_vector(n downto 0);  -- BCD polynomial
-        size        : out std_logic_vector(ceillgn downto 0); -- size
-        msb         : out std_logic_vector(ceillgn1 downto 0)    -- msb
+        size        : out std_logic_vector(clgn downto 0); -- size
+        msb         : out std_logic_vector(clgn1 downto 0)    -- msb
     );
 end indices;
 
 architecture structural of indices is
 
-    signal prio_enc : std_logic_vector(ceillgn downto 0) := (others => '-');
+    signal prio_enc : std_logic_vector(clgn downto 0) := (others => '-');
 
 begin
 
@@ -39,6 +39,6 @@ begin
                 "----";                                -- under 2
 
     size <= prio_enc;
-    msb <= std_logic_vector(unsigned(prio_enc(ceillgn1 downto 0)) - 1);
+    msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);
 
 end structural;

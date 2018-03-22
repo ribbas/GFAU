@@ -11,22 +11,27 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity generator is
+    generic(
+        n           : positive := 8;
+        clgn        : positive := 3;
+        clgn1       : positive := 2
+    );
     port(
         clk         : in std_logic;
         en          : in std_logic;
         rst         : in std_logic;
 
         -- polynomial data
-        poly_bcd    : in std_logic_vector(8 downto 0);
-        mask        : in std_logic_vector(8 downto 0);
-        msb         : in std_logic_vector(3 downto 0);
-        size        : in std_logic_vector(3 downto 0);
+        poly_bcd    : in std_logic_vector(n downto 0);
+        mask        : in std_logic_vector(n downto 0);
+        size        : in std_logic_vector(clgn downto 0);
+        msb         : in std_logic_vector(clgn1 downto 0);
 
         -- memory signals
         wr_en       : out std_logic;
         rdy         : out std_logic;
-        addr        : out std_logic_vector(8 downto 0);
-        sym         : out std_logic_vector(8 downto 0)
+        addr        : out std_logic_vector(n downto 0);
+        sym         : out std_logic_vector(n downto 0)
     );
 end generator;
 
@@ -34,58 +39,74 @@ architecture fsm of generator is
 
     component claadder16
         port(
-            a   : in std_logic_vector(8 downto 0);
-            b   : in std_logic_vector(8 downto 0);
-            s   : out std_logic_vector(8 downto 0)
+            a   : in std_logic_vector(n downto 0);
+            b   : in std_logic_vector(n downto 0);
+            s   : out std_logic_vector(n downto 0)
         );
     end component;
 
     component auto_sym
+        generic(
+            n       : positive := 8
+        );
         port(
-            clk : in std_logic;
-            rst : in std_logic;
-            en  : in std_logic;
-            sym : out std_logic_vector(8 downto 0)
+            clk     : in std_logic;
+            rst     : in std_logic;
+            en      : in std_logic;
+            sym     : out std_logic_vector(n downto 0)
         );
     end component;
 
     component gen_sym
+        generic(
+            n       : positive := 8;
+            clgn1   : positive := 2   -- ceil(log2(n - 1))
+        );
         port(
             clk     : in std_logic;
             rst     : in std_logic;
-            en  : in std_logic;
-            msb     : in std_logic_vector(3 downto 0);  -- n of element
-            nth_sym : in std_logic_vector(8 downto 0);
-            sym     : out std_logic_vector(8 downto 0)
+            en      : in std_logic;
+            nth_sym : in std_logic_vector(n downto 0);
+            msb     : in std_logic_vector(clgn1 downto 0);  -- msb of element
+            sym     : out std_logic_vector(n downto 0)
         );
     end component;
 
-    signal sum : std_logic_vector(8 downto 0);
+    signal sum : std_logic_vector(n downto 0);
 
     signal rst_auto : std_logic := '1';
     signal en_auto : std_logic := '1';
-    signal temp_auto : std_logic_vector(8 downto 0);
+    signal temp_auto : std_logic_vector(n downto 0);
 
     signal rst_gen : std_logic := '1';
     signal en_gen : std_logic := '1';
-    signal temp_gen : std_logic_vector(8 downto 0);
+    signal temp_gen : std_logic_vector(n downto 0);
 
-    signal nth_sym : std_logic_vector(8 downto 0);
-    signal counter : std_logic_vector(8 downto 0);
+    signal nth_sym : std_logic_vector(n downto 0);
+    signal counter : std_logic_vector(n downto 0);
 
     type state_type is (auto_sym_state, gen_sym_state);  -- define the states
     signal state : state_type;
 
 begin
 
-    auto : auto_sym port map(
+    auto : auto_sym
+    generic map(
+        n => n
+    )
+    port map(
         clk => clk,
         rst => rst_auto,
         en => en_auto,
         sym => temp_auto
     );
 
-    gen : gen_sym port map(
+    gen : gen_sym
+    generic map(
+        n => n,
+        clgn1 => clgn1
+    )
+    port map(
         clk => clk,
         rst => rst_gen,
         en => en_gen,
@@ -102,10 +123,10 @@ begin
 
     process (clk, en, rst, poly_bcd, mask)
 
-        constant DCAREVEC : std_logic_vector(8 downto 0) := (others => '-');
-        constant ZEROVEC : std_logic_vector(8 downto 0) := (others => '0');
-        constant ONEVEC : std_logic_vector(8 downto 0) := (0 => '1', others => '0');
-        constant HIVEC : std_logic_vector(8 downto 0) := (others => '1');
+        constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
+        constant ZEROVEC : std_logic_vector(n downto 0) := (others => '0');
+        constant ONEVEC : std_logic_vector(n downto 0) := (0 => '1', others => '0');
+        constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
 
     begin
 

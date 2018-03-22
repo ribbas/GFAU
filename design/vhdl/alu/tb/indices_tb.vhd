@@ -13,20 +13,20 @@ end indices_tb;
 architecture behavioral of indices_tb is
 
     constant n : positive := 8;
-    constant ceillgn : positive := 3;
-    constant ceillgn1 : positive := 2;
+    constant clgn : positive := 3;
+    constant clgn1 : positive := 2;
 
     -- component declaration for the unit under test (uut)
     component indices
         generic(
             n           : positive := 8;
-            ceillgn     : positive := 3;
-            ceillgn1    : positive := 3
+            clgn        : positive := 3;
+            clgn1       : positive := 3
         );
         port(
             poly_bcd    : in  std_logic_vector(n downto 0);
-            size        : out std_logic_vector(ceillgn downto 0);
-            msb         : out std_logic_vector(ceillgn1 downto 0)
+            size        : out std_logic_vector(clgn downto 0);
+            msb         : out std_logic_vector(clgn1 downto 0)
         );
     end component;
 
@@ -34,8 +34,8 @@ architecture behavioral of indices_tb is
     signal poly_bcd : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    signal size : std_logic_vector(ceillgn downto 0);
-    signal msb : std_logic_vector(ceillgn1 downto 0);
+    signal size : std_logic_vector(clgn downto 0);
+    signal msb : std_logic_vector(clgn1 downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -60,8 +60,8 @@ begin
     uut: indices
     generic map(
         n => n,
-        ceillgn => ceillgn,
-        ceillgn1 => ceillgn1
+        clgn => clgn,
+        clgn1 => clgn1
     )
     port map(
         poly_bcd => poly_bcd,

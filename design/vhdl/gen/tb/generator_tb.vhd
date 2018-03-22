@@ -12,38 +12,47 @@ end generator_tb;
 
 architecture test of generator_tb is
 
+    constant n : positive := 8;
+    constant clgn : positive := 3;
+    constant clgn1 : positive := 2;
+
     -- component declaration for the unit under test (uut)
     component generator
+        generic(
+            n           : positive := 8;
+            clgn        : positive := 3;
+            clgn1       : positive := 2
+        );
         port(
             clk         : in std_logic;
             en          : in std_logic;
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(8 downto 0);
-            mask        : in std_logic_vector(8 downto 0);
-            msb         : in std_logic_vector(3 downto 0);
-            size        : in std_logic_vector(3 downto 0);
+            poly_bcd    : in std_logic_vector(n downto 0);
+            mask        : in std_logic_vector(n downto 0);
+            size        : in std_logic_vector(clgn downto 0);
+            msb         : in std_logic_vector(clgn1 downto 0);
 
             -- memory signals
             wr_en       : out std_logic;
             rdy         : out std_logic;
-            addr        : out std_logic_vector(8 downto 0);
-            sym         : out std_logic_vector(8 downto 0)
+            addr        : out std_logic_vector(n downto 0);
+            sym         : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(8 downto 0);
-    signal mask : std_logic_vector(8 downto 0);
-    signal msb : std_logic_vector(3 downto 0);
-    signal size : std_logic_vector(3 downto 0);
+    signal poly_bcd : std_logic_vector(n downto 0);
+    signal mask : std_logic_vector(n downto 0);
+    signal msb : std_logic_vector(clgn1 downto 0);
+    signal size : std_logic_vector(clgn downto 0);
 
     -- outputs
     signal rdy : std_logic;
     signal wr_en : std_logic;
-    signal addr : std_logic_vector(8 downto 0);
-    signal sym : std_logic_vector(8 downto 0);
+    signal addr : std_logic_vector(n downto 0);
+    signal sym : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -54,7 +63,13 @@ architecture test of generator_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: generator port map(
+    uut: generator
+    generic map(
+        n => n,
+        clgn => clgn,
+        clgn1 => clgn1
+    )
+    port map(
         clk => clk,
         rst => rst,
         en => en,
@@ -85,7 +100,7 @@ begin
     begin
 
         mask <= "000000111";
-        msb <= "0010";
+        msb <= "010";
         size <= "0011";
         poly_bcd <= "000001101";
 

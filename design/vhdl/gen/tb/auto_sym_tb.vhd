@@ -12,30 +12,42 @@ end auto_sym_tb;
 
 architecture behavioral of auto_sym_tb is
 
-    -- component declaration for the unit under test (uut)     
+    constant n : positive := 8;
+
+    -- component declaration for the unit under test (uut)
     component auto_sym
+        generic(
+            n       : positive := 8
+        );
         port(
-            clk         : in std_logic;
-            rst         : in std_logic;
-            cur_term    : out std_logic_vector(15 downto 0)
+            clk     : in std_logic;
+            rst     : in std_logic;
+            en      : in std_logic;
+            sym     : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- outputs
-    signal cur_term : std_logic_vector(15 downto 0);
+    signal sym : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums   : integer := 640;
     signal clk      : std_logic := '1';
-    signal rst      : std_logic := '1';
+    signal rst      : std_logic := '0';
+    signal en       : std_logic := '1';
 
 begin
 
     -- instantiate the unit under test (uut)
-    uut: auto_sym port map(
+    uut: auto_sym
+    generic map(
+        n => 8
+    )
+    port map(
         clk => clk,
         rst => rst,
-        cur_term => cur_term
+        en => en,
+        sym => sym
     );
 
     -- clock process
@@ -58,6 +70,7 @@ begin
         wait for 40 ns;
 
         rst <= '0';
+        en <= '1';
 
         wait for 700 ns;
 
