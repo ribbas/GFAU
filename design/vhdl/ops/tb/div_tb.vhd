@@ -12,22 +12,29 @@ end div_tb;
 
 architecture behavioral of div_tb is
 
+    constant n : positive := 8;
+    constant clgn : positive := 3;
+
     -- component declaration for the unit under test (uut)
-    component div16
+    component div
+        generic(
+            n       : positive := 8;
+            clgn    : positive := 3
+        );
         port(
-            i       : in std_logic_vector (15 downto 0);
-            j       : in std_logic_vector (15 downto 0);
-            n       : in std_logic_vector (3 downto 0);
-            quot    : out std_logic_vector (15 downto 0)
+            i       : in std_logic_vector(n downto 0); -- first element
+            j       : in std_logic_vector(n downto 0); -- second element
+            size    : in std_logic_vector(clgn downto 0);  -- size of element
+            quot    : out std_logic_vector(n downto 0) -- quotient of elements
         );
     end component;
 
     -- inputs
-    signal i, j : std_logic_vector(15 downto 0) := (others => '0');
-    signal n    : std_logic_vector (3 downto 0) := (others => '0');
+    signal i, j : std_logic_vector(n downto 0) := (others => '0');
+    signal size    : std_logic_vector (clgn downto 0) := (others => '0');
 
     -- outputs
-    signal quot : std_logic_vector(15 downto 0);
+    signal quot : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -36,10 +43,15 @@ architecture behavioral of div_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: div16 port map(
+    uut: div
+    generic map(
+        n => n,
+        clgn => clgn
+    )
+    port map(
         i => i,
         j => j,
-        n => n,
+        size => size,
         quot => quot
     );
 
@@ -59,53 +71,49 @@ begin
     stim_proc: process
     begin
 
-        mask <= "0000000000000111";
-        n <= "0011";
-        --report "n" & integer'image(n);
+        size <= "0011";
 
         -- hold reset state for 20 ns.
         wait for 40 ns;
 
         -- (2 / 3) = (2 - 3) mod 7 = 6
-        i <= "0000000000000010";
-        j <= "0000000000000101";
+        i <= "000000010";
+        j <= "000000101";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 / 5) = (6 - 5) mod 7 = 1
-        i <= "0000000000000110";
-        j <= "0000000000000011";
+        i <= "000000110";
+        j <= "000000011";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (0 / 6) = (0 - 6) mod 7 = 1
-        i <= "0000000000000000";
-        j <= "0000000000000010";
+        i <= "000000000";
+        j <= "000000010";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 / 1) = (6 - 1) mod 7 = 5
-        i <= "0000000000000110";
-        j <= "0000000000000111";
+        i <= "000000110";
+        j <= "000000111";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (11 / 12) = (11 - 12) mod 15 = 14
-        mask <= "0000000000001111";
-        n <= "0100";
-        i <= "0000000000001011";
-        j <= "0000000000000100";
+        size <= "0100";
+        i <= "000001011";
+        j <= "000000100";
 
         wait for 40 ns;
 
-        mask <= "0111111111111111";
-        n <= "1111";
-        i <= "0111111111111110";
-        j <= "0000000000000011";
+        size <= "1111";
+        i <= "011111110";
+        j <= "000000011";
 
         wait for 40 ns;
 

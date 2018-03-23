@@ -12,27 +12,29 @@ end addsub_tb;
 
 architecture behavioral of addsub_tb is
 
+    constant n : positive := 8;
+
     -- component declaration for the unit under test (uut)
     component addsub
         generic(
             n       : positive
         );
         port(
-            i       : in std_logic_vector (8 downto 0);
-            j       : in std_logic_vector (8 downto 0);
+            i       : in std_logic_vector (n downto 0);
+            j       : in std_logic_vector (n downto 0);
             i_null  : in std_logic;
             j_null  : in std_logic;
-            bitxor  : out std_logic_vector (8 downto 0)
+            bitxor  : out std_logic_vector (n downto 0)
         );
     end component;
 
     -- inputs
-    signal i, j     : std_logic_vector(8 downto 0) := (others => '0');
+    signal i, j     : std_logic_vector(n downto 0) := (others => '0');
     signal i_null   : std_logic;
     signal j_null   : std_logic;
 
     -- outputs
-    signal bitxor   : std_logic_vector(8 downto 0);
+    signal bitxor   : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -43,7 +45,7 @@ begin
     -- instantiate the unit under test (uut)
     uut: addsub
     generic map(
-        n => 8
+        n => n
     )
     port map(
         i => i,
@@ -90,13 +92,15 @@ begin
         wait for 40 ns;
 
         -- (0 ^ 6) = 6
-        i <= "000000000";
+        i_null <= '1';
+        i <= "111111111";
         j <= "000000110";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
 
         -- (6 ^ 1) = 7
+        i_null <= '0';
         i <= "000000110";
         j <= "000000001";
 

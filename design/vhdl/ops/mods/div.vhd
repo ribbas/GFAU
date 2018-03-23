@@ -12,46 +12,27 @@ use ieee.numeric_std.all;
 
 entity div is
     generic(
-        n       : positive := 8,
-        ceillgn : positive := 3
+        n       : positive := 8;
+        clgn    : positive := 3
     );
     port(
         i       : in std_logic_vector(n downto 0); -- first element
         j       : in std_logic_vector(n downto 0); -- second element
-        size    : in std_logic_vector(ceillgn downto 0);  -- size of element
+        size    : in std_logic_vector(clgn downto 0);  -- size of element
         quot    : out std_logic_vector(n downto 0) -- quotient of elements
     );
 end div;
 
 architecture structural of div is
 
-    -- CLA adder component
-    component claadder16
-        port(
-            a   : in std_logic_vector (n downto 0);
-            b   : in std_logic_vector (n downto 0);
-            s   : out std_logic_vector (n downto 0)
-        );
-    end component;
-
     signal sumij : std_logic_vector(n downto 0);
     signal sumij1 : std_logic_vector(n downto 0);
+    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
 
 begin
 
-    -- sum(i, neg_j)
-    cla1 : claadder16 port map(
-        i,                  -- first element
-        j,                  -- masked two's complement of j
-        sumij               -- sum of i and j
-    );
-
-    -- sum(i, neg_j, 1)
-    cla2 : claadder16 port map(
-        sumij,              -- sum of i and j
-        "1111111111111111", -- 16-bit negative 1
-        sumij1              -- sum of i and j and 1
-    );
+    sumij <= std_logic_vector(unsigned(i) + unsigned(j));
+    sumij1 <= std_logic_vector(unsigned(sumij) + unsigned(HIVEC));
 
     process (size, sumij, sumij1)
     begin
