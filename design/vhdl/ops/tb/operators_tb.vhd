@@ -28,10 +28,9 @@ architecture behavioral of operators_tb is
             j       : in std_logic_vector(n downto 0); -- second opand
             i_null  : in std_logic;  -- opand 1 null flag
             j_null  : in std_logic;  -- opand 2 null flag
-            size    : in std_logic_vector(clgn downto 0);  -- size of polynomial
+            size    : in std_logic_vector(clgn downto 0); -- size of polynomial
             mask    : in std_logic_vector(n downto 0);  -- mask
             out_sel : out std_logic_vector(n downto 0); -- selected output
-            --convert : out std_logic; -- convert flag
             mem_t   : out std_logic; -- memory type
             err_z   : out std_logic -- zero exception
         );
@@ -48,7 +47,6 @@ architecture behavioral of operators_tb is
 
     -- outputs
     signal out_sel : std_logic_vector(n downto 0);
-    signal convert : std_logic;
     signal mem_t : std_logic;
     signal err_z : std_logic;
 

@@ -12,19 +12,24 @@ end twoscmp_tb;
 
 architecture behavioral of twoscmp_tb is
 
+    constant n : positive := 8;
+
     -- component declaration for the unit under test (uut)
     component twoscmp
+        generic(
+            n       : positive
+        );
         port(
-            num     : in  std_logic_vector(15 downto 0);
-            tcnum   : out  std_logic_vector(15 downto 0)
+            num     : in  std_logic_vector(n downto 0);
+            tcnum   : out  std_logic_vector(n downto 0)
         );
     end component;
 
     -- inputs
-    signal num      : std_logic_vector(15 downto 0) := (others => '0');
+    signal num      : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    signal tcnum    : std_logic_vector(15 downto 0);
+    signal tcnum    : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -46,7 +51,11 @@ begin
 
 
     -- instantiate the unit under test (uut)
-    uut: twoscmp port map(
+    uut: twoscmp
+    generic map(
+        n => n
+    )
+    port map(
         num => num,
         tcnum => tcnum
     );
@@ -58,24 +67,24 @@ begin
         -- hold reset state for 100 ns.
         wait for 40 ns;
 
+        -- 5
+        num <= "000000101";
+        wait for 40 ns;
+
+        -- 511
+        num <= "111111111";
+        wait for 40 ns;
+
+        -- 1
+        num <= "000000001";
+        wait for 40 ns;
+
         -- 3
-        num <= "0000000000000101";
-        wait for 40 ns;
-
-        -- 65535
-        num <= "1111111111111111";
-        wait for 40 ns;
-
-        -- 65535
-        num <= "0000000000000001";
-        wait for 40 ns;
-
-        -- 65535
-        num <= "0000000000000011";
+        num <= "000000011";
         wait for 40 ns;
 
         -- 0
-        num <= "0000000000000000";
+        num <= "000000000";
 
         wait for 40 ns;
 

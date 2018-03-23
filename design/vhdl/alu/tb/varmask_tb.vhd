@@ -12,19 +12,24 @@ end varmask_tb;
 
 architecture behavioral of varmask_tb is
 
+    constant n : positive := 8;
+
     -- component declaration for the unit under test (uut)
     component varmask
+        generic(
+            n           : positive
+        );
         port(
-            poly_bcd    : in  std_logic_vector(15 downto 0);
-            mask        : out std_logic_vector(15 downto 0)
+            poly_bcd    : in  std_logic_vector(n downto 0);
+            mask        : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(15 downto 0) := (others => '0');
+    signal poly_bcd : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    signal mask    : std_logic_vector(15 downto 0);
+    signal mask    : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums   : integer := 320;
@@ -46,7 +51,11 @@ begin
 
 
     -- instantiate the unit under test (uut)
-    uut: varmask port map(
+    uut: varmask
+    generic map(
+        n => n
+    )
+    port map(
         poly_bcd => poly_bcd,
         mask => mask
     );
@@ -59,15 +68,15 @@ begin
         wait for 40 ns;
 
         -- x^2
-        poly_bcd <= "0000000000000101";
+        poly_bcd <= "000000101";
         wait for 40 ns;
 
-        -- x^11
-        poly_bcd <= "0000100000000101";
+        -- x^7
+        poly_bcd <= "010000101";
         wait for 40 ns;
 
-        -- x^15
-        poly_bcd <= "1111111111111111";
+        -- x^8
+        poly_bcd <= "111111111";
 
         wait for 40 ns;
 
