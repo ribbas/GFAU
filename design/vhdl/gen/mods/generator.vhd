@@ -37,14 +37,6 @@ end generator;
 
 architecture fsm of generator is
 
-    component claadder16
-        port(
-            a   : in std_logic_vector(n downto 0);
-            b   : in std_logic_vector(n downto 0);
-            s   : out std_logic_vector(n downto 0)
-        );
-    end component;
-
     component auto_sym
         generic(
             n       : positive := 8
@@ -114,12 +106,6 @@ begin
         nth_sym => nth_sym,
         sym => temp_gen
     );
-
-    --cla : claadder16 port map(
-    --    a => counter,
-    --    b => "0000000000000001",
-    --    s => sum
-    --);
 
     process (clk, en, rst, poly_bcd, mask)
 
