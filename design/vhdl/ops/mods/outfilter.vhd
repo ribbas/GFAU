@@ -21,7 +21,7 @@ entity outfilter is
         i_null  : in std_logic;
         j_null  : in std_logic;
         mask    : in std_logic_vector(15 downto 0);
-        mem_id      : inout std_logic_vector(1 downto 0);
+        mem_id  : inout std_logic_vector(1 downto 0);
         mem_t   : out std_logic;
         err_z   : out std_logic;
         result  : out std_logic_vector(15 downto 0)

@@ -11,16 +11,20 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity operators is
+    generic(
+        n       : positive := 8;
+        clgn    : positive := 3
+    );
     port(
         clk     : in std_logic;
         opcode  : in std_logic_vector(5 downto 0);  -- opcode
-        i       : in std_logic_vector(15 downto 0); -- first opand
-        j       : in std_logic_vector(15 downto 0); -- second opand
+        i       : in std_logic_vector(n downto 0); -- first opand
+        j       : in std_logic_vector(n downto 0); -- second opand
         i_null  : in std_logic;  -- opand 1 null flag
         j_null  : in std_logic;  -- opand 2 null flag
-        n       : in std_logic_vector(3 downto 0);  -- size of polynomial
-        mask    : in std_logic_vector(15 downto 0);  -- mask
-        out_sel : out std_logic_vector(15 downto 0); -- selected output
+        size    : in std_logic_vector(clgn downto 0);  -- size of polynomial
+        mask    : in std_logic_vector(n downto 0);  -- mask
+        out_sel : out std_logic_vector(n downto 0); -- selected output
         --convert : out std_logic; -- convert flag
         mem_t   : out std_logic; -- memory type
         err_z   : out std_logic -- zero exception
@@ -32,42 +36,53 @@ architecture structural of operators is
     -- two's complement
     component maskedtwoscmp
         port(
-            num         : in std_logic_vector(15 downto 0);
-            mask        : in std_logic_vector(15 downto 0);
-            maskedtc    : out std_logic_vector(15 downto 0)
+            num         : in std_logic_vector(n downto 0);
+            mask        : in std_logic_vector(n downto 0);
+            maskedtc    : out std_logic_vector(n downto 0)
         );
     end component;
 
     ---------------- Galois operators ----------------
 
     -- addition / subtraction
-    component addsub16
+    component addsub
+        generic(
+            n       : positive := n
+        );
         port(
-            i       : in std_logic_vector (15 downto 0);
-            j       : in std_logic_vector (15 downto 0);
+            i       : in std_logic_vector (n downto 0);
+            j       : in std_logic_vector (n downto 0);
             i_null  : in std_logic;
             j_null  : in std_logic;
-            bitxor  : out std_logic_vector (15 downto 0)
+            bitxor  : out std_logic_vector (n downto 0)
         );
     end component;
 
     -- multiplication
-    component mul16
+    component mul
+        generic(
+            n       : positive := n;
+            clgn    : positive := clgn
+        );
         port(
-            i       : in std_logic_vector(15 downto 0);
-            j       : in std_logic_vector(15 downto 0);
-            n       : in std_logic_vector(3 downto 0);
-            prod    : out std_logic_vector(15 downto 0)
+            i       : in std_logic_vector(n downto 0);
+            j       : in std_logic_vector(n downto 0);
+            size    : in std_logic_vector(clgn downto 0);
+            prod    : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- division
-    component div16
+    component div
+        generic(
+            n       : positive := n;
+            clgn    : positive := clgn
+        );
         port(
-            i       : in std_logic_vector (15 downto 0);
-            j       : in std_logic_vector (15 downto 0);
-            n       : in std_logic_vector (3 downto 0);
-            quot    : out std_logic_vector (15 downto 0)
+            i       : in std_logic_vector (n downto 0);
+            j       : in std_logic_vector (n downto 0);
+            size    : in std_logic_vector (clgn downto 0);
+            quot    : out std_logic_vector (n downto 0)
         );
     end component;
 
@@ -90,15 +105,19 @@ architecture structural of operators is
     ---------------- output multiplexers ----------------
 
     component outselect
+        generic(
+            n       : positive := n;
+            clgn    : positive := clgn
+        );
         port(
             opcode  : in std_logic_vector(5 downto 0);
-            out_as  : in std_logic_vector(15 downto 0);
-            out_m   : in std_logic_vector(15 downto 0);
-            out_d   : in std_logic_vector(15 downto 0);
-            out_l   : in std_logic_vector(15 downto 0);
+            out_as  : in std_logic_vector(n downto 0);
+            out_m   : in std_logic_vector(n downto 0);
+            out_d   : in std_logic_vector(n downto 0);
+            out_l   : in std_logic_vector(n downto 0);
             i_null  : in std_logic;
             j_null  : in std_logic;
-            out_sel : out std_logic_vector(15 downto 0);
+            out_sel : out std_logic_vector(n downto 0);
             mem_t   : out std_logic;
             convert : out std_logic;
             err_z   : out std_logic
@@ -116,11 +135,11 @@ architecture structural of operators is
     --    );
     --end component;
 
-    signal neg_j : std_logic_vector(15 downto 0);
+    signal neg_j : std_logic_vector(n downto 0);
 
-    signal bitxor : std_logic_vector(15 downto 0);
-    signal prod : std_logic_vector(15 downto 0);
-    signal quot : std_logic_vector(15 downto 0);
+    signal bitxor : std_logic_vector(n downto 0);
+    signal prod : std_logic_vector(n downto 0);
+    signal quot : std_logic_vector(n downto 0);
 
     --signal out_sel : std_logic_vector(15 downto 0);
     --signal mem_out : std_logic_vector(15 downto 0);
@@ -138,7 +157,11 @@ begin
     ---------------- Galois operator units ----------------
 
     -- addition / subtraction
-    addsub_unit: addsub16 port map(
+    addsub_unit: addsub
+    generic map(
+        n => n
+    )
+    port map(
         i => i,
         j => j,
         i_null => i_null,
@@ -147,18 +170,28 @@ begin
     );
 
     -- multiplication
-    mul_unit: mul16 port map(
+    mul_unit: mul
+    generic map(
+        n => n,
+        clgn => clgn
+    )
+    port map(
         i => i,
         j => j,
-        n => n,
+        size => size,
         prod => prod
     );
 
     -- division
-    div_unit: div16 port map(
+    div_unit: div
+    generic map(
+        n => n,
+        clgn => clgn
+    )
+    port map(
         i => i,
         j => neg_j,
-        n => n,
+        size => size,
         quot => quot
     );
 

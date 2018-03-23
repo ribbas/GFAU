@@ -12,19 +12,26 @@ end operators_tb;
 
 architecture behavioral of operators_tb is
 
+    constant n : positive := 8;
+    constant clgn : positive := 3;
+
     -- component declaration for the unit under test (uut)
     component operators
+        generic(
+            n       : positive;
+            clgn    : positive
+        );
         port(
             clk     : in std_logic;
             opcode  : in std_logic_vector(5 downto 0);  -- opcode
-            i       : in std_logic_vector(15 downto 0); -- first opand
-            j       : in std_logic_vector(15 downto 0); -- second opand
+            i       : in std_logic_vector(n downto 0); -- first opand
+            j       : in std_logic_vector(n downto 0); -- second opand
             i_null  : in std_logic;  -- opand 1 null flag
             j_null  : in std_logic;  -- opand 2 null flag
-            n       : in std_logic_vector(3 downto 0);  -- size of polynomial
-            mask    : in std_logic_vector(15 downto 0);  -- mask
-            out_sel : out std_logic_vector(15 downto 0); -- selected output
-            convert : out std_logic; -- convert flag
+            size    : in std_logic_vector(clgn downto 0);  -- size of polynomial
+            mask    : in std_logic_vector(n downto 0);  -- mask
+            out_sel : out std_logic_vector(n downto 0); -- selected output
+            --convert : out std_logic; -- convert flag
             mem_t   : out std_logic; -- memory type
             err_z   : out std_logic -- zero exception
         );
@@ -32,15 +39,15 @@ architecture behavioral of operators_tb is
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 0) := (others => '0');
-    signal i : std_logic_vector(15 downto 0) := (others => '0');
-    signal j : std_logic_vector(15 downto 0) := (others => '0');
+    signal i : std_logic_vector(n downto 0) := (others => '0');
+    signal j : std_logic_vector(n downto 0) := (others => '0');
     signal i_null : std_logic;
     signal j_null : std_logic;
-    signal n : std_logic_vector(3 downto 0) := (others => '0');
-    signal mask : std_logic_vector(15 downto 0) := (others => '0');
+    signal size : std_logic_vector(clgn downto 0) := (others => '0');
+    signal mask : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    signal out_sel : std_logic_vector(15 downto 0);
+    signal out_sel : std_logic_vector(n downto 0);
     signal convert : std_logic;
     signal mem_t : std_logic;
     signal err_z : std_logic;
@@ -52,17 +59,21 @@ architecture behavioral of operators_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: operators port map(
+    uut: operators
+    generic map(
+        n => n,
+        clgn => clgn
+    )
+    port map(
         clk => clk,
         opcode => opcode,
         i => i,
         j => j,
         i_null => i_null,
         j_null => j_null,
-        n => n,
+        size => size,
         mask => mask,
         out_sel => out_sel,
-        convert => convert,
         mem_t=> mem_t,
         err_z => err_z
     );
@@ -83,12 +94,12 @@ begin
     stim_proc: process
     begin
 
-        i <= "0000000000001001";
-        j <= "0000000000001100";
+        i <= "000001001";
+        j <= "000001100";
         i_null <= '0';
         j_null <= '1';
-        n <= "0100";
-        mask <= "0000000000001111";
+        size <= "0100";
+        mask <= "000001111";
 
         -- hold reset state for 40 ns.
         wait for 40 ns;
