@@ -48,9 +48,6 @@ end control_unit;
 architecture structural of control_unit is
 
     component isbounded
-        generic(
-            n           : positive := 8
-        );
         port(
             operand     : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
@@ -59,9 +56,6 @@ architecture structural of control_unit is
     end component;
 
     component isnull
-        generic(
-            n          : positive := 8
-        );
         port(
             opand      : in std_logic_vector(n downto 0);
             mem_t      : in std_logic;
@@ -81,31 +75,19 @@ architecture structural of control_unit is
 
 begin
 
-    isbounded_unit: isbounded
-    generic map(
-        n => 8
-    )
-    port map(
+    isbounded_unit: isbounded port map(
         operand => opand_b,
         mask => mask,
         is_out_bd => err_b
     );
 
-    iszero_unit1: isnull
-    generic map(
-        n => 8
-    )
-    port map(
+    iszero_unit1: isnull port map(
         opand => opand_z1,
         mem_t => mem_t_z1,
         is_null => opand1_null
     );
 
-    iszero_unit2: isnull
-    generic map(
-        n => 8
-    )
-    port map(
+    iszero_unit2: isnull port map(
         opand => opand_z2,
         mem_t => mem_t_z2,
         is_null => opand2_null

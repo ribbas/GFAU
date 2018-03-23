@@ -38,9 +38,6 @@ end generator;
 architecture fsm of generator is
 
     component auto_sym
-        generic(
-            n       : positive := 8
-        );
         port(
             clk     : in std_logic;
             rst     : in std_logic;
@@ -50,10 +47,6 @@ architecture fsm of generator is
     end component;
 
     component gen_sym
-        generic(
-            n       : positive := 8;
-            clgn1   : positive := 2   -- ceil(log2(n - 1))
-        );
         port(
             clk     : in std_logic;
             rst     : in std_logic;
@@ -64,8 +57,6 @@ architecture fsm of generator is
         );
     end component;
 
-    signal sum : std_logic_vector(n downto 0);
-
     signal rst_auto : std_logic := '1';
     signal en_auto : std_logic := '1';
     signal temp_auto : std_logic_vector(n downto 0);
@@ -73,32 +64,28 @@ architecture fsm of generator is
     signal rst_gen : std_logic := '1';
     signal en_gen : std_logic := '1';
     signal temp_gen : std_logic_vector(n downto 0);
-
     signal nth_sym : std_logic_vector(n downto 0);
+
     signal counter : std_logic_vector(n downto 0);
 
     type state_type is (auto_sym_state, gen_sym_state);  -- define the states
     signal state : state_type;
 
+    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
+    constant ZEROVEC : std_logic_vector(n downto 0) := (others => '0');
+    constant ONEVEC: std_logic_vector(n downto 0) := (0 => '1', others => '0');
+    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
+
 begin
 
-    auto : auto_sym
-    generic map(
-        n => n
-    )
-    port map(
+    auto : auto_sym port map(
         clk => clk,
         rst => rst_auto,
         en => en_auto,
         sym => temp_auto
     );
 
-    gen : gen_sym
-    generic map(
-        n => n,
-        clgn1 => clgn1
-    )
-    port map(
+    gen : gen_sym port map(
         clk => clk,
         rst => rst_gen,
         en => en_gen,
@@ -108,12 +95,6 @@ begin
     );
 
     process (clk, en, rst, poly_bcd, mask)
-
-        constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
-        constant ZEROVEC : std_logic_vector(n downto 0) := (others => '0');
-        constant ONEVEC : std_logic_vector(n downto 0) := (0 => '1', others => '0');
-        constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
-
     begin
 
         nth_sym <= poly_bcd and mask;
