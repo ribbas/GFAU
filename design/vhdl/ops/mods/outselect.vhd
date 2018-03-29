@@ -1,6 +1,6 @@
 -- outselect.vhd
 --
--- Sabbir Ahmed, Jeffrey Osazuwa
+-- Sabbir Ahmed
 -- 2018-01-16
 --
 -- Multiplexer to select the operator's output as the result.
@@ -11,15 +11,18 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity outselect is
+    generic(
+        n       : positive := 8
+    );
     port(
         opcode  : in std_logic_vector(5 downto 0);
-        out_as  : in std_logic_vector(15 downto 0);
-        out_m   : in std_logic_vector(15 downto 0);
-        out_d   : in std_logic_vector(15 downto 0);
-        out_l   : in std_logic_vector(15 downto 0);
+        out_as  : in std_logic_vector(n downto 0);
+        out_m   : in std_logic_vector(n downto 0);
+        out_d   : in std_logic_vector(n downto 0);
+        out_l   : in std_logic_vector(n downto 0);
         i_null  : in std_logic;
         j_null  : in std_logic;
-        out_sel : out std_logic_vector(15 downto 0);
+        out_sel : out std_logic_vector(n downto 0);
         mem_t   : out std_logic;
         convert : out std_logic;
         err_z   : out std_logic
@@ -27,6 +30,9 @@ entity outselect is
 end outselect;
 
 architecture behavioral of outselect is
+
+    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
+    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
 
 begin
 
@@ -53,7 +59,7 @@ begin
                 else
 
                     convert <= '0';
-                    mem_t <= 'X';
+                    mem_t <= '-';
 
                 end if;
 
@@ -79,7 +85,7 @@ begin
                     else
 
                         convert <= '0';
-                        mem_t <= 'X';
+                        mem_t <= '-';
 
                     end if;
 
@@ -87,7 +93,7 @@ begin
                 elsif (i_null = '1' or j_null = '1') then
 
                     -- null (in element form) is selected
-                    out_sel <= "1111111111111111";
+                    out_sel <= HIVEC;
 
                 end if;
 
@@ -111,7 +117,7 @@ begin
                     else
 
                         convert <= '0';
-                        mem_t <= 'X';
+                        mem_t <= '-';
 
                     end if;
 
@@ -120,13 +126,13 @@ begin
 
                     -- throw divide by zero exception
                     err_z <= '1';
-                    out_sel <= "XXXXXXXXXXXXXXXX";
+                    out_sel <= DCAREVEC;
 
                 -- if dividing null is attempted
                 elsif (i_null = '1' and j_null = '0') then
 
                     err_z <= '0';
-                    out_sel <= "1111111111111111";
+                    out_sel <= HIVEC;
 
                 end if;
 
@@ -149,7 +155,7 @@ begin
                     else
 
                         convert <= '0';
-                        mem_t <= 'X';
+                        mem_t <= '-';
 
                     end if;
 
@@ -158,7 +164,7 @@ begin
 
                     -- throw zero exception
                     err_z <= '1';
-                    out_sel <= "XXXXXXXXXXXXXXXX";
+                    out_sel <= DCAREVEC;
 
                 end if;
 
@@ -166,8 +172,8 @@ begin
 
                 err_z <= '0';
                 convert <= '0';
-                mem_t <= 'X';
-                out_sel <= "XXXXXXXXXXXXXXXX";
+                mem_t <= '-';
+                out_sel <= DCAREVEC;
 
         end case;
 

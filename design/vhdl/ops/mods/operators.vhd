@@ -25,7 +25,6 @@ entity operators is
         size    : in std_logic_vector(clgn downto 0);  -- size of polynomial
         mask    : in std_logic_vector(n downto 0);  -- mask
         out_sel : out std_logic_vector(n downto 0); -- selected output
-        --convert : out std_logic; -- convert flag
         mem_t   : out std_logic; -- memory type
         err_z   : out std_logic -- zero exception
     );
@@ -46,9 +45,6 @@ architecture structural of operators is
 
     -- addition / subtraction
     component addsub
-        generic(
-            n       : positive := n
-        );
         port(
             i       : in std_logic_vector (n downto 0);
             j       : in std_logic_vector (n downto 0);
@@ -60,10 +56,6 @@ architecture structural of operators is
 
     -- multiplication
     component mul
-        generic(
-            n       : positive := n;
-            clgn    : positive := clgn
-        );
         port(
             i       : in std_logic_vector(n downto 0);
             j       : in std_logic_vector(n downto 0);
@@ -74,10 +66,6 @@ architecture structural of operators is
 
     -- division
     component div
-        generic(
-            n       : positive := n;
-            clgn    : positive := clgn
-        );
         port(
             i       : in std_logic_vector (n downto 0);
             j       : in std_logic_vector (n downto 0);
@@ -105,10 +93,6 @@ architecture structural of operators is
     ---------------- output multiplexers ----------------
 
     component outselect
-        generic(
-            n       : positive := n;
-            clgn    : positive := clgn
-        );
         port(
             opcode  : in std_logic_vector(5 downto 0);
             out_as  : in std_logic_vector(n downto 0);
@@ -148,6 +132,8 @@ architecture structural of operators is
 
 begin
 
+    ---------------- Two's Compliment ----------------
+
     maskedtwoscmp_unit: maskedtwoscmp port map(
         num => j,
         mask => mask,
@@ -157,11 +143,7 @@ begin
     ---------------- Galois operator units ----------------
 
     -- addition / subtraction
-    addsub_unit: addsub
-    generic map(
-        n => n
-    )
-    port map(
+    addsub_unit: addsub port map(
         i => i,
         j => j,
         i_null => i_null,
@@ -170,12 +152,7 @@ begin
     );
 
     -- multiplication
-    mul_unit: mul
-    generic map(
-        n => n,
-        clgn => clgn
-    )
-    port map(
+    mul_unit: mul port map(
         i => i,
         j => j,
         size => size,
@@ -183,32 +160,28 @@ begin
     );
 
     -- division
-    div_unit: div
-    generic map(
-        n => n,
-        clgn => clgn
-    )
-    port map(
+    div_unit: div port map(
         i => i,
         j => neg_j,
         size => size,
         quot => quot
     );
 
-    ---- output selector
-    --outselect_unit: outselect port map(
-    --    opcode => opcode,
-    --    out_as => bitxor,
-    --    out_m => prod,
-    --    out_d => quot,
-    --    out_l => i,
-    --    i_null => i_null,
-    --    j_null => j_null,
-    --    out_sel => out_sel,
-    --    mem_t => mem_t,
-    --    convert => convert,
-    --    err_z => err_z
-    --);
+    ---------------- Multiplexers ----------------
+
+    -- output selector
+    outselect_unit: outselect port map(
+        opcode => opcode,
+        out_as => bitxor,
+        out_m => prod,
+        out_d => quot,
+        out_l => i,
+        i_null => i_null,
+        j_null => j_null,
+        out_sel => out_sel,
+        mem_t => mem_t,
+        err_z => err_z
+    );
 
     ---- memory wrapper
     --mem : memory port map(

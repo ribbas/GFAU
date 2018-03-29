@@ -12,17 +12,22 @@ end outselect_tb;
 
 architecture behavioral of outselect_tb is
 
+    constant n : positive := 8;
+
     -- component declaration for the unit under test (uut)
     component outselect
+        generic(
+            n       : positive
+        );
         port(
             opcode  : in std_logic_vector(5 downto 0);
-            out_as  : in std_logic_vector(15 downto 0);
-            out_m   : in std_logic_vector(15 downto 0);
-            out_d   : in std_logic_vector(15 downto 0);
-            out_l   : in std_logic_vector(15 downto 0);
+            out_as  : in std_logic_vector(n downto 0);
+            out_m   : in std_logic_vector(n downto 0);
+            out_d   : in std_logic_vector(n downto 0);
+            out_l   : in std_logic_vector(n downto 0);
             i_null  : in std_logic;
             j_null  : in std_logic;
-            out_sel : out std_logic_vector(15 downto 0);
+            out_sel : out std_logic_vector(n downto 0);
             mem_t   : out std_logic;
             convert : out std_logic;
             err_z   : out std_logic
@@ -31,15 +36,15 @@ architecture behavioral of outselect_tb is
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 0) := (others => '0');
-    signal out_as : std_logic_vector(15 downto 0) := (others => '0');
-    signal out_m : std_logic_vector(15 downto 0) := (others => '0');
-    signal out_d : std_logic_vector(15 downto 0) := (others => '0');
-    signal out_l : std_logic_vector(15 downto 0) := (others => '0');
+    signal out_as : std_logic_vector(n downto 0) := (others => '0');
+    signal out_m : std_logic_vector(n downto 0) := (others => '0');
+    signal out_d : std_logic_vector(n downto 0) := (others => '0');
+    signal out_l : std_logic_vector(n downto 0) := (others => '0');
     signal i_null : std_logic;
     signal j_null : std_logic;
 
     -- outputs
-    signal out_sel : std_logic_vector(15 downto 0);
+    signal out_sel : std_logic_vector(n downto 0);
     signal convert : std_logic;
     signal mem_t : std_logic;
     signal err_z : std_logic;
@@ -51,7 +56,11 @@ architecture behavioral of outselect_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: outselect port map(
+    uut: outselect
+    generic map(
+        n => n
+    )
+    port map(
         opcode => opcode,
         out_as => out_as,
         out_m => out_m,

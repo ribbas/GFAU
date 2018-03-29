@@ -1,8 +1,8 @@
 
 --************************************************************************
---**    MODEL   :       async_32Kx16.vhd     	                         **
+--**    MODEL   :       async_32Kx16.vhd                                 **
 --**    COMPANY :       Cypress Semiconductor                           **
---**    REVISION:       1.0 Created new base model		                    ** 
+--**    REVISION:       1.0 Created new base model                          **
 --************************************************************************
 
 Library IEEE,work;
@@ -18,22 +18,21 @@ use work.package_utility.all;
 
 Entity async_32Kx16 is
 generic
-	(ADDR_BITS			: integer := 15;
-	DATA_BITS			 : integer := 16;
-	depth 				 : integer := 32768;
-	
-	TimingInfo			: BOOLEAN := TRUE;
-	TimingChecks	: std_logic := '1'
-	);
+    (ADDR_BITS          : integer := 15;
+    DATA_BITS           : integer := 16;
+    depth               : integer := 32768;
+    TimingInfo          : BOOLEAN := TRUE;
+    TimingChecks        : std_logic := '1'
+    );
 Port (
-    CE_b   : IN Std_Logic;	                                                -- Chip Enable CE#
-    WE_b  	: IN Std_Logic;	                                                -- Write Enable WE#
-    OE_b  	: IN Std_Logic;                                                 -- Output Enable OE#
-    BHE_b		: IN std_logic;                                                 -- Byte Enable High BHE#
+    CE_b   : IN Std_Logic;                                                  -- Chip Enable CE#
+    WE_b    : IN Std_Logic;                                                 -- Write Enable WE#
+    OE_b    : IN Std_Logic;                                                 -- Output Enable OE#
+    BHE_b       : IN std_logic;                                                 -- Byte Enable High BHE#
     BLE_b  : IN std_logic;                                                 -- Byte Enable Low BLE#
-    A 			  : IN Std_Logic_Vector(addr_bits-1 downto 0);                    -- Address Inputs A
-    DQ			  : INOUT Std_Logic_Vector(DATA_BITS-1 downto 0):=(others=>'Z')   -- Read/Write Data IO
-    ); 
+    A             : IN Std_Logic_Vector(addr_bits-1 downto 0);                    -- Address Inputs A
+    DQ            : INOUT Std_Logic_Vector(DATA_BITS-1 downto 0):=(others=>'Z')   -- Read/Write Data IO
+    );
 End async_32Kx16;
 
 -----------------------------
@@ -82,22 +81,22 @@ end process;
 process (write_enable'delayed(tHA))
 begin
     if (write_enable'delayed(tHA) = '0' and TimingInfo) then
-	assert (A'last_event = 0 ns) or (A'last_event > tHA)
-	report "Address hold time tHA violated";
+    assert (A'last_event = 0 ns) or (A'last_event > tHA)
+    report "Address hold time tHA violated";
     end if;
 end process;
 
 process (write_enable'delayed(tHD))
 begin
     if (write_enable'delayed(tHD) = '0' and TimingInfo) then
-	assert (DQ'last_event > tHD) or (DQ'last_event = 0 ns)
-	report "Data hold time tHD violated";
+    assert (DQ'last_event > tHD) or (DQ'last_event = 0 ns)
+    report "Data hold time tHD violated";
     end if;
 end process;
 
 -- main process
 process
-    
+
 VARIABLE mem_array: mem_array_type;
 
 --- Variables for timing checks
@@ -113,12 +112,12 @@ VARIABLE tBDW_chk : TIME := 0 ns;
 VARIABLE write_flag : BOOLEAN := TRUE;
 
 VARIABLE accesstime : TIME := 0 ns;
-    
+
 begin
 
     -- start of write
     if (write_enable = '1' and write_enable'event) then
-             
+
        DQ(DATA_BITS-1 downto 0)<=(others=>'Z') after tHZWE;
 
        if (A'last_event >= tSA) then
@@ -129,9 +128,9 @@ begin
 
        else
           if (TimingInfo) then
-		       assert FALSE
-		       report "Address setup violated";
-	       end if;
+               assert FALSE
+               report "Address setup violated";
+           end if;
           write_flag := FALSE;
 
        end if;   
@@ -143,22 +142,22 @@ begin
         if (NOW - tPWE_chk >= tPWE or NOW - tPWE_chk <= 0.1 ns or NOW = 0 ns) then
             --- pulse width OK, do nothing
         else
-      	   if (TimingInfo) then
-           	assert FALSE
-		      report "Pulse Width violation";
-	       end if;
-	     
-	     write_flag := FALSE;
-	     end if;
+           if (TimingInfo) then
+            assert FALSE
+              report "Pulse Width violation";
+           end if;
+         
+         write_flag := FALSE;
+         end if;
         
         --- check for address setup with write end, i.e., tAW
         if (NOW - tAW_chk >= tAW or NOW = 0 ns) then
             --- tAW OK, do nothing
         else
-      	   if (TimingInfo) then
-	         assert FALSE
-		      report "Address setup tAW violation";
-	       end if;
+           if (TimingInfo) then
+             assert FALSE
+              report "Address setup tAW violation";
+           end if;
 
           write_flag := FALSE;
         end if;
@@ -167,10 +166,10 @@ begin
         if (NOW - tSD_chk >= tSD_dataskew or NOW - tSD_chk <= 0.1 ns or NOW = 0 ns) then 
             --- tSD OK, do nothing
         else
-      	   if (TimingInfo) then
-	          assert FALSE
-	   	      report "Data setup tSD violation";
-	       end if;
+           if (TimingInfo) then
+              assert FALSE
+              report "Data setup tSD violation";
+           end if;
           write_flag := FALSE;
         end if;
         
@@ -178,23 +177,23 @@ begin
         if (write_flag = TRUE) then
 
             if (BLE_b = '1' and BLE_b'last_event = write_enable'last_event and NOW /= 0 ns) then
-            	mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
+                mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
             end if;
             
             if (BHE_b = '1' and BHE_b'last_event = write_enable'last_event and NOW /= 0 ns) then
-            	mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
+                mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
             end if;
 
             if (BLE_b = '0' and NOW - tBAW_chk >= tBW) then
-            	mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
+                mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
             elsif (NOW - tBAW_chk < tBW and NOW - tBAW_chk > 0.1 ns and NOW > 0 ns) then
-            	assert FALSE report "Insufficient pulse width for lower byte to be written";
+                assert FALSE report "Insufficient pulse width for lower byte to be written";
             end if;
-            	
+                
             if (BHE_b = '0' and NOW - tBBW_chk >= tBW) then
-            	mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
+                mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
             elsif (NOW - tBBW_chk < tBW and NOW - tBBW_chk > 0.1 ns and NOW > 0 ns) then
-            	assert FALSE report "Insufficient pulse width for higher byte to be written";
+                assert FALSE report "Insufficient pulse width for higher byte to be written";
             end if;
 
         end if; 
@@ -204,7 +203,7 @@ begin
     
        if (BLE_b = '0') then
      
-      	   --- Reset timing variables
+           --- Reset timing variables
           tAW_chk := A'last_event;
           tBAW_chk := NOW;
           write_flag := TRUE;
@@ -215,59 +214,59 @@ begin
           if (NOW - tPWE_chk >= tPWE) then
             --- tPWE OK, do nothing
           else
-      	      if (TimingInfo) then
-            	   assert FALSE
-		          report "Pulse Width violation";
-	          end if;
+              if (TimingInfo) then
+                   assert FALSE
+                  report "Pulse Width violation";
+              end if;
 
-	          write_flag := FALSE;
-	       end if;
+              write_flag := FALSE;
+           end if;
         
            --- check for address setup with write end, i.e., tAW
            if (NOW - tAW_chk >= tAW) then
             --- tAW OK, do nothing
            else
-      	       if (TimingInfo) then
-	              assert FALSE
-		           report "Address setup tAW violation for Lower Byte Write";
-	           end if;
+               if (TimingInfo) then
+                  assert FALSE
+                   report "Address setup tAW violation for Lower Byte Write";
+               end if;
 
               write_flag := FALSE;
            end if;
-	
+    
            --- check for byte write setup with write end, i.e., tBW
            if (NOW - tBAW_chk >= tBW) then
             --- tBW OK, do nothing
            else
-      	       if (TimingInfo) then
+               if (TimingInfo) then
                  assert FALSE
-		           report "Lower Byte setup tBW violation";
-	           end if;
+                   report "Lower Byte setup tBW violation";
+               end if;
 
               write_flag := FALSE;
            end if;
-	
-	        --- check for data setup with write end, i.e., tSD
+    
+            --- check for data setup with write end, i.e., tSD
            if (NOW - tSD_chk >= tSD_dataskew or NOW - tSD_chk <= 0.1 ns or NOW = 0 ns) then 
             --- tSD OK, do nothing
            else
-      	       if (TimingInfo) then
-	              assert FALSE
-	   	          report "Data setup tSD violation for Lower Byte Write";
-	           end if;
+               if (TimingInfo) then
+                  assert FALSE
+                  report "Data setup tSD violation for Lower Byte Write";
+               end if;
            
               write_flag := FALSE;
            end if;
-	
-	        --- perform WRITE operation if no violations
-	        if (write_flag = TRUE) then
-	           mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
+    
+            --- perform WRITE operation if no violations
+            if (write_flag = TRUE) then
+               mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
               if (BHE_b = '0') then
-            	    mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
+                    mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
               end if;
-	        end if;
-	
-   	       --- Reset timing variables
+            end if;
+    
+           --- Reset timing variables
            tAW_chk := A'last_event;
            tBAW_chk := NOW;
            write_flag := TRUE;
@@ -279,7 +278,7 @@ begin
 
       if (BHE_b = '0') then
      
-    	   --- Reset timing variables
+           --- Reset timing variables
         tAW_chk := A'last_event;
         tBBW_chk := NOW;
         write_flag := TRUE;
@@ -290,71 +289,71 @@ begin
         if (NOW - tPWE_chk >= tPWE) then
             --- tPWE OK, do nothing
         else
-      	   if (TimingInfo) then
-           	assert FALSE
-		      report "Pulse Width violation";
-	       end if;
-	     
-	     write_flag := FALSE;
-	     end if;
+           if (TimingInfo) then
+            assert FALSE
+              report "Pulse Width violation";
+           end if;
+         
+         write_flag := FALSE;
+         end if;
         
         --- check for address setup with write end, i.e., tAW
         if (NOW - tAW_chk >= tAW) then
             --- tAW OK, do nothing
         else
-      	   if (TimingInfo) then
-	         assert FALSE
-		      report "Address setup tAW violation for Upper Byte Write";
-	       end if;
+           if (TimingInfo) then
+             assert FALSE
+              report "Address setup tAW violation for Upper Byte Write";
+           end if;
           write_flag := FALSE;
         end if;
-	
+    
         --- check for byte setup with write end, i.e., tBW
         if (NOW - tBBW_chk >= tBW) then
             --- tBW OK, do nothing
         else
-      	   if (TimingInfo) then
-	         assert FALSE
-		      report "Upper Byte setup tBW violation";
-	       end if;
+           if (TimingInfo) then
+             assert FALSE
+              report "Upper Byte setup tBW violation";
+           end if;
         
         write_flag := FALSE;
         end if;
-	
+    
         --- check for data setup with write end, i.e., tSD
         if (NOW - tSD_chk >= tSD_dataskew or NOW - tSD_chk <= 0.1 ns or NOW = 0 ns) then
             --- tSD OK, do nothing
         else
-      	   if (TimingInfo) then
-	          assert FALSE
-	   	      report "Data setup tSD violation for Upper Byte Write";
-	       end if;
+           if (TimingInfo) then
+              assert FALSE
+              report "Data setup tSD violation for Upper Byte Write";
+           end if;
         
           write_flag := FALSE;
         end if;
-	
-	     --- perform WRITE operation if no violations
-	
-	     if (write_flag = TRUE) then
-	       mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
+    
+         --- perform WRITE operation if no violations
+    
+         if (write_flag = TRUE) then
+           mem_array(conv_integer1(address_internal))(15 downto 8) := data_skew(15 downto 8);
           if (BLE_b = '0') then
-            	mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
+                mem_array(conv_integer1(address_internal))(7 downto 0) := data_skew(7 downto 0);
           end if;
-	
-      	 end if; 
-	
-	     --- Reset timing variables
-	     tAW_chk := A'last_event;
+    
+         end if; 
+    
+         --- Reset timing variables
+         tAW_chk := A'last_event;
         tBBW_chk := NOW;
         write_flag := TRUE;
-	    
+        
      end if;
 
   end if;
   --- END OF WRITE
 
   if (data_skew'event and read_enable /= '1') then
-    	tSD_chk := NOW;
+        tSD_chk := NOW;
   end if;
 
   --- START of READ
@@ -362,10 +361,10 @@ begin
   --- Tri-state the data bus if CE or OE disabled
   if (read_enable = '0' and read_enable'event) then
     if (OE_b'last_event >= CE_b'last_event) then
-   		DQ <=(others=>'Z') after tHZCE;
-   	elsif (CE_b'last_event > OE_b'last_event) then
-   		DQ <=(others=>'Z') after tHZOE;
-   	end if;
+        DQ <=(others=>'Z') after tHZCE;
+    elsif (CE_b'last_event > OE_b'last_event) then
+        DQ <=(others=>'Z') after tHZOE;
+    end if;
   end if;
    
   --- Address-controlled READ operation
@@ -379,30 +378,30 @@ begin
     else
            
        if (TimingInfo) then
-	       assert FALSE
-	   	   report "Read Cycle time tRC violation";
-	    end if;
+           assert FALSE
+           report "Read Cycle time tRC violation";
+        end if;
 
     end if;    
        
     if (read_enable = '1') then
-	   
-	   if (BLE_b = '0') then
-		   DQ (7 downto 0) <= mem_array (conv_integer1(A))(7 downto 0) after tAA;
-	   end if;
-	   
-	   if (BHE_b = '0') then
-		   DQ (15 downto 8) <= mem_array (conv_integer1(A))(15 downto 8) after tAA;
-	   end if;
-	   
+       
+       if (BLE_b = '0') then
+           DQ (7 downto 0) <= mem_array (conv_integer1(A))(7 downto 0) after tAA;
+       end if;
+       
+       if (BHE_b = '0') then
+           DQ (15 downto 8) <= mem_array (conv_integer1(A))(15 downto 8) after tAA;
+       end if;
+       
       tRC_chk := NOW;
 
-	end if;
-	
-	if (write_enable = '1') then
-	   --- do nothing
-	end if;
-	
+    end if;
+    
+    if (write_enable = '1') then
+       --- do nothing
+    end if;
+    
   end if;
 
   if (read_enable = '0' and read_enable'event) then
@@ -412,10 +411,10 @@ begin
         tRC_CHK := 0 ns;
      else
          if (TimingInfo) then
-	        assert FALSE
-		     report "Read Cycle time tRC violation";
- 	      end if;          
-	      tRC_CHK := 0 ns;
+            assert FALSE
+             report "Read Cycle time tRC violation";
+          end if;          
+          tRC_CHK := 0 ns;
      end if;
 
    end if;
@@ -429,17 +428,17 @@ begin
        if (CE_b'last_event = read_enable'last_event ) then --  changed rev2
 
            if (BLE_b = '0') then
-		         DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tACE;
+                 DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tACE;
            end if;
 
            if (BHE_b = '0') then
-		         DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tACE;
+                 DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tACE;
            end if;
            
        end if;
 
    
- 	    --- OE triggered READ  
+        --- OE triggered READ  
        if (OE_b'last_event = read_enable'last_event) then
 
            -- if address or CE changes before OE such that tAA/tACE > tDOE
@@ -449,21 +448,21 @@ begin
 
                   accesstime:=tAA-A'last_event;
                   if (BLE_b = '0') then
-		               DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
+                       DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
                   end if; 
                
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;               
 
                else
                   accesstime:=tACE-CE_b'last_event;
                   if (BLE_b = '0') then
-		               DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
+                       DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
                   end if; 
                
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;
               end if;
 
@@ -472,11 +471,11 @@ begin
                
                   accesstime:=tAA-A'last_event;
                   if (BLE_b = '0') then
-		               DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
+                       DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
                   end if; 
                
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;
 
            -- if CE changes before OE such that tACE > tDOE
@@ -484,21 +483,21 @@ begin
                
                   accesstime:=tACE-CE_b'last_event;
                   if (BLE_b = '0') then
-		               DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
+                       DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after accesstime;
                   end if; 
                
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;
 
            -- if OE changes such that tDOE > tAA/tACE           
            else
                    if (BLE_b = '0') then
-		               DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tDOE;
+                       DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tDOE;
                    end if; 
                
                    if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tDOE;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tDOE;
                    end if;
             
            end if;
@@ -506,7 +505,7 @@ begin
        end if;
        --- END of OE triggered READ
 
- 	    --- BLE/BHE triggered READ  
+        --- BLE/BHE triggered READ  
        if (BLE_b'last_event = read_enable'last_event or BHE_b'last_event = read_enable'last_event) then
 
            -- if address or CE changes before BHE/BLE such that tAA/tACE > tDBE
@@ -520,7 +519,7 @@ begin
                   end if;
               
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;               
 
                else
@@ -531,7 +530,7 @@ begin
                   end if;
                   
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;
               end if;
 
@@ -544,7 +543,7 @@ begin
                   end if;
                
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;
 
            -- if CE changes before BHE/BLE such that tACE > tDBE
@@ -556,17 +555,17 @@ begin
                   end if;
                
                   if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after accesstime;
                   end if;
 
            -- if BHE/BLE changes such that tDBE > tAA/tACE   
            else
                    if (BLE_b = '0') then
-		               DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tDBE;
+                       DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tDBE;
                    end if; 
                
                    if (BHE_b = '0') then
-   		               DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tDBE;
+                       DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tDBE;
                    end if;
             
            end if;
@@ -577,11 +576,11 @@ begin
        if (WE_b'last_event = read_enable'last_event) then
 
            if (BLE_b = '0') then
-		      DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tACE;
+              DQ (7 downto 0)<= mem_array (conv_integer1(A)) (7 downto 0) after tACE;
            end if;
 
            if (BHE_b = '0') then
-		      DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tACE;
+              DQ (15 downto 8)<= mem_array (conv_integer1(A)) (15 downto 8) after tACE;
            end if;
 
        end if;
@@ -591,11 +590,11 @@ begin
    
     --- If either BHE or BLE toggle during read mode
     if (BLE_b'event and BLE_b = '0' and read_enable = '1' and not(read_enable'event)) then
-	   DQ (7 downto 0) <= mem_array (conv_integer1(A)) (7 downto 0) after tDBE;
+       DQ (7 downto 0) <= mem_array (conv_integer1(A)) (7 downto 0) after tDBE;
     end if;
 
     if (BHE_b'event and BHE_b = '0' and read_enable = '1' and not(read_enable'event)) then
-	   DQ (15 downto 8) <= mem_array (conv_integer1(A)) (15 downto 8) after tDBE;
+       DQ (15 downto 8) <= mem_array (conv_integer1(A)) (15 downto 8) after tDBE;
     end if;
 
     --- tri-state bus depending on BHE/BLE 

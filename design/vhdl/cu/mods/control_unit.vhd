@@ -17,7 +17,7 @@ entity control_unit is
     );
     port(
         clk         : in std_logic;
-        opcode      : in std_logic_vector(5 downto 0);   -- op code
+        opcode      : in std_logic_vector(5 downto 1);   -- op code
         opand1      : in std_logic_vector(n downto 0);   -- operand 1
         opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
@@ -57,17 +57,18 @@ architecture structural of control_unit is
 
     component isnull
         port(
-            opand      : in std_logic_vector(n downto 0);
-            mem_t      : in std_logic;
-            is_null    : out std_logic
+            opand       : in std_logic_vector(n downto 0);
+            mem_t       : in std_logic;
+            is_null     : out std_logic
         );
     end component;
 
     signal opand_b : std_logic_vector(n downto 0);  -- mem_data from memory
 
     signal mem_t_z1 : std_logic;
-    signal mem_t_z2 : std_logic;
     signal opand_z1 : std_logic_vector(n downto 0); -- zero flag for operand 1
+
+    signal mem_t_z2 : std_logic;
     signal opand_z2 : std_logic_vector(n downto 0); -- zero flag for operand 2
 
     type state_type is (op1_state, op2_state);  -- define the states
@@ -120,7 +121,7 @@ begin
                     mem_rd <= '0';
                     mem_addr <= DCAREVEC;
 
-                -- add/sub
+                -- add / sub
                 when "001" =>
 
                     -- disable generator
