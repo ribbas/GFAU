@@ -1,6 +1,6 @@
 -- mul.vhd
 --
--- Sabbir Ahmed, Jeffrey Osazuwa
+-- Sabbir Ahmed
 -- 2018-01-16
 --
 -- Computes the Galois multiplication of two symbols.
@@ -25,7 +25,7 @@ entity mul is
     );
 end mul;
 
-architecture structural of mul is
+architecture behavioral of mul is
 
     signal sumij : std_logic_vector(n downto 0);
     signal sumij1 : std_logic_vector(n downto 0);
@@ -35,7 +35,7 @@ begin
     sumij <= std_logic_vector(unsigned(i) + unsigned(j));
     sumij1 <= std_logic_vector(unsigned(sumij) + 1);
 
-    process (size, sumij, sumij1)
+    process(size, sumij, sumij1)
     begin
 
         -- if (OF(i + j) or OF(i + j + 1) == 0)
@@ -54,4 +54,4 @@ begin
 
     end process;
 
-end structural;
+end behavioral;

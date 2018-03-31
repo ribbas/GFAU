@@ -47,7 +47,7 @@ entity control_unit is
     );
 end control_unit;
 
-architecture structural of control_unit is
+architecture behavioral of control_unit is
 
     component isbounded
         port(
@@ -417,4 +417,4 @@ begin
 
     end process;
 
-end structural;
+end behavioral;

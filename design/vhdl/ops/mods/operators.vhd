@@ -38,12 +38,10 @@ entity operators is
 
         -- memory types and methods
         mem_t       : out std_logic; -- memory type
-        mem_rd      : out std_logic;
-        mem_wr      : out std_logic;
 
         -- memory wrapper control signals
         id_con      : out std_logic;
-        rdy         : in std_logic;
+        mem_rdy     : in std_logic;
 
         -- memory address and data signals
         addr_con    : out std_logic_vector((n + 1) downto 0);
@@ -54,7 +52,7 @@ entity operators is
     );
 end operators;
 
-architecture structural of operators is
+architecture behavioral of operators is
 
     -- two's complement
     component maskedtwoscmp
@@ -132,16 +130,24 @@ architecture structural of operators is
         );
     end component;
 
-    ---- output select
-    --component outconvert
-    --    port(
-    --        convert : in std_logic;
-    --        mask    : in std_logic_vector(15 downto 0);
-    --        out_sel : in std_logic_vector(15 downto 0);
-    --        mem_out : in std_logic_vector(15 downto 0);
-    --        result  : out std_logic_vector(15 downto 0)
-    --    );
-    --end component;
+    -- output converter
+    component outconvert
+        port(
+            clk         : in std_logic;
+            convert     : in std_logic;  -- convert flag
+            mask        : in std_logic_vector(n downto 0);  -- operand mask
+            -- result
+            out_sel     : in std_logic_vector(n downto 0);
+            -- memory wrapper control signals
+            id_con      : out std_logic;
+            mem_rdy     : in std_logic;
+            -- memory address and data signals
+            addr_con    : out std_logic_vector(n downto 0);
+            dout_con    : in std_logic_vector(n downto 0);
+            -- final output
+            result      : out std_logic_vector(n downto 0)
+        );
+    end component;
 
     signal neg_j : std_logic_vector(n downto 0);
 
@@ -149,7 +155,8 @@ architecture structural of operators is
     signal prod : std_logic_vector(n downto 0);
     signal quot : std_logic_vector(n downto 0);
 
-    --signal out_sel : std_logic_vector(15 downto 0);
+    signal dout_con : std_logic_vector(n downto 0);
+    signal addr_con : std_logic_vector(n downto 0);
     --signal mem_out : std_logic_vector(15 downto 0);
     --signal mem_t : std_logic;
     --signal convert : std_logic;
@@ -219,13 +226,17 @@ begin
     --    data_out => mem_out
     --);
 
-    ---- output converter
-    --outconvert_unit : outconvert port map(
-    --    convert => convert,
-    --    mask => mask,
-    --    out_sel => out_sel,
-    --    mem_out => mem_out,
-    --    result => result
-    --);
+    -- output converter
+    outconvert_unit : outconvert port map(
+        clk => clk,
+        convert => convert,
+        mask => mask,
+        out_sel => out_sel,
+        id_con => id_con,
+        mem_rdy => mem_rdy,
+        addr_con => addr_con,
+        dout_con => dout_con,
+        result => result
+    );
 
-end structural;
+end behavioral;

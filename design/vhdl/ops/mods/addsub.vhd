@@ -24,7 +24,7 @@ entity addsub is
     );
 end addsub;
 
-architecture structural of addsub is
+architecture behavioral of addsub is
 begin
 
     process (i, j, i_null, j_null)
@@ -54,4 +54,4 @@ begin
 
     end process;
 
-end structural;
+end behavioral;

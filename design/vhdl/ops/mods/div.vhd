@@ -25,7 +25,7 @@ entity div is
     );
 end div;
 
-architecture structural of div is
+architecture behavioral of div is
 
     signal sumij : std_logic_vector(n downto 0);
     signal sumij1 : std_logic_vector(n downto 0);
@@ -53,4 +53,4 @@ begin
 
     end process;
 
-end structural;
+end behavioral;

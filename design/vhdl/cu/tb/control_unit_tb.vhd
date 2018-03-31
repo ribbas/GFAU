@@ -7,6 +7,9 @@
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
+    use work.demo_tb.all;
 
 entity control_unit_tb is
 end control_unit_tb;
@@ -19,7 +22,7 @@ architecture behavior of control_unit_tb is
     component control_unit
         port(
             clk         : in std_logic;
-            opcode      : in std_logic_vector(5 downto 0);   -- op code
+            opcode      : in std_logic_vector(5 downto 1);   -- op code
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
@@ -50,7 +53,7 @@ architecture behavior of control_unit_tb is
     signal rst_gen : std_logic;
 
     -- inputs
-    signal opcode : std_logic_vector(5 downto 0);   -- op code
+    signal opcode : std_logic_vector(5 downto 1);   -- op code
     signal opand1 : std_logic_vector(n downto 0);   -- operand 1
     signal opand2 : std_logic_vector(n downto 0);   -- operand 2
     signal mask : std_logic_vector(n downto 0);   -- mask
@@ -67,9 +70,7 @@ architecture behavior of control_unit_tb is
     signal mem_addr : std_logic_vector(n downto 0);  -- address in memory
     signal mem_data : std_logic_vector(n downto 0) := "111111100";  -- data from memory
 
-    -- testbench clocks
-    constant t_nums : integer := 320;
-    constant t_clk_per : time := 20 ns;
+    -- clocks
     signal clk : std_ulogic := '1';
 
 begin
@@ -98,10 +99,10 @@ begin
     clk_proc: process
     begin
 
-        for i in 1 to t_nums loop
+        for i in 1 to TNUMS loop
             clk <= not clk;
             mem_data <= std_logic_vector(unsigned(mem_data) + 1);
-            wait for (t_clk_per / 2);
+            wait for (CLK_PER / 2);
             -- clock period = 50 MHz
         end loop;
 
@@ -116,8 +117,8 @@ begin
         --opand2 <= "0000000000001100";
         opand2 <= "000000000";  -- zero in element
 
-        opcode <= "01100X";  -- add/sub, operands in element
-        wait for (t_clk_per * 3);
+        opcode <= "01100";  -- add/sub, operands in element
+        wait for (CLK_PER * 3);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

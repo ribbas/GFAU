@@ -11,7 +11,6 @@ library ieee;
 library work;
     use work.demo.all;
 
-
 entity outconvert is
     generic(
         n           : positive := DEGREE
@@ -25,17 +24,15 @@ entity outconvert is
         -- result
         out_sel     : in std_logic_vector(n downto 0);
 
-        mem_rd      : out std_logic;
-        mem_wr      : out std_logic;
-
         -- memory wrapper control signals
         id_con      : out std_logic;
-        rdy         : in std_logic;
+        mem_rdy     : in std_logic;
 
         -- memory address and data signals
         addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector(n downto 0);
+        dout_con    : in std_logic_vector(n downto 0);
 
+        -- final output
         result      : out std_logic_vector(n downto 0)
     );
 end outconvert;
@@ -48,20 +45,20 @@ architecture behavioral of outconvert is
 
 begin
 
-    process (clk, convert, mask, out_sel, rdy) begin
+    process (clk, convert, mask, out_sel, mem_rdy) begin
 
         if (rising_edge(clk)) then
 
+            -- if conversion requested
             if (convert = '1') then
 
                 case state is
 
+                    -- send address to memory wrapper
                     when send_addr =>
 
                         -- read control signal with ID
                         id_con <= '1';
-                        mem_rd <= '1';
-                        mem_wr <= '0';
 
                         addr_con <= out_sel;
                         result <= HIIMPVEC;
@@ -72,10 +69,8 @@ begin
 
                         -- read control signal with ID
                         id_con <= '1';
-                        mem_rd <= '1';
-                        mem_wr <= '0';
 
-                        if (rdy = '1') then
+                        if (mem_rdy = '1') then
 
                             result <= dout_con and mask;
                             state <= send_addr;
@@ -91,8 +86,6 @@ begin
 
                         -- stand-by control signal with ID
                         id_con <= '0';
-                        mem_rd <= '0';
-                        mem_wr <= '0';
 
                         addr_con <= HIIMPVEC;
                         result <= HIIMPVEC;
@@ -102,6 +95,11 @@ begin
                 end case;
 
             else
+
+                -- stand-by control signal with ID
+                id_con <= '0';
+
+                addr_con <= HIIMPVEC;
 
                 result <= out_sel and mask;
 
