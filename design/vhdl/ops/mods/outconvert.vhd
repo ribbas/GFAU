@@ -11,28 +11,101 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity outconvert is
+    generic(
+        n           : positive := 8
+    );
     port(
-        convert : in std_logic;
-        mask    : in std_logic_vector(15 downto 0);
-        out_sel : in std_logic_vector(15 downto 0);
-        mem_out : in std_logic_vector(15 downto 0);
-        result  : out std_logic_vector(15 downto 0)
+        clk         : in std_logic;
+
+        convert     : in std_logic;  -- convert flag
+        mask        : in std_logic_vector(n downto 0);  -- operand mask
+
+        -- result
+        out_sel     : in std_logic_vector(n downto 0);
+
+        mem_rd      : out std_logic;
+        mem_wr      : out std_logic;
+
+        -- memory wrapper control signals
+        id_con      : out std_logic;
+        rdy         : in std_logic;
+
+        -- memory address and data signals
+        addr_con    : out std_logic_vector(n downto 0);
+        dout_con    : inout std_logic_vector(n downto 0);
+
+        result      : out std_logic_vector(n downto 0)
     );
 end outconvert;
 
 architecture behavioral of outconvert is
 
+    -- define the states for writing data
+    type state_type is (send_addr, get_data);
+    signal state : state_type;
+
+    constant HIIMPVEC : std_logic_vector(n downto 0) := (others => 'Z');
+
 begin
 
-    process (convert, mask, out_sel, mem_out) begin
+    process (clk, convert, mask, out_sel, rdy) begin
 
-        if (convert = '1') then
+        if (rising_edge(clk)) then
 
-            result <= mem_out and mask;
+            if (convert = '1') then
 
-        else
+                case state is
 
-            result <= out_sel and mask;
+                    when send_addr =>
+
+                        -- read control signal with ID
+                        id_con <= '1';
+                        mem_rd <= '1';
+                        mem_wr <= '0';
+
+                        addr_con <= out_sel;
+                        result <= HIIMPVEC;
+
+                        state <= get_data;
+
+                    when get_data =>
+
+                        -- read control signal with ID
+                        id_con <= '1';
+                        mem_rd <= '1';
+                        mem_wr <= '0';
+
+                        if (rdy = '1') then
+
+                            result <= dout_con and mask;
+                            state <= send_addr;
+
+                        else
+
+                            result <= HIIMPVEC;
+                            state <= get_data;
+
+                        end if;
+
+                    when others =>
+
+                        -- stand-by control signal with ID
+                        id_con <= '0';
+                        mem_rd <= '0';
+                        mem_wr <= '0';
+
+                        addr_con <= HIIMPVEC;
+                        result <= HIIMPVEC;
+
+                        state <= send_addr;
+
+                end case;
+
+            else
+
+                result <= out_sel and mask;
+
+            end if;
 
         end if;
 

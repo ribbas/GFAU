@@ -12,21 +12,43 @@ use ieee.numeric_std.all;
 
 entity operators is
     generic(
-        n       : positive := 8;
-        clgn    : positive := 3
+        n           : positive := 8;
+        clgn        : positive := 3
     );
     port(
-        clk     : in std_logic;
-        opcode  : in std_logic_vector(5 downto 0);  -- opcode
-        i       : in std_logic_vector(n downto 0); -- first opand
-        j       : in std_logic_vector(n downto 0); -- second opand
-        i_null  : in std_logic;  -- opand 1 null flag
-        j_null  : in std_logic;  -- opand 2 null flag
-        size    : in std_logic_vector(clgn downto 0);  -- size of polynomial
-        mask    : in std_logic_vector(n downto 0);  -- mask
-        out_sel : out std_logic_vector(n downto 0); -- selected output
-        mem_t   : out std_logic; -- memory type
-        err_z   : out std_logic -- zero exception
+        -- clock
+        clk         : in std_logic;
+
+        -- opcode
+        opcode      : in std_logic_vector(5 downto 0);
+
+        -- operands
+        i           : in std_logic_vector(n downto 0);
+        j           : in std_logic_vector(n downto 0);
+
+        -- operand null flags
+        i_null      : in std_logic;
+        j_null      : in std_logic;
+
+        -- registers
+        size        : in std_logic_vector(clgn downto 0);  -- size
+        mask        : in std_logic_vector(n downto 0);  -- mask
+
+        -- memory types and methods
+        mem_t       : out std_logic; -- memory type
+        mem_rd      : out std_logic;
+        mem_wr      : out std_logic;
+
+        -- memory wrapper control signals
+        id_con      : out std_logic;
+        rdy         : in std_logic;
+
+        -- memory address and data signals
+        addr_con    : out std_logic_vector((n + 1) downto 0);
+        dout_con    : inout std_logic_vector(n downto 0);
+
+        result      : out std_logic_vector(n downto 0); -- selected output
+        err_z       : out std_logic -- zero exception
     );
 end operators;
 

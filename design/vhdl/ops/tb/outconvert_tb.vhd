@@ -1,4 +1,4 @@
--- outselect_tb.vhd
+-- outcovert_tb.vhd
 --
 -- Sabbir Ahmed, Jeffrey Osazuwa
 -- 2018-01-16
@@ -7,35 +7,47 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity outselect_tb is
-end outselect_tb;
+entity outcovert_tb is
+end outcovert_tb;
 
-architecture behavioral of outselect_tb is
+architecture behavioral of outcovert_tb is
 
     constant n : positive := 8;
 
     -- component declaration for the unit under test (uut)
-    component outselect
+    component outcovert
         generic(
-            n       : positive := 8
+            n       : positive
         );
         port(
-            convert : in std_logic;
-            mask    : in std_logic_vector(n downto 0);
-            out_sel : in std_logic_vector(n downto 0);
-            out_mem : in std_logic_vector(n downto 0);
-            result  : out std_logic_vector(n downto 0)
+            opcode  : in std_logic_vector(5 downto 0);
+            out_as  : in std_logic_vector(n downto 0);
+            out_m   : in std_logic_vector(n downto 0);
+            out_d   : in std_logic_vector(n downto 0);
+            out_l   : in std_logic_vector(n downto 0);
+            i_null  : in std_logic;
+            j_null  : in std_logic;
+            out_sel : out std_logic_vector(n downto 0);
+            mem_t   : out std_logic;
+            convert : out std_logic;
+            err_z   : out std_logic
         );
     end component;
 
     -- inputs
-    signal convert : std_logic;
-    signal mask : std_logic_vector(n downto 0) := (others => '0');
-    signal out_sel : std_logic_vector(n downto 0) := (others => '0');
-    signal out_mem : std_logic_vector(n downto 0) := (others => '0');
+    signal opcode : std_logic_vector(5 downto 0) := (others => '0');
+    signal out_as : std_logic_vector(n downto 0) := (others => '0');
+    signal out_m : std_logic_vector(n downto 0) := (others => '0');
+    signal out_d : std_logic_vector(n downto 0) := (others => '0');
+    signal out_l : std_logic_vector(n downto 0) := (others => '0');
+    signal i_null : std_logic;
+    signal j_null : std_logic;
 
     -- outputs
-    signal result : std_logic_vector(n downto 0) := (others => '0');
+    signal out_sel : std_logic_vector(n downto 0);
+    signal convert : std_logic;
+    signal mem_t : std_logic;
+    signal err_z : std_logic;
 
     -- testbench clocks
     constant nums : integer := 320;
@@ -44,16 +56,22 @@ architecture behavioral of outselect_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: outselect
+    uut: outcovert
     generic map(
         n => n
     )
     port map(
-        convert => convert,
-        mask => mask,
+        opcode => opcode,
+        out_as => out_as,
+        out_m => out_m,
+        out_d => out_d,
+        out_l => out_l,
+        i_null => i_null,
+        j_null => j_null,
         out_sel => out_sel,
-        out_mem => out_mem,
-        result => result
+        mem_t => mem_t,
+        convert => convert,
+        err_z => err_z
     );
 
     -- clock process
