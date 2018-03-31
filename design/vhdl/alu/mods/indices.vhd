@@ -25,7 +25,7 @@ entity indices is
     );
 end indices;
 
-architecture structural of indices is
+architecture behavioral of indices is
 
     signal prio_enc : std_logic_vector(clgn downto 0) := (others => '-');
 
@@ -43,4 +43,4 @@ begin
     size <= prio_enc;
     msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);
 
-end structural;
+end behavioral;

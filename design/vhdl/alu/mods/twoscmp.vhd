@@ -22,10 +22,10 @@ entity twoscmp is
    );
 end twoscmp;
 
-architecture structural of twoscmp is
+architecture behavioral of twoscmp is
 
 begin
 
     tcnum <= std_logic_vector(unsigned(not num) + unsigned(ONEVEC));
 
-end structural;
+end behavioral;

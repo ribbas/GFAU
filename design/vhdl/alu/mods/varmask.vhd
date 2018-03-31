@@ -22,7 +22,7 @@ entity varmask is
    );
 end varmask;
 
-architecture structural of varmask is
+architecture behavioral of varmask is
 
 begin
 
@@ -35,4 +35,4 @@ begin
             "000000011" when (poly_bcd(2) = '1') else   -- 2
             DCAREVEC;                                   -- under 2
 
-end structural;
+end behavioral;

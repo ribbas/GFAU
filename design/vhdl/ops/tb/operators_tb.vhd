@@ -8,6 +8,7 @@ library ieee;
     use ieee.std_logic_1164.all;
 library work;
     use work.demo.all;
+    use work.demo_tb.all;
 
 entity operators_tb is
 end operators_tb;
@@ -20,17 +21,37 @@ architecture behavioral of operators_tb is
     -- component declaration for the unit under test (uut)
     component operators
         port(
-            clk     : in std_logic;
-            opcode  : in std_logic_vector(5 downto 0);  -- opcode
-            i       : in std_logic_vector(n downto 0); -- first opand
-            j       : in std_logic_vector(n downto 0); -- second opand
-            i_null  : in std_logic;  -- opand 1 null flag
-            j_null  : in std_logic;  -- opand 2 null flag
-            size    : in std_logic_vector(clgn downto 0); -- size of polynomial
-            mask    : in std_logic_vector(n downto 0);  -- mask
-            out_sel : out std_logic_vector(n downto 0); -- selected output
-            mem_t   : out std_logic; -- memory type
-            err_z   : out std_logic -- zero exception
+            -- clock
+            clk         : in std_logic;
+
+            -- opcode
+            opcode      : in std_logic_vector(5 downto 0);
+
+            -- operands
+            i           : in std_logic_vector(n downto 0);
+            j           : in std_logic_vector(n downto 0);
+
+            -- operand null flags
+            i_null      : in std_logic;
+            j_null      : in std_logic;
+
+            -- registers
+            size        : in std_logic_vector(clgn downto 0);  -- size
+            mask        : in std_logic_vector(n downto 0);  -- mask
+
+            -- memory types and methods
+            mem_t       : out std_logic; -- memory type
+
+            -- memory wrapper control signals
+            id_con      : out std_logic;
+            mem_rdy     : in std_logic;
+
+            -- memory address and data signals
+            addr_con    : out std_logic_vector((n + 1) downto 0);
+            dout_con    : inout std_logic_vector(n downto 0);
+
+            result      : out std_logic_vector(n downto 0); -- selected output
+            err_z       : out std_logic -- zero exception
         );
     end component;
 
@@ -45,11 +66,14 @@ architecture behavioral of operators_tb is
 
     -- outputs
     signal out_sel : std_logic_vector(n downto 0);
+    signal addr_con : std_logic_vector((n + 1) downto 0);
+    signal dout_con : std_logic_vector(n downto 0);
+    signal id_con : std_logic;
     signal mem_t : std_logic;
+    signal mem_rdy : std_logic;
     signal err_z : std_logic;
 
     -- testbench clocks
-    constant nums : integer := 320;
     signal clk : std_ulogic := '1';
 
 begin
@@ -73,9 +97,9 @@ begin
     clk_proc: process
     begin
 
-        for i in 1 to nums loop
+        for i in 1 to TNUMS loop
             clk <= not clk;
-            wait for 20 ns;
+            wait for (CLK_PER / 2);
             -- clock period = 50 MHz
         end loop;
 

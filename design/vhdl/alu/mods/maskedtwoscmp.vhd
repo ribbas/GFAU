@@ -23,7 +23,7 @@ entity maskedtwoscmp is
    );
 end maskedtwoscmp;
 
-architecture structural of maskedtwoscmp is
+architecture behavioral of maskedtwoscmp is
 
     -- twoscmp component
     component twoscmp
@@ -44,4 +44,4 @@ begin
 
     maskedtc <= std_logic_vector(mask) and tcnum;
 
-end structural;
+end behavioral;

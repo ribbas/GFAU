@@ -24,7 +24,7 @@ entity isnull is
    );
 end isnull;
 
-architecture structural of isnull is
+architecture behavioral of isnull is
 
 begin
 
@@ -43,4 +43,4 @@ begin
 
     end process;
 
-end structural;
+end behavioral;

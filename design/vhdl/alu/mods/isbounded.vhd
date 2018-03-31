@@ -25,7 +25,7 @@ entity isbounded is
     );
 end isbounded;
 
-architecture structural of isbounded is
+architecture behavioral of isbounded is
 
     signal is_same_mask : std_ulogic;
     signal is_below_bd : std_ulogic;
@@ -38,4 +38,4 @@ begin
 
     is_out_bd <= not is_same_mask or is_below_bd;
 
-end structural;
+end behavioral;
