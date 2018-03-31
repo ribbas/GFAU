@@ -5,24 +5,21 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity generator_tb is
 end generator_tb;
 
 architecture test of generator_tb is
 
-    constant n : positive := 8;
-    constant clgn : positive := 3;
-    constant clgn1 : positive := 2;
+    constant n : positive := DEGREE;
+    constant clgn : positive := CEILLGN;
+    constant clgn1 : positive := CEILLGN1;
 
     -- component declaration for the unit under test (uut)
     component generator
-        generic(
-            n           : positive := 8;
-            clgn        : positive := 3;
-            clgn1       : positive := 2
-        );
         port(
             clk         : in std_logic;
             en          : in std_logic;
@@ -63,13 +60,7 @@ architecture test of generator_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: generator
-    generic map(
-        n => n,
-        clgn => clgn,
-        clgn1 => clgn1
-    )
-    port map(
+    uut: generator port map(
         clk => clk,
         rst => rst,
         en => en,

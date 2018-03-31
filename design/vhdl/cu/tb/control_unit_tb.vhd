@@ -5,21 +5,18 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
 
 entity control_unit_tb is
 end control_unit_tb;
 
 architecture behavior of control_unit_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component control_unit
-        generic(
-            n           : positive
-        );
         port(
             clk         : in std_logic;
             opcode      : in std_logic_vector(5 downto 0);   -- op code
@@ -78,11 +75,7 @@ architecture behavior of control_unit_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: control_unit
-    generic map(
-        n => 8
-    )
-    port map(
+    uut: control_unit port map(
         clk => clk,
         opcode => opcode,
         opand1 => opand1,

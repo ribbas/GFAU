@@ -5,22 +5,20 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity mul_tb is
 end mul_tb;
 
 architecture behavioral of mul_tb is
 
-    constant n : positive := 8;
-    constant clgn : positive := 3;
+    constant n : positive := DEGREE;
+    constant clgn : positive := CEILLGN;
 
     -- component declaration for the unit under test (uut)
     component mul
-        generic(
-            n       : positive;
-            clgn    : positive
-        );
         port(
             i       : in std_logic_vector(n downto 0); -- first element
             j       : in std_logic_vector(n downto 0); -- second element
@@ -43,12 +41,7 @@ architecture behavioral of mul_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: mul
-    generic map(
-        n => n,
-        clgn => clgn
-    )
-    port map(
+    uut: mul port map(
         i => i,
         j => j,
         size => size,

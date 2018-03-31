@@ -7,13 +7,15 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity operators is
     generic(
-        n           : positive := 8;
-        clgn        : positive := 3
+        n           : positive := DEGREE;
+        clgn        : positive := CEILLGN
     );
     port(
         -- clock

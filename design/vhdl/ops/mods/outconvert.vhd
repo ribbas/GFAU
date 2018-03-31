@@ -6,13 +6,15 @@
 -- Multiplexer to convert the result of the operations if necessary.
 --
 
-library std;
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
+
 
 entity outconvert is
     generic(
-        n           : positive := 8
+        n           : positive := DEGREE
     );
     port(
         clk         : in std_logic;
@@ -43,8 +45,6 @@ architecture behavioral of outconvert is
     -- define the states for writing data
     type state_type is (send_addr, get_data);
     signal state : state_type;
-
-    constant HIIMPVEC : std_logic_vector(n downto 0) := (others => 'Z');
 
 begin
 

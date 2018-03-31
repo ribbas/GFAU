@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity varmask_tb is
 end varmask_tb;
 
 architecture behavioral of varmask_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component varmask
-        generic(
-            n           : positive
-        );
         port(
             poly_bcd    : in  std_logic_vector(n downto 0);
             mask        : out std_logic_vector(n downto 0)
@@ -51,11 +50,7 @@ begin
 
 
     -- instantiate the unit under test (uut)
-    uut: varmask
-    generic map(
-        n => n
-    )
-    port map(
+    uut: varmask port map(
         poly_bcd => poly_bcd,
         mask => mask
     );

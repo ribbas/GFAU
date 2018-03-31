@@ -12,11 +12,10 @@ end isnull_tb;
 
 architecture behavioral of isnull_tb is
 
+    constant n : positive := DEGREE;
+
     -- component declaration for the unit under test (uut)
     component isnull
-        generic(
-            n       : positive := 8
-        );
         port(
             opand   : in std_logic_vector(n downto 0);  -- opand
             mem_t   : in std_logic;
@@ -50,11 +49,7 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: isnull
-    generic map(
-        n => 8
-    )
-    port map(
+    uut: isnull port map(
         opand => opand,
         mem_t => mem_t,
         is_null => is_null

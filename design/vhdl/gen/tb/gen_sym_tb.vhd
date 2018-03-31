@@ -5,22 +5,20 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity gen_sym_tb is
 end gen_sym_tb;
 
 architecture behavioral of gen_sym_tb is
 
-    constant n : positive := 8;
-    constant clgn1 : positive := 2;
+    constant n : positive := DEGREE;
+    constant clgn1 : positive := CEILLGN1;
 
     -- component declaration for the unit under test (uut)
     component gen_sym
-        generic(
-            n       : positive := 8;
-            clgn1   : positive := 2   -- ceil(log2(n - 1))
-        );
         port(
             clk     : in std_logic;
             rst     : in std_logic;
@@ -47,12 +45,7 @@ architecture behavioral of gen_sym_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: gen_sym
-    generic map(
-        n => 8,
-        clgn1 => 2
-    )
-    port map(
+    uut: gen_sym port map(
         clk => clk,
         rst => rst,
         en => en,

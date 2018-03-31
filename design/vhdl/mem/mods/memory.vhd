@@ -8,12 +8,14 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity memory is
     generic(
-        n           : positive := 8
+        n           : positive := DEGREE
     );
     port(
         -- clock
@@ -40,8 +42,8 @@ entity memory is
 
         -- memory control signals
         nCE         : out std_logic;
-        --nOE         : out std_logic;
         nWE         : out std_logic;
+        --nOE         : out std_logic;
         --nBLE        : out std_logic;
         --nBHE        : out std_logic;
 
@@ -63,9 +65,6 @@ architecture behavioral of memory is
     -- nWE      1       0       -
     -- nBLE     0       0       -
     -- nBHE     0       0       -
-
-    constant HIIMPVEC : std_logic_vector(n downto 0) := (others => 'Z');
-    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
 
     -- define the states for reading data
     type rd_state_type is (send_addr, get_data);

@@ -6,13 +6,14 @@
 -- Multiplexer to select the operator's output as the result.
 --
 
-library std;
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity outselect is
     generic(
-        n       : positive := 8
+        n       : positive := DEGREE
     );
     port(
         opcode  : in std_logic_vector(5 downto 0);
@@ -30,10 +31,6 @@ entity outselect is
 end outselect;
 
 architecture behavioral of outselect is
-
-    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
-    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
-
 begin
 
     process (opcode, out_as, out_m, out_d, out_l, i_null, j_null) begin

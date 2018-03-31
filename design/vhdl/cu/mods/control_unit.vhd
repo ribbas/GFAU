@@ -7,13 +7,15 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-use ieee.std_logic_unsigned.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+    use ieee.std_logic_unsigned.all;
+library work;
+    use work.demo.all;
 
 entity control_unit is
     generic(
-        n           : positive := 8
+        n           : positive := DEGREE
     );
     port(
         clk         : in std_logic;
@@ -95,9 +97,6 @@ begin
     );
 
     process (clk, opcode, opand1, opand2, mask, mem_data, mem_t)
-
-        constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
-
     begin
 
         if (rising_edge(clk)) then

@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity outcovert_tb is
 end outcovert_tb;
 
 architecture behavioral of outcovert_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component outcovert
-        generic(
-            n       : positive
-        );
         port(
             opcode  : in std_logic_vector(5 downto 0);
             out_as  : in std_logic_vector(n downto 0);
@@ -56,11 +55,7 @@ architecture behavioral of outcovert_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: outcovert
-    generic map(
-        n => n
-    )
-    port map(
+    uut: outcovert port map(
         opcode => opcode,
         out_as => out_as,
         out_m => out_m,

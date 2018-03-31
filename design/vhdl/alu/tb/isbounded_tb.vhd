@@ -5,18 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity isbounded_tb is
 end isbounded_tb;
 
 architecture behavioral of isbounded_tb is
 
+    constant n : positive := DEGREE;
+
     -- component declaration for the unit under test (uut)
     component isbounded
-        generic(
-            n           : positive := 8
-        );
         port(
             operand     : in  std_logic_vector(n downto 0);
             mask        : in  std_logic_vector(n downto 0);
@@ -50,11 +51,7 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: isbounded
-    generic map(
-        n => 8
-    )
-    port map(
+    uut: isbounded port map(
         operand => operand,
         mask => mask,
         is_out_bd => is_out_bd

@@ -7,13 +7,15 @@
 --
 
 library ieee;
-use ieee.numeric_std.all;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_misc.all;
+    use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.std_logic_misc.all;
+library work;
+    use work.demo.all;
 
 entity isnull is
     generic(
-        n       : positive := 8
+        n       : positive := DEGREE
     );
     port(
         opand   : in std_logic_vector(n downto 0);  -- term to check

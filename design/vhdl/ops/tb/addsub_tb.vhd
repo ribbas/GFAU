@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity addsub_tb is
 end addsub_tb;
 
 architecture behavioral of addsub_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component addsub
-        generic(
-            n       : positive
-        );
         port(
             i       : in std_logic_vector (n downto 0);
             j       : in std_logic_vector (n downto 0);
@@ -43,11 +42,7 @@ architecture behavioral of addsub_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: addsub
-    generic map(
-        n => n
-    )
-    port map(
+    uut: addsub port map(
         i => i,
         j => j,
         i_null => i_null,

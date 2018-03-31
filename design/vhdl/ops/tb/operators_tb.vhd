@@ -5,22 +5,20 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity operators_tb is
 end operators_tb;
 
 architecture behavioral of operators_tb is
 
-    constant n : positive := 8;
-    constant clgn : positive := 3;
+    constant n : positive := DEGREE;
+    constant clgn : positive := CEILLGN;
 
     -- component declaration for the unit under test (uut)
     component operators
-        generic(
-            n       : positive;
-            clgn    : positive
-        );
         port(
             clk     : in std_logic;
             opcode  : in std_logic_vector(5 downto 0);  -- opcode
@@ -57,12 +55,7 @@ architecture behavioral of operators_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: operators
-    generic map(
-        n => n,
-        clgn => clgn
-    )
-    port map(
+    uut: operators port map(
         clk => clk,
         opcode => opcode,
         i => i,

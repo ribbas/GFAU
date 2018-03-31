@@ -7,14 +7,16 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity generator is
     generic(
-        n           : positive := 8;
-        clgn        : positive := 3;
-        clgn1       : positive := 2
+        n           : positive := DEGREE;
+        clgn        : positive := CEILLGN;
+        clgn1       : positive := CEILLGN1
     );
     port(
         clk         : in std_logic;
@@ -71,11 +73,6 @@ architecture fsm of generator is
     type state_type is (auto_sym_state, gen_sym_state);  -- define the states
     signal state : state_type;
 
-    constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
-    constant ZEROVEC : std_logic_vector(n downto 0) := (others => '0');
-    constant ONEVEC: std_logic_vector(n downto 0) := (0 => '1', others => '0');
-    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
-
 begin
 
     auto : auto_sym port map(
@@ -120,7 +117,8 @@ begin
                         counter <= std_logic_vector(unsigned(counter) + 1);
                         rdy <= '0';
 
-                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(msb))) = '1') then
+                        if (rst_gen = '1' and
+                            temp_auto(to_integer(unsigned(msb))) = '1') then
 
                             rst_gen <= '0';
                             en_gen <= '0';
@@ -128,7 +126,8 @@ begin
 
                         end if;
 
-                        if (rst_gen = '1' and temp_auto(to_integer(unsigned(size))) = '0') then
+                        if (rst_gen = '1' and
+                            temp_auto(to_integer(unsigned(size))) = '0') then
 
                             sym <= temp_auto and mask;
                             state <= auto_sym_state;

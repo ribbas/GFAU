@@ -5,24 +5,21 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity indices_tb is
 end indices_tb;
 
 architecture behavioral of indices_tb is
 
-    constant n : positive := 8;
-    constant clgn : positive := 3;
-    constant clgn1 : positive := 2;
+    constant n : positive := DEGREE;
+    constant clgn : positive := CEILLGN;
+    constant clgn1 : positive := CEILLGN1;
 
     -- component declaration for the unit under test (uut)
     component indices
-        generic(
-            n           : positive := 8;
-            clgn        : positive := 3;
-            clgn1       : positive := 3
-        );
         port(
             poly_bcd    : in  std_logic_vector(n downto 0);
             size        : out std_logic_vector(clgn downto 0);
@@ -57,13 +54,7 @@ begin
 
 
     -- instantiate the unit under test (uut)
-    uut: indices
-    generic map(
-        n => n,
-        clgn => clgn,
-        clgn1 => clgn1
-    )
-    port map(
+    uut: indices port map(
         poly_bcd => poly_bcd,
         size => size,
         msb => msb

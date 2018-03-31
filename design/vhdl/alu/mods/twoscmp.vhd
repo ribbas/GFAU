@@ -7,22 +7,22 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity twoscmp is
     generic(
-        n       : positive := 8
+        n       : positive := DEGREE
     );
     port(
-        num     : in  std_logic_vector(n downto 0);
-        tcnum   : out  std_logic_vector(n downto 0)
+        num     : in std_logic_vector(n downto 0);
+        tcnum   : out std_logic_vector(n downto 0)
    );
 end twoscmp;
 
 architecture structural of twoscmp is
-
-    constant ONEVEC: std_logic_vector(n downto 0) := (0 => '1', others => '0');
 
 begin
 

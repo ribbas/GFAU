@@ -7,14 +7,16 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity indices is
     generic(
-        n           : positive := 8;
-        clgn        : positive := 3;  -- ceil(log2(n))
-        clgn1       : positive := 2   -- ceil(log2(n - 1))
+        n           : positive := DEGREE;
+        clgn        : positive := CEILLGN;  -- ceil(log2(n))
+        clgn1       : positive := CEILLGN1   -- ceil(log2(n - 1))
     );
     port(
         poly_bcd    : in std_logic_vector(n downto 0);  -- BCD polynomial
@@ -36,7 +38,7 @@ begin
                 "0100" when (poly_bcd(4) = '1') else   -- 4
                 "0011" when (poly_bcd(3) = '1') else   -- 3
                 "0010" when (poly_bcd(2) = '1') else   -- 2
-                "----";                                -- under 2
+                DCAREVEC(clgn downto 0);               -- under 2
 
     size <= prio_enc;
     msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);

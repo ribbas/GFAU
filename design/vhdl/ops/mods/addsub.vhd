@@ -7,11 +7,13 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity addsub is
     generic(
-        n       : positive := 8
+        n       : positive := DEGREE
     );
     port(
         i       : in std_logic_vector(n downto 0);
@@ -26,9 +28,6 @@ architecture structural of addsub is
 begin
 
     process (i, j, i_null, j_null)
-
-        constant ZEROVEC : std_logic_vector(n downto 0) := (others => '0');
-
     begin
 
         -- if operand 1 is null

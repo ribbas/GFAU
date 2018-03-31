@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity twoscmp_tb is
 end twoscmp_tb;
 
 architecture behavioral of twoscmp_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component twoscmp
-        generic(
-            n       : positive
-        );
         port(
             num     : in  std_logic_vector(n downto 0);
             tcnum   : out  std_logic_vector(n downto 0)
@@ -51,11 +50,7 @@ begin
 
 
     -- instantiate the unit under test (uut)
-    uut: twoscmp
-    generic map(
-        n => n
-    )
-    port map(
+    uut: twoscmp port map(
         num => num,
         tcnum => tcnum
     );

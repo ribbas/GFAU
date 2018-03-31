@@ -7,12 +7,14 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity auto_sym is
     generic(
-        n       : positive := 8
+        n       : positive := DEGREE
     );
     port(
         clk     : in std_logic;
@@ -29,9 +31,6 @@ architecture behavioral of auto_sym is
 begin
 
     process (clk, en, rst, temp_sym)
-
-        constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
-
     begin
 
         if (en = '1') then

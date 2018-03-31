@@ -7,13 +7,15 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity gen_sym is
     generic(
-        n       : positive := 8;
-        clgn1   : positive := 2   -- ceil(log2(n - 1))
+        n       : positive := DEGREE;
+        clgn1   : positive := CEILLGN1   -- ceil(log2(n - 1))
     );
     port(
         clk     : in std_logic;
@@ -32,9 +34,6 @@ architecture behavioral of gen_sym is
 begin
 
     process (clk, en, rst, nth_sym, msb, temp_sym)
-
-        constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
-
     begin
 
         if (en = '1') then

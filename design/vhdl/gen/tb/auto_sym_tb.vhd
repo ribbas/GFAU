@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity auto_sym_tb is
 end auto_sym_tb;
 
 architecture behavioral of auto_sym_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component auto_sym
-        generic(
-            n       : positive := 8
-        );
         port(
             clk     : in std_logic;
             rst     : in std_logic;
@@ -39,11 +38,7 @@ architecture behavioral of auto_sym_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: auto_sym
-    generic map(
-        n => 8
-    )
-    port map(
+    uut: auto_sym port map(
         clk => clk,
         rst => rst,
         en => en,

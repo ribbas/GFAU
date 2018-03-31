@@ -7,13 +7,15 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
 
 entity div is
     generic(
-        n       : positive := 8;
-        clgn    : positive := 3
+        n       : positive := DEGREE;
+        clgn    : positive := CEILLGN
     );
     port(
         i       : in std_logic_vector(n downto 0); -- first element
@@ -27,7 +29,6 @@ architecture structural of div is
 
     signal sumij : std_logic_vector(n downto 0);
     signal sumij1 : std_logic_vector(n downto 0);
-    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
 
 begin
 

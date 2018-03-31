@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity outselect_tb is
 end outselect_tb;
 
 architecture behavioral of outselect_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component outselect
-        generic(
-            n       : positive := 8
-        );
         port(
             convert : in std_logic;
             mask    : in std_logic_vector(n downto 0);
@@ -44,11 +43,7 @@ architecture behavioral of outselect_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: outselect
-    generic map(
-        n => n
-    )
-    port map(
+    uut: outselect port map(
         convert => convert,
         mask => mask,
         out_sel => out_sel,

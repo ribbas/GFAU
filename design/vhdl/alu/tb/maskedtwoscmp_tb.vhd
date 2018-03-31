@@ -5,20 +5,19 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity maskedtwoscmp_tb is
 end maskedtwoscmp_tb;
 
 architecture behavioral of maskedtwoscmp_tb is
 
-    constant n : positive := 8;
+    constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
     component maskedtwoscmp
-        generic(
-            n           : positive
-        );
         port(
             num         : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
@@ -52,11 +51,7 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: maskedtwoscmp
-    generic map(
-        n => n
-    )
-    port map(
+    uut: maskedtwoscmp port map(
         num => num,
         mask => mask,
         maskedtc => maskedtc

@@ -5,22 +5,20 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
+    use ieee.std_logic_1164.all;
+library work;
+    use work.demo.all;
 
 entity div_tb is
 end div_tb;
 
 architecture behavioral of div_tb is
 
-    constant n : positive := 8;
-    constant clgn : positive := 3;
+    constant n : positive := DEGREE;
+    constant clgn : positive := CEILLGN;
 
     -- component declaration for the unit under test (uut)
     component div
-        generic(
-            n       : positive := 8;
-            clgn    : positive := 3
-        );
         port(
             i       : in std_logic_vector(n downto 0); -- first element
             j       : in std_logic_vector(n downto 0); -- second element
@@ -43,12 +41,7 @@ architecture behavioral of div_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: div
-    generic map(
-        n => n,
-        clgn => clgn
-    )
-    port map(
+    uut: div port map(
         i => i,
         j => j,
         size => size,
