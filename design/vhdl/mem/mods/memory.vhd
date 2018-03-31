@@ -7,8 +7,6 @@
 --
 --
 
---------------- TODO: DETERMINE THE CORRECT SIGNALS FOR READ/WRITE
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -18,10 +16,15 @@ entity memory is
         n           : positive := 8
     );
     port(
+        -- clock
         clk         : in std_logic;
+
+        -- memory types and methods
         mem_t       : in std_logic;
         mem_rd      : in std_logic;
         mem_wr      : in std_logic;
+
+        -- module signals
         id_cu       : in std_logic;
         addr_cu     : in std_logic_vector(n downto 0);
         dout_cu     : out std_logic_vector(n downto 0);
@@ -30,7 +33,21 @@ entity memory is
         din_gen     : in std_logic_vector(n downto 0);
         id_con      : in std_logic;
         addr_con    : in std_logic_vector(n downto 0);
-        dout_con    : out std_logic_vector(n downto 0)
+        dout_con    : out std_logic_vector(n downto 0);
+
+        -- ready
+        rdy         : out std_logic;
+
+        -- memory control signals
+        nCE         : out std_logic;
+        --nOE         : out std_logic;
+        nWE         : out std_logic;
+        --nBLE        : out std_logic;
+        --nBHE        : out std_logic;
+
+        -- memory address and data signals
+        A           : out std_logic_vector((n + 1) downto 0);
+        DQ          : inout std_logic_vector(n downto 0)
     );
 end memory;
 
@@ -38,15 +55,8 @@ architecture behavioral of memory is
 
     ---------------- memory ----------------
 
-    -- CY7C1020DV33
-
-    -- control signals
-    signal nCE : std_logic;
-    signal nOE : std_logic;
-    signal nWE : std_logic;
-    signal nBLE : std_logic;
-    signal nBHE  : std_logic;
-
+    -- CY7C1020DV33 truth table
+    --------------------------------------
     -- signal   read    write   stand-by
     -- nCE      0       0       1
     -- nOE      0       -       -
@@ -54,22 +64,21 @@ architecture behavioral of memory is
     -- nBLE     0       0       -
     -- nBHE     0       0       -
 
-    signal A : std_logic_vector(n + 1 downto 0);
-    signal DQ : std_logic_vector(n downto 0);
-
     constant HIIMPVEC : std_logic_vector(n downto 0) := (others => 'Z');
     constant DCAREVEC : std_logic_vector(n downto 0) := (others => '-');
 
-    type rd_state_type is (send_addr, get_data);  -- define the states
+    -- define the states for reading data
+    type rd_state_type is (send_addr, get_data);
     signal rd_state : rd_state_type;
 
-    type wr_state_type is (wr_mem1, wr_mem2);  -- define the states
+    -- define the states for writing data
+    type wr_state_type is (wr_mem1, wr_mem2);
     signal wr_state : wr_state_type;
 
 begin
 
-    process (clk, addr_cu, addr_gen, addr_con, din_gen, id_cu, id_gen, id_con,
-        mem_rd, mem_wr) begin
+    process (clk, id_cu, id_gen, id_con, mem_rd, mem_wr,
+        addr_cu, addr_gen, addr_con, din_gen) begin
 
         if (rising_edge(clk)) then
 
@@ -85,13 +94,15 @@ begin
 
                             -- read control signals
                             nCE <= '0';
-                            nOE <= '0';
                             nWE <= '1';
-                            nBLE <= '0';
-                            nBHE  <= '0';
+                            --nOE <= '0';
+                            --nBLE <= '0';
+                            --nBHE  <= '0';
 
                             -- send control unit's address to memory
                             A <= mem_t & addr_cu;
+
+                            rdy <= '0';
 
                             rd_state <= get_data;
 
@@ -99,29 +110,33 @@ begin
 
                             -- read control signals
                             nCE <= '0';
-                            nOE <= '0';
                             nWE <= '1';
-                            nBLE <= '0';
-                            nBHE  <= '0';
+                            --nOE <= '0';
+                            --nBLE <= '0';
+                            --nBHE  <= '0';
 
                             -- send dout to control unit
                             dout_cu <= DQ;
                             dout_con <= DCAREVEC;
+
+                            rdy <= '1';
 
                             rd_state <= send_addr;
 
                         when others =>
 
                             -- stand-by control signals
-                            nCE <= '0';
-                            nOE <= '-';
+                            nCE <= '1';
                             nWE <= '-';
-                            nBLE <= '-';
-                            nBHE  <= '-';
+                            --nOE <= '-';
+                            --nBLE <= '-';
+                            --nBHE  <= '-';
 
                             -- data outs are don't care
                             dout_con <= DCAREVEC;
                             dout_cu <= DCAREVEC;
+
+                            rdy <= '0';
 
                             rd_state <= send_addr;
 
@@ -136,13 +151,15 @@ begin
 
                             -- read control signals
                             nCE <= '0';
-                            nOE <= '0';
                             nWE <= '1';
-                            nBLE <= '0';
-                            nBHE  <= '0';
+                            --nOE <= '0';
+                            --nBLE <= '0';
+                            --nBHE  <= '0';
 
                             -- send output converter's address to memory
                             A <= mem_t & addr_con;
+
+                            rdy <= '0';
 
                             rd_state <= get_data;
 
@@ -150,29 +167,33 @@ begin
 
                             -- read control signals
                             nCE <= '0';
-                            nOE <= '0';
                             nWE <= '1';
-                            nBLE <= '0';
-                            nBHE  <= '0';
+                            --nOE <= '0';
+                            --nBLE <= '0';
+                            --nBHE  <= '0';
 
                             -- send dout to output converter
                             dout_con <= DQ;
                             dout_cu <= DCAREVEC;
+
+                            rdy <= '1';
 
                             rd_state <= send_addr;
 
                         when others =>
 
                             -- stand-by control signals
-                            nCE <= '0';
-                            nOE <= '-';
+                            nCE <= '1';
                             nWE <= '-';
-                            nBLE <= '-';
-                            nBHE  <= '-';
+                            --nOE <= '-';
+                            --nBLE <= '-';
+                            --nBHE  <= '-';
 
                             -- data outs are don't care
                             dout_con <= DCAREVEC;
                             dout_cu <= DCAREVEC;
+
+                            rdy <= '0';
 
                             rd_state <= send_addr;
 
@@ -181,14 +202,16 @@ begin
                 else
 
                     -- stand-by control signals
-                    nCE <= '0';
-                    nOE <= '-';
+                    nCE <= '1';
                     nWE <= '-';
-                    nBLE <= '-';
-                    nBHE  <= '-';
+                    --nOE <= '-';
+                    --nBLE <= '-';
+                    --nBHE  <= '-';
 
                     A <= '-' & DCAREVEC;
                     DQ <= HIIMPVEC;
+
+                    rdy <= '0';
 
                     -- data outs are don't care
                     dout_con <= DCAREVEC;
@@ -206,44 +229,57 @@ begin
                 -- generator
                 if (id_cu = '0' and id_gen = '1' and id_con = '0') then
 
-                    -- write control signals
-                    nCE <= '0';
-                    nOE <= '-';
-                    nWE <= '0';
-                    nBLE <= '0';
-                    nBHE  <= '0';
-
                     case wr_state is
 
                         when wr_mem1 =>
+
+                            -- write control signals
+                            nCE <= '0';
+                            nWE <= '0';
+                            --nOE <= '-';
+                            --nBLE <= '0';
+                            --nBHE  <= '0';
 
                            -- element memory (mem1)
                            -- addr = polynomial, data = element
                             A <= mem_t & addr_gen;
                             DQ <= din_gen;
 
+                            rdy <= '0';
+
                             wr_state <= wr_mem2;
 
                         when wr_mem2 =>
+
+                            -- write control signals
+                            nCE <= '0';
+                            nWE <= '0';
+                            --nOE <= '-';
+                            --nBLE <= '0';
+                            --nBHE  <= '0';
 
                             -- polynomial memory (mem2)
                             -- addr = element, data = polynomial
                             A <= mem_t & din_gen;
                             DQ <= addr_gen;
 
+                            rdy <= '1';
+
                             wr_state <= wr_mem1;
 
                         when others =>
 
                             -- stand-by control signals
-                            nCE <= '0';
-                            nOE <= '-';
+                            nCE <= '1';
                             nWE <= '-';
-                            nBLE <= '-';
-                            nBHE  <= '-';
+                            --nOE <= '-';
+                            --nBLE <= '-';
+                            --nBHE  <= '-';
 
                             A <= '-' & DCAREVEC;
                             DQ <= HIIMPVEC;
+
+                            rdy <= '0';
 
                             wr_state <= wr_mem1;
 
@@ -252,11 +288,13 @@ begin
                 else
 
                     -- stand-by control signals
-                    nCE <= '0';
-                    nOE <= '-';
+                    nCE <= '1';
                     nWE <= '-';
-                    nBLE <= '-';
-                    nBHE  <= '-';
+                    --nOE <= '-';
+                    --nBLE <= '-';
+                    --nBHE  <= '-';
+
+                    rdy <= '0';
 
                     A <= '-' & DCAREVEC;
                     DQ <= HIIMPVEC;
@@ -265,14 +303,17 @@ begin
 
             else
 
-                -- stand-by
-                nCE <= '0';
-                nOE <= '0';
-                nWE <= '1';
-                nBLE <= '0';
-                nBHE  <= '0';
+                -- stand-by control signals
+                nCE <= '1';
+                nWE <= '-';
+                --nOE <= '-';
+                --nBLE <= '-';
+                --nBHE  <= '-';
+
                 A <= '-' & DCAREVEC;
                 DQ <= HIIMPVEC;
+
+                rdy <= '0';
 
                 -- data outs are don't care
                 dout_con <= DCAREVEC;
