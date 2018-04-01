@@ -65,7 +65,6 @@ architecture behavioral of operators_tb is
     signal mask : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    --signal out_sel : std_logic_vector(n downto 0);
     signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector(n downto 0);
     signal id_con : std_logic;

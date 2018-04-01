@@ -3,8 +3,16 @@
 -- Sabbir Ahmed
 -- 2018-03-30
 --
--- Wrapper for the IS61LP6432A memory chips.
+-- Wrapper for the CY7C1020DV33 memory chips.
 --
+-- CY7C1020DV33 truth table
+--------------------------------------
+-- signal   read    write   stand-by
+-- nCE      0       0       1
+-- nOE      0       -       -
+-- nWE      1       0       -
+-- nBLE     0       0       -
+-- nBHE     0       0       -
 --
 
 library ieee;
@@ -29,19 +37,16 @@ entity memory is
         id_cu       : in std_logic;
         addr_cu     : in std_logic_vector(n downto 0);
         dout_cu     : out std_logic_vector(n downto 0);
-        id_gen      : in std_logic;
-        addr_gen    : in std_logic_vector(n downto 0);
-        din_gen     : in std_logic_vector(n downto 0);
         id_con      : in std_logic;
         addr_con    : in std_logic_vector(n downto 0);
         dout_con    : out std_logic_vector(n downto 0);
+        id_gen      : in std_logic;
+        addr_gen    : in std_logic_vector(n downto 0);
+        din_gen     : in std_logic_vector(n downto 0);
 
         -- memory control signals
         nCE         : out std_logic;
         nWE         : out std_logic;
-        --nOE         : out std_logic;
-        --nBLE        : out std_logic;
-        --nBHE        : out std_logic;
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);
@@ -50,17 +55,6 @@ entity memory is
 end memory;
 
 architecture behavioral of memory is
-
-    ---------------- memory ----------------
-
-    -- CY7C1020DV33 truth table
-    --------------------------------------
-    -- signal   read    write   stand-by
-    -- nCE      0       0       1
-    -- nOE      0       -       -
-    -- nWE      1       0       -
-    -- nBLE     0       0       -
-    -- nBHE     0       0       -
 
     -- define the states for reading data
     signal rd_state : rd_state_type;
