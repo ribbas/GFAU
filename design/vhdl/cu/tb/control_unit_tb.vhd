@@ -30,27 +30,30 @@ architecture behavior of control_unit_tb is
             mask        : in  std_logic_vector(n downto 0);
 
             -- generation signals
-            en_gen      : out std_logic;  -- term generator enable
-            rst_gen     : out std_logic;  -- term generator reset
+            en_gen      : out std_logic;  -- polynomial generator enable
+            rst_gen     : out std_logic;  -- polynomial generator reset
 
             -- operation signals
             i           : out std_logic_vector(n downto 0);  -- i
             j           : out std_logic_vector(n downto 0);  -- j
 
-            -- memory signals
-            dout_cu     : in std_logic_vector(n downto 0);  -- memory data
-            addr_cu     : out std_logic_vector(n downto 0);  -- memory addr
-            mem_t       : inout std_logic;  -- which memory
-            id_cu       : out std_logic;  -- read signal to memory
+            -- memory types and methods
+            mem_t       : out std_logic; -- memory type
 
-            -- exceptions
+            -- memory wrapper control signals
+            id_cu       : out std_logic;
+            mem_rdy     : in std_logic;
+
+            -- memory address and data signals
+            addr_cu     : out std_logic_vector(n downto 0);
+            dout_cu     : in std_logic_vector(n downto 0);
+
+            -- exceptions and flags
             err_b       : out std_logic;  -- out of bound exception
-            opand1_null : out std_logic;  -- zero exception
-            opand2_null : out std_logic  -- zero exception
+            opand1_null : out std_logic;  -- operand 1 zero flag
+            opand2_null : out std_logic  -- operand 2 zero flag
         );
     end component;
-
-    signal rst_gen : std_logic;
 
     -- inputs
     signal opcode : std_logic_vector(5 downto 1);   -- op code
@@ -59,16 +62,20 @@ architecture behavior of control_unit_tb is
     signal mask : std_logic_vector(n downto 0);   -- mask
 
     -- outputs
-    signal err_b : std_logic;
-    signal opand1_null : std_logic;
-    signal opand2_null : std_logic;
+    signal rst_gen : std_logic;
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(n downto 0);  -- address in memory
     signal j : std_logic_vector(n downto 0);  -- address in memory
+    signal err_b : std_logic;
+    signal opand1_null : std_logic;
+    signal opand2_null : std_logic;
+
+    -- memory signals
+    signal mem_rdy : std_logic;  -- read signal to memory
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal id_cu : std_logic;  -- read signal to memory
     signal addr_cu : std_logic_vector(n downto 0);  -- address in memory
-    signal dout_cu : std_logic_vector(n downto 0) := "111111100";  -- data from memory
+    signal dout_cu : std_logic_vector(n downto 0) := "000000011";  -- data from memory
 
     -- clocks
     signal clk : std_ulogic := '1';
@@ -88,6 +95,7 @@ begin
         j => j,
         mem_t => mem_t,
         id_cu => id_cu,
+        mem_rdy => mem_rdy,
         addr_cu => addr_cu,
         dout_cu => dout_cu,
         err_b => err_b,
@@ -112,12 +120,11 @@ begin
     test : process
     begin
 
-        mask <= "000001111";
-        opand1 <= "000001001";
-        --opand2 <= "0000000000001100";
-        opand2 <= "000000000";  -- zero in element
+        mask <= "000000111";
+        opand1 <= "000000101";
+        opand2 <= "111111111";  -- zero in element
 
-        opcode <= "01100";  -- add/sub, operands in element
+        opcode <= "00111";  -- add/sub, operands in element
         wait for (CLK_PER * 3);
 
         -- stop simulation

@@ -34,16 +34,21 @@ entity control_unit is
         i           : out std_logic_vector(n downto 0);  -- i
         j           : out std_logic_vector(n downto 0);  -- j
 
-        -- memory signals
-        dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
-        addr_cu     : out std_logic_vector(n downto 0);  -- address in memory
-        mem_t       : inout std_logic;  -- which memory
-        id_cu       : out std_logic;  -- read signal to memory
+        -- memory types and methods
+        mem_t       : out std_logic; -- memory type
 
-        -- exceptions
+        -- memory wrapper control signals
+        id_cu       : out std_logic;
+        mem_rdy     : in std_logic;
+
+        -- memory address and data signals
+        addr_cu     : out std_logic_vector(n downto 0);  -- address in memory
+        dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
+
+        -- exceptions and flags
         err_b       : out std_logic;  -- out of bound exception
-        opand1_null : out std_logic;  -- zero exception
-        opand2_null : out std_logic  -- zero exception
+        opand1_null : out std_logic;  -- operand 1 zero flag
+        opand2_null : out std_logic  -- operand 2 zero flag
     );
 end control_unit;
 
@@ -95,14 +100,14 @@ begin
         is_null => opand2_null
     );
 
-    process (clk, opcode, opand1, opand2, mask, dout_cu, mem_t)
+    process (clk, opcode, opand1, opand2, mask, mem_rdy, dout_cu)
     begin
 
         if (rising_edge(clk)) then
 
             case opcode(5 downto 3) is  -- instruction bits
 
-                -- intiate polynomial generator
+                -- initiate polynomial generator
                 when "000" =>
 
                     -- enable generator
@@ -110,7 +115,7 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    opand_b <= DCAREVEC;
+                    opand_b <= ZEROVEC;
                     opand_z1 <= DCAREVEC;
                     opand_z2 <= DCAREVEC;
 
@@ -351,7 +356,7 @@ begin
                     rst_gen <= '1';
 
                     -- disable arithmetic exceptions
-                    opand_b <= DCAREVEC;
+                    opand_b <= ZEROVEC;
                     opand_z1 <= DCAREVEC;
                     opand_z2 <= DCAREVEC;
 
@@ -368,24 +373,7 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    opand_b <= DCAREVEC;
-                    opand_z1 <= DCAREVEC;
-                    opand_z2 <= DCAREVEC;
-
-                    -- disable memory lookup
-                    mem_t <= '-';
-                    id_cu <= '0';
-                    addr_cu <= DCAREVEC;
-
-                -- nop
-                when "111" =>
-
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
-
-                    -- disable arithmetic exceptions
-                    opand_b <= DCAREVEC;
+                    opand_b <= ZEROVEC;
                     opand_z1 <= DCAREVEC;
                     opand_z2 <= DCAREVEC;
 
@@ -401,7 +389,7 @@ begin
                     rst_gen <= '0';
 
                     -- disable arithmetic exceptions
-                    opand_b <= DCAREVEC;
+                    opand_b <= ZEROVEC;
                     opand_z1 <= DCAREVEC;
                     opand_z2 <= DCAREVEC;
 
