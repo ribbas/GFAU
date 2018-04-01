@@ -13,6 +13,11 @@ library work;
     use work.demo.all;
 
 entity top is
+    generic(
+        n       : positive := DEGREE;
+        clgn    : positive := CEILLGN;  -- ceil(log2(n))
+        clgn1   : positive := CEILLGN1   -- ceil(log2(n - 1))
+    );
     port(
         -- master clock
         CLK     : in std_logic;
@@ -32,13 +37,14 @@ entity top is
         -- IO interrupts
         RDYGEN  : out std_logic;
         ERRB    : out std_logic;
-        ERRZ    : out std_logic
+        ERRZ    : out std_logic;
 
+        -- memory control signals
         _CE     : out std_logic;
         _WE     : out std_logic;
-        _OE     : out std_logic;
-        _BLE    : out std_logic;
-        _BHE    : out std_logic;
+        _OE     : out std_logic := '0';
+        _BLE    : out std_logic := '0';
+        _BHE    : out std_logic := '0';
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
@@ -64,8 +70,9 @@ architecture behavioral of top is
     -- size and most significant bit index
     component indices
         port(
-            poly_bcd    : in std_logic_vector(n downto 0);
-            n           : out std_logic_vector(3 downto 0)
+            poly_bcd    : in  std_logic_vector(n downto 0);
+            size        : out std_logic_vector(clgn downto 0);
+            msb         : out std_logic_vector(clgn1 downto 0)
         );
     end component;
 
@@ -136,18 +143,21 @@ architecture behavioral of top is
 
     component operators
         port(
-            clk     : in std_logic;
-            opcode  : in std_logic_vector(5 downto 0);  -- opcode
-            i       : in std_logic_vector(n downto 0); -- first opand
-            j       : in std_logic_vector(n downto 0); -- second opand
-            i_null  : in std_logic;  -- opand 1 null flag
-            j_null  : in std_logic;  -- opand 2 null flag
-            n       : in std_logic_vector(3 downto 0);  -- size of polynomial
-            mask    : in std_logic_vector(n downto 0);  -- mask
-            out_sel : out std_logic_vector(n downto 0); -- selected output
-            convert : out std_logic; -- convert flag
-            mem_t   : out std_logic; -- memory type
-            err_z   : out std_logic -- zero exception
+            clk         : in std_logic;
+            opcode      : in std_logic_vector(5 downto 0);
+            i           : in std_logic_vector(n downto 0);
+            j           : in std_logic_vector(n downto 0);
+            i_null      : in std_logic;
+            j_null      : in std_logic;
+            size        : in std_logic_vector(clgn downto 0);  -- size
+            mask        : in std_logic_vector(n downto 0);  -- mask
+            mem_t       : out std_logic; -- memory type
+            id_con      : out std_logic;
+            mem_rdy     : in std_logic;
+            addr_con    : out std_logic_vector(n downto 0);
+            dout_con    : inout std_logic_vector(n downto 0);
+            result      : out std_logic_vector(n downto 0); -- selected output
+            err_z       : out std_logic -- zero exception
         );
     end component;
 
@@ -162,12 +172,12 @@ architecture behavioral of top is
             id_cu       : in std_logic;
             addr_cu     : in std_logic_vector(n downto 0);
             dout_cu     : out std_logic_vector(n downto 0);
-            id_gen      : in std_logic;
-            addr_gen    : in std_logic_vector(n downto 0);
-            din_gen     : in std_logic_vector(n downto 0);
             id_con      : in std_logic;
             addr_con    : in std_logic_vector(n downto 0);
             dout_con    : out std_logic_vector(n downto 0);
+            id_gen      : in std_logic;
+            addr_gen    : in std_logic_vector(n downto 0);
+            din_gen     : in std_logic_vector(n downto 0);
             nCE         : out std_logic;
             nWE         : out std_logic;
             A           : out std_logic_vector((n + 1) downto 0);
@@ -205,7 +215,7 @@ begin
     ---------------- universal registers and constants ----------------
 
     -- most significant bit
-    msb_unit: indices port map(
+    indices_unit: indices port map(
         poly_bcd => POLYBCD,
         size => size,
         msb => msb
@@ -261,12 +271,20 @@ begin
     mem : memory port map(
         clk => CLK,
         mem_t => mem_t,
-        mem_rd => mem_rd,
-        mem_wr => mem_wr,
-        addr_in => mem_addr_in,
-        addr_out => mem_addr_out,
-        data_in => mem_data_in,
-        data_out => mem_data_out
+        mem_rdy => mem_rdy,
+        id_cu => id_cu,
+        addr_cu => addr_cu,
+        dout_cu => dout_cu,
+        id_gen => id_gen,
+        addr_gen => addr_gen,
+        din_gen => din_gen,
+        id_con => id_con,
+        addr_con => addr_con,
+        dout_con => dout_con,
+        nCE => _CE,
+        nWE => _WE,
+        A => A,
+        DQ => _IO
     );
 
 
@@ -277,9 +295,17 @@ begin
         opcode => OPCODE,
         i => i,
         j => j,
-        n => n,
+        i_null => i_null,
+        j_null => j_null,
+        size => size,
         mask => mask,
-        result => RESULT
+        mem_t => mem_t,
+        id_con => id_con,
+        mem_rdy => mem_rdy,
+        addr_con => addr_con,
+        dout_con => dout_con,
+        result => RESULT,
+        err_z => ERRZ
     );
 
 
