@@ -70,8 +70,7 @@ architecture fsm of generator is
 
     signal counter : std_logic_vector(n downto 0);
 
-    type state_type is (auto_sym_state, gen_sym_state);  -- define the states
-    signal state : state_type;
+    signal state : gen_state_type;
 
 begin
 

@@ -63,11 +63,9 @@ architecture behavioral of memory is
     -- nBHE     0       0       -
 
     -- define the states for reading data
-    type rd_state_type is (send_addr, get_data);
     signal rd_state : rd_state_type;
 
     -- define the states for writing data
-    type wr_state_type is (wr_mem1, wr_mem2);
     signal wr_state : wr_state_type;
 
 begin

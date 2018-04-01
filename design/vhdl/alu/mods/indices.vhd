@@ -3,7 +3,7 @@
 -- Sabbir Ahmed
 -- 2018-01-16
 --
--- Generates the index of the size.
+-- Generates the indices of the size and the MSB
 --
 
 library ieee;

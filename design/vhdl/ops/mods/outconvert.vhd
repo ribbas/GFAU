@@ -40,8 +40,7 @@ end outconvert;
 architecture behavioral of outconvert is
 
     -- define the states for writing data
-    type state_type is (send_addr, get_data);
-    signal state : state_type;
+    signal state : rd_state_type;
 
 begin
 

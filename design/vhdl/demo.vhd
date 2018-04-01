@@ -41,4 +41,10 @@ package demo is
     constant ONEVEC: std_logic_vector(DEGREE downto 0) := (0 => '1',
                                                         others => '0');
 
+    type op_state_type is (op1_state, op2_state);
+    type gen_state_type is (auto_sym_state, gen_sym_state);
+
+    type rd_state_type is (send_addr, get_data);
+    type wr_state_type is (wr_mem1, wr_mem2);
+
 end demo;
