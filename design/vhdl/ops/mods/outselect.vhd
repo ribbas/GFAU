@@ -66,7 +66,7 @@ begin
                 -- mul never throws a zero exception
                 err_z <= '0';
 
-                -- if both non-null operands
+                -- if both non-null operands (a * b)
                 if (i_null = '0' and j_null = '0') then
 
                     -- mul output is selected
@@ -86,9 +86,11 @@ begin
 
                     end if;
 
-                -- if any of the operands are null
-                elsif (i_null = '1' or j_null = '1') then
+                -- if any of the operands are null (a * 0 or 0 * b or 0 * 0)
+                else
 
+                    convert <= '0';
+                    mem_t <= '-';
                     -- null (in element form) is selected
                     out_sel <= HIVEC;
 
@@ -97,7 +99,7 @@ begin
             -- div
             when "011" =>
 
-                -- if both non-null operands
+                -- if both non-null operands (a/b)
                 if (i_null = '0' and j_null = '0') then
 
                     -- div output is selected
@@ -118,15 +120,21 @@ begin
 
                     end if;
 
-                -- if divide by null is attempted
+                -- if divide by null is attempted (a/0)
                 elsif (j_null = '1') then
+
+                    convert <= '0';
+                    mem_t <= '-';
 
                     -- throw divide by zero exception
                     err_z <= '1';
                     out_sel <= DCAREVEC;
 
-                -- if dividing null is attempted
-                elsif (i_null = '1' and j_null = '0') then
+                -- if dividing null is attempted (0/b)
+                else
+
+                    convert <= '0';
+                    mem_t <= '-';
 
                     err_z <= '0';
                     out_sel <= HIVEC;
@@ -136,7 +144,7 @@ begin
             -- log
             when "100" =>
 
-                -- if non-null operand
+                -- if non-null operand (log(a))
                 if (i_null <= '0') then
 
                     -- log output is selected
@@ -156,8 +164,11 @@ begin
 
                     end if;
 
-                -- if log of null is attempted
-                elsif (i_null <= '1') then
+                -- if log of null is attempted (log(0))
+                else
+
+                    convert <= '0';
+                    mem_t <= '-';
 
                     -- throw zero exception
                     err_z <= '1';

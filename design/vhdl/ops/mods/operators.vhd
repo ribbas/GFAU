@@ -44,7 +44,7 @@ entity operators is
         mem_rdy     : in std_logic;
 
         -- memory address and data signals
-        addr_con    : out std_logic_vector((n + 1) downto 0);
+        addr_con    : out std_logic_vector(n downto 0);
         dout_con    : inout std_logic_vector(n downto 0);
 
         result      : out std_logic_vector(n downto 0); -- selected output
@@ -96,21 +96,6 @@ architecture behavioral of operators is
         );
     end component;
 
-    ------------------ memory ----------------
-
-    ---- IS61LP6432A chips wrapper
-    --component memory is
-    --    port(
-    --        clk         : in std_logic;
-    --        mem_t       : in std_logic;
-    --        mem_rd      : in std_logic;
-    --        mem_wr      : in std_logic;
-    --        addr_in     : in std_logic_vector(15 downto 0);
-    --        addr_out    : in std_logic_vector(15 downto 0);
-    --        data_in     : in std_logic_vector(15 downto 0);
-    --        data_out    : out std_logic_vector(15 downto 0)
-    --    );
-    --end component;
 
     ---------------- output multiplexers ----------------
 
@@ -134,17 +119,13 @@ architecture behavioral of operators is
     component outconvert
         port(
             clk         : in std_logic;
-            convert     : in std_logic;  -- convert flag
-            mask        : in std_logic_vector(n downto 0);  -- operand mask
-            -- result
+            convert     : in std_logic;
+            mask        : in std_logic_vector(n downto 0);
             out_sel     : in std_logic_vector(n downto 0);
-            -- memory wrapper control signals
             id_con      : out std_logic;
             mem_rdy     : in std_logic;
-            -- memory address and data signals
             addr_con    : out std_logic_vector(n downto 0);
             dout_con    : in std_logic_vector(n downto 0);
-            -- final output
             result      : out std_logic_vector(n downto 0)
         );
     end component;
@@ -155,11 +136,8 @@ architecture behavioral of operators is
     signal prod : std_logic_vector(n downto 0);
     signal quot : std_logic_vector(n downto 0);
 
-    signal dout_con : std_logic_vector(n downto 0);
-    signal addr_con : std_logic_vector(n downto 0);
-    --signal mem_out : std_logic_vector(15 downto 0);
-    --signal mem_t : std_logic;
-    --signal convert : std_logic;
+    signal out_sel : std_logic_vector(n downto 0);
+    signal convert : std_logic;
 
 begin
 
@@ -211,20 +189,9 @@ begin
         j_null => j_null,
         out_sel => out_sel,
         mem_t => mem_t,
+        convert => convert,
         err_z => err_z
     );
-
-    ---- memory wrapper
-    --mem : memory port map(
-    --    clk => clk,
-    --    mem_t => mem_t,
-    --    mem_rd => convert,
-    --    mem_wr => '0',
-    --    addr_in => "XXXXXXXXXXXXXXXX",
-    --    addr_out => out_sel,
-    --    data_in => "XXXXXXXXXXXXXXXX",
-    --    data_out => mem_out
-    --);
 
     -- output converter
     outconvert_unit : outconvert port map(

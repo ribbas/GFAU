@@ -47,7 +47,7 @@ architecture behavioral of operators_tb is
             mem_rdy     : in std_logic;
 
             -- memory address and data signals
-            addr_con    : out std_logic_vector((n + 1) downto 0);
+            addr_con    : out std_logic_vector(n downto 0);
             dout_con    : inout std_logic_vector(n downto 0);
 
             result      : out std_logic_vector(n downto 0); -- selected output
@@ -65,13 +65,14 @@ architecture behavioral of operators_tb is
     signal mask : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    signal out_sel : std_logic_vector(n downto 0);
-    signal addr_con : std_logic_vector((n + 1) downto 0);
+    --signal out_sel : std_logic_vector(n downto 0);
+    signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector(n downto 0);
     signal id_con : std_logic;
     signal mem_t : std_logic;
     signal mem_rdy : std_logic;
     signal err_z : std_logic;
+    signal result : std_logic_vector(n downto 0);
 
     -- testbench clocks
     signal clk : std_ulogic := '1';
@@ -88,8 +89,12 @@ begin
         j_null => j_null,
         size => size,
         mask => mask,
-        out_sel => out_sel,
-        mem_t=> mem_t,
+        mem_t => mem_t,
+        id_con => id_con,
+        mem_rdy => mem_rdy,
+        addr_con => addr_con,
+        dout_con => dout_con,
+        result => result,
         err_z => err_z
     );
 
@@ -115,38 +120,40 @@ begin
         j_null <= '1';
         size <= "0100";
         mask <= "000001111";
+        dout_con <= "111110011";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for (CLK_PER * 1);
 
         -- add/sub
         opcode <= "001011";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for (CLK_PER * 1);
 
         -- mul
         opcode <= "010010";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for (CLK_PER * 1);
 
         -- div
         opcode <= "011010";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for (CLK_PER * 1);
+        mem_rdy <= '1';
 
         -- log
         opcode <= "100010";
 
         -- hold reset state for 40 ns.
-        wait for 40 ns;
+        wait for (CLK_PER * 1);
 
         -- convert
         opcode <= "000111";
 
-        wait for 40 ns;
+        wait for (CLK_PER * 1);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

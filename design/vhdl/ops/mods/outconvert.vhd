@@ -69,6 +69,7 @@ begin
 
                         -- read control signal with ID
                         id_con <= '1';
+                        addr_con <= out_sel;
 
                         if (mem_rdy = '1') then
 
@@ -110,4 +111,3 @@ begin
     end process;
 
 end behavioral;
-
