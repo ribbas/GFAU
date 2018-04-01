@@ -35,10 +35,10 @@ entity control_unit is
         j           : out std_logic_vector(n downto 0);  -- j
 
         -- memory signals
-        mem_data    : in std_logic_vector(n downto 0);  -- data from memory
-        mem_addr    : out std_logic_vector(n downto 0);  -- address in memory
+        dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
+        addr_cu     : out std_logic_vector(n downto 0);  -- address in memory
         mem_t       : inout std_logic;  -- which memory
-        mem_rd      : out std_logic;  -- read signal to memory
+        id_cu       : out std_logic;  -- read signal to memory
 
         -- exceptions
         err_b       : out std_logic;  -- out of bound exception
@@ -65,7 +65,7 @@ architecture behavioral of control_unit is
         );
     end component;
 
-    signal opand_b : std_logic_vector(n downto 0);  -- mem_data from memory
+    signal opand_b : std_logic_vector(n downto 0);  -- address from memory
 
     signal mem_t_z1 : std_logic;
     signal opand_z1 : std_logic_vector(n downto 0); -- zero flag for operand 1
@@ -73,8 +73,7 @@ architecture behavioral of control_unit is
     signal mem_t_z2 : std_logic;
     signal opand_z2 : std_logic_vector(n downto 0); -- zero flag for operand 2
 
-    type state_type is (op1_state, op2_state);  -- define the states
-    signal state : state_type;
+    signal state : op_state_type;
 
 begin
 
@@ -96,7 +95,7 @@ begin
         is_null => opand2_null
     );
 
-    process (clk, opcode, opand1, opand2, mask, mem_data, mem_t)
+    process (clk, opcode, opand1, opand2, mask, dout_cu, mem_t)
     begin
 
         if (rising_edge(clk)) then
@@ -117,8 +116,8 @@ begin
 
                     -- disable memory lookup
                     mem_t <= '-';
-                    mem_rd <= '0';
-                    mem_addr <= DCAREVEC;
+                    id_cu <= '0';
+                    addr_cu <= DCAREVEC;
 
                 -- add / sub
                 when "001" =>
@@ -128,7 +127,7 @@ begin
                     rst_gen <= '0';
 
                     -- read from memory to convert element to polynomial
-                    mem_rd <= '1';
+                    id_cu <= '1';
 
                     -- mem2, addr = element, data = polynomial
                     mem_t <= '1';
@@ -143,11 +142,11 @@ begin
                             if (opcode(2) = '0') then
 
                                 -- i is converted to polynomial
-                                i <= mem_data;
+                                i <= dout_cu;
 
-                                -- check mem_data for out-of-bound exceptions
-                                opand_b <= mem_data;
-                                opand_z1 <= mem_data;
+                                -- check dout_cu for out-of-bound exceptions
+                                opand_b <= dout_cu;
+                                opand_z1 <= dout_cu;
 
                             -- if operand 1 is in polynomial form
                             else
@@ -162,7 +161,7 @@ begin
                             end if;
 
                             -- address = element
-                            mem_addr <= opand2;
+                            addr_cu <= opand2;
 
                             state <= op2_state;
 
@@ -174,11 +173,11 @@ begin
                             if (opcode(1) = '0') then
 
                                 -- j is converted to polynomial
-                                j <= mem_data;
+                                j <= dout_cu;
 
-                                -- check mem_data for out-of-bound exceptions
-                                opand_b <= mem_data;
-                                opand_z2 <= mem_data;
+                                -- check dout_cu for out-of-bound exceptions
+                                opand_b <= dout_cu;
+                                opand_z2 <= dout_cu;
 
                             -- if operand 2 is in polynomial form
                             else
@@ -197,7 +196,7 @@ begin
                         when others =>
 
                             -- address = element
-                            mem_addr <= opand1;
+                            addr_cu <= opand1;
 
                             -- state initializes to op1_state
                             state <= op1_state;
@@ -212,7 +211,7 @@ begin
                     rst_gen <= '0';
 
                     -- read from memory to convert element to polynomial
-                    mem_rd <= '1';
+                    id_cu <= '1';
 
                     -- mem1, addr = polynomial, data = element
                     mem_t <= '0';
@@ -227,11 +226,11 @@ begin
                             if (opcode(2) = '1') then
 
                                 -- i is converted to element
-                                i <= mem_data;
+                                i <= dout_cu;
 
-                                -- check mem_data for out-of-bound exceptions
-                                opand_b <= mem_data;
-                                opand_z1 <= mem_data;
+                                -- check dout_cu for out-of-bound exceptions
+                                opand_b <= dout_cu;
+                                opand_z1 <= dout_cu;
 
                             -- if operand 1 is in element form
                             else
@@ -246,7 +245,7 @@ begin
                             end if;
 
                             -- address = polynomial
-                            mem_addr <= opand2;
+                            addr_cu <= opand2;
 
                             state <= op2_state;
 
@@ -258,11 +257,11 @@ begin
                             if (opcode(1) = '1') then
 
                                 -- j is converted to element
-                                j <= mem_data;
+                                j <= dout_cu;
 
-                                -- check mem_data for out-of-bound exceptions
-                                opand_b <= mem_data;
-                                opand_z2 <= mem_data;
+                                -- check dout_cu for out-of-bound exceptions
+                                opand_b <= dout_cu;
+                                opand_z2 <= dout_cu;
 
                             -- if operand 2 is in element form
                             else
@@ -281,7 +280,7 @@ begin
                         when others =>
 
                             -- address = polynomial
-                            mem_addr <= opand1;
+                            addr_cu <= opand1;
 
                             -- state initializes to op1_state
                             state <= op1_state;
@@ -296,7 +295,7 @@ begin
                     rst_gen <= '0';
 
                     -- read from memory to convert element to polynomial
-                    mem_rd <= '1';
+                    id_cu <= '1';
 
                     -- mem1, addr = polynomial, data = element
                     mem_t <= '0';
@@ -311,11 +310,11 @@ begin
                             if (opcode(2) = '1') then
 
                                 -- i is converted to element
-                                i <= mem_data;
+                                i <= dout_cu;
 
-                                -- check mem_data for out-of-bound exceptions
-                                opand_b <= mem_data;
-                                opand_z1 <= mem_data;
+                                -- check dout_cu for out-of-bound exceptions
+                                opand_b <= dout_cu;
+                                opand_z1 <= dout_cu;
 
                             -- if operand 1 is in element form
                             else
@@ -330,14 +329,14 @@ begin
                             end if;
 
                             -- address = don't care
-                            mem_addr <= DCAREVEC;
+                            addr_cu <= DCAREVEC;
 
                             state <= op1_state;
 
                         when others =>
 
                             -- address = polynomial
-                            mem_addr <= opand1;
+                            addr_cu <= opand1;
 
                             -- state initializes to op1_state
                             state <= op1_state;
@@ -358,8 +357,8 @@ begin
 
                     -- disable memory lookup
                     mem_t <= '-';
-                    mem_rd <= '0';
-                    mem_addr <= DCAREVEC;
+                    id_cu <= '0';
+                    addr_cu <= DCAREVEC;
 
                 -- mode
                 when "110" =>
@@ -375,8 +374,8 @@ begin
 
                     -- disable memory lookup
                     mem_t <= '-';
-                    mem_rd <= '0';
-                    mem_addr <= DCAREVEC;
+                    id_cu <= '0';
+                    addr_cu <= DCAREVEC;
 
                 -- nop
                 when "111" =>
@@ -392,8 +391,8 @@ begin
 
                     -- disable memory lookup
                     mem_t <= '-';
-                    mem_rd <= '0';
-                    mem_addr <= DCAREVEC;
+                    id_cu <= '0';
+                    addr_cu <= DCAREVEC;
 
                 when others =>
 
@@ -408,8 +407,8 @@ begin
 
                     -- disable memory lookup
                     mem_t <= '-';
-                    mem_rd <= '0';
-                    mem_addr <= DCAREVEC;
+                    id_cu <= '0';
+                    addr_cu <= DCAREVEC;
 
             end case;
 

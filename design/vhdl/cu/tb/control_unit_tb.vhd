@@ -38,10 +38,10 @@ architecture behavior of control_unit_tb is
             j           : out std_logic_vector(n downto 0);  -- j
 
             -- memory signals
-            mem_data    : in std_logic_vector(n downto 0);  -- memory data
-            mem_addr    : out std_logic_vector(n downto 0);  -- memory addr
+            dout_cu     : in std_logic_vector(n downto 0);  -- memory data
+            addr_cu     : out std_logic_vector(n downto 0);  -- memory addr
             mem_t       : inout std_logic;  -- which memory
-            mem_rd      : out std_logic;  -- read signal to memory
+            id_cu       : out std_logic;  -- read signal to memory
 
             -- exceptions
             err_b       : out std_logic;  -- out of bound exception
@@ -66,9 +66,9 @@ architecture behavior of control_unit_tb is
     signal i : std_logic_vector(n downto 0);  -- address in memory
     signal j : std_logic_vector(n downto 0);  -- address in memory
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
-    signal mem_rd : std_logic;  -- read signal to memory
-    signal mem_addr : std_logic_vector(n downto 0);  -- address in memory
-    signal mem_data : std_logic_vector(n downto 0) := "111111100";  -- data from memory
+    signal id_cu : std_logic;  -- read signal to memory
+    signal addr_cu : std_logic_vector(n downto 0);  -- address in memory
+    signal dout_cu : std_logic_vector(n downto 0) := "111111100";  -- data from memory
 
     -- clocks
     signal clk : std_ulogic := '1';
@@ -87,9 +87,9 @@ begin
         i => i,
         j => j,
         mem_t => mem_t,
-        mem_rd => mem_rd,
-        mem_addr => mem_addr,
-        mem_data => mem_data,
+        id_cu => id_cu,
+        addr_cu => addr_cu,
+        dout_cu => dout_cu,
         err_b => err_b,
         opand1_null => opand1_null,
         opand2_null => opand2_null
@@ -101,7 +101,7 @@ begin
 
         for i in 1 to TNUMS loop
             clk <= not clk;
-            mem_data <= std_logic_vector(unsigned(mem_data) + 1);
+            dout_cu <= std_logic_vector(unsigned(dout_cu) + 1);
             wait for (CLK_PER / 2);
             -- clock period = 50 MHz
         end loop;
