@@ -24,7 +24,7 @@ entity generator is
         rst         : in std_logic;
 
         -- polynomial data
-        poly_bcd    : in std_logic_vector(n downto 0);
+        poly_bcd    : in std_logic_vector(n - 1 downto 0);
         mask        : in std_logic_vector(n downto 0);
         size        : in std_logic_vector(clgn downto 0);
         msb         : in std_logic_vector(clgn1 downto 0);
@@ -96,7 +96,7 @@ begin
     process (clk, en, rst, poly_bcd, mask, size, msb, mem_rdy)
     begin
 
-        nth_sym <= poly_bcd and mask;
+        nth_sym <= (poly_bcd & '1') and mask;
         id_gen <= en;
 
         if (en = '1') then

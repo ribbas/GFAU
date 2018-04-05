@@ -8,6 +8,7 @@ library ieee;
     use ieee.std_logic_1164.all;
 library work;
     use work.demo.all;
+    use work.demo_tb.all;
 
 entity varmask_tb is
 end varmask_tb;
@@ -19,13 +20,13 @@ architecture behavioral of varmask_tb is
     -- component declaration for the unit under test (uut)
     component varmask
         port(
-            poly_bcd    : in  std_logic_vector(n downto 0);
+            poly_bcd    : in  std_logic_vector(n - 1 downto 0);
             mask        : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(n downto 0) := (others => '0');
+    signal poly_bcd : std_logic_vector(n - 1 downto 0) := (others => '0');
 
     -- outputs
     signal mask    : std_logic_vector(n downto 0);
@@ -42,8 +43,7 @@ begin
 
         for i in 1 to nums loop
             clk <= not clk;
-            wait for 20 ns;
-            -- clock period = 50 MHz
+            wait for (CLK_PER / 2);
         end loop;
 
     end process;
@@ -60,20 +60,20 @@ begin
     begin
 
         -- hold reset state for 100 ns.
-        wait for 40 ns;
+        wait for (CLK_PER * 2);
 
         -- x^2
-        poly_bcd <= "000000101";
-        wait for 40 ns;
+        poly_bcd <= "00000010";
+        wait for (CLK_PER * 2);
 
         -- x^7
-        poly_bcd <= "010000101";
-        wait for 40 ns;
+        poly_bcd <= "01000010";
+        wait for (CLK_PER * 2);
 
         -- x^8
-        poly_bcd <= "111111111";
+        poly_bcd <= "11111111";
 
-        wait for 40 ns;
+        wait for (CLK_PER * 2);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

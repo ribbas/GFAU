@@ -25,7 +25,6 @@ entity isnull is
 end isnull;
 
 architecture behavioral of isnull is
-
 begin
 
     process(mem_t, opand)

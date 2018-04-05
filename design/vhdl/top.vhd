@@ -26,7 +26,7 @@ entity top is
         RST     : in std_logic;
 
         -- user inputs
-        POLYBCD : in std_logic_vector(n downto 0);
+        POLYBCD : in std_logic_vector(n - 1 downto 0);
         OPCODE  : in std_logic_vector(5 downto 0);
         OPAND1  : in std_logic_vector(n downto 0);
         OPAND2  : in std_logic_vector(n downto 0);
@@ -70,7 +70,7 @@ architecture behavioral of top is
     -- size and most significant bit index
     component indices
         port(
-            poly_bcd    : in  std_logic_vector(n downto 0);
+            poly_bcd    : in  std_logic_vector(n -1 downto 0);
             size        : out std_logic_vector(clgn downto 0);
             msb         : out std_logic_vector(clgn1 downto 0)
         );
@@ -79,7 +79,7 @@ architecture behavioral of top is
     -- mask
     component varmask
         port(
-            poly_bcd    : in  std_logic_vector(n downto 0);
+            poly_bcd    : in  std_logic_vector(n -1 downto 0);
             mask        : out std_logic_vector(n downto 0)
         );
     end component;
@@ -125,7 +125,7 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n downto 0);
+            poly_bcd    : in std_logic_vector(n -1 downto 0);
             mask        : in std_logic_vector(n downto 0);
             msb           : in std_logic_vector(3 downto 0);
             n           : in std_logic_vector(3 downto 0);
@@ -265,7 +265,7 @@ begin
     );
 
 
-    ---------------- memories ----------------
+    ---------------- memory ----------------
 
     -- memory wrapper
     mem : memory port map(
