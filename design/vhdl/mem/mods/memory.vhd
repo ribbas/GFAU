@@ -30,7 +30,8 @@ entity memory is
         clk         : in std_logic;
 
         -- memory types and methods
-        mem_t       : in std_logic;
+        mem_t_cu    : in std_logic;
+        mem_t_con   : in std_logic;
         mem_rdy     : out std_logic;  -- ready
 
         -- module signals
@@ -81,7 +82,7 @@ begin
                         nWE <= '1';
 
                         -- send control unit's address to memory
-                        A <= mem_t & addr_cu;
+                        A <= mem_t_cu & addr_cu;
 
                         mem_rdy <= '0';
 
@@ -129,7 +130,7 @@ begin
                         nWE <= '1';
 
                         -- send output converter's address to memory
-                        A <= mem_t & addr_con;
+                        A <= mem_t_con & addr_con;
 
                         mem_rdy <= '0';
 
@@ -182,7 +183,8 @@ begin
 
                        -- element memory (mem1)
                        -- addr = polynomial, data = element
-                        A <= mem_t & addr_gen;
+                       -- mem_t = 0
+                        A <= '0' & addr_gen;
                         DQ <= din_gen;
 
                         mem_rdy <= '0';
@@ -197,7 +199,8 @@ begin
 
                         -- polynomial memory (mem2)
                         -- addr = element, data = polynomial
-                        A <= mem_t & din_gen;
+                       -- mem_t = 1
+                        A <= '1' & din_gen;
                         DQ <= addr_gen;
 
                         mem_rdy <= '1';
