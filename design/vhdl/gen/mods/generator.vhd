@@ -29,10 +29,13 @@ entity generator is
         size        : in std_logic_vector(clgn downto 0);
         msb         : in std_logic_vector(clgn1 downto 0);
 
+        -- memory wrapper control signals
+        id_gen      : out std_logic;
+        mem_rdy     : in std_logic;
+
         -- memory signals
-        wr_en       : out std_logic;
-        rdy         : out std_logic;
-        addr        : out std_logic_vector(n downto 0);
+        gen_rdy     : out std_logic;
+        addr_gen    : out std_logic_vector(n downto 0);
         sym         : out std_logic_vector(n downto 0)
     );
 end generator;
@@ -90,19 +93,19 @@ begin
         sym => temp_gen
     );
 
-    process (clk, en, rst, poly_bcd, mask)
+    process (clk, en, rst, poly_bcd, mask, size, msb, mem_rdy)
     begin
 
         nth_sym <= poly_bcd and mask;
-        wr_en <= en;
+        id_gen <= en;
 
         if (en = '1') then
 
             if (rst = '1') then
 
-                rdy <= '0';
+                gen_rdy <= '0';
                 counter <= ZEROVEC;
-                addr <= ZEROVEC;
+                addr_gen <= ZEROVEC;
                 sym <= ZEROVEC;
                 state <= auto_sym_state;
 
@@ -112,61 +115,71 @@ begin
 
                     when auto_sym_state =>
 
-                        rst_auto <= '0';
-                        counter <= std_logic_vector(unsigned(counter) + 1);
-                        rdy <= '0';
+                        if (mem_rdy = '1') then
 
-                        if (rst_gen = '1' and
-                            temp_auto(to_integer(unsigned(msb))) = '1') then
+                            counter <= std_logic_vector(unsigned(counter) + 1);
+                            rst_auto <= '0';
+                            gen_rdy <= '0';
 
-                            rst_gen <= '0';
-                            en_gen <= '0';
-                            en_gen <= '1';
+                            if (rst_gen = '1' and
+                                temp_auto(to_integer(unsigned(msb))) = '1') then
 
-                        end if;
+                                rst_gen <= '0';
+                                en_gen <= '1';
 
-                        if (rst_gen = '1' and
-                            temp_auto(to_integer(unsigned(size))) = '0') then
+                            end if;
 
-                            sym <= temp_auto and mask;
-                            state <= auto_sym_state;
+                            if (rst_gen = '1' and
+                                temp_auto(to_integer(unsigned(size))) = '0') then
 
-                        else  -- all automatic symbols generated
+                                sym <= temp_auto and mask;
+                                state <= auto_sym_state;
 
-                            sym <= nth_sym and mask;
-                            state <= gen_sym_state;
-                            en_auto <= '0';
-                            en_gen <= '1';
+                            else  -- all automatic symbols generated
 
-                        end if;
+                                sym <= nth_sym and mask;
+                                en_auto <= '0';
+                                en_gen <= '1';
+                                state <= gen_sym_state;
 
-                        addr <= counter;
+                            end if;
 
-                    when gen_sym_state =>
-
-                        counter <= std_logic_vector(unsigned(counter) + 1);
-
-                        if (((temp_gen and mask) xnor ONEVEC) = HIVEC) then
-
-                            sym <= DCAREVEC;
-                            addr <= DCAREVEC;
-                            rdy <= '1';
+                            addr_gen <= counter;
 
                         else
 
-                            sym <= temp_gen and mask;
-                            addr <= counter;
-                            rdy <= '0';
+                            state <= auto_sym_state;
 
                         end if;
+
+                    when gen_sym_state =>
+
+                        report "DONE";
+
+                        if (mem_rdy = '1') then  -- if memory is ready
+
+                            counter <= std_logic_vector(unsigned(counter) + 1);
+                            addr_gen <= counter;
+
+                            if (((temp_gen and mask) xnor ONEVEC) = HIVEC) then
+
+                                sym <= DCAREVEC;
+                                gen_rdy <= '1';
+
+                            else
+
+                                sym <= temp_gen and mask;
+                                gen_rdy <= '0';
+
+                            end if;
+
+                        end if;  -- else latch data and address values
 
                         state <= gen_sym_state;
 
                     when others =>
 
-                        rdy <= '0';
-                        --addr <= DCAREVEC;
-                        --sym <= DCAREVEC;
+                        gen_rdy <= '0';
                         state <= auto_sym_state;
 
                 end case;
@@ -175,9 +188,9 @@ begin
 
         else
 
-            rdy <= '0';
+            gen_rdy <= '0';
             counter <= ZEROVEC;
-            addr <= DCAREVEC;
+            addr_gen <= DCAREVEC;
             sym <= DCAREVEC;
 
         end if;  -- en

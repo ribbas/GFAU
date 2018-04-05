@@ -8,6 +8,7 @@ library ieee;
     use ieee.std_logic_1164.all;
 library work;
     use work.demo.all;
+    use work.demo_tb.all;
 
 entity generator_tb is
 end generator_tb;
@@ -31,10 +32,13 @@ architecture test of generator_tb is
             size        : in std_logic_vector(clgn downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
 
+            -- memory wrapper control signals
+            id_gen      : out std_logic;
+            mem_rdy     : in std_logic;
+
             -- memory signals
-            wr_en       : out std_logic;
-            rdy         : out std_logic;
-            addr        : out std_logic_vector(n downto 0);
+            gen_rdy     : out std_logic;
+            addr_gen    : out std_logic_vector(n downto 0);
             sym         : out std_logic_vector(n downto 0)
         );
     end component;
@@ -44,11 +48,12 @@ architecture test of generator_tb is
     signal mask : std_logic_vector(n downto 0);
     signal msb : std_logic_vector(clgn1 downto 0);
     signal size : std_logic_vector(clgn downto 0);
+    signal mem_rdy : std_logic := '1';
 
     -- outputs
-    signal rdy : std_logic;
-    signal wr_en : std_logic;
-    signal addr : std_logic_vector(n downto 0);
+    signal gen_rdy : std_logic;
+    signal id_gen : std_logic;
+    signal addr_gen : std_logic_vector(n downto 0);
     signal sym : std_logic_vector(n downto 0);
 
     -- testbench clocks
@@ -68,9 +73,10 @@ begin
         mask => mask,
         msb => msb,
         size => size,
-        wr_en => wr_en,
-        rdy => rdy,
-        addr => addr,
+        id_gen => id_gen,
+        mem_rdy => mem_rdy,
+        gen_rdy => gen_rdy,
+        addr_gen => addr_gen,
         sym => sym
     );
 
@@ -80,8 +86,19 @@ begin
 
         for i in 1 to nums loop
             clk <= not clk;
-            wait for 20 ns;
+            wait for (CLK_PER / 2);
             -- clock period = 50 MHz
+        end loop;
+
+    end process;
+
+    -- clock process
+    mem_proc: process
+    begin
+
+        for i in 1 to nums loop
+            mem_rdy <= not mem_rdy;
+            wait for (CLK_PER / 2);
         end loop;
 
     end process;
@@ -96,11 +113,11 @@ begin
         poly_bcd <= "000001101";
 
         -- hold reset state for 40 ns.
-        wait for 30 ns;
+        wait for (CLK_PER * 2);
 
         rst <= '0';
 
-        wait for 1000 ns;
+        wait for (CLK_PER * 20);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
