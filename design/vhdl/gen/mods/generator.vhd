@@ -154,8 +154,6 @@ begin
 
                     when gen_sym_state =>
 
-                        report "DONE";
-
                         if (mem_rdy = '1') then  -- if memory is ready
 
                             counter <= std_logic_vector(unsigned(counter) + 1);

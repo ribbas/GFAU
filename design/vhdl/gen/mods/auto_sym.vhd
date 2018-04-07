@@ -37,9 +37,9 @@ begin
 
             if (rst = '1') then
 
-                temp_sym <= (0 => '1', others => '0');
+                temp_sym <= ONEVEC;
 
-            elsif rising_edge(clk) then  -- on rising edge
+            elsif falling_edge(clk) then  -- on rising edge
 
                 temp_sym <= std_logic_vector(
                                 shift_left(unsigned(temp_sym), 1)
