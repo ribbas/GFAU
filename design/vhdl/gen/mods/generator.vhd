@@ -162,8 +162,8 @@ begin
 
                             if (((temp_gen and mask) xnor ONEVEC) = HIVEC) then
 
-                                sym <= ZEROVEC;
-										  addr_gen <= HIVEC;
+                                sym <= HIVEC;
+										  addr_gen <= ZEROVEC;
 										  nextgen <= '1';
 
                             elsif (nextgen = '1') then
