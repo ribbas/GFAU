@@ -39,7 +39,7 @@ begin
 
                 temp_sym <= ONEVEC;
 
-            elsif falling_edge(clk) then  -- on rising edge
+            elsif falling_edge(clk) then  -- on falling edge
 
                 temp_sym <= std_logic_vector(
                                 shift_left(unsigned(temp_sym), 1)

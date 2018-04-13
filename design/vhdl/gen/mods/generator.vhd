@@ -68,6 +68,7 @@ architecture fsm of generator is
 
     signal rst_gen : std_logic := '1';
     signal en_gen : std_logic := '1';
+	 signal nextgen : std_logic := '0';
     signal temp_gen : std_logic_vector(n downto 0);
     signal nth_sym : std_logic_vector(n downto 0);
 
@@ -161,8 +162,15 @@ begin
 
                             if (((temp_gen and mask) xnor ONEVEC) = HIVEC) then
 
-                                sym <= DCAREVEC;
-                                gen_rdy <= '1';
+                                sym <= ZEROVEC;
+										  addr_gen <= HIVEC;
+										  nextgen <= '1';
+
+                            elsif (nextgen = '1') then
+									 
+									     sym <= mask and HIVEC;
+										  nextgen <= '0';
+										  gen_rdy <= '1';
 
                             else
 
