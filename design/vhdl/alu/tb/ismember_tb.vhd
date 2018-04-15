@@ -1,4 +1,4 @@
--- isbounded_tb.vhd
+-- ismember_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -9,19 +9,19 @@ library ieee;
 library work;
     use work.demo.all;
 
-entity isbounded_tb is
-end isbounded_tb;
+entity ismember_tb is
+end ismember_tb;
 
-architecture behavioral of isbounded_tb is
+architecture behavioral of ismember_tb is
 
     constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
-    component isbounded
+    component ismember
         port(
             operand     : in  std_logic_vector(n downto 0);
             mask        : in  std_logic_vector(n downto 0);
-            is_out_bd   : out std_logic
+            is_not_in   : out std_logic
         );
     end component;
 
@@ -30,7 +30,7 @@ architecture behavioral of isbounded_tb is
     signal mask         : std_logic_vector(n downto 0) := (others => '0');
 
     -- outputs
-    signal is_out_bd : std_logic;
+    signal is_not_in : std_logic;
 
     -- testbench clocks
     constant nums       : integer := 320;
@@ -51,10 +51,10 @@ begin
     end process;
 
     -- instantiate the unit under test (uut)
-    uut: isbounded port map(
+    uut: ismember port map(
         operand => operand,
         mask => mask,
-        is_out_bd => is_out_bd
+        is_not_in => is_not_in
     );
 
     -- stimulus process

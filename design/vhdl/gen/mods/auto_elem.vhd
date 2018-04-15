@@ -1,9 +1,9 @@
--- auto_sym.vhd
+-- auto_elem.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
 --
--- Generates the automatic symbols.
+-- Generates the automatic elembols.
 --
 
 library ieee;
@@ -12,7 +12,7 @@ library ieee;
 library work;
     use work.demo.all;
 
-entity auto_sym is
+entity auto_elem is
     generic(
         n       : positive := DEGREE
     );
@@ -20,38 +20,38 @@ entity auto_sym is
         clk     : in std_logic;
         rst     : in std_logic;
         en      : in std_logic;
-        sym     : out std_logic_vector(n downto 0)
+        elem    : out std_logic_vector(n downto 0)
     );
-end auto_sym;
+end auto_elem;
 
-architecture behavioral of auto_sym is
+architecture behavioral of auto_elem is
 
-    signal temp_sym : std_logic_vector(n downto 0);
+    signal temp_elem : std_logic_vector(n downto 0);
 
 begin
 
-    process (clk, en, rst, temp_sym)
+    process (clk, en, rst, temp_elem)
     begin
 
         if (en = '1') then
 
             if (rst = '1') then
 
-                temp_sym <= ONEVEC;
+                temp_elem <= ONEVEC;
 
             elsif falling_edge(clk) then  -- on falling edge
 
-                temp_sym <= std_logic_vector(
-                                shift_left(unsigned(temp_sym), 1)
+                temp_elem <= std_logic_vector(
+                                shift_left(unsigned(temp_elem), 1)
                             );
 
             end if;
 
-            sym <= temp_sym;
+            elem <= temp_elem;
 
         else
 
-            sym <= DCAREVEC;
+            elem <= DCAREVEC;
 
         end if;
 

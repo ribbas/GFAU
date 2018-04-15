@@ -46,7 +46,7 @@ entity control_unit is
         dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
 
         -- exceptions and flags
-        err_b       : out std_logic;  -- out of bound exception
+        err_b       : out std_logic;  -- set membership exception
         opand1_null : out std_logic;  -- operand 1 zero flag
         opand2_null : out std_logic  -- operand 2 zero flag
     );
@@ -54,11 +54,11 @@ end control_unit;
 
 architecture behavioral of control_unit is
 
-    component isbounded
+    component ismember
         port(
             operand     : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
-            is_out_bd   : out std_logic
+            is_not_in   : out std_logic
         );
     end component;
 
@@ -78,14 +78,16 @@ architecture behavioral of control_unit is
     signal mem_t_z2 : std_logic;
     signal opand_z2 : std_logic_vector(n downto 0); -- zero flag for operand 2
 
-    signal state : op_state_type;
+    signal op_state : op_state_type;
+    signal dbnc_state : debounce_state_type;
+    signal rd_state : rd_state_type;
 
 begin
 
-    isbounded_unit: isbounded port map(
+    ismember_unit: ismember port map(
         operand => opand_b,
         mask => mask,
-        is_out_bd => err_b
+        is_not_in => err_b
     );
 
     iszero_unit1: isnull port map(
@@ -112,11 +114,31 @@ begin
 
                     -- enable generator
                     en_gen <= '1';
-                    rst_gen <= '0';
+
+                    case dbnc_state is
+
+                        when rst_state =>
+
+                            -- reset generator values
+                            rst_gen <= '1';
+                            dbnc_state <= en_state;
+
+                        when en_state =>
+
+                            rst_gen <= '0';
+                            dbnc_state <= rst_state;
+
+                        when others =>
+
+                            dbnc_state <= rst_state;
+
+                    end case;
 
                     -- disable arithmetic exceptions
                     opand_b <= ZEROVEC;
+                    mem_t_z1 <= '-';
                     opand_z1 <= DCAREVEC;
+                    mem_t_z2 <= '-';
                     opand_z2 <= DCAREVEC;
 
                     -- disable memory lookup
@@ -131,13 +153,10 @@ begin
                     en_gen <= '0';
                     rst_gen <= '0';
 
-                    -- read from memory to convert element to polynomial
-                    id_cu <= '1';
-
                     -- mem2, addr = element, data = polynomial
                     mem_t <= '1';
 
-                    case state is
+                    case op_state is
 
                         when op1_state =>
 
@@ -146,29 +165,72 @@ begin
                             -- if operand 1 is in element form
                             if (opcode(2) = '0') then
 
-                                -- i is converted to polynomial
-                                i <= dout_cu;
+                                case rd_state is
 
-                                -- check dout_cu for out-of-bound exceptions
-                                opand_b <= dout_cu;
-                                opand_z1 <= dout_cu;
+                                    -- send address to memory wrapper
+                                    when send_addr =>
+
+                                        report "SEND";
+                                        id_cu <= '1';
+                                        addr_cu <= opand1;
+                                        i <= HIIMPVEC;
+
+                                        rd_state <= get_data;
+                                        op_state <= op1_state;
+
+                                    when get_data =>
+
+                                        report "GET";
+
+                                        id_cu <= '1';
+                                        if (mem_rdy = '1') then
+
+                                            -- i is converted to polynomial
+                                            i <= dout_cu;
+                                            -- check dout_cu for set membership exceptions
+                                            opand_b <= dout_cu;
+                                            opand_z1 <= dout_cu;
+
+                                            op_state <= op1_state;
+                                            rd_state <= get_data;
+
+                                        else
+
+                                            rd_state <= send_addr;
+                                            op_state <= op2_state;
+
+                                        end if;
+
+                                    when others =>
+
+                                        report "OTHERS";
+                                        id_cu <= '0';
+                                        addr_cu <= HIIMPVEC;
+                                        i <= HIIMPVEC;
+
+                                        rd_state <= send_addr;
+                                        op_state <= op1_state;
+
+                                end case;
 
                             -- if operand 1 is in polynomial form
                             else
 
+                                id_cu <= '0';
+
                                 -- i is the user input
                                 i <= opand1;
 
-                                -- check operand 1 for out-of-bound exceptions
+                                -- check operand 1 for set membership exceptions
                                 opand_b <= opand1;
                                 opand_z1 <= opand1;
+
+                                op_state <= op1_state;
 
                             end if;
 
                             -- address = element
                             addr_cu <= opand2;
-
-                            state <= op2_state;
 
                         when op2_state =>
 
@@ -177,34 +239,68 @@ begin
                             -- if operand 2 is in element form
                             if (opcode(1) = '0') then
 
-                                -- j is converted to polynomial
-                                j <= dout_cu;
+                                case rd_state is
 
-                                -- check dout_cu for out-of-bound exceptions
-                                opand_b <= dout_cu;
-                                opand_z2 <= dout_cu;
+                                    -- send address to memory wrapper
+                                    when send_addr =>
+
+                                        report "SEND2";
+                                        id_cu <= '1';
+                                        addr_cu <= opand1;
+                                        j <= HIIMPVEC;
+
+                                        rd_state <= get_data;
+                                        op_state <= op2_state;
+
+                                    when get_data =>
+
+                                        report "GET2";
+                                        id_cu <= '1';
+                                        -- i is converted to polynomial
+                                        j <= dout_cu;
+
+                                        -- check dout_cu for set membership exceptions
+                                        opand_b <= dout_cu;
+                                        opand_z2 <= dout_cu;
+
+                                        rd_state <= send_addr;
+                                        op_state <= op1_state;
+
+                                    when others =>
+
+                                        report "OTHERS2";
+                                        id_cu <= '0';
+                                        addr_cu <= HIIMPVEC;
+                                        j <= HIIMPVEC;
+
+                                        rd_state <= send_addr;
+                                        op_state <= op2_state;
+
+                                end case;
 
                             -- if operand 2 is in polynomial form
                             else
 
+                                id_cu <= '0';
+
                                 -- j is the user input
                                 j <= opand2;
 
-                                -- check operand 1 for out-of-bound exceptions
+                                -- check operand 1 for set membership exceptions
                                 opand_b <= opand2;
                                 opand_z2 <= opand2;
 
                             end if;
 
-                            state <= op1_state;
+                            op_state <= op1_state;
 
                         when others =>
 
                             -- address = element
                             addr_cu <= opand1;
 
-                            -- state initializes to op1_state
-                            state <= op1_state;
+                            -- op_state initializes to op1_state
+                            op_state <= op1_state;
 
                     end case;
 
@@ -221,7 +317,7 @@ begin
                     -- mem1, addr = polynomial, data = element
                     mem_t <= '0';
 
-                    case state is
+                    case op_state is
 
                         when op1_state =>
 
@@ -233,7 +329,7 @@ begin
                                 -- i is converted to element
                                 i <= dout_cu;
 
-                                -- check dout_cu for out-of-bound exceptions
+                                -- check dout_cu for set membership exceptions
                                 opand_b <= dout_cu;
                                 opand_z1 <= dout_cu;
 
@@ -243,7 +339,7 @@ begin
                                 -- i is the user input
                                 i <= opand1;
 
-                                -- check operand 1 for out-of-bound exceptions
+                                -- check operand 1 for set membership exceptions
                                 opand_b <= opand1;
                                 opand_z1 <= opand1;
 
@@ -252,7 +348,7 @@ begin
                             -- address = polynomial
                             addr_cu <= opand2;
 
-                            state <= op2_state;
+                            op_state <= op2_state;
 
                         when op2_state =>
 
@@ -264,7 +360,7 @@ begin
                                 -- j is converted to element
                                 j <= dout_cu;
 
-                                -- check dout_cu for out-of-bound exceptions
+                                -- check dout_cu for set membership exceptions
                                 opand_b <= dout_cu;
                                 opand_z2 <= dout_cu;
 
@@ -274,21 +370,21 @@ begin
                                 -- j is the user input
                                 j <= opand2;
 
-                                -- check operand 1 for out-of-bound exceptions
+                                -- check operand 1 for set membership exceptions
                                 opand_b <= opand2;
                                 opand_z2 <= opand2;
 
                             end if;
 
-                            state <= op1_state;
+                            op_state <= op1_state;
 
                         when others =>
 
                             -- address = polynomial
                             addr_cu <= opand1;
 
-                            -- state initializes to op1_state
-                            state <= op1_state;
+                            -- op_state initializes to op1_state
+                            op_state <= op1_state;
 
                     end case;
 
@@ -305,7 +401,7 @@ begin
                     -- mem1, addr = polynomial, data = element
                     mem_t <= '0';
 
-                    case state is
+                    case op_state is
 
                         when op1_state =>
 
@@ -317,7 +413,7 @@ begin
                                 -- i is converted to element
                                 i <= dout_cu;
 
-                                -- check dout_cu for out-of-bound exceptions
+                                -- check dout_cu for set membership exceptions
                                 opand_b <= dout_cu;
                                 opand_z1 <= dout_cu;
 
@@ -327,7 +423,7 @@ begin
                                 -- i is the user input
                                 i <= opand1;
 
-                                -- check operand 1 for out-of-bound exceptions
+                                -- check operand 1 for set membership exceptions
                                 opand_b <= opand1;
                                 opand_z1 <= opand1;
 
@@ -336,15 +432,15 @@ begin
                             -- address = don't care
                             addr_cu <= DCAREVEC;
 
-                            state <= op1_state;
+                            op_state <= op1_state;
 
                         when others =>
 
                             -- address = polynomial
                             addr_cu <= opand1;
 
-                            -- state initializes to op1_state
-                            state <= op1_state;
+                            -- op_state initializes to op1_state
+                            op_state <= op1_state;
 
                     end case;
 

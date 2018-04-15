@@ -49,7 +49,7 @@ architecture behavior of control_unit_tb is
             dout_cu     : in std_logic_vector(n downto 0);
 
             -- exceptions and flags
-            err_b       : out std_logic;  -- out of bound exception
+            err_b       : out std_logic;  -- set membership exception
             opand1_null : out std_logic;  -- operand 1 zero flag
             opand2_null : out std_logic  -- operand 2 zero flag
         );
@@ -71,7 +71,7 @@ architecture behavior of control_unit_tb is
     signal opand2_null : std_logic;
 
     -- memory signals
-    signal mem_rdy : std_logic;  -- read signal to memory
+    signal mem_rdy : std_logic := '1';  -- read signal to memory
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal id_cu : std_logic;  -- read signal to memory
     signal addr_cu : std_logic_vector(n downto 0);  -- address in memory
@@ -111,7 +111,16 @@ begin
             clk <= not clk;
             dout_cu <= std_logic_vector(unsigned(dout_cu) + 1);
             wait for (CLK_PER / 2);
-            -- clock period = 50 MHz
+        end loop;
+
+    end process;
+
+    mem_proc: process
+    begin
+
+        for i in 1 to TNUMS loop
+            mem_rdy <= not mem_rdy;
+            wait for (CLK_PER / 2);
         end loop;
 
     end process;
@@ -124,8 +133,11 @@ begin
         opand1 <= "000000101";
         opand2 <= "111111111";  -- zero in element
 
-        opcode <= "00111";  -- add/sub, operands in element
-        wait for (CLK_PER * 3);
+        opcode <= "11100";  -- add/sub, operands in element
+        wait for (CLK_PER * 2);
+
+        opcode <= "00100";  -- add/sub, operands in element
+        wait for (CLK_PER * 10);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

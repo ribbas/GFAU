@@ -1,4 +1,4 @@
--- gen_sym_tb.vhd
+-- gen_elem_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -9,23 +9,23 @@ library ieee;
 library work;
     use work.demo.all;
 
-entity gen_sym_tb is
-end gen_sym_tb;
+entity gen_elem_tb is
+end gen_elem_tb;
 
-architecture behavioral of gen_sym_tb is
+architecture behavioral of gen_elem_tb is
 
     constant n : positive := DEGREE;
     constant clgn1 : positive := CEILLGN1;
 
     -- component declaration for the unit under test (uut)
-    component gen_sym
+    component gen_elem
         port(
-            clk     : in std_logic;
-            rst     : in std_logic;
-            en      : in std_logic;
-            nth_sym : in std_logic_vector(n downto 0);
-            msb     : in std_logic_vector(clgn1 downto 0);  -- msb of element
-            sym     : out std_logic_vector(n downto 0)
+            clk         : in std_logic;
+            rst         : in std_logic;
+            en          : in std_logic;
+            nth_elem    : in std_logic_vector(n downto 0);
+            msb         : in std_logic_vector(clgn1 downto 0);  -- msb of element
+            elem        : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -33,10 +33,10 @@ architecture behavioral of gen_sym_tb is
     signal rst : std_logic := '1';
     signal en : std_logic := '1';
     signal msb : std_logic_vector(clgn1 downto 0);
-    signal nth_sym : std_logic_vector(n downto 0);
+    signal nth_elem : std_logic_vector(n downto 0);
 
     -- outputs
-    signal sym : std_logic_vector(n downto 0);
+    signal elem : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -45,13 +45,13 @@ architecture behavioral of gen_sym_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: gen_sym port map(
+    uut: gen_elem port map(
         clk => clk,
         rst => rst,
         en => en,
-        nth_sym => nth_sym,
+        nth_elem => nth_elem,
         msb => msb,
-        sym => sym
+        elem => elem
     );
 
     -- clock process
@@ -71,7 +71,7 @@ begin
     begin
 
         msb <= "010";
-        nth_sym <= "000000101";
+        nth_elem <= "000000101";
 
         -- hold reset state for 40 ns.
         wait for 20 ns;

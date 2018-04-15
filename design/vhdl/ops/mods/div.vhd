@@ -3,7 +3,7 @@
 -- Sabbir Ahmed
 -- 2018-01-16
 --
--- Computes the Galois division of two symbols.
+-- Computes the Galois division of two elements.
 --
 
 library ieee;

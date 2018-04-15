@@ -39,7 +39,7 @@ architecture test of generator_tb is
             -- memory signals
             gen_rdy     : out std_logic;
             addr_gen    : out std_logic_vector(n downto 0);
-            sym         : out std_logic_vector(n downto 0)
+            elem         : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -54,7 +54,7 @@ architecture test of generator_tb is
     signal gen_rdy : std_logic;
     signal id_gen : std_logic;
     signal addr_gen : std_logic_vector(n downto 0);
-    signal sym : std_logic_vector(n downto 0);
+    signal elem : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -77,7 +77,7 @@ begin
         mem_rdy => mem_rdy,
         gen_rdy => gen_rdy,
         addr_gen => addr_gen,
-        sym => sym
+        elem => elem
     );
 
     -- clock process

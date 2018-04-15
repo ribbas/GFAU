@@ -3,7 +3,7 @@
 -- Sabbir Ahmed
 -- 2018-01-16
 --
--- Computes the Galois multiplication of two symbols.
+-- Computes the Galois multiplication of two elements.
 --
 
 library ieee;

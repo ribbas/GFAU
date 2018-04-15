@@ -1,4 +1,4 @@
--- auto_sym_tb.vhd
+-- auto_elem_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -9,25 +9,25 @@ library ieee;
 library work;
     use work.demo.all;
 
-entity auto_sym_tb is
-end auto_sym_tb;
+entity auto_elem_tb is
+end auto_elem_tb;
 
-architecture behavioral of auto_sym_tb is
+architecture behavioral of auto_elem_tb is
 
     constant n : positive := DEGREE;
 
     -- component declaration for the unit under test (uut)
-    component auto_sym
+    component auto_elem
         port(
             clk     : in std_logic;
             rst     : in std_logic;
             en      : in std_logic;
-            sym     : out std_logic_vector(n downto 0)
+            elem    : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- outputs
-    signal sym : std_logic_vector(n downto 0);
+    signal elem : std_logic_vector(n downto 0);
 
     -- testbench clocks
     constant nums   : integer := 640;
@@ -38,11 +38,11 @@ architecture behavioral of auto_sym_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: auto_sym port map(
+    uut: auto_elem port map(
         clk => clk,
         rst => rst,
         en => en,
-        sym => sym
+        elem => elem
     );
 
     -- clock process
