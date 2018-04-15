@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/sabbirahm3d/GFAU/master/logo.png?token=ALF2FXIfgqIeSTuw5pAZwU5CuHoPBO98ks5Z7O_nwA%3D%3D" width="70%">
+  <img src="https://raw.githubusercontent.com/sabbirahm3d/sabbirahm3d.github.io/master/assets/img/gfau.png" width="70%">
 </div>
 
 ## Galois Field Arithmetic Unit

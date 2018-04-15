@@ -68,7 +68,7 @@ architecture fsm of generator is
 
     signal rst_gen : std_logic := '1';
     signal en_gen : std_logic := '1';
-	 signal nextgen : std_logic := '0';
+    signal next_gen : std_logic := '0';
     signal temp_gen : std_logic_vector(n downto 0);
     signal nth_sym : std_logic_vector(n downto 0);
 
@@ -123,7 +123,8 @@ begin
                             gen_rdy <= '0';
 
                             if (rst_gen = '1' and
-                                temp_auto(to_integer(unsigned(msb))) = '1') then
+                                temp_auto(to_integer(unsigned(msb))) = '1'
+                                ) then
 
                                 rst_gen <= '0';
                                 en_gen <= '1';
@@ -131,7 +132,8 @@ begin
                             end if;
 
                             if (rst_gen = '1' and
-                                temp_auto(to_integer(unsigned(size))) = '0') then
+                                temp_auto(to_integer(unsigned(size))) = '0'
+                                ) then
 
                                 sym <= temp_auto and mask;
                                 state <= auto_sym_state;
@@ -158,22 +160,24 @@ begin
                         if (mem_rdy = '1') then  -- if memory is ready
 
                             counter <= std_logic_vector(unsigned(counter) + 1);
-                            addr_gen <= counter;
 
+                            -- when the generator is done
                             if (((temp_gen and mask) xnor ONEVEC) = HIVEC) then
 
                                 sym <= HIVEC;
-										  addr_gen <= ZEROVEC;
-										  nextgen <= '1';
+                                addr_gen <= ZEROVEC;
+                                next_gen <= '1';
 
-                            elsif (nextgen = '1') then
-									 
-									     sym <= mask and HIVEC;
-										  nextgen <= '0';
-										  gen_rdy <= '1';
+                            elsif (next_gen = '1') then
+
+                                sym <= DCAREVEC;
+                                addr_gen <= counter;
+                                next_gen <= '0';
+                                gen_rdy <= '1';
 
                             else
 
+                                addr_gen <= counter;
                                 sym <= temp_gen and mask;
                                 gen_rdy <= '0';
 
