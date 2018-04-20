@@ -51,6 +51,7 @@ package demo is
 
     -- memory states
     type rd_state_type is (send_addr, get_data);
-    type wr_state_type is (wr_mem1, wr_mem2);
+    type wr_state_type is (wr_mem1, wr_mem2, wr_mem3);
+    type setup_type is (addr_setup, wr);
 
 end demo;

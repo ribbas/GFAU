@@ -48,9 +48,13 @@ entity memory is
         -- memory control signals
         nCE         : out std_logic;
         nWE         : out std_logic;
+        nOE         : out std_logic;
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);
+        DQ_in       : in std_logic_vector(n downto 0);
+        wr_rd       : out std_logic; --1 output mode, 0 for read mode of ioport
+        DQ_out      : out std_logic_vector(n downto 0);
         DQ          : inout std_logic_vector(n downto 0)
     );
 end memory;
@@ -58,10 +62,23 @@ end memory;
 architecture behavioral of memory is
 
     -- define the states for reading data
-    signal rd_state : rd_state_type;
+    signal rd_state     : rd_state_type;
 
     -- define the states for writing data
-    signal wr_state : wr_state_type;
+    signal wr_state     : wr_state_type;
+    
+    --used for setting up address before writing
+    signal setup        : setup_type := addr_init;
+    
+    signal ioport_oe    : std_logic;
+
+    component io_port port(
+        output  => DQ_out,
+        oe      => wr_rd,
+        input   => DQ_in,
+        pad     => DQ
+    );
+    end component;
 
 begin
 
@@ -76,31 +93,72 @@ begin
                 case rd_state is
 
                     when send_addr =>
+                        
+                        case setup is
+                            
+                            when addr_setup => 
+                                
+                                -- memory read control signals
+                                nCE <= '0';
+                                nWE <= '1'; --don't write yet
+                                nOE <= '1';
+                                
 
-                        -- memory read control signals
-                        nCE <= '0';
-                        nWE <= '1';
+                                -- send control unit's address to memory
+                                A <= mem_t_cu & addr_cu;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1'; --sets the io port to output mode
+                                mem_rdy <= '0'; 
 
-                        -- send control unit's address to memory
-                        A <= mem_t_cu & addr_cu;
-
-                        mem_rdy <= '0';
-
-                        rd_state <= get_data;
+                                setup <= wr;
+                            
+                            when wr =>
+                            
+                                nCE <= '0';
+                                nWE <= '0';
+                                nOE <= '1';
+                                
+                                --hold address, data, and bus control signals
+                                A <= mem_t_cu & addr_cu;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1';
+                                mem_rdy '1'; --data now written
+                                setup <= addr_setup;
+                                rd_state <= get_data;
 
                     when get_data =>
 
-                        -- memory read control signals
-                        nCE <= '0';
-                        nWE <= '1';
+                        case setup is
 
-                        -- send dout to control unit
-                        dout_cu <= DQ;
-                        dout_con <= DCAREVEC;
+                            when addr_setup => 
+                                
+                                -- memory read control signals
+                                nCE <= '0';
+                                nWE <= '1'; --don't write yet
+                                nOE <= '1';
+                                
 
-                        mem_rdy <= '1';
+                                -- send control unit's address to memory
+                                A <= mem_t_cu & addr_cu;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1'; --sets the io port to output mode
+                                mem_rdy <= '0'; 
 
-                        rd_state <= send_addr;
+                                setup <= wr;
+                            
+                            when wr =>
+                            
+                                nCE <= '0';
+                                nWE <= '0';
+                                nOE <= '1';
+                                
+                                --hold address, data, and bus control signals
+                                A <= mem_t_cu & addr_cu;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1';
+                                mem_rdy '1'; --data now written
+                                setup <= addr_setup;
+                                rd_state <= get_data;
 
                     when others =>
 
@@ -175,17 +233,18 @@ begin
 
                 case wr_state is
 
-                    when wr_mem1 =>
+                    when wr_mem1 => --get address and data ready
 
                         -- memory write control signals
                         nCE <= '0';
-                        nWE <= '0';
+                        nWE <= '1';
 
                        -- element memory (mem1)
                        -- addr = polynomial, data = element
                        -- mem_t = 0
                         A <= '0' & addr_gen;
-                        DQ <= din_gen;
+                        wr_rd <= '1';
+                        DQ_out <= din_gen;
 
                         mem_rdy <= '0';
 
@@ -214,7 +273,6 @@ begin
                         nWE <= '-';
 
                         A <= '-' & DCAREVEC;
-                        DQ <= HIIMPVEC;
 
                         mem_rdy <= '0';
 
