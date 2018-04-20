@@ -60,7 +60,7 @@ architecture test of generator_tb is
     constant nums : integer := 640;
     signal clk : std_logic := '1';
     signal rst : std_logic := '1';
-    signal en : std_logic := '1';
+    signal en : std_logic := '0';
 
 begin
 
@@ -112,8 +112,13 @@ begin
         size <= "0011";
         poly_bcd <= "00000110";
 
-        -- hold reset state for 40 ns.
-        wait for (CLK_PER * 2);
+        -- hold reset state for 10 ns.
+        wait for (CLK_PER * 1);
+
+        en <= '1';
+
+        -- hold reset state for 10 ns.
+        wait for (CLK_PER * 1);
 
         rst <= '0';
 

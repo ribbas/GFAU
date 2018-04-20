@@ -56,13 +56,13 @@ architecture behavioral of operators_tb is
     end component;
 
     -- inputs
-    signal opcode : std_logic_vector(5 downto 0) := (others => '0');
-    signal i : std_logic_vector(n downto 0) := (others => '0');
-    signal j : std_logic_vector(n downto 0) := (others => '0');
+    signal opcode : std_logic_vector(5 downto 0);
+    signal i : std_logic_vector(n downto 0);
+    signal j : std_logic_vector(n downto 0);
     signal i_null : std_logic;
     signal j_null : std_logic;
-    signal size : std_logic_vector(clgn downto 0) := (others => '0');
-    signal mask : std_logic_vector(n downto 0) := (others => '0');
+    signal size : std_logic_vector(clgn downto 0);
+    signal mask : std_logic_vector(n downto 0);
 
     -- outputs
     signal addr_con : std_logic_vector(n downto 0);
@@ -104,7 +104,6 @@ begin
         for i in 1 to TNUMS loop
             clk <= not clk;
             wait for (CLK_PER / 2);
-            -- clock period = 50 MHz
         end loop;
 
     end process;
@@ -113,46 +112,44 @@ begin
     stim_proc: process
     begin
 
-        i <= "000001001";
-        j <= "000000000";
+        i <= "000000101";
+        j <= "000000011";
         i_null <= '0';
-        j_null <= '1';
-        size <= "0100";
-        mask <= "000001111";
-        dout_con <= "111110011";
+        j_null <= '0';
+        size <= "0011";
+        mask <= "000000111";
+        dout_con <= "000000010";
 
-        -- hold reset state for 40 ns.
-        wait for (CLK_PER * 1);
+        -- generator
+        opcode <= "000000";
 
-        -- add/sub
+        -- hold reset state for 10 ns
+        wait for (CLK_PER * 3);
+
+        -- add/sub, poly, elem
         opcode <= "001011";
 
-        -- hold reset state for 40 ns.
-        wait for (CLK_PER * 1);
+        -- hold reset state for 10 ns
+        wait for (CLK_PER * 3);
 
-        -- mul
-        opcode <= "010010";
+        -- mul, poly, elem
+        opcode <= "010000";
 
-        -- hold reset state for 40 ns.
-        wait for (CLK_PER * 1);
+        -- hold reset state for 10 ns
+        wait for (CLK_PER * 3);
 
-        -- div
-        opcode <= "011010";
+        -- div, poly, elem
+        opcode <= "011000";
 
-        -- hold reset state for 40 ns.
-        wait for (CLK_PER * 1);
+        -- hold reset state for 10 ns
+        wait for (CLK_PER * 3);
+
         mem_rdy <= '1';
 
-        -- log
+        -- log, elem, poly
         opcode <= "100010";
 
-        -- hold reset state for 40 ns.
-        wait for (CLK_PER * 1);
-
-        -- convert
-        opcode <= "000111";
-
-        wait for (CLK_PER * 1);
+        wait for (CLK_PER * 3);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

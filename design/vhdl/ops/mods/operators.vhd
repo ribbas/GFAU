@@ -125,7 +125,7 @@ architecture behavioral of operators is
             id_con      : out std_logic;
             mem_rdy     : in std_logic;
             addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : in std_logic_vector(n downto 0);
+            dout_con    : inout std_logic_vector(n downto 0);
             result      : out std_logic_vector(n downto 0)
         );
     end component;
