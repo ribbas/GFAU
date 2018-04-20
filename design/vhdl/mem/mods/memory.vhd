@@ -1,6 +1,6 @@
 -- memory.vhd
 --
--- Sabbir Ahmed
+-- Sabbir Ahmed, Brian Weber
 -- 2018-03-30
 --
 -- Wrapper for the CY7C1020DV33 memory chips.
@@ -94,71 +94,36 @@ begin
 
                     when send_addr =>
                         
-                        case setup is
-                            
-                            when addr_setup => 
-                                
-                                -- memory read control signals
-                                nCE <= '0';
-                                nWE <= '1'; --don't write yet
-                                nOE <= '1';
-                                
+                        -- memory read control signals
+                        nCE <= '0';
+			nOE <= '0';
+                        nWE <= '1';
 
-                                -- send control unit's address to memory
-                                A <= mem_t_cu & addr_cu;
-                                DQ_out <= din_gen;
-                                wr_rd <= '1'; --sets the io port to output mode
-                                mem_rdy <= '0'; 
+			wr_rd <= '0'; --set iobus mode to read
 
-                                setup <= wr;
-                            
-                            when wr =>
-                            
-                                nCE <= '0';
-                                nWE <= '0';
-                                nOE <= '1';
-                                
-                                --hold address, data, and bus control signals
-                                A <= mem_t_cu & addr_cu;
-                                DQ_out <= din_gen;
-                                wr_rd <= '1';
-                                mem_rdy '1'; --data now written
-                                setup <= addr_setup;
-                                rd_state <= get_data;
+                        -- send output converter's address to memory
+                        A <= mem_t_cu & addr_cu;
+
+                        mem_rdy <= '0';
+
+                        rd_state <= get_data;
 
                     when get_data =>
 
-                        case setup is
+                        -- memory read control signals
+                        nCE <= '0';
+			nOE <= '0';
+                        nWE <= '1';
 
-                            when addr_setup => 
-                                
-                                -- memory read control signals
-                                nCE <= '0';
-                                nWE <= '1'; --don't write yet
-                                nOE <= '1';
-                                
+			wr_rd <= '0'; --set iobus mode to read
 
-                                -- send control unit's address to memory
-                                A <= mem_t_cu & addr_cu;
-                                DQ_out <= din_gen;
-                                wr_rd <= '1'; --sets the io port to output mode
-                                mem_rdy <= '0'; 
+                        -- send dout to output converter
+                        dout_cu <= DQ_in; --read from iobus in
+                        dout_con <= DCAREVEC;
 
-                                setup <= wr;
-                            
-                            when wr =>
-                            
-                                nCE <= '0';
-                                nWE <= '0';
-                                nOE <= '1';
-                                
-                                --hold address, data, and bus control signals
-                                A <= mem_t_cu & addr_cu;
-                                DQ_out <= din_gen;
-                                wr_rd <= '1';
-                                mem_rdy '1'; --data now written
-                                setup <= addr_setup;
-                                rd_state <= get_data;
+                        mem_rdy <= '1';
+
+                        rd_state <= send_addr;
 
                     when others =>
 
@@ -185,7 +150,10 @@ begin
 
                         -- memory read control signals
                         nCE <= '0';
+			nOE <= '0';
                         nWE <= '1';
+
+			wr_rd <= '0'; --set iobus mode to read
 
                         -- send output converter's address to memory
                         A <= mem_t_con & addr_con;
@@ -198,10 +166,13 @@ begin
 
                         -- memory read control signals
                         nCE <= '0';
+			nOE <= '0';
                         nWE <= '1';
 
+			wr_rd <= '0'; --set iobus mode to read
+
                         -- send dout to output converter
-                        dout_con <= DQ;
+                        dout_con <= DQ_in; --read from iobus in
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '1';
@@ -235,36 +206,71 @@ begin
 
                     when wr_mem1 => --get address and data ready
 
-                        -- memory write control signals
-                        nCE <= '0';
-                        nWE <= '1';
+                        case setup is
+                            
+                            when addr_setup => 
+                                
+                                -- memory read control signals
+                                nCE <= '0';
+                                nWE <= '1'; --don't write yet
+                                nOE <= '1';
+                                
 
-                       -- element memory (mem1)
-                       -- addr = polynomial, data = element
-                       -- mem_t = 0
-                        A <= '0' & addr_gen;
-                        wr_rd <= '1';
-                        DQ_out <= din_gen;
+                                -- send control unit's address to memory
+                                A <= '0' & addr_gen;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1'; --sets the io port to output mode
+                                mem_rdy <= '0'; 
 
-                        mem_rdy <= '0';
-
-                        wr_state <= wr_mem2;
+                                setup <= wr;
+                            
+                            when wr =>
+                            
+                                nCE <= '0';
+                                nWE <= '0';
+                                nOE <= '1';
+                                
+                                --hold address, data, and bus control signals
+                                A <= mem_t_cu & addr_cu;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1';
+                                mem_rdy '1'; --data now written
+                                setup <= addr_setup;
+                                wr_state <= wr_mem2; 
 
                     when wr_mem2 =>
 
-                        -- memory write control signals
-                        nCE <= '0';
-                        nWE <= '0';
+                        case setup is
+                            
+                            when addr_setup => 
+                                
+                                -- memory read control signals
+                                nCE <= '0';
+                                nWE <= '1'; --don't write yet
+                                nOE <= '1';
+                                
 
-                        -- polynomial memory (mem2)
-                        -- addr = element, data = polynomial
-                       -- mem_t = 1
-                        A <= '1' & din_gen;
-                        DQ <= addr_gen;
+                                -- send control unit's address to memory
+                                A <= '1' & addr_gen;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1'; --sets the io port to output mode
+                                mem_rdy <= '0'; 
 
-                        mem_rdy <= '1';
-
-                        wr_state <= wr_mem1;
+                                setup <= wr;
+                            
+                            when wr =>
+                            
+                                nCE <= '0';
+                                nWE <= '0';
+                                nOE <= '1';
+                                
+                                --hold address, data, and bus control signals
+                                A <= mem_t_cu & addr_cu;
+                                DQ_out <= din_gen;
+                                wr_rd <= '1';
+                                mem_rdy '1'; --data now written
+                                setup <= addr_setup;
+                                wr_state <= wr_mem1;
 
                     when others =>
 
