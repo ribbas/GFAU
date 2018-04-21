@@ -75,7 +75,7 @@ architecture behavior of control_unit_tb is
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal id_cu : std_logic;  -- read signal to memory
     signal addr_cu : std_logic_vector(n downto 0);  -- address in memory
-    signal dout_cu : std_logic_vector(n downto 0) := "000000011";  -- data from memory
+    signal dout_cu : std_logic_vector(n downto 0) := "000000000";  -- data from memory
 
     -- clocks
     signal clk : std_ulogic := '1';
@@ -109,8 +109,18 @@ begin
 
         for i in 1 to TNUMS loop
             clk <= not clk;
-            dout_cu <= std_logic_vector(unsigned(dout_cu) + 1);
             wait for (CLK_PER / 2);
+        end loop;
+
+    end process;
+
+    -- data process
+    data_proc: process
+    begin
+
+        for i in 1 to TNUMS loop
+            dout_cu <= std_logic_vector(unsigned(dout_cu) + 1);
+            wait for (CLK_PER);
         end loop;
 
     end process;
@@ -131,13 +141,13 @@ begin
 
         mask <= "000000111";
         opand1 <= "000000101";
-        opand2 <= "111111111";  -- zero in element
-
-        opcode <= "11100";  -- add/sub, operands in element
-        wait for (CLK_PER * 2);
+        opand2 <= "000000011";  -- zero in element
 
         opcode <= "00100";  -- add/sub, operands in element
-        wait for (CLK_PER * 10);
+        wait for (CLK_PER * 4);
+
+        opcode <= "00111";  -- add/sub, operands in element
+        wait for (CLK_PER * 4);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
