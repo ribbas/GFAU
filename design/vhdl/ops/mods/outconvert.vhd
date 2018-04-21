@@ -75,7 +75,7 @@ begin
                         if (mem_rdy = '1') then
 
                             result <= dout_con and mask;
-                            state <= send_addr;
+                            --state <= send_addr;
 
                         else
 
@@ -91,7 +91,6 @@ begin
 
                         addr_con <= HIIMPVEC;
                         result <= HIIMPVEC;
-
                         state <= send_addr;
 
                 end case;

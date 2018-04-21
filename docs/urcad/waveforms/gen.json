@@ -1,0 +1,186 @@
+{
+  "head": {
+    "tick": 0
+  },
+  "signal": [{
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "clk"],
+      "wave": "p..........."
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "mem_rdy"],
+      "wave": "p..........."
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "id_gen"],
+      "wave": "01.........."
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "rst"],
+      "wave": "1.0........."
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "en"],
+      "wave": "01.........."
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "poly_bcd[7:0]"],
+      "wave": "u3..........",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "b'00000110"]
+      ]
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "mask[8:0]"],
+      "wave": "u3..........",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "b'000000111"]
+      ]
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "size[3:0]"],
+      "wave": "u3..........",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "3"]
+      ]
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "msb[2:0]"],
+      "wave": "u3..........",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "2"]
+      ]
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "gen_rdy"],
+      "wave": "0.........10"
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "addr_gen[8:0]"],
+      "wave": "x2.342342342",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "0"],
+        ["tspan", {
+          "class": "h4"
+        }, "1"],
+        ["tspan", {
+          "class": "h4"
+        }, "2"],
+        ["tspan", {
+          "class": "h4"
+        }, "3"],
+        ["tspan", {
+          "class": "h4"
+        }, "4"],
+        ["tspan", {
+          "class": "h4"
+        }, "5"],
+        ["tspan", {
+          "class": "h4"
+        }, "6"],
+        ["tspan", {
+          "class": "h4"
+        }, "0"],
+        ["tspan", {
+          "class": "h4"
+        }, "8"],
+        ["tspan", {
+          "class": "h4"
+        }, "9"]
+      ]
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "elem[8:0]"],
+      "wave": "x234234234x3",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "0"],
+        ["tspan", {
+          "class": "h4"
+        }, "1"],
+        ["tspan", {
+          "class": "h4"
+        }, "2"],
+        ["tspan", {
+          "class": "h4"
+        }, "4"],
+        ["tspan", {
+          "class": "h4"
+        }, "5"],
+        ["tspan", {
+          "class": "h4"
+        }, "7"],
+        ["tspan", {
+          "class": "h4"
+        }, "3"],
+        ["tspan", {
+          "class": "h4"
+        }, "6"],
+        ["tspan", {
+          "class": "h4"
+        }, "511"],
+        ["tspan", {
+          "class": "h4"
+        }, "4"]
+      ]
+    }
+  ]
+}

@@ -69,7 +69,7 @@ architecture behavioral of operators_tb is
     signal dout_con : std_logic_vector(n downto 0);
     signal id_con : std_logic;
     signal mem_t : std_logic;
-    signal mem_rdy : std_logic;
+    signal mem_rdy : std_logic := '1';
     signal err_z : std_logic;
     signal result : std_logic_vector(n downto 0);
 
@@ -118,38 +118,44 @@ begin
         j_null <= '0';
         size <= "0011";
         mask <= "000000111";
-        dout_con <= "000000010";
 
         -- generator
-        opcode <= "000000";
+        opcode <= "000XX0";
 
         -- hold reset state for 10 ns
-        wait for (CLK_PER * 3);
+        wait for (CLK_PER * 1);
 
-        -- add/sub, poly, elem
-        opcode <= "001011";
-
-        -- hold reset state for 10 ns
-        wait for (CLK_PER * 3);
-
-        -- mul, poly, elem
-        opcode <= "010000";
+        -- add/sub, poly
+        opcode <= "001XX1";
 
         -- hold reset state for 10 ns
-        wait for (CLK_PER * 3);
+        wait for (CLK_PER * 1);
 
-        -- div, poly, elem
-        opcode <= "011000";
+        -- mul, elem
+        opcode <= "010XX0";
 
         -- hold reset state for 10 ns
-        wait for (CLK_PER * 3);
+        wait for (CLK_PER * 1);
 
+        dout_con <= "000000100";
         mem_rdy <= '1';
+        -- div, elem
+        opcode <= "011XX1";
 
-        -- log, elem, poly
-        opcode <= "100010";
-
+        -- hold reset state for 10 ns
         wait for (CLK_PER * 3);
+
+        -- log, elem
+        i_null <= '1';
+        opcode <= "100XX0";
+
+        wait for (CLK_PER * 1);
+
+        -- log, elem
+        i_null <= '0';
+        opcode <= "100XX0";
+
+        wait for (CLK_PER * 1);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
