@@ -41,7 +41,7 @@ entity io_port is
         input   :   out     std_logic_vector(n downto 0);  --in from pad
         pad     :   inout   std_logic_vector(n downto 0)   --external io pad
     );
-end io_port16;
+end io_port;
 
 architecture Behavioral of io_port is
 

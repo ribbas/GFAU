@@ -66,21 +66,28 @@ architecture behavioral of memory is
 
     -- define the states for writing data
     signal wr_state     : wr_state_type;
-    
+
     --used for setting up address before writing
-    signal setup        : setup_type := addr_init;
-    
+    signal setup        : setup_type := addr_setup;
     signal ioport_oe    : std_logic;
 
-    component io_port port(
+    component io_port
+        port(
+            output  : in std_logic_vector(n downto 0);  --out to pad
+            oe      : in std_logic;                         --enable pad output
+            input   : out std_logic_vector(n downto 0);  --in from pad
+            pad     : inout std_logic_vector(n downto 0)   --external io pad
+        );
+    end component;
+
+begin
+
+    io_port_unit : io_port port map(
         output  => DQ_out,
         oe      => wr_rd,
         input   => DQ_in,
         pad     => DQ
     );
-    end component;
-
-begin
 
     process (clk, id_cu, id_gen, id_con,
         addr_cu, addr_gen, addr_con, din_gen) begin
@@ -93,13 +100,13 @@ begin
                 case rd_state is
 
                     when send_addr =>
-                        
+
                         -- memory read control signals
                         nCE <= '0';
-			nOE <= '0';
+                        nOE <= '0';
                         nWE <= '1';
 
-			wr_rd <= '0'; --set iobus mode to read
+                        wr_rd <= '0'; --set iobus mode to read
 
                         -- send output converter's address to memory
                         A <= mem_t_cu & addr_cu;
@@ -112,10 +119,10 @@ begin
 
                         -- memory read control signals
                         nCE <= '0';
-			nOE <= '0';
+                        nOE <= '0';
                         nWE <= '1';
 
-			wr_rd <= '0'; --set iobus mode to read
+                        wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
                         dout_cu <= DQ_in; --read from iobus in
@@ -150,10 +157,10 @@ begin
 
                         -- memory read control signals
                         nCE <= '0';
-			nOE <= '0';
+                        nOE <= '0';
                         nWE <= '1';
 
-			wr_rd <= '0'; --set iobus mode to read
+                        wr_rd <= '0'; --set iobus mode to read
 
                         -- send output converter's address to memory
                         A <= mem_t_con & addr_con;
@@ -166,10 +173,10 @@ begin
 
                         -- memory read control signals
                         nCE <= '0';
-			nOE <= '0';
+                        nOE <= '0';
                         nWE <= '1';
 
-			wr_rd <= '0'; --set iobus mode to read
+                        wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
                         dout_con <= DQ_in; --read from iobus in
@@ -207,70 +214,80 @@ begin
                     when wr_mem1 => --get address and data ready
 
                         case setup is
-                            
-                            when addr_setup => 
-                                
+
+                            when addr_setup =>
+
                                 -- memory read control signals
                                 nCE <= '0';
                                 nWE <= '1'; --don't write yet
                                 nOE <= '1';
-                                
 
                                 -- send control unit's address to memory
                                 A <= '0' & addr_gen;
                                 DQ_out <= din_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
-                                mem_rdy <= '0'; 
+                                mem_rdy <= '0';
 
                                 setup <= wr;
-                            
+
                             when wr =>
-                            
+
                                 nCE <= '0';
                                 nWE <= '0';
                                 nOE <= '1';
-                                
+
                                 --hold address, data, and bus control signals
                                 A <= mem_t_cu & addr_cu;
                                 DQ_out <= din_gen;
                                 wr_rd <= '1';
-                                mem_rdy '1'; --data now written
+                                mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
-                                wr_state <= wr_mem2; 
+                                wr_state <= wr_mem2;
+
+                            when others =>
+
+                                -- BRIAN: PUT SOMETHING
+
+                        end case;
 
                     when wr_mem2 =>
 
                         case setup is
-                            
-                            when addr_setup => 
-                                
+
+                            when addr_setup =>
+
                                 -- memory read control signals
                                 nCE <= '0';
                                 nWE <= '1'; --don't write yet
                                 nOE <= '1';
-                                
 
                                 -- send control unit's address to memory
                                 A <= '1' & addr_gen;
                                 DQ_out <= din_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
-                                mem_rdy <= '0'; 
+                                mem_rdy <= '0';
 
                                 setup <= wr;
-                            
+
                             when wr =>
-                            
+
                                 nCE <= '0';
                                 nWE <= '0';
                                 nOE <= '1';
-                                
+
                                 --hold address, data, and bus control signals
                                 A <= mem_t_cu & addr_cu;
                                 DQ_out <= din_gen;
                                 wr_rd <= '1';
-                                mem_rdy '1'; --data now written
+                                mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
                                 wr_state <= wr_mem1;
+
+                            when others =>
+
+                                -- BRIAN: PUT SOMETHING
+
+                        end case;
 
                     when others =>
 
