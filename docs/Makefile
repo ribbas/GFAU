@@ -4,9 +4,16 @@ all: convert
 
 .PHONY: convert convert1 convert2
 convert: convert1 convert2
+bib-convert: convert bib
 convert1 convert2:
 	# convert LaTex file to PDF
 	pdflatex -output-directory=$(dir ${DOC}) ${DOC}
+
+
+.PHONY: bib
+bib:
+	@bibtex ${DOC:.tex=.aux}
+
 
 .PHONY: clean
 clean:
