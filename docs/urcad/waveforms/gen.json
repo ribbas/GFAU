@@ -8,7 +8,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "clk"],
-      "wave": "p..........."
+      "wave": "n..........."
     },
     {
       "name": ["tspan", {
@@ -16,7 +16,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "mem_rdy"],
-      "wave": "p..........."
+      "wave": "n..........."
     },
     {
       "name": ["tspan", {

@@ -120,7 +120,7 @@ begin
 
         for i in 1 to TNUMS loop
             dout_cu <= std_logic_vector(unsigned(dout_cu) + 1);
-            wait for (CLK_PER);
+            wait for (CLK_PER * 2);
         end loop;
 
     end process;
@@ -141,13 +141,18 @@ begin
 
         mask <= "000000111";
         opand1 <= "000000101";
-        opand2 <= "000000011";  -- zero in element
+        opand2 <= "000000011";
 
         opcode <= "00100";  -- add/sub, operands in element
         wait for (CLK_PER * 4);
 
-        opcode <= "00111";  -- add/sub, operands in element
+        opand1 <= "000000111";  -- 2^n-1
+        opand2 <= "111111111";  -- zero in element
+        opcode <= "01100";  -- division, operands in element
         wait for (CLK_PER * 4);
+
+        opcode <= "000XX";  -- generator
+        wait for (CLK_PER * 2);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
