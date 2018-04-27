@@ -29,7 +29,6 @@ architecture test of generator_tb is
             -- polynomial data
             poly_bcd    : in std_logic_vector(n - 1 downto 0);
             mask        : in std_logic_vector(n downto 0);
-            size        : in std_logic_vector(clgn downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
 
             -- memory wrapper control signals
@@ -47,7 +46,6 @@ architecture test of generator_tb is
     signal poly_bcd : std_logic_vector(n - 1 downto 0);
     signal mask : std_logic_vector(n downto 0);
     signal msb : std_logic_vector(clgn1 downto 0);
-    signal size : std_logic_vector(clgn downto 0);
     signal mem_rdy : std_logic := '1';
 
     -- outputs
@@ -72,7 +70,6 @@ begin
         poly_bcd => poly_bcd,
         mask => mask,
         msb => msb,
-        size => size,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
         gen_rdy => gen_rdy,
@@ -109,7 +106,6 @@ begin
 
         mask <= "000000111";
         msb <= "010";
-        size <= "0011";
         poly_bcd <= "00000110";
 
         -- hold reset state for 10 ns.

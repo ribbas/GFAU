@@ -43,6 +43,9 @@ package demo is
     constant ONEVEC: std_logic_vector(DEGREE downto 0) := (0 => '1',
                                                         others => '0');
 
+    constant TWOVEC: std_logic_vector(DEGREE downto 0) := (1 => '1',
+                                                        others => '0');
+
     -------- state types --------
 
     type op_state_type is (op1_state, op2_state);
