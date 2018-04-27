@@ -143,7 +143,7 @@ begin
         opand1 <= "000000101";
         opand2 <= "000000011";
 
-        opcode <= "00100";  -- add/sub, operands in element
+        opcode <= "10000";  -- add/sub, operands in element
         wait for (CLK_PER * 4);
 
         opand1 <= "000000111";  -- 2^n-1

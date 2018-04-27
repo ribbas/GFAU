@@ -30,7 +30,7 @@ entity outconvert is
 
         -- memory address and data signals
         addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector(n downto 0);
+        dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
 
         -- final output
         result      : out std_logic_vector(n downto 0)
@@ -47,8 +47,6 @@ begin
     process (clk, convert, mask, out_sel, mem_rdy, dout_con) begin
 
         if (rising_edge(clk)) then
-
-            dout_con <= HIIMPVEC;
 
             -- if conversion requested
             if (convert = '1') then
