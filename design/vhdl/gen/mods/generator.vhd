@@ -9,13 +9,13 @@
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+    use ieee.std_logic_misc.all;
 library work;
     use work.demo.all;
 
 entity generator is
     generic(
         n           : positive := DEGREE;
-        clgn        : positive := CEILLGN;
         clgn1       : positive := CEILLGN1
     );
     port(
@@ -35,17 +35,16 @@ entity generator is
         -- memory signals
         gen_rdy     : out std_logic := '0';
         addr_gen    : out std_logic_vector(n downto 0) := DCAREVEC;
-        elem         : out std_logic_vector(n downto 0) := DCAREVEC
+        elem        : out std_logic_vector(n downto 0) := DCAREVEC
     );
 end generator;
 
 architecture fsm of generator is
 
-    signal temp_elem : std_logic_vector(n downto 0);
-    signal wr_rdy : std_logic := '0';
-    signal nth_elem : std_logic_vector(n downto 0);
-
     signal counter : std_logic_vector(n downto 0);
+    signal temp_elem : std_logic_vector(n downto 0);
+    signal nth_elem : std_logic_vector(n downto 0);
+    signal wr_rdy : std_logic := '0';
 
 begin
 
@@ -89,7 +88,8 @@ begin
                     else
 
                         -- when the generator is done
-                        if (((temp_elem and mask) xnor ONEVEC) = HIVEC) then
+                        if (and_reduce((temp_elem and mask) xnor ONEVEC) = '1')
+                        then
 
                             -- generator control signals
                             gen_rdy <= '1';

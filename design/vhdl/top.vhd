@@ -67,10 +67,10 @@ architecture behavioral of top is
 
     ---------------- universal registers and constants ----------------
 
-    -- size and most significant bit index
+    -- order and most significant bit index
     component indices
         port(
-            poly_bcd    : in  std_logic_vector(n -1 downto 0);
+            poly_bcd    : in  std_logic_vector(n - 1 downto 0);
             size        : out std_logic_vector(clgn downto 0);
             msb         : out std_logic_vector(clgn1 downto 0)
         );
@@ -79,7 +79,7 @@ architecture behavioral of top is
     -- mask
     component varmask
         port(
-            poly_bcd    : in  std_logic_vector(n -1 downto 0);
+            poly_bcd    : in  std_logic_vector(n - 1 downto 0);
             mask        : out std_logic_vector(n downto 0)
         );
     end component;
@@ -115,7 +115,7 @@ architecture behavioral of top is
         );
     end component;
 
-    ---------------- symbol generator ----------------
+    ---------------- element generator ----------------
 
     -- generator controller
     component generator
@@ -125,17 +125,18 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n -1 downto 0);
+            poly_bcd    : in std_logic_vector(n - 1 downto 0);
             mask        : in std_logic_vector(n downto 0);
-            msb           : in std_logic_vector(3 downto 0);
-            n           : in std_logic_vector(3 downto 0);
+            msb         : in std_logic_vector(clgn1 downto 0);
+
+            -- memory wrapper control signals
+            id_gen      : out std_logic;
+            mem_rdy     : in std_logic;
 
             -- memory signals
-            write_en    : out std_logic;
-            rdy         : out std_logic;
-            addr        : out std_logic_vector(n downto 0);
-            sym1        : out std_logic_vector(n downto 0);
-            sym2        : out std_logic_vector(n downto 0)
+            gen_rdy     : out std_logic;
+            addr_gen    : out std_logic_vector(n downto 0);
+            elem        : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -251,17 +252,16 @@ begin
     -- generator controller
     generator_unit: generator port map(
         clk => clk,
-        rst => rst_gen,
-        en => en_gen,
-        rdy => RDYGEN,
-        poly_bcd => POLYBCD,
+        rst => rst,
+        en => en,
+        poly_bcd => poly_bcd,
         mask => mask,
         msb => msb,
-        n => n,
-        write_en => mem_wr,
-        addr => mem_addr_in,
-        sym1 => mem_data_in,
-        sym2 => sym2
+        id_gen => id_gen,
+        mem_rdy => mem_rdy,
+        gen_rdy => gen_rdy,
+        addr_gen => addr_gen,
+        elem => elem
     );
 
 

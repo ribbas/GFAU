@@ -38,7 +38,7 @@ architecture test of generator_tb is
             -- memory signals
             gen_rdy     : out std_logic;
             addr_gen    : out std_logic_vector(n downto 0);
-            elem         : out std_logic_vector(n downto 0)
+            elem        : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -108,7 +108,6 @@ begin
         msb <= "010";
         poly_bcd <= "00000110";
 
-        -- hold reset state for 10 ns.
         wait for (CLK_PER * 1);
 
         en <= '1';
