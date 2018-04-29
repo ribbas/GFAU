@@ -25,7 +25,8 @@ architecture behavioral of operators_tb is
             clk         : in std_logic;
 
             -- opcode
-            opcode      : in std_logic_vector(5 downto 0);
+            op      : in std_logic_vector(2 downto 0);
+            out_t   : in std_logic;
 
             -- operands
             i           : in std_logic_vector(n downto 0);
@@ -51,12 +52,14 @@ architecture behavioral of operators_tb is
             dout_con    : inout std_logic_vector(n downto 0);
 
             result      : out std_logic_vector(n downto 0); -- selected output
-            err_z       : out std_logic -- zero exception
+            err_z       : out std_logic; -- zero exception
+            rdy_out     : out std_logic -- result ready interrupt
         );
     end component;
 
     -- inputs
-    signal opcode : std_logic_vector(5 downto 0);
+    signal op : std_logic_vector(2 downto 0);
+    signal out_t : std_logic;
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
     signal i_null : std_logic;
@@ -71,6 +74,7 @@ architecture behavioral of operators_tb is
     signal mem_t : std_logic;
     signal mem_rdy : std_logic := '1';
     signal err_z : std_logic;
+    signal rdy_out : std_logic;
     signal result : std_logic_vector(n downto 0);
 
     -- testbench clocks
@@ -81,7 +85,8 @@ begin
     -- instantiate the unit under test (uut)
     uut: operators port map(
         clk => clk,
-        opcode => opcode,
+        op => op,
+        out_t => out_t,
         i => i,
         j => j,
         i_null => i_null,
@@ -94,7 +99,8 @@ begin
         addr_con => addr_con,
         dout_con => dout_con,
         result => result,
-        err_z => err_z
+        err_z => err_z,
+        rdy_out => rdy_out
     );
 
     -- clock process
@@ -120,19 +126,22 @@ begin
         mask <= "000000111";
 
         -- generator
-        opcode <= "000XX0";
+        op <= "000";
+        out_t <= '0';
 
         -- hold reset state for 10 ns
         wait for (CLK_PER * 1);
 
         -- add/sub, poly
-        opcode <= "001XX1";
+        op <= "001";
+        out_t <= '1';
 
         -- hold reset state for 10 ns
         wait for (CLK_PER * 1);
 
         -- mul, elem
-        opcode <= "010XX0";
+        op <= "010";
+        out_t <= '0';
 
         -- hold reset state for 10 ns
         wait for (CLK_PER * 1);
@@ -140,20 +149,23 @@ begin
         dout_con <= "000000100";
         mem_rdy <= '1';
         -- div, elem
-        opcode <= "011XX1";
+        op <= "011";
+        out_t <= '1';
 
         -- hold reset state for 10 ns
         wait for (CLK_PER * 3);
 
         -- log, elem
         i_null <= '1';
-        opcode <= "100XX0";
+        op <= "100";
+        out_t <= '0';
 
         wait for (CLK_PER * 1);
 
         -- log, elem
         i_null <= '0';
-        opcode <= "100XX0";
+        op <= "100";
+        out_t <= '0';
 
         wait for (CLK_PER * 1);
 

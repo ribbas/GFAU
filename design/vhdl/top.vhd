@@ -36,6 +36,7 @@ entity top is
 
         -- IO interrupts
         RDYGEN  : out std_logic;
+        RDYOUT  : out std_logic;
         ERRB    : out std_logic;
         ERRZ    : out std_logic;
 
@@ -154,7 +155,8 @@ architecture behavioral of top is
             clk         : in std_logic;
 
             -- opcode
-            opcode      : in std_logic_vector(5 downto 0);
+            op          : in std_logic_vector(2 downto 0);
+            out_t       : in std_logic;
 
             -- operands
             i           : in std_logic_vector(n downto 0);
@@ -180,7 +182,8 @@ architecture behavioral of top is
             dout_con    : inout std_logic_vector(n downto 0);
 
             result      : out std_logic_vector(n downto 0); -- selected output
-            err_z       : out std_logic -- zero exception
+            err_z       : out std_logic; -- zero exception
+            rdy_out     : out std_logic -- result ready interrupt
         );
     end component;
 
@@ -276,7 +279,7 @@ begin
         opand2_null => j_null
     );
 
-    ---------------- symbol generator ----------------
+    ---------------- element generator ----------------
 
     -- generator controller
     generator_unit: generator port map(
@@ -321,7 +324,8 @@ begin
 
     operators_unit: operators port map(
         clk => CLK,
-        opcode => OPCODE,
+        op => OPCODE(5 downto 3),
+        out_t => OPCODE(0),
         i => i,
         j => j,
         i_null => i_null,
@@ -334,7 +338,8 @@ begin
         addr_con => addr_con,
         dout_con => dout_con,
         result => RESULT,
-        err_z => ERRZ
+        err_z => ERRZ,
+        rdy_out => RDYOUT
     );
 
 
@@ -342,10 +347,17 @@ begin
     t_size <= size;
     t_msb <= msb;
     t_mask <= mask;
-    t_1 <= rst_gen;
+    t_1 <= id_con;
     t_n1 <= i;
     t_n2 <= j;
     --t_addr <= mem_addr;
     --t_sym <= mem_data_in;
+
+    process (clk) begin
+    for i in 5 downto 0 loop
+        report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
+    end loop;
+    end process;
+
 
 end behavioral;

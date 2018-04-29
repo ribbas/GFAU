@@ -22,7 +22,8 @@ entity operators is
         clk         : in std_logic;
 
         -- opcode
-        opcode      : in std_logic_vector(5 downto 0);
+        op          : in std_logic_vector(2 downto 0);
+        out_t       : in std_logic;
 
         -- operands
         i           : in std_logic_vector(n downto 0);
@@ -48,7 +49,8 @@ entity operators is
         dout_con    : inout std_logic_vector(n downto 0);
 
         result      : out std_logic_vector(n downto 0); -- selected output
-        err_z       : out std_logic -- zero exception
+        err_z       : out std_logic; -- zero exception
+        rdy_out     : out std_logic -- result ready interrupt
     );
 end operators;
 
@@ -68,11 +70,11 @@ architecture behavioral of operators is
     -- addition / subtraction
     component addsub
         port(
-            i       : in std_logic_vector (n downto 0);
-            j       : in std_logic_vector (n downto 0);
+            i       : in std_logic_vector(n downto 0);
+            j       : in std_logic_vector(n downto 0);
             i_null  : in std_logic;
             j_null  : in std_logic;
-            bitxor  : out std_logic_vector (n downto 0)
+            bitxor  : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -89,10 +91,10 @@ architecture behavioral of operators is
     -- division
     component div
         port(
-            i       : in std_logic_vector (n downto 0);
-            j       : in std_logic_vector (n downto 0);
-            size    : in std_logic_vector (clgn downto 0);
-            quot    : out std_logic_vector (n downto 0)
+            i       : in std_logic_vector(n downto 0);
+            j       : in std_logic_vector(n downto 0);
+            size    : in std_logic_vector(clgn downto 0);
+            quot    : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -101,7 +103,8 @@ architecture behavioral of operators is
 
     component outselect
         port(
-            opcode  : in std_logic_vector(5 downto 0);
+            op      : in std_logic_vector(2 downto 0);
+            out_t   : in std_logic;
             out_as  : in std_logic_vector(n downto 0);
             out_m   : in std_logic_vector(n downto 0);
             out_d   : in std_logic_vector(n downto 0);
@@ -126,7 +129,8 @@ architecture behavioral of operators is
             mem_rdy     : in std_logic;
             addr_con    : out std_logic_vector(n downto 0);
             dout_con    : inout std_logic_vector(n downto 0);
-            result      : out std_logic_vector(n downto 0)
+            result      : out std_logic_vector(n downto 0);
+            rdy_out     : out std_logic -- result ready interrupt
         );
     end component;
 
@@ -180,7 +184,8 @@ begin
 
     -- output selector
     outselect_unit: outselect port map(
-        opcode => opcode,
+        op => op,
+        out_t => out_t,
         out_as => bitxor,
         out_m => prod,
         out_d => quot,
@@ -203,7 +208,15 @@ begin
         mem_rdy => mem_rdy,
         addr_con => addr_con,
         dout_con => dout_con,
-        result => result
+        result => result,
+        rdy_out => rdy_out
     );
+
+    process (clk) begin
+    for i in 2 downto 0 loop
+        report "OPCODE("&integer'image(i)&") value is" & std_logic'image(op(i));
+    end loop;
+    end process;
+
 
 end behavioral;

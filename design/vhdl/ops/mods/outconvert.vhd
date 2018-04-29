@@ -33,7 +33,8 @@ entity outconvert is
         dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
 
         -- final output
-        result      : out std_logic_vector(n downto 0)
+        result      : out std_logic_vector(n downto 0);
+        rdy_out     : out std_logic -- result ready interrupt
     );
 end outconvert;
 

@@ -44,6 +44,7 @@ architecture behavior of top_tb is
 
             -- IO interrupts
             RDYGEN  : out std_logic;
+            RDYOUT  : out std_logic;
             ERRB    : out std_logic;
             ERRZ    : out std_logic;
 
@@ -92,6 +93,7 @@ architecture behavior of top_tb is
     -- outputs
     signal RESULT  : std_logic_vector(n downto 0);
     signal RDYGEN  : std_logic;
+    signal RDYOUT  : std_logic;
     signal ERRB    : std_logic;
     signal ERRZ    : std_logic;
     signal A       : std_logic_vector((n + 1) downto 0);
@@ -124,6 +126,7 @@ begin
         OPAND2 => OPAND2,
         RESULT => RESULT,
         RDYGEN => RDYGEN,
+        RDYOUT => RDYOUT,
         ERRB => ERRB,
         ERRZ => ERRZ,
         nCE => nCE,
@@ -163,13 +166,13 @@ begin
 
         POLYBCD <= "00000110";  -- x^3+x^2+x^0
         OPAND1 <= "000000101";
-        OPAND2 <= "000000000";
+        OPAND2 <= "000000011";
 
         wait for (CLK_PER * 4);
-        OPCODE <= "011000";  -- generator
+        OPCODE <= "100000";  -- generator
 
         wait for (CLK_PER * 20);
-        OPCODE <= "111XXX";  -- noop
+        --OPCODE <= "111XXX";  -- noop
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

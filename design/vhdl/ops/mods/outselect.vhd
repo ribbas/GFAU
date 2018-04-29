@@ -16,7 +16,8 @@ entity outselect is
         n       : positive := DEGREE
     );
     port(
-        opcode  : in std_logic_vector(5 downto 0);
+        op      : in std_logic_vector(2 downto 0);
+        out_t   : in std_logic;
         out_as  : in std_logic_vector(n downto 0);
         out_m   : in std_logic_vector(n downto 0);
         out_d   : in std_logic_vector(n downto 0);
@@ -33,12 +34,14 @@ end outselect;
 architecture behavioral of outselect is
 begin
 
-    process (opcode, out_as, out_m, out_d, out_l, i_null, j_null) begin
+    process (op, out_t, out_as, out_m, out_d, out_l, i_null, j_null) begin
 
-        case opcode(5 downto 3) is  -- first 3 bits
+        case op is  -- first 3 bits
 
             -- add / sub
             when "001" =>
+
+                report "ADD";
 
                 -- add / sub output is selected
                 out_sel <= out_as;
@@ -47,11 +50,11 @@ begin
                 err_z <= '0';
 
                 -- if output is requested in element form
-                if (opcode(0) = '0') then
+                if (out_t = '0') then
 
                     -- convert to polynomial form
                     convert <= '1';
-                    mem_t <= opcode(0);
+                    mem_t <= out_t;
 
                 else
 
@@ -73,11 +76,11 @@ begin
                     out_sel <= out_m;
 
                     -- if output is requested in polynomial form
-                    if (opcode(0) = '1') then
+                    if (out_t = '1') then
 
                         -- convert to element form
                         convert <= '1';
-                        mem_t <= opcode(0);
+                        mem_t <= out_t;
 
                     else
 
@@ -107,11 +110,11 @@ begin
                     err_z <= '0';
 
                     -- if output is requested in polynomial form
-                    if (opcode(0) = '1') then
+                    if (out_t = '1') then
 
                         -- convert to element form
                         convert <= '1';
-                        mem_t <= opcode(0);
+                        mem_t <= out_t;
 
                     else
 
@@ -152,10 +155,10 @@ begin
                     err_z <= '0';
 
                     -- if output is requested in polynomial form
-                    if (opcode(0) = '1') then
+                    if (out_t = '1') then
 
                         convert <= '1';
-                        mem_t <= opcode(0);
+                        mem_t <= out_t;
 
                     else
 
@@ -177,6 +180,12 @@ begin
                 end if;
 
             when others =>
+
+                report "NONE OUT_T" & std_logic'image(out_t);
+                for i in 2 downto 0 loop
+                    report "opcode("&integer'image(i)&") value is" &
+                    std_logic'image(op(i));
+                end loop;
 
                 err_z <= '0';
                 convert <= '0';

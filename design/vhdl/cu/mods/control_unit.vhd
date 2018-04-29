@@ -109,7 +109,7 @@ begin
 
             case opcode(5 downto 3) is  -- instruction bits
 
-                -- initiate polynomial generator
+                -- initiate element generator
                 when "000" =>
 
                     -- enable generator
@@ -460,6 +460,15 @@ begin
 
                     -- mem1, addr = polynomial, data = element
                     mem_t <= '0';
+
+                    -- default values for opand2
+                    -- j is the user input
+                    j <= DCAREVEC;
+
+                    -- check operand 2 for set membership
+                    -- exceptions
+                    opand_b <= ZEROVEC;
+                    opand_z2 <= DCAREVEC;
 
                     case op_state is
 
