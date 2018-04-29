@@ -26,6 +26,8 @@ architecture behavior of control_unit_tb is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
+            en          : in std_logic;  -- control unit enable
+
             -- registers
             mask        : in  std_logic_vector(n downto 0);
 
@@ -34,6 +36,7 @@ architecture behavior of control_unit_tb is
             rst_gen     : out std_logic;  -- polynomial generator reset
 
             -- operation signals
+            en_ops      : out std_logic;  -- operators enable
             i           : out std_logic_vector(n downto 0);  -- i
             j           : out std_logic_vector(n downto 0);  -- j
 
@@ -60,8 +63,10 @@ architecture behavior of control_unit_tb is
     signal opand1 : std_logic_vector(n downto 0);   -- operand 1
     signal opand2 : std_logic_vector(n downto 0);   -- operand 2
     signal mask : std_logic_vector(n downto 0);   -- mask
+    signal en : std_logic := '0';
 
     -- outputs
+    signal en_ops : std_logic;
     signal rst_gen : std_logic;
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(n downto 0);  -- address in memory
@@ -75,7 +80,7 @@ architecture behavior of control_unit_tb is
     signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal id_cu : std_logic;  -- read signal to memory
     signal addr_cu : std_logic_vector(n downto 0);  -- address in memory
-    signal dout_cu : std_logic_vector(n downto 0) := "000000000";  -- data from memory
+    signal dout_cu : std_logic_vector(n downto 0) := "000000000";  -- data
 
     -- clocks
     signal clk : std_ulogic := '1';
@@ -88,7 +93,9 @@ begin
         opcode => opcode,
         opand1 => opand1,
         opand2 => opand2,
+        en => en,
         mask => mask,
+        en_ops => en_ops,
         en_gen => en_gen,
         rst_gen => rst_gen,
         i => i,
@@ -143,7 +150,10 @@ begin
         opand1 <= "000000101";
         opand2 <= "000000011";
 
-        opcode <= "10000";  -- add/sub, operands in element
+        wait for (CLK_PER * 1);
+        en <= '1';
+
+        opcode <= "00111";  -- add/sub, operands in element
         wait for (CLK_PER * 4);
 
         opand1 <= "000000111";  -- 2^n-1

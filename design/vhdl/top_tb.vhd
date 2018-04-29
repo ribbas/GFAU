@@ -33,6 +33,9 @@ architecture behavior of top_tb is
             -- master reset
             RST     : in std_logic;
 
+            -- control unit enable
+            ENCU    : in std_logic;
+
             -- user inputs
             POLYBCD : in std_logic_vector(n - 1 downto 0);
             OPCODE  : in std_logic_vector(5 downto 0);
@@ -78,6 +81,7 @@ architecture behavior of top_tb is
     --inputs
     signal CLK     : std_ulogic := '1';
     signal RST     : std_logic;
+    signal ENCU    : std_logic := '0';
     signal POLYBCD : std_logic_vector(n - 1 downto 0);
     signal OPCODE  : std_logic_vector(5 downto 0);
     signal OPAND1  : std_logic_vector(n downto 0);
@@ -120,6 +124,7 @@ begin
     uut: top port map (
         CLK => CLK,
         RST => RST,
+        ENCU => ENCU,
         POLYBCD => POLYBCD,
         OPCODE => OPCODE,
         OPAND1 => OPAND1,
@@ -168,13 +173,17 @@ begin
         OPAND1 <= "000000101";
         OPAND2 <= "000000011";
 
+        wait for (CLK_PER * 1);
+        ENCU <= '1';
+
         wait for (CLK_PER * 2);
-        OPCODE <= "011000";  -- generator
+        OPCODE <= "011000";  -- add, elem, elem, elem
 
         wait for (CLK_PER * 4);
-        OPCODE <= "111XXX";  -- noop
+        ENCU <= '0';
+        OPCODE <= "000XXX";  -- generator
 
-        wait for (CLK_PER * 2);
+        wait for (CLK_PER * 20);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

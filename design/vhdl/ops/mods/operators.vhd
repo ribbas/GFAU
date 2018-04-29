@@ -21,6 +21,8 @@ entity operators is
         -- clock
         clk         : in std_logic;
 
+        en          : in std_logic;
+
         -- opcode
         op          : in std_logic_vector(2 downto 0);
         out_t       : in std_logic;
@@ -103,12 +105,13 @@ architecture behavioral of operators is
 
     component outselect
         port(
+            en      : in std_logic;
             op      : in std_logic_vector(2 downto 0);
             out_t   : in std_logic;
-            out_as  : in std_logic_vector(n downto 0);
-            out_m   : in std_logic_vector(n downto 0);
-            out_d   : in std_logic_vector(n downto 0);
-            out_l   : in std_logic_vector(n downto 0);
+            bitxor  : in std_logic_vector(n downto 0);
+            prod    : in std_logic_vector(n downto 0);
+            quot    : in std_logic_vector(n downto 0);
+            lg      : in std_logic_vector(n downto 0);
             i_null  : in std_logic;
             j_null  : in std_logic;
             out_sel : out std_logic_vector(n downto 0);
@@ -189,10 +192,11 @@ begin
     outselect_unit: outselect port map(
         op => op,
         out_t => out_t,
-        out_as => bitxor,
-        out_m => prod,
-        out_d => quot,
-        out_l => i,
+        en => en,
+        bitxor => bitxor,
+        prod => prod,
+        quot => quot,
+        lg => i,
         i_null => i_null,
         j_null => j_null,
         out_sel => out_sel,

@@ -25,6 +25,9 @@ entity top is
         -- master reset
         RST     : in std_logic;
 
+        -- control unit enable
+        ENCU    : in std_logic;
+
         -- user inputs
         POLYBCD : in std_logic_vector(n - 1 downto 0);
         OPCODE  : in std_logic_vector(5 downto 0);
@@ -51,7 +54,7 @@ entity top is
         A       : out std_logic_vector((n + 1) downto 0);
         IO      : inout std_logic_vector(n downto 0);
 
-        -------------- TEMPORARY - JUST FOR TB ------------
+        ---------------- TEMPORARY - JUST FOR TB ------------
 
         ---- universal registers
         t_size      : out std_logic_vector(clgn downto 0);
@@ -93,6 +96,8 @@ architecture behavioral of top is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
+            en          : in std_logic;  -- control unit enable
+
             -- registers
             mask        : in  std_logic_vector(n downto 0);
 
@@ -101,6 +106,7 @@ architecture behavioral of top is
             rst_gen     : out std_logic;  -- polynomial generator reset
 
             -- operation signals
+            en_ops      : out std_logic;  -- operators enable
             i           : out std_logic_vector(n downto 0);  -- i
             j           : out std_logic_vector(n downto 0);  -- j
 
@@ -153,6 +159,8 @@ architecture behavioral of top is
         port(
             -- clock
             clk         : in std_logic;
+
+            en          : in std_logic;
 
             -- opcode
             op          : in std_logic_vector(2 downto 0);
@@ -222,6 +230,7 @@ architecture behavioral of top is
     signal rst_gen : std_logic;  -- reset
 
     -- internal operation signals
+    signal en_ops : std_logic;
     signal id_cu : std_logic;
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
@@ -264,7 +273,9 @@ begin
         opcode => OPCODE(5 downto 1),
         opand1 => OPAND1,
         opand2 => OPAND2,
+        en => ENCU,
         mask => mask,
+        en_ops => en_ops,
         en_gen => en_gen,
         rst_gen => rst_gen,
         i => i,
@@ -326,6 +337,7 @@ begin
         clk => CLK,
         op => OPCODE(5 downto 3),
         out_t => OPCODE(0),
+        en => en_ops,
         i => i,
         j => j,
         i_null => i_null,
@@ -348,7 +360,7 @@ begin
     t_msb <= msb;
     t_mask <= mask;
     t_1 <= id_con;
-    t_n1 <= dout_con;
+    t_n1 <= i;
     t_n2 <= j;
     --t_addr <= mem_addr;
     --t_sym <= mem_data_in;

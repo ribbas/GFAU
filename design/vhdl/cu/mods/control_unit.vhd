@@ -23,6 +23,8 @@ entity control_unit is
         opand1      : in std_logic_vector(n downto 0);   -- operand 1
         opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
+        en          : in std_logic;  -- control unit enable
+
         -- registers
         mask        : in  std_logic_vector(n downto 0);
 
@@ -31,6 +33,7 @@ entity control_unit is
         rst_gen     : out std_logic;  -- polynomial generator reset
 
         -- operation signals
+        en_ops      : out std_logic;  -- operators enable
         i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
         j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
@@ -38,7 +41,7 @@ entity control_unit is
         mem_t       : out std_logic; -- memory type
 
         -- memory wrapper control signals
-        id_cu       : out std_logic;
+        id_cu       : out std_logic := '0';
         mem_rdy     : in std_logic;
 
         -- memory address and data signals
@@ -102,509 +105,570 @@ begin
         is_null => opand2_null
     );
 
-    process (clk, opcode, opand1, opand2, mask, mem_rdy, dout_cu)
+    process (clk)
     begin
 
         if (rising_edge(clk)) then
 
-            case opcode(5 downto 3) is  -- instruction bits
+            if (en = '1') then
 
-                -- initiate element generator
-                when "000" =>
+                case opcode(5 downto 3) is  -- instruction bits
 
-                    -- enable generator
-                    en_gen <= '1';
+                    -- initiate element generator
+                    when "000" =>
 
-                    case dbnc_state is
+                        -- enable generator
+                        en_gen <= '1';
 
-                        when rst_state =>
+                        case dbnc_state is
 
-                            -- reset generator values
-                            rst_gen <= '1';
-                            dbnc_state <= en_state;
+                            when rst_state =>
 
-                        when en_state =>
+                                -- reset generator values
+                                rst_gen <= '1';
+                                dbnc_state <= en_state;
 
-                            rst_gen <= '0';
-                            --dbnc_state <= rst_state;
+                            when en_state =>
 
-                        when others =>
+                                rst_gen <= '0';
+                                --dbnc_state <= rst_state;
 
-                            dbnc_state <= rst_state;
+                            when others =>
 
-                    end case;
+                                dbnc_state <= rst_state;
 
-                    -- disable arithmetic exceptions
-                    opand_b <= ZEROVEC;
-                    mem_t_z1 <= '-';
-                    opand_z1 <= DCAREVEC;
-                    mem_t_z2 <= '-';
-                    opand_z2 <= DCAREVEC;
+                        end case;
 
-                    -- disable memory lookup
-                    mem_t <= '-';
-                    id_cu <= '0';
-                    addr_cu <= DCAREVEC;
+                        -- disable arithmetic exceptions
+                        opand_b <= ZEROVEC;
+                        mem_t_z1 <= '-';
+                        opand_z1 <= DCAREVEC;
+                        mem_t_z2 <= '-';
+                        opand_z2 <= DCAREVEC;
 
-                -- add / sub
-                when "001" =>
+                        -- disable operators
+                        en_ops <= '0';
 
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
+                        -- disable memory lookup
+                        mem_t <= '-';
+                        id_cu <= '0';
+                        addr_cu <= DCAREVEC;
 
-                    -- mem2, addr = element, data = polynomial
-                    mem_t <= '1';
+                    -- add / sub
+                    when "001" =>
 
-                    case op_state is
+                        -- disable generator
+                        en_gen <= '0';
+                        rst_gen <= '0';
 
-                        when op1_state =>
+                        -- mem2, addr = element, data = polynomial
+                        mem_t <= '1';
 
+                        case op_state is
 
-                            mem_t_z1 <= not opcode(2);
+                            when op1_state =>
 
-                            -- if operand 1 is in element form
-                            if (opcode(2) = '0') then
+                                -- disable generator
+                                en_ops <= '0';
 
-                                case rd_state1 is
+                                mem_t_z1 <= not opcode(2);
 
-                                    -- send address to memory wrapper
-                                    when send_addr =>
+                                -- if operand 1 is in element form
+                                if (opcode(2) = '0') then
 
-                                        id_cu <= '1';
-                                        addr_cu <= opand1;
-                                        i <= HIIMPVEC;
+                                    case rd_state1 is
 
-                                        rd_state1 <= get_data;
-                                        op_state <= op1_state;
+                                        -- send address to memory wrapper
+                                        when send_addr =>
 
-                                    when get_data =>
+                                            id_cu <= '1';
+                                            addr_cu <= opand1;
+                                            i <= DCAREVEC;
 
-
-                                        id_cu <= '1';
-                                        if (mem_rdy = '1') then
-
-                                            -- i is converted to polynomial
-                                            i <= dout_cu;
-                                            -- check dout_cu for set
-                                            -- membership exceptions
-                                            opand_b <= dout_cu;
-                                            opand_z1 <= dout_cu;
-
-                                            op_state <= op2_state;
                                             rd_state1 <= get_data;
+                                            op_state <= op1_state;
 
-                                        else
+                                        when get_data =>
+
+                                            id_cu <= '1';
+
+                                            if (mem_rdy = '1') then
+
+                                                -- i is converted to polynomial
+                                                i <= dout_cu;
+                                                -- check dout_cu for set
+                                                -- membership exceptions
+                                                opand_b <= dout_cu;
+                                                opand_z1 <= dout_cu;
+
+                                                op_state <= op2_state;
+                                                rd_state1 <= get_data;
+
+                                            else
+
+                                                rd_state1 <= send_addr;
+                                                op_state <= op1_state;
+
+                                            end if;
+
+                                        when others =>
+
+                                            id_cu <= '0';
+                                            addr_cu <= HIIMPVEC;
+                                            i <= DCAREVEC;
 
                                             rd_state1 <= send_addr;
                                             op_state <= op1_state;
 
-                                        end if;
+                                    end case;
 
-                                    when others =>
+                                -- if operand 1 is in polynomial form
+                                else
 
-                                        id_cu <= '0';
-                                        addr_cu <= HIIMPVEC;
-                                        i <= HIIMPVEC;
+                                    id_cu <= '0';
 
-                                        rd_state1 <= send_addr;
-                                        op_state <= op1_state;
+                                    -- i is the user input
+                                    i <= opand1;
 
-                                end case;
+                                    -- check operand 1 for set membership
+                                    -- exceptions
+                                    opand_b <= opand1;
+                                    opand_z1 <= opand1;
 
-                            -- if operand 1 is in polynomial form
-                            else
+                                    op_state <= op2_state;
 
-                                id_cu <= '0';
+                                end if;
 
-                                -- i is the user input
-                                i <= opand1;
+                            when op2_state =>
 
-                                -- check operand 1 for set membership
-                                -- exceptions
-                                opand_b <= opand1;
-                                opand_z1 <= opand1;
+                                mem_t_z2 <= not opcode(1);
 
-                                op_state <= op2_state;
+                                -- if operand 2 is in element form
+                                if (opcode(1) = '0') then
 
-                            end if;
+                                    case rd_state2 is
 
-                        when op2_state =>
+                                        -- send address to memory wrapper
+                                        when send_addr =>
 
-                            mem_t_z2 <= not opcode(1);
+                                            id_cu <= '1';
+                                            addr_cu <= opand2;
+                                            j <= DCAREVEC;
 
-                            -- if operand 2 is in element form
-                            if (opcode(1) = '0') then
+                                            -- disable generator
+                                            en_ops <= '0';
 
-                                case rd_state2 is
-
-                                    -- send address to memory wrapper
-                                    when send_addr =>
-
-                                        id_cu <= '1';
-                                        addr_cu <= opand2;
-                                        j <= HIIMPVEC;
-
-                                        rd_state2 <= get_data;
-                                        op_state <= op2_state;
-
-                                    when get_data =>
-
-                                        id_cu <= '1';
-                                        -- i is converted to polynomial
-                                        j <= dout_cu;
-
-                                        -- check dout_cu for set membership
-                                        -- exceptions
-                                        opand_b <= dout_cu;
-                                        opand_z2 <= dout_cu;
-
-                                        rd_state2 <= send_addr;
-                                        op_state <= op1_state;
-
-                                    when others =>
-
-                                        id_cu <= '0';
-                                        addr_cu <= HIIMPVEC;
-                                        j <= HIIMPVEC;
-
-                                        rd_state2 <= send_addr;
-                                        op_state <= op2_state;
-
-                                end case;
-
-                            -- if operand 2 is in polynomial form
-                            else
-
-
-                                id_cu <= '0';
-
-                                -- j is the user input
-                                j <= opand2;
-
-                                -- check operand 1 for set membership
-                                -- exceptions
-                                opand_b <= opand2;
-                                opand_z2 <= opand2;
-
-                            end if;
-
-                        when others =>
-
-                            -- address = element
-                            addr_cu <= opand1;
-
-                            -- op_state initializes to op1_state
-                            op_state <= op1_state;
-
-                    end case;
-
-                -- mul / div
-                when "010" | "011" =>
-
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
-
-                    -- mem1, addr = polynomial, data = element
-                    mem_t <= '0';
-
-                    case op_state is
-
-                        when op1_state =>
-
-                            mem_t_z1 <= opcode(2);
-
-                            -- if operand 1 is in polynomial form
-                            if (opcode(2) = '1') then
-
-                                case rd_state1 is
-
-                                    -- send address to memory wrapper
-                                    when send_addr =>
-
-                                        id_cu <= '1';
-                                        addr_cu <= opand1;
-                                        i <= HIIMPVEC;
-
-                                        rd_state1 <= get_data;
-                                        op_state <= op1_state;
-
-                                    when get_data =>
-
-                                        id_cu <= '1';
-
-                                        if (mem_rdy = '1') then
-
-                                            -- i is converted to polynomial
-                                            i <= dout_cu;
-                                            -- check dout_cu for set membership
-                                            -- exceptions
-                                            opand_b <= dout_cu;
-                                            opand_z1 <= dout_cu;
-
+                                            rd_state2 <= get_data;
                                             op_state <= op2_state;
-                                            rd_state1 <= get_data;
 
-                                        else
+                                        when get_data =>
+
+                                            id_cu <= '1';
+
+                                            if (mem_rdy = '1') then
+
+                                                -- j is converted to polynomial
+                                                j <= dout_cu;
+                                                -- check dout_cu for set
+                                                -- membership exceptions
+                                                opand_b <= dout_cu;
+                                                opand_z2 <= dout_cu;
+
+                                                op_state <= op1_state;
+                                                rd_state2 <= get_data;
+
+                                                -- enable generator
+                                                en_ops <= '1';
+
+                                            else
+
+                                                rd_state2 <= send_addr;
+                                                op_state <= op2_state;
+
+                                                -- disable generator
+                                                en_ops <= '0';
+
+                                            end if;
+
+                                        when others =>
+
+                                            id_cu <= '0';
+                                            addr_cu <= HIIMPVEC;
+                                            j <= DCAREVEC;
+
+                                            rd_state2 <= send_addr;
+                                            op_state <= op2_state;
+
+                                    end case;
+
+                                -- if operand 2 is in polynomial form
+                                else
+
+                                    -- enable generator
+                                    en_ops <= '1';
+
+                                    id_cu <= '0';
+
+                                    -- j is the user input
+                                    j <= opand2;
+
+                                    -- check operand 1 for set membership
+                                    -- exceptions
+                                    opand_b <= opand2;
+                                    opand_z2 <= opand2;
+
+                                end if;
+
+                            when others =>
+
+                                -- address = element
+                                addr_cu <= opand1;
+
+                                -- op_state initializes to op1_state
+                                op_state <= op1_state;
+
+                        end case;
+
+                    -- mul / div
+                    when "010" | "011" =>
+
+                        -- disable generator
+                        en_gen <= '0';
+                        rst_gen <= '0';
+
+                        -- mem1, addr = polynomial, data = element
+                        mem_t <= '0';
+
+                        case op_state is
+
+                            when op1_state =>
+
+                                -- disable generator
+                                en_ops <= '0';
+
+                                mem_t_z1 <= opcode(2);
+
+                                -- if operand 1 is in polynomial form
+                                if (opcode(2) = '1') then
+
+                                    case rd_state1 is
+
+                                        -- send address to memory wrapper
+                                        when send_addr =>
+
+                                            id_cu <= '1';
+                                            addr_cu <= opand1;
+                                            i <= DCAREVEC;
+
+                                            rd_state1 <= get_data;
+                                            op_state <= op1_state;
+
+                                        when get_data =>
+
+                                            id_cu <= '1';
+
+                                            if (mem_rdy = '1') then
+
+                                                -- i is converted to element
+                                                i <= dout_cu;
+                                                -- check dout_cu for set
+                                                -- membership exceptions
+                                                opand_b <= dout_cu;
+                                                opand_z1 <= dout_cu;
+
+                                                op_state <= op2_state;
+                                                rd_state1 <= get_data;
+
+                                            else
+
+                                                rd_state1 <= send_addr;
+                                                op_state <= op1_state;
+
+                                            end if;
+
+                                        when others =>
+
+                                            id_cu <= '0';
+                                            addr_cu <= HIIMPVEC;
+                                            i <= DCAREVEC;
 
                                             rd_state1 <= send_addr;
                                             op_state <= op1_state;
 
-                                        end if;
+                                    end case;
 
-                                    when others =>
+                                -- if operand 1 is in element form
+                                else
 
-                                        id_cu <= '0';
-                                        addr_cu <= HIIMPVEC;
-                                        i <= HIIMPVEC;
+                                    id_cu <= '0';
 
-                                        rd_state1 <= send_addr;
-                                        op_state <= op1_state;
+                                    -- i is the user input
+                                    i <= opand1;
 
-                                end case;
+                                    -- check operand 1 for set membership
+                                    -- exceptions
+                                    opand_b <= opand1;
+                                    opand_z1 <= opand1;
 
-                            -- if operand 1 is in polynomial form
-                            else
+                                    op_state <= op2_state;
 
-                                id_cu <= '0';
+                                end if;
 
-                                -- i is the user input
-                                i <= opand1;
+                            when op2_state =>
 
-                                -- check operand 1 for set membership
-                                -- exceptions
-                                opand_b <= opand1;
-                                opand_z1 <= opand1;
+                                mem_t_z2 <= opcode(1);
 
-                                op_state <= op2_state;
+                                -- if operand 2 is in polynomial form
+                                if (opcode(1) = '1') then
 
-                            end if;
+                                    case rd_state2 is
 
-                        when op2_state =>
+                                        -- send address to memory wrapper
+                                        when send_addr =>
 
-                            mem_t_z2 <= opcode(1);
+                                            id_cu <= '1';
+                                            addr_cu <= opand2;
+                                            j <= DCAREVEC;
 
-                            -- if operand 2 is in polynomial form
-                            if (opcode(1) = '1') then
+                                            -- disable generator
+                                            en_ops <= '0';
 
-                                case rd_state2 is
-
-                                    -- send address to memory wrapper
-                                    when send_addr =>
-
-                                        id_cu <= '1';
-                                        addr_cu <= opand2;
-                                        j <= HIIMPVEC;
-
-                                        rd_state2 <= get_data;
-                                        op_state <= op2_state;
-
-                                    when get_data =>
-
-                                        id_cu <= '1';
-                                        -- i is converted to polynomial
-                                        j <= dout_cu;
-
-                                        -- check dout_cu for set membership
-                                        -- exceptions
-                                        opand_b <= dout_cu;
-                                        opand_z2 <= dout_cu;
-
-                                        rd_state2 <= send_addr;
-                                        op_state <= op1_state;
-
-                                    when others =>
-
-                                        id_cu <= '0';
-                                        addr_cu <= HIIMPVEC;
-                                        j <= HIIMPVEC;
-
-                                        rd_state2 <= send_addr;
-                                        op_state <= op2_state;
-
-                                end case;
-
-                            -- if operand 2 is in element form
-                            else
-
-
-                                id_cu <= '0';
-
-                                -- j is the user input
-                                j <= opand2;
-
-                                -- check operand 1 for set membership
-                                -- exceptions
-                                opand_b <= opand2;
-                                opand_z2 <= opand2;
-
-                            end if;
-
-                        when others =>
-
-                            -- address = element
-                            addr_cu <= opand1;
-
-                            -- op_state initializes to op1_state
-                            op_state <= op1_state;
-
-                    end case;
-
-                -- log
-                when "100" =>
-
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
-
-                    -- mem1, addr = polynomial, data = element
-                    mem_t <= '0';
-
-                    -- default values for opand2
-                    -- j is the user input
-                    j <= DCAREVEC;
-
-                    -- check operand 2 for set membership
-                    -- exceptions
-                    opand_b <= ZEROVEC;
-                    opand_z2 <= DCAREVEC;
-
-                    case op_state is
-
-                        when op1_state =>
-
-                            mem_t_z1 <= opcode(2);
-
-                            -- if operand 1 is in polynomial form
-                            if (opcode(2) = '1') then
-
-                                case rd_state1 is
-
-                                    -- send address to memory wrapper
-                                    when send_addr =>
-
-                                        id_cu <= '1';
-                                        addr_cu <= opand1;
-                                        i <= HIIMPVEC;
-
-                                        rd_state1 <= get_data;
-                                        op_state <= op1_state;
-
-                                    when get_data =>
-
-                                        id_cu <= '1';
-
-                                        if (mem_rdy = '1') then
-
-                                            -- i is converted to polynomial
-                                            i <= dout_cu;
-                                            -- check dout_cu for set membership
-                                            -- exceptions
-                                            opand_b <= dout_cu;
-                                            opand_z1 <= dout_cu;
-
+                                            rd_state2 <= get_data;
                                             op_state <= op2_state;
-                                            rd_state1 <= get_data;
 
-                                        else
+                                        when get_data =>
+
+                                            id_cu <= '1';
+
+                                            if (mem_rdy = '1') then
+
+                                                -- j is converted to element
+                                                j <= dout_cu;
+                                                -- check dout_cu for set
+                                                -- membership exceptions
+                                                opand_b <= dout_cu;
+                                                opand_z2 <= dout_cu;
+
+                                                op_state <= op1_state;
+                                                rd_state2 <= get_data;
+
+                                                -- enable generator
+                                                en_ops <= '1';
+
+                                            else
+
+                                                rd_state2 <= send_addr;
+                                                op_state <= op2_state;
+
+                                                -- disable generator
+                                                en_ops <= '0';
+
+                                            end if;
+
+                                        when others =>
+
+                                            id_cu <= '0';
+                                            addr_cu <= HIIMPVEC;
+                                            j <= DCAREVEC;
+
+                                            rd_state2 <= send_addr;
+                                            op_state <= op2_state;
+
+                                    end case;
+
+                                -- if operand 2 is in element form
+                                else
+
+                                    -- enable generator
+                                    en_ops <= '1';
+
+                                    id_cu <= '0';
+
+                                    -- j is the user input
+                                    j <= opand2;
+
+                                    -- check operand 1 for set membership
+                                    -- exceptions
+                                    opand_b <= opand2;
+                                    opand_z2 <= opand2;
+
+                                end if;
+
+                            when others =>
+
+                                -- address = element
+                                addr_cu <= opand1;
+
+                                -- op_state initializes to op1_state
+                                op_state <= op1_state;
+
+                        end case;
+
+                    -- log
+                    when "100" =>
+
+                        -- disable generator
+                        en_gen <= '0';
+                        rst_gen <= '0';
+
+                        -- mem1, addr = polynomial, data = element
+                        mem_t <= '0';
+
+                        -- default values for opand2
+                        -- j is the user input
+                        j <= DCAREVEC;
+
+                        -- check operand 2 for set membership
+                        -- exceptions
+                        opand_b <= ZEROVEC;
+                        opand_z2 <= DCAREVEC;
+
+                        case op_state is
+
+                            when op1_state =>
+
+                                mem_t_z1 <= opcode(2);
+
+                                -- if operand 1 is in polynomial form
+                                if (opcode(2) = '1') then
+
+                                    case rd_state1 is
+
+                                        -- send address to memory wrapper
+                                        when send_addr =>
+
+                                            id_cu <= '1';
+                                            addr_cu <= opand1;
+                                            i <= DCAREVEC;
+
+                                            rd_state1 <= get_data;
+                                            op_state <= op1_state;
+
+                                        when get_data =>
+
+                                            id_cu <= '1';
+
+                                            if (mem_rdy = '1') then
+
+                                                -- i is converted to polynomial
+                                                i <= dout_cu;
+                                                -- check dout_cu for set membership
+                                                -- exceptions
+                                                opand_b <= dout_cu;
+                                                opand_z1 <= dout_cu;
+
+                                                op_state <= op2_state;
+                                                rd_state1 <= get_data;
+
+                                            else
+
+                                                rd_state1 <= send_addr;
+                                                op_state <= op1_state;
+
+                                            end if;
+
+                                        when others =>
+
+                                            id_cu <= '0';
+                                            addr_cu <= HIIMPVEC;
+                                            i <= DCAREVEC;
 
                                             rd_state1 <= send_addr;
                                             op_state <= op1_state;
 
-                                        end if;
+                                    end case;
 
-                                    when others =>
+                                -- if operand 1 is in polynomial form
+                                else
 
-                                        id_cu <= '0';
-                                        addr_cu <= HIIMPVEC;
-                                        i <= HIIMPVEC;
+                                    id_cu <= '0';
 
-                                        rd_state1 <= send_addr;
-                                        op_state <= op1_state;
+                                    -- i is the user input
+                                    i <= opand1;
 
-                                end case;
+                                    -- check operand 1 for set membership
+                                    -- exceptions
+                                    opand_b <= opand1;
+                                    opand_z1 <= opand1;
 
-                            -- if operand 1 is in polynomial form
-                            else
+                                    op_state <= op2_state;
 
-                                id_cu <= '0';
+                                end if;
 
-                                -- i is the user input
-                                i <= opand1;
+                            when others =>
 
-                                -- check operand 1 for set membership
-                                -- exceptions
-                                opand_b <= opand1;
-                                opand_z1 <= opand1;
+                                -- address = element
+                                addr_cu <= opand1;
 
-                                op_state <= op2_state;
+                                -- op_state initializes to op1_state
+                                op_state <= op1_state;
 
-                            end if;
+                        end case;
 
-                        when others =>
+                    -- multiplicative inverse
+                    when "101" =>
 
-                            -- address = element
-                            addr_cu <= opand1;
+                        -- disable operations
+                        en_ops <= '0';
 
-                            -- op_state initializes to op1_state
-                            op_state <= op1_state;
+                        -- reset generator
+                        en_gen <= '1';
+                        rst_gen <= '1';
 
-                    end case;
+                        -- disable arithmetic exceptions
+                        opand_b <= ZEROVEC;
+                        opand_z1 <= DCAREVEC;
+                        opand_z2 <= DCAREVEC;
 
-                -- reset
-                when "101" =>
+                        -- disable memory lookup
+                        mem_t <= '-';
+                        id_cu <= '0';
+                        addr_cu <= DCAREVEC;
 
-                    -- reset generator
-                    en_gen <= '1';
-                    rst_gen <= '1';
+                    when others =>
 
-                    -- disable arithmetic exceptions
-                    opand_b <= ZEROVEC;
-                    opand_z1 <= DCAREVEC;
-                    opand_z2 <= DCAREVEC;
+                        -- disable operations
+                        en_ops <= '0';
 
-                    -- disable memory lookup
-                    mem_t <= '-';
-                    id_cu <= '0';
-                    addr_cu <= DCAREVEC;
+                        -- disable generator
+                        en_gen <= '0';
+                        rst_gen <= '0';
 
-                -- mode
-                when "110" =>
+                        -- disable arithmetic exceptions
+                        opand_b <= ZEROVEC;
+                        opand_z1 <= DCAREVEC;
+                        opand_z2 <= DCAREVEC;
 
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
+                        -- disable memory lookup
+                        mem_t <= '-';
+                        id_cu <= '0';
+                        addr_cu <= DCAREVEC;
 
-                    -- disable arithmetic exceptions
-                    opand_b <= ZEROVEC;
-                    opand_z1 <= DCAREVEC;
-                    opand_z2 <= DCAREVEC;
+                end case;
 
-                    -- disable memory lookup
-                    mem_t <= '-';
-                    id_cu <= '0';
-                    addr_cu <= DCAREVEC;
 
-                when others =>
+            else
 
-                    -- disable generator
-                    en_gen <= '0';
-                    rst_gen <= '0';
+                -- disable operations
+                en_ops <= '0';
 
-                    -- disable arithmetic exceptions
-                    opand_b <= ZEROVEC;
-                    opand_z1 <= DCAREVEC;
-                    opand_z2 <= DCAREVEC;
+                -- disable generator
+                en_gen <= '0';
+                rst_gen <= '0';
 
-                    -- disable memory lookup
-                    mem_t <= '-';
-                    id_cu <= '0';
-                    addr_cu <= DCAREVEC;
+                -- disable arithmetic exceptions
+                opand_b <= ZEROVEC;
+                opand_z1 <= DCAREVEC;
+                opand_z2 <= DCAREVEC;
 
-            end case;
+                -- disable memory lookup
+                mem_t <= '-';
+                id_cu <= '0';
+                addr_cu <= DCAREVEC;
 
-        end if;
+            end if;  -- enable
+
+        end if;  -- clock
 
     end process;
 

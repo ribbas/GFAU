@@ -124,9 +124,9 @@ begin
 
         end if;  -- clock
 
-        for i in n downto 0 loop
-            report "outsel("&integer'image(i)&")=" & std_logic'image(out_sel(i));
-        end loop;
+        --for i in n downto 0 loop
+        --    report "outsel("&integer'image(i)&")=" & std_logic'image(out_sel(i));
+        --end loop;
 
     end process;
 
