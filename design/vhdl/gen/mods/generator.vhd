@@ -82,7 +82,7 @@ begin
                         elem <= ZEROVEC;
 
                         -- generator control signals
-                        gen_rdy <= '0';
+                        gen_rdy <= '1';
                         id_gen <= '0';
 
                     else
@@ -92,7 +92,7 @@ begin
                         then
 
                             -- generator control signals
-                            gen_rdy <= '1';
+                            gen_rdy <= '0';
                             id_gen <= '1';
 
                             -- finish writing

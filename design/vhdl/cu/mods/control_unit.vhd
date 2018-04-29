@@ -126,7 +126,7 @@ begin
                         when en_state =>
 
                             rst_gen <= '0';
-                            dbnc_state <= rst_state;
+                            --dbnc_state <= rst_state;
 
                         when others =>
 
@@ -159,6 +159,7 @@ begin
                     case op_state is
 
                         when op1_state =>
+
 
                             mem_t_z1 <= not opcode(2);
 

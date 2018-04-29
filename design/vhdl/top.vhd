@@ -40,26 +40,27 @@ entity top is
         ERRZ    : out std_logic;
 
         -- memory control signals
-        _CE     : out std_logic;
-        _WE     : out std_logic;
-        _OE     : out std_logic := '0';
-        _BLE    : out std_logic := '0';
-        _BHE    : out std_logic := '0';
+        nCE     : out std_logic;
+        nWE     : out std_logic;
+        nOE     : out std_logic := '0';
+        nBLE    : out std_logic := '0';
+        nBHE    : out std_logic := '0';
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
-        _IO     : inout std_logic_vector(n downto 0)
+        IO      : inout std_logic_vector(n downto 0);
 
         -------------- TEMPORARY - JUST FOR TB ------------
 
         ---- universal registers
-        --t_n         : out std_logic_vector(3 downto 0);
-        --t_m         : out std_logic_vector(3 downto 0);
-        --t_mask      : out std_logic_vector(n downto 0);
+        t_size      : out std_logic_vector(clgn downto 0);
+        t_msb       : out std_logic_vector(clgn1 downto 0);
+        t_mask      : out std_logic_vector(n downto 0);
 
-        ---- generated terms
-        --t_addr      : out std_logic_vector(n downto 0);
-        --t_sym       : out std_logic_vector(n downto 0)
+        t_1         : out std_logic;
+        t_n1      : out std_logic_vector(n downto 0);
+        t_n2      : out std_logic_vector(n downto 0)
+
     );
 end top;
 
@@ -87,7 +88,7 @@ architecture behavioral of top is
     component control_unit
         port(
             clk         : in std_logic;
-            opcode      : in std_logic_vector(5 downto 0);   -- op code
+            opcode      : in std_logic_vector(5 downto 1);   -- op code
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
@@ -102,16 +103,21 @@ architecture behavioral of top is
             i           : out std_logic_vector(n downto 0);  -- i
             j           : out std_logic_vector(n downto 0);  -- j
 
-            -- memory signals
-            mem_data    : in std_logic_vector(n downto 0);  -- data
-            mem_addr    : out std_logic_vector(n downto 0);  -- address
-            mem_t       : inout std_logic;  -- which memory
-            mem_rd      : out std_logic;  -- read signal to memory
+            -- memory types and methods
+            mem_t       : out std_logic; -- memory type
 
-            -- exceptions
-            err_b       : out std_logic;  -- out of bound exception
-            opand1_null : out std_logic;  -- zero exception
-            opand2_null : out std_logic  -- zero exception
+            -- memory wrapper control signals
+            id_cu       : out std_logic;
+            mem_rdy     : in std_logic;
+
+            -- memory address and data signals
+            addr_cu     : out std_logic_vector(n downto 0);
+            dout_cu     : in std_logic_vector(n downto 0);
+
+            -- exceptions and flags
+            err_b       : out std_logic;  -- set membership exception
+            opand1_null : out std_logic;  -- operand 1 zero flag
+            opand2_null : out std_logic  -- operand 2 zero flag
         );
     end component;
 
@@ -144,19 +150,35 @@ architecture behavioral of top is
 
     component operators
         port(
+            -- clock
             clk         : in std_logic;
+
+            -- opcode
             opcode      : in std_logic_vector(5 downto 0);
+
+            -- operands
             i           : in std_logic_vector(n downto 0);
             j           : in std_logic_vector(n downto 0);
+
+            -- operand null flags
             i_null      : in std_logic;
             j_null      : in std_logic;
+
+            -- registers
             size        : in std_logic_vector(clgn downto 0);  -- size
             mask        : in std_logic_vector(n downto 0);  -- mask
+
+            -- memory types and methods
             mem_t       : out std_logic; -- memory type
+
+            -- memory wrapper control signals
             id_con      : out std_logic;
             mem_rdy     : in std_logic;
+
+            -- memory address and data signals
             addr_con    : out std_logic_vector(n downto 0);
             dout_con    : inout std_logic_vector(n downto 0);
+
             result      : out std_logic_vector(n downto 0); -- selected output
             err_z       : out std_logic -- zero exception
         );
@@ -164,52 +186,58 @@ architecture behavioral of top is
 
     ---------------- memory ----------------
 
-    -- CY7C1020DV33 chips wrapper
-    component memory is
-        port(
-            clk         : in std_logic;
-            mem_t       : in std_logic;
-            mem_rdy     : out std_logic;
-            id_cu       : in std_logic;
-            addr_cu     : in std_logic_vector(n downto 0);
-            dout_cu     : out std_logic_vector(n downto 0);
-            id_con      : in std_logic;
-            addr_con    : in std_logic_vector(n downto 0);
-            dout_con    : out std_logic_vector(n downto 0);
-            id_gen      : in std_logic;
-            addr_gen    : in std_logic_vector(n downto 0);
-            din_gen     : in std_logic_vector(n downto 0);
-            nCE         : out std_logic;
-            nWE         : out std_logic;
-            A           : out std_logic_vector((n + 1) downto 0);
-            DQ          : inout std_logic_vector(n downto 0)
-        );
-    end component;
+    ---- CY7C1020DV33 chips wrapper
+    --component memory is
+    --    port(
+    --        clk         : in std_logic;
+    --        mem_t       : in std_logic;
+    --        mem_rdy     : out std_logic;
+    --        id_cu       : in std_logic;
+    --        addr_cu     : in std_logic_vector(n downto 0);
+    --        dout_cu     : out std_logic_vector(n downto 0);
+    --        id_con      : in std_logic;
+    --        addr_con    : in std_logic_vector(n downto 0);
+    --        dout_con    : out std_logic_vector(n downto 0);
+    --        id_gen      : in std_logic;
+    --        addr_gen    : in std_logic_vector(n downto 0);
+    --        din_gen     : in std_logic_vector(n downto 0);
+    --        nCE         : out std_logic;
+    --        nWE         : out std_logic;
+    --        A           : out std_logic_vector((n + 1) downto 0);
+    --        DQ          : inout std_logic_vector(n downto 0)
+    --    );
+    --end component;
 
-    -- constants
+    -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
-    signal msb : std_logic_vector(3 downto 0);  -- msb
-    signal n : std_logic_vector(3 downto 0);  -- size
-
-    -- generator data signals
-    --signal addr : std_logic_vector(n downto 0);
-    --signal sym1 : std_logic_vector(n downto 0);
-    signal sym2 : std_logic_vector(n downto 0);
+    signal size : std_logic_vector(clgn downto 0);  -- size
+    signal msb : std_logic_vector(clgn1 downto 0);  -- msb
 
     -- generator control signals
-    signal en_gen : std_logic := '1';  -- enable
+    signal id_gen : std_logic;
+    signal en_gen : std_logic;  -- enable
     signal rst_gen : std_logic;  -- reset
 
     -- internal operation signals
+    signal id_cu : std_logic;
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
+    signal i_null : std_logic;
+    signal j_null : std_logic;
 
     -- memory control signals
     signal mem_t : std_logic;  -- memory type
-    signal mem_addr_in : std_logic_vector(n downto 0);  -- memory address
-    signal mem_addr_out : std_logic_vector(n downto 0);  -- memory address
-    signal mem_data_in : std_logic_vector(n downto 0);  -- memory data in
-    signal mem_data_out : std_logic_vector(n downto 0);  -- memory data out
+    signal mem_rdy : std_logic;  -- memory type
+
+    signal id_con : std_logic;
+
+    -- memory address and data signals
+    signal elem : std_logic_vector(n downto 0);
+    signal addr_gen : std_logic_vector(n downto 0);
+    signal addr_cu : std_logic_vector(n downto 0);
+    signal dout_cu : std_logic_vector(n downto 0);
+    signal addr_con : std_logic_vector(n downto 0);
+    signal dout_con : std_logic_vector(n downto 0);
 
 begin
 
@@ -230,7 +258,7 @@ begin
 
     cu: control_unit port map(
         clk => CLK,
-        opcode => OPCODE,
+        opcode => OPCODE(5 downto 1),
         opand1 => OPAND1,
         opand2 => OPAND2,
         mask => mask,
@@ -240,26 +268,27 @@ begin
         j => j,
         mem_t => mem_t,
         id_cu => id_cu,
+        mem_rdy => mem_rdy,
         addr_cu => addr_cu,
         dout_cu => dout_cu,
         err_b => ERRB,
-        opand1_null => opand1_null,
-        opand2_null => opand2_null
+        opand1_null => i_null,
+        opand2_null => j_null
     );
 
     ---------------- symbol generator ----------------
 
     -- generator controller
     generator_unit: generator port map(
-        clk => clk,
-        rst => rst,
-        en => en,
-        poly_bcd => poly_bcd,
+        clk => CLK,
+        rst => rst_gen,
+        en => en_gen,
+        poly_bcd => POLYBCD,
         mask => mask,
         msb => msb,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
-        gen_rdy => gen_rdy,
+        gen_rdy => RDYGEN,
         addr_gen => addr_gen,
         elem => elem
     );
@@ -267,25 +296,25 @@ begin
 
     ---------------- memory ----------------
 
-    -- memory wrapper
-    mem : memory port map(
-        clk => CLK,
-        mem_t => mem_t,
-        mem_rdy => mem_rdy,
-        id_cu => id_cu,
-        addr_cu => addr_cu,
-        dout_cu => dout_cu,
-        id_gen => id_gen,
-        addr_gen => addr_gen,
-        din_gen => din_gen,
-        id_con => id_con,
-        addr_con => addr_con,
-        dout_con => dout_con,
-        nCE => _CE,
-        nWE => _WE,
-        A => A,
-        DQ => _IO
-    );
+    ---- memory wrapper
+    --mem : memory port map(
+    --    clk => CLK,
+    --    mem_t => mem_t,
+    --    mem_rdy => mem_rdy,
+    --    id_cu => id_cu,
+    --    addr_cu => addr_cu,
+    --    dout_cu => dout_cu,
+    --    id_gen => id_gen,
+    --    addr_gen => addr_gen,
+    --    din_gen => din_gen,
+    --    id_con => id_con,
+    --    addr_con => addr_con,
+    --    dout_con => dout_con,
+    --    nCE => nCE,
+    --    nWE => nWE,
+    --    A => A,
+    --    DQ => IO
+    --);
 
 
     ---------------- Galois operators ----------------
@@ -310,9 +339,12 @@ begin
 
 
     ---------------- TEMPORARY OUTPUTS ----------------
-    --t_m <= msb;
-    --t_n <= n;
-    --t_mask <= mask;
+    t_size <= size;
+    t_msb <= msb;
+    t_mask <= mask;
+    t_1 <= rst_gen;
+    t_n1 <= i;
+    t_n2 <= j;
     --t_addr <= mem_addr;
     --t_sym <= mem_data_in;
 

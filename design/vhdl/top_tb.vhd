@@ -5,69 +5,115 @@
 --
 
 library ieee;
-use ieee.std_logic_1164.all;
- 
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+library work;
+    use work.demo.all;
+    use work.demo_tb.all;
+
 entity top_tb is
 end top_tb;
- 
-architecture behavior of top_tb is 
- 
+
+architecture behavior of top_tb is
+
+    constant n : positive := DEGREE;
+    constant clgn : positive := CEILLGN;
+    constant clgn1 : positive := CEILLGN1;
+
     component top
+        generic(
+            n       : positive := DEGREE;
+            clgn    : positive := CEILLGN;  -- ceil(log2(n))
+            clgn1   : positive := CEILLGN1   -- ceil(log2(n - 1))
+        );
         port(
+            -- master clock
             CLK     : in std_logic;
+
+            -- master reset
             RST     : in std_logic;
-            POLYBCD : in std_logic_vector(15 downto 0);
+
+            -- user inputs
+            POLYBCD : in std_logic_vector(n - 1 downto 0);
             OPCODE  : in std_logic_vector(5 downto 0);
-            OPAND1  : in std_logic_vector(15 downto 0);
-            OPAND2  : in std_logic_vector(15 downto 0);
-            RESULT  : out std_logic_vector(15 downto 0);
+            OPAND1  : in std_logic_vector(n downto 0);
+            OPAND2  : in std_logic_vector(n downto 0);
+
+            -- user output
+            RESULT  : out std_logic_vector(n downto 0);
+
+            -- IO interrupts
             RDYGEN  : out std_logic;
             ERRB    : out std_logic;
-            ERRZ    : out std_logic
+            ERRZ    : out std_logic;
+
+            -- memory control signals
+            nCE     : out std_logic;
+            nWE     : out std_logic;
+            nOE     : out std_logic;
+            nBLE    : out std_logic;
+            nBHE    : out std_logic;
+
+            -- memory address and data signals
+            A       : out std_logic_vector((n + 1) downto 0);
+            IO      : inout std_logic_vector(n downto 0);
 
             -------------- TEMPORARY - JUST FOR TB ------------
 
             ---- universal registers
-            --t_n         : out std_logic_vector(3 downto 0);
-            --t_m         : out std_logic_vector(3 downto 0);
-            --t_mask      : out std_logic_vector(15 downto 0);
+            t_size      : out std_logic_vector(clgn downto 0);
+            t_msb       : out std_logic_vector(clgn1 downto 0);
+            t_mask      : out std_logic_vector(n downto 0);
 
             ---- generated terms
-            --t_addr      : out std_logic_vector(15 downto 0);
-            --t_sym       : out std_logic_vector(15 downto 0)
+            --t_addr      : out std_logic_vector(n downto 0);
+            --t_sym       : out std_logic_vector(n downto 0)
+            t_1         : out std_logic;
+            t_n1      : out std_logic_vector(n downto 0);
+            t_n2      : out std_logic_vector(n downto 0)
         );
     end component;
 
     --inputs
     signal CLK     : std_ulogic := '1';
     signal RST     : std_logic;
-    signal POLYBCD : std_logic_vector(15 downto 0);
+    signal POLYBCD : std_logic_vector(n - 1 downto 0);
     signal OPCODE  : std_logic_vector(5 downto 0);
-    signal OPAND1  : std_logic_vector(15 downto 0);
-    signal OPAND2  : std_logic_vector(15 downto 0);
+    signal OPAND1  : std_logic_vector(n downto 0);
+    signal OPAND2  : std_logic_vector(n downto 0);
+
+    -- memory control signals
+    signal nCE    : std_logic;
+    signal nWE    : std_logic;
+    signal nOE    : std_logic;
+    signal nBLE   : std_logic;
+    signal nBHE   : std_logic;
 
     -- outputs
-    signal RESULT  : std_logic_vector(15 downto 0);
+    signal RESULT  : std_logic_vector(n downto 0);
     signal RDYGEN  : std_logic;
     signal ERRB    : std_logic;
     signal ERRZ    : std_logic;
+    signal A       : std_logic_vector((n + 1) downto 0);
+    signal IO      : std_logic_vector(n downto 0);
 
     -------------- TEMPORARY - JUST FOR TB ------------
 
     ---- universal registers
-    --signal t_n : std_logic_vector(3 downto 0);
-    --signal t_m : std_logic_vector(3 downto 0);
-    --signal t_mask : std_logic_vector(15 downto 0);
+    signal t_size : std_logic_vector(clgn downto 0);
+    signal t_msb : std_logic_vector(clgn1 downto 0);
+    signal t_mask : std_logic_vector(n downto 0);
+
+    signal t_1 : std_logic;
+    signal t_n1 : std_logic_vector(n downto 0);
+    signal t_n2 : std_logic_vector(n downto 0);
 
     ---- memory signals
-    --signal t_addr : std_logic_vector(15 downto 0);
-    --signal t_sym : std_logic_vector(15 downto 0);
+    --signal t_addr : std_logic_vector(n downto 0);
+    --signal t_sym : std_logic_vector(n downto 0);
 
-    -- testbench clocks
-    constant t_nums : integer := 320;
- 
 begin
- 
+
     -- instantiate the unit under test (uut)
     uut: top port map (
         CLK => CLK,
@@ -79,89 +125,56 @@ begin
         RESULT => RESULT,
         RDYGEN => RDYGEN,
         ERRB => ERRB,
-        ERRZ => ERRZ
+        ERRZ => ERRZ,
+        nCE => nCE,
+        nWE => nWE,
+        nOE => nOE,
+        nBLE => nBLE,
+        nBHE => nBHE,
+        A => A,
+        IO => IO,
 
         -- TEMPORARY SIGNALS
         --RST => RST,
-        --t_n => t_n,
-        --t_m => t_m,
-        --t_mask => t_mask,
+        t_size => t_size,
+        t_msb => t_msb,
+        t_mask => t_mask,
+        t_1 => t_1,
+        t_n1 => t_n1,
+        t_n2 => t_n2
         --t_addr => t_addr,
         --t_sym => t_sym
     );
 
     -- clock process
-    CLK_proc: process
+    clk_proc: process
     begin
 
-        for i in 1 to t_nums loop
+        for i in 1 to TNUMS loop
             CLK <= not CLK;
-            wait for 10 ns;
-            -- clock period = 50 MHz
+            wait for (CLK_PER / 2);
         end loop;
 
     end process;
 
     -- stimulus process
     stim_proc: process
-        begin    
+    begin
 
-        POLYBCD <= "0000000000011001";
-        RST <= '1';
+        POLYBCD <= "00000110";  -- x^3+x^2+x^0
+        OPAND1 <= "000000101";
+        OPAND2 <= "000000000";
 
-        OPAND1 <= "0000000000001001";
-        OPAND2 <= "0000000000001100";
+        wait for (CLK_PER * 4);
+        OPCODE <= "011000";  -- generator
 
-        wait for 20 ns;
-
-        RST <= '0';
-
-        -- hold reset state for 40 ns.
-        wait for 40 ns;
-
-        -- add/sub
-        OPCODE <= "111110";
-
-        -- hold reset state for 40 ns.
-        wait for 60 ns;
-
-        -- add/sub
-        OPCODE <= "001110";
-
-        -- hold reset state for 40 ns.
-        wait for 60 ns;
-
-        -- mul
-        OPCODE <= "010000";
-
-        -- hold reset state for 40 ns.
-        wait for 60 ns;
-
-        -- div
-        OPCODE <= "001110";
-
-        -- hold reset state for 40 ns.
-        wait for 60 ns;
-
-        -- log
-        OPCODE <= "001000";
-
-        -- hold reset state for 40 ns.
-        wait for 60 ns;
-
-        -- convert
-        OPCODE <= "000111";
-
-        -- hold reset state for 40 ns.
-        wait for 160 ns;
-
-        -- convert
-        OPCODE <= "111111";
-
-        wait for 1000 ns;
+        wait for (CLK_PER * 20);
+        OPCODE <= "111XXX";  -- noop
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
+
+        wait;
 
     end process;
 
