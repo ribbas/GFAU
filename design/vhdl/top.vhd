@@ -348,16 +348,16 @@ begin
     t_msb <= msb;
     t_mask <= mask;
     t_1 <= id_con;
-    t_n1 <= i;
+    t_n1 <= dout_con;
     t_n2 <= j;
     --t_addr <= mem_addr;
     --t_sym <= mem_data_in;
 
-    process (clk) begin
-    for i in 5 downto 0 loop
-        report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
-    end loop;
-    end process;
+    --process (clk) begin
+    --for i in 5 downto 0 loop
+    --    report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
+    --end loop;
+    --end process;
 
 
 end behavioral;

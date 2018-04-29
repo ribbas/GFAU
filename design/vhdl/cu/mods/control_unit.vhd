@@ -31,8 +31,8 @@ entity control_unit is
         rst_gen     : out std_logic;  -- polynomial generator reset
 
         -- operation signals
-        i           : out std_logic_vector(n downto 0);  -- i
-        j           : out std_logic_vector(n downto 0);  -- j
+        i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
+        j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
         -- memory types and methods
         mem_t       : out std_logic; -- memory type

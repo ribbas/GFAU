@@ -18,6 +18,7 @@ entity outconvert is
     port(
         clk         : in std_logic;
 
+        en          : in std_logic;  -- enable
         convert     : in std_logic;  -- convert flag
         mask        : in std_logic_vector(n downto 0);  -- operand mask
 
@@ -33,8 +34,8 @@ entity outconvert is
         dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
 
         -- final output
-        result      : out std_logic_vector(n downto 0);
-        rdy_out     : out std_logic -- result ready interrupt
+        result      : out std_logic_vector(n downto 0) := DCAREVEC;
+        rdy_out     : out std_logic := '0' -- result ready interrupt
     );
 end outconvert;
 
@@ -45,67 +46,87 @@ architecture behavioral of outconvert is
 
 begin
 
-    process (clk, convert, mask, out_sel, mem_rdy, dout_con) begin
+    process (clk) begin
 
         if (rising_edge(clk)) then
 
-            -- if conversion requested
-            if (convert = '1') then
+            if (en = '1') then
 
-                case state is
+                report "ENABLED";
 
-                    -- send address to memory wrapper
-                    when send_addr =>
+                -- if conversion requested
+                if (convert = '1') then
 
-                        -- read control signal with ID
-                        id_con <= '1';
+                    case state is
 
-                        addr_con <= out_sel;
-                        result <= HIIMPVEC;
+                        -- send address to memory wrapper
+                        when send_addr =>
 
-                        state <= get_data;
+                            -- read control signal with ID
+                            id_con <= '1';
+                            rdy_out <= '0';
 
-                    when get_data =>
+                            addr_con <= out_sel;
+                            result <= DCAREVEC;
 
-                        -- read control signal with ID
-                        id_con <= '1';
-                        addr_con <= out_sel;
-
-                        if (mem_rdy = '1') then
-
-                            result <= dout_con and mask;
-                            --state <= send_addr;
-
-                        else
-
-                            result <= HIIMPVEC;
                             state <= get_data;
 
-                        end if;
+                        when get_data =>
 
-                    when others =>
+                            -- read control signal with ID
+                            id_con <= '1';
+                            addr_con <= out_sel;
 
-                        -- stand-by control signal with ID
-                        id_con <= '0';
+                            if (mem_rdy = '1') then
 
-                        addr_con <= HIIMPVEC;
-                        result <= HIIMPVEC;
-                        state <= send_addr;
+                                result <= dout_con and mask;
+                                rdy_out <= '1';
 
-                end case;
+                            else
+
+                                result <= DCAREVEC;
+                                rdy_out <= '0';
+                                state <= get_data;
+
+                            end if;
+
+                        when others =>
+
+                            -- stand-by control signal with ID
+                            id_con <= '0';
+                            rdy_out <= '0';
+
+                            addr_con <= DCAREVEC;
+                            result <= DCAREVEC;
+                            state <= send_addr;
+
+                    end case;
+
+                else
+
+                    report "HERE";
+
+                    -- stand-by control signal with ID
+                    id_con <= '0';
+                    rdy_out <= '1';
+
+                    addr_con <= DCAREVEC;
+
+                    result <= out_sel and mask;
+
+                end if;  -- convert
 
             else
 
-                -- stand-by control signal with ID
-                id_con <= '0';
+                rdy_out <= '0';
 
-                addr_con <= HIIMPVEC;
+            end if;  -- enable
 
-                result <= out_sel and mask;
+        end if;  -- clock
 
-            end if;
-
-        end if;
+        for i in n downto 0 loop
+            report "outsel("&integer'image(i)&")=" & std_logic'image(out_sel(i));
+        end loop;
 
     end process;
 

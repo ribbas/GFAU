@@ -20,7 +20,7 @@ entity isnull is
     port(
         opand   : in std_logic_vector(n downto 0);  -- term to check
         mem_t   : in std_logic;                     -- memory type flag
-        is_null : out std_logic                     -- is_null flag
+        is_null : out std_logic := '0'              -- is_null flag
    );
 end isnull;
 

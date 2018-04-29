@@ -27,6 +27,7 @@ entity outselect is
         out_sel : out std_logic_vector(n downto 0);
         mem_t   : out std_logic;
         convert : out std_logic;
+        en_con  : out std_logic;
         err_z   : out std_logic
     );
 end outselect;
@@ -41,10 +42,10 @@ begin
             -- add / sub
             when "001" =>
 
-                report "ADD";
-
                 -- add / sub output is selected
                 out_sel <= out_as;
+                -- enable output converter
+                en_con <= '1';
 
                 -- add / sub never throws a zero exception
                 err_z <= '0';
@@ -65,6 +66,9 @@ begin
 
             -- mul
             when "010" =>
+
+                -- enable output converter
+                en_con <= '1';
 
                 -- mul never throws a zero exception
                 err_z <= '0';
@@ -102,8 +106,15 @@ begin
             -- div
             when "011" =>
 
+                for i in n downto 0 loop
+                    report "quot("&integer'image(i)&")=" & std_logic'image(out_d(i));
+                end loop;
+
                 -- if both non-null operands (a/b)
                 if (i_null = '0' and j_null = '0') then
+
+                    -- enable output converter
+                    en_con <= '1';
 
                     -- div output is selected
                     out_sel <= out_d;
@@ -129,12 +140,20 @@ begin
                     convert <= '0';
                     mem_t <= '-';
 
+                    -- disable output converter
+                    en_con <= '0';
+
                     -- throw divide by zero exception
                     err_z <= '1';
                     out_sel <= DCAREVEC;
 
                 -- if dividing null is attempted (0/b)
                 else
+
+                    report "QUE";
+
+                    -- enable output converter
+                    en_con <= '1';
 
                     convert <= '0';
                     mem_t <= '-';
@@ -149,6 +168,9 @@ begin
 
                 -- if non-null operand (log(a))
                 if (i_null <= '0') then
+
+                    -- enable output converter
+                    en_con <= '1';
 
                     -- log output is selected
                     out_sel <= out_l;
@@ -170,6 +192,9 @@ begin
                 -- if log of null is attempted (log(0))
                 else
 
+                    -- disable output converter
+                    en_con <= '0';
+
                     convert <= '0';
                     mem_t <= '-';
 
@@ -181,11 +206,8 @@ begin
 
             when others =>
 
-                report "NONE OUT_T" & std_logic'image(out_t);
-                for i in 2 downto 0 loop
-                    report "opcode("&integer'image(i)&") value is" &
-                    std_logic'image(op(i));
-                end loop;
+                -- disable output converter
+                en_con <= '0';
 
                 err_z <= '0';
                 convert <= '0';

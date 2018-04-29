@@ -34,10 +34,11 @@ architecture behavioral of outconvert_tb is
 
             -- memory address and data signals
             addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : in std_logic_vector(n downto 0);
+            dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
 
             -- final output
-            result      : out std_logic_vector(n downto 0)
+            result      : out std_logic_vector(n downto 0);
+            rdy_out     : out std_logic -- result ready interrupt
         );
     end component;
 
@@ -49,6 +50,7 @@ architecture behavioral of outconvert_tb is
 
     -- outputs
     signal id_con : std_logic;
+    signal rdy_out : std_logic;
     signal result : std_logic_vector(n downto 0);
     signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector(n downto 0);
@@ -68,7 +70,8 @@ begin
         mem_rdy => mem_rdy,
         addr_con => addr_con,
         dout_con => dout_con,
-        result => result
+        result => result,
+        rdy_out => rdy_out
     );
 
     -- clock process

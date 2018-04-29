@@ -168,11 +168,13 @@ begin
         OPAND1 <= "000000101";
         OPAND2 <= "000000011";
 
-        wait for (CLK_PER * 4);
-        OPCODE <= "100000";  -- generator
+        wait for (CLK_PER * 2);
+        OPCODE <= "011000";  -- generator
 
-        wait for (CLK_PER * 20);
-        --OPCODE <= "111XXX";  -- noop
+        wait for (CLK_PER * 4);
+        OPCODE <= "111XXX";  -- noop
+
+        wait for (CLK_PER * 2);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

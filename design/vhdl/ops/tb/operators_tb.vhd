@@ -129,21 +129,21 @@ begin
         op <= "000";
         out_t <= '0';
 
-        -- hold reset state for 10 ns
+        -- hold state for 10 ns
         wait for (CLK_PER * 1);
 
         -- add/sub, poly
         op <= "001";
         out_t <= '1';
 
-        -- hold reset state for 10 ns
+        -- hold state for 10 ns
         wait for (CLK_PER * 1);
 
         -- mul, elem
         op <= "010";
         out_t <= '0';
 
-        -- hold reset state for 10 ns
+        -- hold state for 10 ns
         wait for (CLK_PER * 1);
 
         dout_con <= "000000100";
@@ -152,7 +152,7 @@ begin
         op <= "011";
         out_t <= '1';
 
-        -- hold reset state for 10 ns
+        -- hold state for 10 ns
         wait for (CLK_PER * 3);
 
         -- log, elem
@@ -164,8 +164,6 @@ begin
 
         -- log, elem
         i_null <= '0';
-        op <= "100";
-        out_t <= '0';
 
         wait for (CLK_PER * 1);
 

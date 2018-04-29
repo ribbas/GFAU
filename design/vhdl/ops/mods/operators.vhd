@@ -48,7 +48,7 @@ entity operators is
         addr_con    : out std_logic_vector(n downto 0);
         dout_con    : inout std_logic_vector(n downto 0);
 
-        result      : out std_logic_vector(n downto 0); -- selected output
+        result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
         err_z       : out std_logic; -- zero exception
         rdy_out     : out std_logic -- result ready interrupt
     );
@@ -114,6 +114,7 @@ architecture behavioral of operators is
             out_sel : out std_logic_vector(n downto 0);
             mem_t   : out std_logic;
             convert : out std_logic;
+            en_con  : out std_logic;
             err_z   : out std_logic
         );
     end component;
@@ -122,6 +123,7 @@ architecture behavioral of operators is
     component outconvert
         port(
             clk         : in std_logic;
+            en          : in std_logic;
             convert     : in std_logic;
             mask        : in std_logic_vector(n downto 0);
             out_sel     : in std_logic_vector(n downto 0);
@@ -142,6 +144,7 @@ architecture behavioral of operators is
 
     signal out_sel : std_logic_vector(n downto 0);
     signal convert : std_logic;
+    signal en_con : std_logic;
 
 begin
 
@@ -195,12 +198,14 @@ begin
         out_sel => out_sel,
         mem_t => mem_t,
         convert => convert,
+        en_con => en_con,
         err_z => err_z
     );
 
     -- output converter
     outconvert_unit : outconvert port map(
         clk => clk,
+        en => en_con,
         convert => convert,
         mask => mask,
         out_sel => out_sel,
@@ -212,11 +217,11 @@ begin
         rdy_out => rdy_out
     );
 
-    process (clk) begin
-    for i in 2 downto 0 loop
-        report "OPCODE("&integer'image(i)&") value is" & std_logic'image(op(i));
-    end loop;
-    end process;
+    --process (clk) begin
+    --for i in 2 downto 0 loop
+    --    report "OPCODE("&integer'image(i)&") value is" & std_logic'image(op(i));
+    --end loop;
+    --end process;
 
 
 end behavioral;
