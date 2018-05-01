@@ -1,6 +1,6 @@
 {
   "config": {
-    "hscale": 3
+    "hscale": 2
   },
   "head": {
     "tick": 0
@@ -11,7 +11,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "clk"],
-      "wave": "n.......",
+      "wave": "n........",
       "period": "1"
     },
     {
@@ -20,7 +20,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "mask[8:0]"],
-      "wave": "3.......",
+      "wave": "3........",
       "data": [
         ["tspan", {
           "class": "h4"
@@ -33,11 +33,37 @@
         "fill": "black",
         "font-weight": "bold"
       }, "size[3:0]"],
-      "wave": "3.......",
+      "wave": "3........",
       "data": [
         ["tspan", {
           "class": "h4"
         }, "3"]
+      ]
+    },
+    {},
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "op[2:0]"],
+      "wave": "u2342..3.",
+      "data": [
+        ["tspan", {
+          "class": "h4"
+        }, "b'000"],
+        ["tspan", {
+          "class": "h4"
+        }, "b'001"],
+        ["tspan", {
+          "class": "h4"
+        }, "b'010"],
+        ["tspan", {
+          "class": "h4"
+        }, "b'011"],
+        ["tspan", {
+          "class": "h4"
+        }, "b'100"]
       ]
     },
     {
@@ -45,25 +71,8 @@
         "class": "h3",
         "fill": "black",
         "font-weight": "bold"
-      }, "opcode[5:0]"],
-      "wave": "2342..3.",
-      "data": [
-        ["tspan", {
-          "class": "h4"
-        }, "b'000XX0"],
-        ["tspan", {
-          "class": "h4"
-        }, "b'001XX1"],
-        ["tspan", {
-          "class": "h4"
-        }, "b'010XX0"],
-        ["tspan", {
-          "class": "h4"
-        }, "b'011XX1"],
-        ["tspan", {
-          "class": "h4"
-        }, "b'100XX0"]
-      ]
+      }, "out_t"],
+      "wave": "u0101..0."
     },
     {
       "name": ["tspan", {
@@ -71,7 +80,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "i_null"],
-      "wave": "0.....10"
+      "wave": "0......10"
     },
     {
       "name": ["tspan", {
@@ -79,7 +88,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "j_null"],
-      "wave": "0......."
+      "wave": "0........"
     },
     {
       "name": ["tspan", {
@@ -87,7 +96,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "i[8:0]"],
-      "wave": "3.......",
+      "wave": "3........",
       "data": [
         ["tspan", {
           "class": "h4"
@@ -100,12 +109,30 @@
         "fill": "black",
         "font-weight": "bold"
       }, "j[8:0]"],
-      "wave": "3.......",
+      "wave": "3........",
       "data": [
         ["tspan", {
           "class": "h4"
         }, "3"]
       ]
+    },
+    {},
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "err_z"],
+      "wave": "0......10"
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "rdy_out"],
+      "wave": "0....1...0.1...0.1",
+      "period": 0.5
     },
     {
       "name": ["tspan", {
@@ -113,7 +140,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "result[8:0]"],
-      "wave": "ux.2.3.z4....x.2",
+      "wave": "x....2.3.x.4.....2",
       "period": "0.5",
       "data": [
         ["tspan", {
@@ -130,22 +157,7 @@
         }, "5"]
       ]
     },
-    {
-      "name": ["tspan", {
-        "class": "h3",
-        "fill": "black",
-        "font-weight": "bold"
-      }, "err_z"],
-      "wave": "0.....10"
-    },
-    {
-      "name": ["tspan", {
-        "class": "h3",
-        "fill": "black",
-        "font-weight": "bold"
-      }, "mem_t"],
-      "wave": "x..1.x.."
-    },
+    {},
     {
       "name": ["tspan", {
         "class": "h3",
@@ -153,7 +165,7 @@
         "font-weight": "bold"
       }, "id_con"],
       "period": "0.5",
-      "wave": "u0.....1.....0.."
+      "wave": "u....0...1.......0"
     },
     {
       "name": ["tspan", {
@@ -161,7 +173,15 @@
         "fill": "black",
         "font-weight": "bold"
       }, "mem_rdy"],
-      "wave": "n......."
+      "wave": "n........"
+    },
+    {
+      "name": ["tspan", {
+        "class": "h3",
+        "fill": "black",
+        "font-weight": "bold"
+      }, "mem_t"],
+      "wave": "x...1.x.."
     },
     {
       "name": ["tspan", {
@@ -170,7 +190,7 @@
         "font-weight": "bold"
       }, "addr_con[8:0]"],
       "period": "0.5",
-      "wave": "uz.....2.....z..",
+      "wave": "u....x...2.......x",
       "data": [
         ["tspan", {
           "class": "h4"
@@ -183,7 +203,7 @@
         "fill": "black",
         "font-weight": "bold"
       }, "dout_con[8:0]"],
-      "wave": "u..2....",
+      "wave": "u...2....",
       "data": [
         ["tspan", {
           "class": "h4"

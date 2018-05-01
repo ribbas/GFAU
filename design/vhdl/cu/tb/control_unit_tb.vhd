@@ -149,11 +149,11 @@ begin
         mask <= "000000111";
         opand1 <= "000000101";
         opand2 <= "000000011";
+        opcode <= "00100";  -- add/sub, operands in polynomial
 
         wait for (CLK_PER * 1);
         en <= '1';
 
-        opcode <= "00111";  -- add/sub, operands in element
         wait for (CLK_PER * 4);
 
         opand1 <= "000000111";  -- 2^n-1

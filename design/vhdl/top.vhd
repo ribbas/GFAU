@@ -54,7 +54,7 @@ entity top is
         A       : out std_logic_vector((n + 1) downto 0);
         IO      : inout std_logic_vector(n downto 0);
 
-        ---------------- TEMPORARY - JUST FOR TB ------------
+        ------------ TEMPORARY - JUST FOR TB ------------
 
         ---- universal registers
         t_size      : out std_logic_vector(clgn downto 0);
