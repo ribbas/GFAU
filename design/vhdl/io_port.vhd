@@ -28,17 +28,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity io_port is
     generic(
         n       : positive := DEGREE
     );
     port(
-        output  :   in      std_logic_vector(n downto 0);  --out to pad
-        oe      :   in      std_logic;                         --enable pad output
-        input   :   out     std_logic_vector(n downto 0);  --in from pad
+        op      :   in      std_logic_vector(n downto 0);  --out to pad
+        oe      :   in      std_logic;                     --enable pad output
+        ip      :   out     std_logic_vector(n downto 0);  --in from pad
         pad     :   inout   std_logic_vector(n downto 0)   --external io pad
     );
 end io_port;
@@ -47,8 +47,8 @@ architecture Behavioral of io_port is
 
 begin
 
-    pad <= output when oe = '1' else HIIMPVEC;
-    input <= pad;
+    pad <= op when oe = '1' else HIIMPVEC;
+    ip <= pad;
 
 end Behavioral;
 

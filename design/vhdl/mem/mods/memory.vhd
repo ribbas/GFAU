@@ -52,9 +52,6 @@ entity memory is
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);
-        DQ_in       : in std_logic_vector(n downto 0);
-        wr_rd       : out std_logic; --1 output mode, 0 for read mode of ioport
-        DQ_out      : out std_logic_vector(n downto 0);
         DQ          : inout std_logic_vector(n downto 0)
     );
 end memory;
@@ -70,12 +67,17 @@ architecture behavioral of memory is
     --used for setting up address before writing
     signal setup        : setup_type := addr_setup;
     signal ioport_oe    : std_logic;
+	
+	--internal DQ signals
+	--signal DQ_in		: std_logic_vector(n downto 0);
+	signal DQ_out		: std_logic_vector(n downto 0);
+	signal wr_rd		: std_logic;
 
     component io_port
         port(
-            output  : in std_logic_vector(n downto 0);  --out to pad
+            op  : in std_logic_vector(n downto 0);  --out to pad
             oe      : in std_logic;                         --enable pad output
-            input   : out std_logic_vector(n downto 0);  --in from pad
+            ip   : out std_logic_vector(n downto 0);  --in from pad
             pad     : inout std_logic_vector(n downto 0)   --external io pad
         );
     end component;
@@ -83,9 +85,9 @@ architecture behavioral of memory is
 begin
 
     io_port_unit : io_port port map(
-        output  => DQ_out,
+        op      => din_gen,
         oe      => wr_rd,
-        input   => DQ_in,
+        ip      => DQ_out,
         pad     => DQ
     );
 
@@ -125,7 +127,7 @@ begin
                         wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
-                        dout_cu <= DQ_in; --read from iobus in
+                        dout_cu <= DQ_out; --read from iobus in
                         dout_con <= DCAREVEC;
 
                         mem_rdy <= '1';
@@ -179,7 +181,7 @@ begin
                         wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
-                        dout_con <= DQ_in; --read from iobus in
+                        dout_con <= DQ_out; --read from iobus in
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '1';
@@ -224,7 +226,6 @@ begin
 
                                 -- send control unit's address to memory
                                 A <= '0' & addr_gen;
-                                DQ_out <= din_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
                                 mem_rdy <= '0';
 
@@ -238,13 +239,12 @@ begin
 
                                 --hold address, data, and bus control signals
                                 A <= mem_t_cu & addr_cu;
-                                DQ_out <= din_gen;
                                 wr_rd <= '1';
                                 mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
                                 wr_state <= wr_mem2;
 
-                            when others =>
+                            --when others =>
 
                                 -- BRIAN: PUT SOMETHING
 
@@ -263,7 +263,6 @@ begin
 
                                 -- send control unit's address to memory
                                 A <= '1' & addr_gen;
-                                DQ_out <= din_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
                                 mem_rdy <= '0';
 
@@ -277,7 +276,6 @@ begin
 
                                 --hold address, data, and bus control signals
                                 A <= mem_t_cu & addr_cu;
-                                DQ_out <= din_gen;
                                 wr_rd <= '1';
                                 mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
