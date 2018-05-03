@@ -8,8 +8,8 @@ library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
 library work;
-    use work.demo.all;
-    use work.demo_tb.all;
+    use work.glob.all;
+    use work.glob_tb.all;
 
 entity control_unit_tb is
 end control_unit_tb;

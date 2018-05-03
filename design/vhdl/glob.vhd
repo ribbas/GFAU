@@ -1,18 +1,18 @@
--- demo.vhd
+-- glob.vhd
 --
 -- Sabbir Ahmed
 -- 2018-03-30
 --
--- Package for the GFAU demo containing all global vectors and constants
+-- Package for the GFAU glob containing all global vectors and constants
 --
 
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.std_logic_unsigned.all;
 
-package demo is
+package glob is
 
-    -------- demo constants --------
+    -------- glob constants --------
 
     -- maximum degree of polynomial
     constant DEGREE : positive := 8;
@@ -23,7 +23,7 @@ package demo is
     -- ceil(log2(degree - 1))
     constant CEILLGN1 : positive := 2;
 
-    -------- demo constants --------
+    -------- glob constants --------
 
     -- vector of all don't care bits
     constant DCAREVEC : std_logic_vector(DEGREE downto 0) := (others => '-');
@@ -57,4 +57,4 @@ package demo is
     type wr_state_type is (wr_mem1, wr_mem2, wr_mem3);
     type setup_type is (addr_setup, wr);
 
-end demo;
+end glob;

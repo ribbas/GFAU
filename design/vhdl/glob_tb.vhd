@@ -1,4 +1,4 @@
--- demo_tb.vhd
+-- glob_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-03-30
@@ -10,11 +10,11 @@ library ieee;
     use ieee.std_logic_1164.all;
     use ieee.std_logic_unsigned.all;
 
-package demo_tb is
+package glob_tb is
 
     -------- timing constants --------
 
     constant TNUMS : integer := 320;
     constant CLK_PER : time := 10 ns;
 
-end demo_tb;
+end glob_tb;

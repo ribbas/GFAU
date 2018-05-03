@@ -7,8 +7,8 @@
 library ieee;
     use ieee.std_logic_1164.all;
 library work;
-    use work.demo.all;
-    use work.demo_tb.all;
+    use work.glob.all;
+    use work.glob_tb.all;
 
 entity outconvert_tb is
 end outconvert_tb;

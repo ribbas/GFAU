@@ -12,7 +12,7 @@ library ieee;
     use ieee.std_logic_1164.all;
     use ieee.std_logic_misc.all;
 library work;
-    use work.demo.all;
+    use work.glob.all;
 
 entity ismember is
     generic(

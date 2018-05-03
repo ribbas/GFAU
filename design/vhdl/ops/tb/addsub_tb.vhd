@@ -7,7 +7,7 @@
 library ieee;
     use ieee.std_logic_1164.all;
 library work;
-    use work.demo.all;
+    use work.glob.all;
 
 entity addsub_tb is
 end addsub_tb;

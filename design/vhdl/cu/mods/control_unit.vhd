@@ -11,7 +11,7 @@ library ieee;
     use ieee.numeric_std.all;
     use ieee.std_logic_unsigned.all;
 library work;
-    use work.demo.all;
+    use work.glob.all;
 
 entity control_unit is
     generic(

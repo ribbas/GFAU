@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 library work;
-use work.demo.all;
+use work.glob.all;
 use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
