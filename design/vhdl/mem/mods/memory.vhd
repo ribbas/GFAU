@@ -67,7 +67,7 @@ architecture behavioral of memory is
     --used for setting up address before writing
     signal setup        : setup_type := addr_setup;
     signal ioport_oe    : std_logic;
-	
+
 	--internal DQ signals
 	--signal DQ_in		: std_logic_vector(n downto 0);
 	signal DQ_out		: std_logic_vector(n downto 0);
