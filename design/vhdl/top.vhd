@@ -52,18 +52,18 @@ entity top is
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
-        IO      : inout std_logic_vector(n downto 0);
+        IO      : inout std_logic_vector(n downto 0)
 
-        ------------ TEMPORARY - JUST FOR TB ------------
+        -------------- TEMPORARY - JUST FOR TB ------------
 
-        ---- universal registers
-        t_size      : out std_logic_vector(clgn downto 0);
-        t_msb       : out std_logic_vector(clgn1 downto 0);
-        t_mask      : out std_logic_vector(n downto 0);
+        ------ universal registers
+        --t_size      : out std_logic_vector(clgn downto 0);
+        --t_msb       : out std_logic_vector(clgn1 downto 0);
+        --t_mask      : out std_logic_vector(n downto 0);
 
-        t_1         : out std_logic;
-        t_n1      : out std_logic_vector(n downto 0);
-        t_n2      : out std_logic_vector(n downto 0)
+        --t_1         : out std_logic;
+        --t_n1      : out std_logic_vector(n downto 0);
+        --t_n2      : out std_logic_vector(n downto 0)
 
     );
 end top;
@@ -249,9 +249,8 @@ architecture behavioral of top is
     signal j_null : std_logic;
 
     -- memory control signals
-    signal mem_t_cu : std_logic;  -- memory type
-    signal mem_t_ops : std_logic;  -- memory type
-    signal mem_t_con : std_logic;  -- memory type
+    signal mem_t_cu : std_logic;  -- memory type of control unit
+    signal mem_t_con : std_logic;  -- memory type of operators
     signal mem_rdy : std_logic;  -- memory type
 
     signal id_con : std_logic;
@@ -359,7 +358,7 @@ begin
         j_null => j_null,
         size => size,
         mask => mask,
-        mem_t => mem_t_ops,
+        mem_t => mem_t_con,
         id_con => id_con,
         mem_rdy => mem_rdy,
         addr_con => addr_con,
@@ -370,21 +369,21 @@ begin
     );
 
 
-    ---------------- TEMPORARY OUTPUTS ----------------
-    t_size <= size;
-    t_msb <= msb;
-    t_mask <= mask;
-    t_1 <= id_cu;
-    t_n1 <= addr_gen;
-    t_n2 <= elem;
-    --t_addr <= mem_addr;
-    --t_sym <= mem_data_in;
+    ------------------ TEMPORARY OUTPUTS ----------------
+    --t_size <= size;
+    --t_msb <= msb;
+    --t_mask <= mask;
+    --t_1 <= id_cu;
+    --t_n1 <= addr_gen;
+    --t_n2 <= elem;
+    ----t_addr <= mem_addr;
+    ----t_sym <= mem_data_in;
 
-    --process (clk) begin
-    --for i in 5 downto 0 loop
-    --    report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
-    --end loop;
-    --end process;
+    ----process (clk) begin
+    ----for i in 5 downto 0 loop
+    ----    report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
+    ----end loop;
+    ----end process;
 
 
 end behavioral;
