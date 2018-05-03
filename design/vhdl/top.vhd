@@ -144,7 +144,6 @@ architecture behavioral of top is
 
             -- memory wrapper control signals
             id_gen      : out std_logic;
-            mem_rdy     : in std_logic;
 
             -- memory signals
             gen_rdy     : out std_logic;
@@ -302,7 +301,6 @@ begin
         mask => mask,
         msb => msb,
         id_gen => id_gen,
-        mem_rdy => mem_rdy,
         gen_rdy => RDYGEN,
         addr_gen => addr_gen,
         elem => elem
