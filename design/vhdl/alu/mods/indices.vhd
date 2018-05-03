@@ -19,7 +19,7 @@ entity indices is
         clgn1       : positive := CEILLGN1   -- ceil(log2(n - 1))
     );
     port(
-        poly_bcd    : in std_logic_vector(n - 1 downto 0);  -- BCD polynomial
+        poly_bcd    : in std_logic_vector(n - 1 downto 1);  -- BCD polynomial
         size        : out std_logic_vector(clgn downto 0);  -- size
         msb         : out std_logic_vector(clgn1 downto 0)  -- msb
     );

@@ -75,7 +75,7 @@ architecture behavioral of top is
     -- order and most significant bit index
     component indices
         port(
-            poly_bcd    : in  std_logic_vector(n - 1 downto 0);
+            poly_bcd    : in  std_logic_vector(n - 1 downto 1);
             size        : out std_logic_vector(clgn downto 0);
             msb         : out std_logic_vector(clgn1 downto 0)
         );
@@ -84,7 +84,7 @@ architecture behavioral of top is
     -- mask
     component varmask
         port(
-            poly_bcd    : in  std_logic_vector(n - 1 downto 0);
+            poly_bcd    : in  std_logic_vector(n - 1 downto 1);
             mask        : out std_logic_vector(n downto 0)
         );
     end component;
@@ -238,7 +238,8 @@ architecture behavioral of top is
     signal j_null : std_logic;
 
     -- memory control signals
-    signal mem_t : std_logic;  -- memory type
+    signal mem_t_cu : std_logic;  -- memory type
+    signal mem_t_ops : std_logic;  -- memory type
     signal mem_rdy : std_logic;  -- memory type
 
     signal id_con : std_logic;
@@ -257,14 +258,14 @@ begin
 
     -- most significant bit
     indices_unit: indices port map(
-        poly_bcd => POLYBCD,
+        poly_bcd => POLYBCD(n - 1 downto 1),
         size => size,
         msb => msb
     );
 
     -- mask
     varmask_unit: varmask port map(
-        poly_bcd => POLYBCD,
+        poly_bcd => POLYBCD(n - 1 downto 1),
         mask => mask
     );
 
@@ -280,7 +281,7 @@ begin
         rst_gen => rst_gen,
         i => i,
         j => j,
-        mem_t => mem_t,
+        mem_t => mem_t_cu,
         id_cu => id_cu,
         mem_rdy => mem_rdy,
         addr_cu => addr_cu,
@@ -344,7 +345,7 @@ begin
         j_null => j_null,
         size => size,
         mask => mask,
-        mem_t => mem_t,
+        mem_t => mem_t_ops,
         id_con => id_con,
         mem_rdy => mem_rdy,
         addr_con => addr_con,

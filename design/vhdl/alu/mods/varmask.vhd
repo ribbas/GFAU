@@ -17,7 +17,7 @@ entity varmask is
         n           : positive := DEGREE
     );
     port(
-        poly_bcd    : in std_logic_vector(n - 1 downto 0);  -- BCD polynomial
+        poly_bcd    : in std_logic_vector(n - 1 downto 1);  -- BCD polynomial
         mask        : out std_logic_vector(n downto 0) := (others => '0')
    );
 end varmask;

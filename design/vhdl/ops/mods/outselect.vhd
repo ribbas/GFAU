@@ -45,10 +45,6 @@ begin
                 -- add / sub
                 when "001" =>
 
-                    for i in n downto 0 loop
-                        report "bitxor("&integer'image(i)&")=" & std_logic'image(bitxor(i));
-                    end loop;
-
                     -- add / sub output is selected
                     out_sel <= bitxor;
                     -- enable output converter

@@ -52,8 +52,6 @@ begin
 
             if (en = '1') then
 
-                report "ENABLED";
-
                 -- if conversion requested
                 if (convert = '1') then
 
@@ -104,8 +102,6 @@ begin
 
                 else
 
-                    report "HERE";
-
                     -- stand-by control signal with ID
                     id_con <= '0';
                     rdy_out <= '1';
@@ -123,10 +119,6 @@ begin
             end if;  -- enable
 
         end if;  -- clock
-
-        --for i in n downto 0 loop
-        --    report "outsel("&integer'image(i)&")=" & std_logic'image(out_sel(i));
-        --end loop;
 
     end process;
 
