@@ -30,6 +30,7 @@ entity generator is
 
         -- memory wrapper control signals
         id_gen      : out std_logic := '0';
+        mem_rdy      : in std_logic;
 
         -- memory signals
         gen_rdy     : out std_logic := '0';
@@ -73,6 +74,8 @@ begin
                     elem <= ONEVEC;
 
                 else
+
+                    if (mem_rdy = '1') then
 
                     if (wr_rdy = '1') then
 
@@ -134,6 +137,8 @@ begin
                         end if;  -- generator done
 
                     end if;  -- writing done
+                    
+                    end if; -- memory is ready
 
                 end if;  -- rst
 
