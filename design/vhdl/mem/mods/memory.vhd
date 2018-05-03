@@ -91,8 +91,7 @@ begin
         pad     => DQ
     );
 
-    process (clk, id_cu, id_gen, id_con,
-        addr_cu, addr_gen, addr_con, din_gen) begin
+    process (clk) begin
 
         if (rising_edge(clk)) then
 
@@ -218,6 +217,7 @@ begin
                         case setup is
 
                             when addr_setup =>
+
 
                                 -- memory read control signals
                                 nCE <= '0';
