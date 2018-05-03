@@ -52,18 +52,18 @@ entity top is
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
-        IO      : inout std_logic_vector(n downto 0);
+        IO      : inout std_logic_vector(n downto 0)
 
-        -------------- TEMPORARY - JUST FOR TB ------------
+        ---------------- TEMPORARY - JUST FOR TB ------------
 
-        ---- universal registers
-        t_size      : out std_logic_vector(clgn downto 0);
-        t_msb       : out std_logic_vector(clgn1 downto 0);
-        t_mask      : out std_logic_vector(n downto 0);
+        ------ universal registers
+        --t_size      : out std_logic_vector(clgn downto 0);
+        --t_msb       : out std_logic_vector(clgn1 downto 0);
+        --t_mask      : out std_logic_vector(n downto 0);
 
-        t_1         : out std_logic;
-        t_n1      : out std_logic_vector(n downto 0);
-        t_n2      : out std_logic_vector(n downto 0)
+        --t_1         : out std_logic;
+        --t_n1      : out std_logic_vector(n downto 0);
+        --t_n2      : out std_logic_vector(n downto 0)
 
     );
 end top;
@@ -370,12 +370,12 @@ begin
 
 
     ------------------ TEMPORARY OUTPUTS ----------------
-    t_size <= size;
-    t_msb <= msb;
-    t_mask <= mask;
-    t_1 <= id_cu;
-    t_n1 <= addr_gen;
-    t_n2 <= elem;
+    --t_size <= size;
+    --t_msb <= msb;
+    --t_mask <= mask;
+    --t_1 <= id_cu;
+    --t_n1 <= addr_gen;
+    --t_n2 <= elem;
 
     ----process (clk) begin
     ----for i in 5 downto 0 loop
