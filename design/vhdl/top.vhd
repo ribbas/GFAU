@@ -144,6 +144,7 @@ architecture behavioral of top is
 
             -- memory wrapper control signals
             id_gen      : out std_logic;
+            mem_rdy     : in std_logic;
 
             -- memory signals
             gen_rdy     : out std_logic;
@@ -196,27 +197,38 @@ architecture behavioral of top is
 
     ---------------- memory ----------------
 
-    ---- CY7C1020DV33 chips wrapper
-    --component memory is
-    --    port(
-    --        clk         : in std_logic;
-    --        mem_t       : in std_logic;
-    --        mem_rdy     : out std_logic;
-    --        id_cu       : in std_logic;
-    --        addr_cu     : in std_logic_vector(n downto 0);
-    --        dout_cu     : out std_logic_vector(n downto 0);
-    --        id_con      : in std_logic;
-    --        addr_con    : in std_logic_vector(n downto 0);
-    --        dout_con    : out std_logic_vector(n downto 0);
-    --        id_gen      : in std_logic;
-    --        addr_gen    : in std_logic_vector(n downto 0);
-    --        din_gen     : in std_logic_vector(n downto 0);
-    --        nCE         : out std_logic;
-    --        nWE         : out std_logic;
-    --        A           : out std_logic_vector((n + 1) downto 0);
-    --        DQ          : inout std_logic_vector(n downto 0)
-    --    );
-    --end component;
+    -- CY7C1020DV33 chips wrapper
+    component memory is
+        port(
+            -- clock
+            clk         : in std_logic;
+
+            -- memory types and methods
+            mem_t_cu    : in std_logic;
+            mem_t_con   : in std_logic;
+            mem_rdy     : out std_logic;  -- ready
+
+            -- module signals
+            id_cu       : in std_logic;
+            addr_cu     : in std_logic_vector(n downto 0);
+            dout_cu     : out std_logic_vector(n downto 0);
+            id_con      : in std_logic;
+            addr_con    : in std_logic_vector(n downto 0);
+            dout_con    : out std_logic_vector(n downto 0);
+            id_gen      : in std_logic;
+            addr_gen    : in std_logic_vector(n downto 0);
+            din_gen     : in std_logic_vector(n downto 0);
+
+            -- memory control signals
+            nCE         : out std_logic;
+            nWE         : out std_logic;
+            nOE         : out std_logic;
+
+            -- memory address and data signals
+            A           : out std_logic_vector((n + 1) downto 0);
+            DQ          : inout std_logic_vector(n downto 0)
+        );
+    end component;
 
     -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
@@ -239,6 +251,7 @@ architecture behavioral of top is
     -- memory control signals
     signal mem_t_cu : std_logic;  -- memory type
     signal mem_t_ops : std_logic;  -- memory type
+    signal mem_t_con : std_logic;  -- memory type
     signal mem_rdy : std_logic;  -- memory type
 
     signal id_con : std_logic;
@@ -301,6 +314,7 @@ begin
         mask => mask,
         msb => msb,
         id_gen => id_gen,
+        mem_rdy => mem_rdy,
         gen_rdy => RDYGEN,
         addr_gen => addr_gen,
         elem => elem
@@ -309,25 +323,27 @@ begin
 
     ---------------- memory ----------------
 
-    ---- memory wrapper
-    --mem : memory port map(
-    --    clk => CLK,
-    --    mem_t => mem_t,
-    --    mem_rdy => mem_rdy,
-    --    id_cu => id_cu,
-    --    addr_cu => addr_cu,
-    --    dout_cu => dout_cu,
-    --    id_gen => id_gen,
-    --    addr_gen => addr_gen,
-    --    din_gen => din_gen,
-    --    id_con => id_con,
-    --    addr_con => addr_con,
-    --    dout_con => dout_con,
-    --    nCE => nCE,
-    --    nWE => nWE,
-    --    A => A,
-    --    DQ => IO
-    --);
+    -- memory wrapper
+    mem : memory port map(
+        clk => CLK,
+        mem_t_cu => mem_t_cu,
+        mem_t_con => mem_t_con,
+        mem_rdy => mem_rdy,
+        id_cu => id_cu,
+        addr_cu => addr_cu,
+        dout_cu => dout_cu,
+        id_con => id_con,
+        addr_con => addr_con,
+        dout_con => dout_con,
+        id_gen => id_gen,
+        addr_gen => addr_gen,
+        din_gen => elem,
+        nCE => nCE,
+        nWE => nWE,
+        nOE => nOE,
+        A => A,
+        DQ => IO
+    );
 
 
     ---------------- Galois operators ----------------
@@ -358,9 +374,9 @@ begin
     t_size <= size;
     t_msb <= msb;
     t_mask <= mask;
-    t_1 <= id_con;
-    t_n1 <= i;
-    t_n2 <= j;
+    t_1 <= id_cu;
+    t_n1 <= addr_gen;
+    t_n2 <= elem;
     --t_addr <= mem_addr;
     --t_sym <= mem_data_in;
 

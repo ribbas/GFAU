@@ -30,7 +30,7 @@ entity generator is
 
         -- memory wrapper control signals
         id_gen      : out std_logic := '0';
-        mem_rdy      : in std_logic;
+        mem_rdy     : in std_logic;
 
         -- memory signals
         gen_rdy     : out std_logic := '0';

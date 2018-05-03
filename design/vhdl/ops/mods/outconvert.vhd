@@ -26,7 +26,7 @@ entity outconvert is
         out_sel     : in std_logic_vector(n downto 0);
 
         -- memory wrapper control signals
-        id_con      : out std_logic;
+        id_con      : out std_logic := '0';
         mem_rdy     : in std_logic;
 
         -- memory address and data signals
