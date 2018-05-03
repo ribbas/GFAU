@@ -24,7 +24,7 @@ entity generator is
         rst         : in std_logic;
 
         -- polynomial data
-        poly_bcd    : in std_logic_vector(n - 1 downto 0);
+        poly_bcd    : in std_logic_vector(n downto 1);
         mask        : in std_logic_vector(n downto 0);
         msb         : in std_logic_vector(clgn1 downto 0);
 

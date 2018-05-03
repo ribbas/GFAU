@@ -29,7 +29,7 @@ entity top is
         ENCU    : in std_logic;
 
         -- user inputs
-        POLYBCD : in std_logic_vector(n - 1 downto 0);
+        POLYBCD : in std_logic_vector(n downto 1);
         OPCODE  : in std_logic_vector(5 downto 0);
         OPAND1  : in std_logic_vector(n downto 0);
         OPAND2  : in std_logic_vector(n downto 0);
@@ -52,18 +52,18 @@ entity top is
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
-        IO      : inout std_logic_vector(n downto 0)
+        IO      : inout std_logic_vector(n downto 0);
 
         -------------- TEMPORARY - JUST FOR TB ------------
 
-        ------ universal registers
-        --t_size      : out std_logic_vector(clgn downto 0);
-        --t_msb       : out std_logic_vector(clgn1 downto 0);
-        --t_mask      : out std_logic_vector(n downto 0);
+        ---- universal registers
+        t_size      : out std_logic_vector(clgn downto 0);
+        t_msb       : out std_logic_vector(clgn1 downto 0);
+        t_mask      : out std_logic_vector(n downto 0);
 
-        --t_1         : out std_logic;
-        --t_n1      : out std_logic_vector(n downto 0);
-        --t_n2      : out std_logic_vector(n downto 0)
+        t_1         : out std_logic;
+        t_n1      : out std_logic_vector(n downto 0);
+        t_n2      : out std_logic_vector(n downto 0)
 
     );
 end top;
@@ -75,7 +75,7 @@ architecture behavioral of top is
     -- order and most significant bit index
     component indices
         port(
-            poly_bcd    : in  std_logic_vector(n - 1 downto 1);
+            poly_bcd    : in  std_logic_vector(n downto 2);
             size        : out std_logic_vector(clgn downto 0);
             msb         : out std_logic_vector(clgn1 downto 0)
         );
@@ -84,7 +84,7 @@ architecture behavioral of top is
     -- mask
     component varmask
         port(
-            poly_bcd    : in  std_logic_vector(n - 1 downto 1);
+            poly_bcd    : in  std_logic_vector(n downto 2);
             mask        : out std_logic_vector(n downto 0)
         );
     end component;
@@ -138,7 +138,7 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n - 1 downto 0);
+            poly_bcd    : in std_logic_vector(n downto 1);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
 
@@ -269,14 +269,14 @@ begin
 
     -- most significant bit
     indices_unit: indices port map(
-        poly_bcd => POLYBCD(n - 1 downto 1),
+        poly_bcd => POLYBCD(n downto 2),
         size => size,
         msb => msb
     );
 
     -- mask
     varmask_unit: varmask port map(
-        poly_bcd => POLYBCD(n - 1 downto 1),
+        poly_bcd => POLYBCD(n downto 2),
         mask => mask
     );
 
@@ -370,14 +370,12 @@ begin
 
 
     ------------------ TEMPORARY OUTPUTS ----------------
-    --t_size <= size;
-    --t_msb <= msb;
-    --t_mask <= mask;
-    --t_1 <= id_cu;
-    --t_n1 <= addr_gen;
-    --t_n2 <= elem;
-    ----t_addr <= mem_addr;
-    ----t_sym <= mem_data_in;
+    t_size <= size;
+    t_msb <= msb;
+    t_mask <= mask;
+    t_1 <= id_cu;
+    t_n1 <= addr_gen;
+    t_n2 <= elem;
 
     ----process (clk) begin
     ----for i in 5 downto 0 loop

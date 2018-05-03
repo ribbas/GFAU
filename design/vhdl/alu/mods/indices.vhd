@@ -19,7 +19,7 @@ entity indices is
         clgn1       : positive := CEILLGN1   -- ceil(log2(n - 1))
     );
     port(
-        poly_bcd    : in std_logic_vector(n - 1 downto 1);  -- BCD polynomial
+        poly_bcd    : in std_logic_vector(n downto 2);  -- BCD polynomial
         size        : out std_logic_vector(clgn downto 0);  -- size
         msb         : out std_logic_vector(clgn1 downto 0)  -- msb
     );
@@ -31,13 +31,13 @@ architecture behavioral of indices is
 
 begin
 
-    prio_enc <= "1000" when (poly_bcd(7) = '1') else   -- 8
-                "0111" when (poly_bcd(6) = '1') else   -- 7
-                "0110" when (poly_bcd(5) = '1') else   -- 6
-                "0101" when (poly_bcd(4) = '1') else   -- 5
-                "0100" when (poly_bcd(3) = '1') else   -- 4
-                "0011" when (poly_bcd(2) = '1') else   -- 3
-                "0010" when (poly_bcd(1) = '1') else   -- 2
+    prio_enc <= "1000" when (poly_bcd(8) = '1') else   -- 8
+                "0111" when (poly_bcd(7) = '1') else   -- 7
+                "0110" when (poly_bcd(6) = '1') else   -- 6
+                "0101" when (poly_bcd(5) = '1') else   -- 5
+                "0100" when (poly_bcd(4) = '1') else   -- 4
+                "0011" when (poly_bcd(3) = '1') else   -- 3
+                "0010" when (poly_bcd(2) = '1') else   -- 2
                 DCAREVEC(clgn downto 0);               -- under 2
 
     size <= prio_enc;

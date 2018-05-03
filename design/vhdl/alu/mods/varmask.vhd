@@ -17,7 +17,7 @@ entity varmask is
         n           : positive := DEGREE
     );
     port(
-        poly_bcd    : in std_logic_vector(n - 1 downto 1);  -- BCD polynomial
+        poly_bcd    : in std_logic_vector(n downto 2);  -- BCD polynomial
         mask        : out std_logic_vector(n downto 0) := (others => '0')
    );
 end varmask;
@@ -25,13 +25,13 @@ end varmask;
 architecture behavioral of varmask is
 begin
 
-    mask <= "011111111" when (poly_bcd(7) = '1') else   -- 8
-            "001111111" when (poly_bcd(6) = '1') else   -- 7
-            "000111111" when (poly_bcd(5) = '1') else   -- 6
-            "000011111" when (poly_bcd(4) = '1') else   -- 5
-            "000001111" when (poly_bcd(3) = '1') else   -- 4
-            "000000111" when (poly_bcd(2) = '1') else   -- 3
-            "000000011" when (poly_bcd(1) = '1') else   -- 2
+    mask <= "011111111" when (poly_bcd(8) = '1') else   -- 8
+            "001111111" when (poly_bcd(7) = '1') else   -- 7
+            "000111111" when (poly_bcd(6) = '1') else   -- 6
+            "000011111" when (poly_bcd(5) = '1') else   -- 5
+            "000001111" when (poly_bcd(4) = '1') else   -- 4
+            "000000111" when (poly_bcd(3) = '1') else   -- 3
+            "000000011" when (poly_bcd(2) = '1') else   -- 2
             DCAREVEC;                                   -- under 2
 
 end behavioral;

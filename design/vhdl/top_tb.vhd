@@ -37,7 +37,7 @@ architecture behavior of top_tb is
             ENCU    : in std_logic;
 
             -- user inputs
-            POLYBCD : in std_logic_vector(n - 1 downto 0);
+            POLYBCD : in std_logic_vector(n downto 1);
             OPCODE  : in std_logic_vector(5 downto 0);
             OPAND1  : in std_logic_vector(n downto 0);
             OPAND2  : in std_logic_vector(n downto 0);
@@ -170,7 +170,7 @@ begin
     begin
 
         POLYBCD <= "00000110";  -- x^3+x^2+x^0
-        POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
+        --POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
         OPAND1 <= "000000101";
         OPAND2 <= "000000011";
 
@@ -184,7 +184,7 @@ begin
         --ENCU <= '0';
         --OPCODE <= "000XXX";  -- generator
 
-        wait for (CLK_PER * 1000);
+        wait for (CLK_PER * 20);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
