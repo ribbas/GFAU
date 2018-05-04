@@ -27,6 +27,7 @@ entity generator is
         poly_bcd    : in std_logic_vector(n downto 1);
         mask        : in std_logic_vector(n downto 0);
         msb         : in std_logic_vector(clgn1 downto 0);
+        poly_bcd_reg : out std_logic_vector(n downto 1);
 
         -- memory wrapper control signals
         id_gen      : out std_logic := '0';
@@ -47,14 +48,15 @@ architecture fsm of generator is
     signal wr_rdy : std_logic := '0';
 
 begin
-
+      
     process (clk)
+   
     begin
-
+        
         if rising_edge(clk) then
 
             if (en = '1') then
-
+					 --poly_bcd_reg <= poly_bcd; 
                 -- elem^n
                 nth_elem <= (poly_bcd & '1') and mask;
 
@@ -72,6 +74,9 @@ begin
                     addr_gen <= ZEROVEC;
                     -- first element
                     elem <= ONEVEC;
+
+                    --save this for later :)
+                    poly_bcd_reg <= poly_bcd;
 
                 else
 

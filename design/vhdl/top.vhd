@@ -141,7 +141,7 @@ architecture behavioral of top is
             poly_bcd    : in std_logic_vector(n downto 1);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
-
+				poly_bcd_reg : out std_logic_vector(n downto 1);
             -- memory wrapper control signals
             id_gen      : out std_logic;
             mem_rdy     : in std_logic;
@@ -234,6 +234,7 @@ architecture behavioral of top is
     signal mask : std_logic_vector(n downto 0);  -- mask
     signal size : std_logic_vector(clgn downto 0);  -- size
     signal msb : std_logic_vector(clgn1 downto 0);  -- msb
+	 signal poly_bcd_reg : std_logic_vector(n downto 1);
 
     -- generator control signals
     signal id_gen : std_logic;
@@ -269,14 +270,14 @@ begin
 
     -- most significant bit
     indices_unit: indices port map(
-        poly_bcd => POLYBCD(n downto 2),
+        poly_bcd => poly_bcd_reg(n downto 2),
         size => size,
         msb => msb
     );
 
     -- mask
     varmask_unit: varmask port map(
-        poly_bcd => POLYBCD(n downto 2),
+        poly_bcd => poly_bcd_reg(n downto 2),
         mask => mask
     );
 
@@ -310,6 +311,7 @@ begin
         rst => rst_gen,
         en => en_gen,
         poly_bcd => POLYBCD,
+		  poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,
         id_gen => id_gen,
@@ -372,7 +374,7 @@ begin
     ------------------ TEMPORARY OUTPUTS ----------------
     t_size <= size;
     t_msb <= msb;
-    t_mask <= mask;
+    t_mask <= '0' & poly_bcd_reg;
     t_1 <= id_cu;
     t_n1 <= addr_gen;
     t_n2 <= elem;
