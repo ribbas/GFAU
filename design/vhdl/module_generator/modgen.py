@@ -19,7 +19,7 @@ except NameError:
 
 def find_file(name):
     result = []
-    for root, dirs, files in os.walk("."):
+    for root, dirs, files in os.walk(".."):
         if name in files:
             result.append(os.path.join(root, name))
     return result
