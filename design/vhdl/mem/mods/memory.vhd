@@ -69,7 +69,7 @@ architecture behavioral of memory is
     signal ioport_oe    : std_logic;
 
 	--internal DQ signals
-	--signal DQ_in		: std_logic_vector(n downto 0);
+	signal DQ_in		: std_logic_vector(n downto 0);
 	signal DQ_out		: std_logic_vector(n downto 0);
 	signal wr_rd		: std_logic;
 
@@ -85,7 +85,7 @@ architecture behavioral of memory is
 begin
 
     io_port_unit : io_port port map(
-        op      => din_gen,
+        op      => DQ_in,
         oe      => wr_rd,
         ip      => DQ_out,
         pad     => DQ
@@ -225,6 +225,7 @@ begin
 
                                 -- send control unit's address to memory
                                 A <= '0' & addr_gen;
+                                DQ_in <= din_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
                                 mem_rdy <= '0';
 
@@ -238,6 +239,7 @@ begin
 
                                 --hold address, data, and bus control signals
                                 A <= '0' & addr_gen;
+                                DQ_in <= din_gen;
                                 wr_rd <= '1';
                                 mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
@@ -261,7 +263,8 @@ begin
                                 nOE <= '1';
 
                                 -- send control unit's address to memory
-                                A <= '1' & addr_gen;
+                                A <= '1' & din_gen;
+                                DQ_in <= addr_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
                                 mem_rdy <= '0';
 
@@ -274,7 +277,8 @@ begin
                                 nOE <= '1';
 
                                 --hold address, data, and bus control signals
-                                A <= '1' & addr_gen;
+                                A <= '1' & din_gen;
+                                DQ_in <= addr_gen;
                                 wr_rd <= '1';
                                 mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
