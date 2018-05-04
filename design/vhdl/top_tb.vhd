@@ -60,21 +60,21 @@ architecture behavior of top_tb is
 
             -- memory address and data signals
             A       : out std_logic_vector((n + 1) downto 0);
-            IO      : inout std_logic_vector(n downto 0)
+            IO      : inout std_logic_vector(n downto 0);
 
-            ---------------- TEMPORARY - JUST FOR TB ------------
+            -------------- TEMPORARY - JUST FOR TB ------------
 
-            ------ universal registers
-            --t_size      : out std_logic_vector(clgn downto 0);
-            --t_msb       : out std_logic_vector(clgn1 downto 0);
-            --t_mask      : out std_logic_vector(n downto 0);
+            ---- universal registers
+            t_size      : out std_logic_vector(clgn downto 0);
+            t_msb       : out std_logic_vector(clgn1 downto 0);
+            t_mask      : out std_logic_vector(n downto 0);
 
-            ------ generated terms
-            ----t_addr      : out std_logic_vector(n downto 0);
-            ----t_sym       : out std_logic_vector(n downto 0)
-            --t_1         : out std_logic;
-            --t_n1      : out std_logic_vector(n downto 0);
-            --t_n2      : out std_logic_vector(n downto 0)
+            ---- generated terms
+            --t_addr      : out std_logic_vector(n downto 0);
+            --t_sym       : out std_logic_vector(n downto 0)
+            t_1         : out std_logic;
+            t_n1      : out std_logic_vector(n downto 0);
+            t_n2      : out std_logic_vector(n downto 0)
         );
     end component;
 
