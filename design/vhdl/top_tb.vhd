@@ -172,13 +172,11 @@ begin
         POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
         OPAND1 <= "111111111";
         OPAND2 <= "000000011";
-			
         wait for (CLK_PER * 1);
         ENCU <= '1';
 
         wait for (CLK_PER * 2);
         OPCODE <= "000XXX";  -- add, elem, elem, elem
-			
         wait for (CLK_PER * 10);
         --ENCU <= '0';
         --OPCODE <= "000XXX";  -- generator

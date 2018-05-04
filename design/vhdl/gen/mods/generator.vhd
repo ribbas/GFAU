@@ -48,15 +48,14 @@ architecture fsm of generator is
     signal wr_rdy : std_logic := '0';
 
 begin
-      
+
     process (clk)
-   
     begin
-        
+
         if rising_edge(clk) then
 
             if (en = '1') then
-					 --poly_bcd_reg <= poly_bcd; 
+
                 -- elem^n
                 nth_elem <= (poly_bcd & '1') and mask;
 
@@ -75,7 +74,7 @@ begin
                     -- first element
                     elem <= ONEVEC;
 
-                    --save this for later :)
+                    -- save this for later :)
                     poly_bcd_reg <= poly_bcd;
 
                 else
@@ -118,15 +117,12 @@ begin
                                 if (temp_elem(to_integer(unsigned(msb))) = '1') then
 
                                     -- (elem^(n+(m-1)) << 1) xor elem^n
-                                    temp_elem <= std_logic_vector(
-                                        shift_left(unsigned(temp_elem), 1)
-                                    ) xor nth_elem;
+                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0')
+                                     xor nth_elem;
 
                                 else
                                     -- (elem^(n+(m-1)) << 1)
-                                    temp_elem <= std_logic_vector(
-                                        shift_left(unsigned(temp_elem), 1)
-                                    );
+                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0');
 
                                 end if;
 
