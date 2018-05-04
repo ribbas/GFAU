@@ -218,7 +218,6 @@ begin
 
                             when addr_setup =>
 
-
                                 -- memory read control signals
                                 nCE <= '0';
                                 nWE <= '1'; --don't write yet
@@ -238,7 +237,7 @@ begin
                                 nOE <= '1';
 
                                 --hold address, data, and bus control signals
-                                A <= mem_t_cu & addr_cu;
+                                A <= '0' & addr_gen;
                                 wr_rd <= '1';
                                 mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
@@ -275,15 +274,11 @@ begin
                                 nOE <= '1';
 
                                 --hold address, data, and bus control signals
-                                A <= mem_t_cu & addr_cu;
+                                A <= '1' & addr_gen;
                                 wr_rd <= '1';
                                 mem_rdy <= '1'; --data now written
                                 setup <= addr_setup;
                                 wr_state <= wr_mem1;
-
-                            when others =>
-
-                                -- BRIAN: PUT SOMETHING
 
                         end case;
 

@@ -1,4 +1,4 @@
--- mem_tb.vhd
+-- memory_tb.vhd
 --
 -- Sabbir Ahmed
 -- 2018-01-16
@@ -10,10 +10,10 @@ library work;
     use work.glob.all;
     use work.demo_tb.all;
 
-entity mem_tb is
-end mem_tb;
+entity memory_tb is
+end memory_tb;
 
-architecture behavioral of mem_tb is
+architecture behavioral of memory_tb is
 
     constant n : positive := DEGREE;
 

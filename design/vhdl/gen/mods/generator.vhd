@@ -82,67 +82,67 @@ begin
 
                     if (mem_rdy = '1') then
 
-                    if (wr_rdy = '1') then
-
-                        -- addr and data of NULL
-                        addr_gen <= HIVEC;
-                        elem <= ZEROVEC;
-
-                        -- generator control signals
-                        gen_rdy <= '1';
-                        id_gen <= '0';
-
-                    else
-
-                        -- when the generator is done
-                        if (and_reduce((temp_elem and mask) xnor ONEVEC) = '1')
-                        then
-
-                            -- generator control signals
-                            gen_rdy <= '0';
-                            id_gen <= '1';
-
-                            -- finish writing
-                            wr_rdy <= '1';
+                        if (wr_rdy = '1') then
 
                             -- addr and data of NULL
                             addr_gen <= HIVEC;
                             elem <= ZEROVEC;
 
+                            -- generator control signals
+                            gen_rdy <= '1';
+                            id_gen <= '0';
+
                         else
 
-                            -- increment counter
-                            counter <= std_logic_vector(unsigned(counter) + 1);
+                            -- when the generator is done
+                            if (and_reduce((temp_elem and mask) xnor ONEVEC) = '1')
+                            then
 
-                            -- if elem^(n+(m-1))[msb] = 1
-                            if (temp_elem(to_integer(unsigned(msb))) = '1') then
+                                -- generator control signals
+                                gen_rdy <= '0';
+                                id_gen <= '1';
 
-                                -- (elem^(n+(m-1)) << 1) xor elem^n
-                                temp_elem <= std_logic_vector(
-                                    shift_left(unsigned(temp_elem), 1)
-                                ) xor nth_elem;
+                                -- finish writing
+                                wr_rdy <= '1';
+
+                                -- addr and data of NULL
+                                addr_gen <= HIVEC;
+                                elem <= ZEROVEC;
 
                             else
-                                -- (elem^(n+(m-1)) << 1)
-                                temp_elem <= std_logic_vector(
-                                    shift_left(unsigned(temp_elem), 1)
-                                );
 
-                            end if;
+                                -- increment counter
+                                counter <= std_logic_vector(unsigned(counter) + 1);
 
-                            -- generator control signals
-                            gen_rdy <= '0';
-                            id_gen <= '1';
+                                -- if elem^(n+(m-1))[msb] = 1
+                                if (temp_elem(to_integer(unsigned(msb))) = '1') then
 
-                            -- address is counter, element is the temp element
-                            -- register
-                            addr_gen <= counter;
-                            elem <= temp_elem and mask;
+                                    -- (elem^(n+(m-1)) << 1) xor elem^n
+                                    temp_elem <= std_logic_vector(
+                                        shift_left(unsigned(temp_elem), 1)
+                                    ) xor nth_elem;
 
-                        end if;  -- generator done
+                                else
+                                    -- (elem^(n+(m-1)) << 1)
+                                    temp_elem <= std_logic_vector(
+                                        shift_left(unsigned(temp_elem), 1)
+                                    );
 
-                    end if;  -- writing done
-                    
+                                end if;
+
+                                -- generator control signals
+                                gen_rdy <= '0';
+                                id_gen <= '1';
+
+                                -- address is counter, element is the temp element
+                                -- register
+                                addr_gen <= counter;
+                                elem <= temp_elem and mask;
+
+                            end if;  -- generator done
+
+                        end if;  -- writing done
+
                     end if; -- memory is ready
 
                 end if;  -- rst
