@@ -7,7 +7,9 @@
 --
 
 library ieee;
+    use ieee.numeric_std.all;
     use ieee.std_logic_1164.all;
+	 use ieee.std_logic_misc.all;
 library work;
     use work.glob.all;
 
@@ -66,7 +68,7 @@ begin
 
                             addr_con <= out_sel;
                             result <= DCAREVEC;
-
+									 
                             state <= get_data;
 
                         when get_data =>
@@ -108,7 +110,12 @@ begin
 
                     addr_con <= DCAREVEC;
 
-                    result <= out_sel and mask;
+                    if(and_reduce(out_sel) = '0') then
+						      result <= out_sel and mask;
+                    else
+						      result <= out_sel;
+						  end if;
+                    
 
                 end if;  -- convert
 
