@@ -8,7 +8,7 @@ library ieee;
     use ieee.std_logic_1164.all;
 library work;
     use work.glob.all;
-    use work.glob_tb.all;
+    use work.demo_tb.all;
 
 entity varmask_tb is
 end varmask_tb;

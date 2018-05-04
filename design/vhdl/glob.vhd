@@ -20,7 +20,7 @@ package glob is
     -- ceil(log2(degree))
     constant CEILLGN : positive := 3;
 
-    -- ceil(log2(degree - 1))
+    -- ceil(log2(degree) - 1)
     constant CEILLGN1 : positive := 2;
 
     -------- glob constants --------

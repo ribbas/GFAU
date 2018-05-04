@@ -3,6 +3,10 @@
 *.log
 *.dvi
 
+# compiled Python files
+*.pyc
+__pycache__/
+
 # VHDL binaries
 *.o
 *.a

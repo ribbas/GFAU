@@ -8,7 +8,7 @@ library ieee;
     use ieee.std_logic_1164.all;
 library work;
     use work.glob.all;
-    use work.glob_tb.all;
+    use work.demo_tb.all;
 
 entity operators_tb is
 end operators_tb;

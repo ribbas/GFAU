@@ -9,7 +9,7 @@ library ieee;
     use ieee.numeric_std.all;
 library work;
     use work.glob.all;
-    use work.glob_tb.all;
+    use work.demo_tb.all;
 
 entity top_tb is
 end top_tb;

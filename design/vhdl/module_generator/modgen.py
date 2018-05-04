@@ -4,62 +4,17 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import argparse
-import fileinput
 import math
 import os
 from pprint import pprint
+
+from modstr import GLOB_STR, INDICES_STR, VARMASK_STR
+
 try:
     input = raw_input
+    range = xrange
 except NameError:
     pass
-
-VARMASK_STR = \
-    ("library ieee;\n"
-     "    use ieee.std_logic_1164.all;\n"
-     "    use ieee.numeric_std.all;\n"
-     "library work;\n"
-     "    use work.glob.all;\n\n"
-     "entity varmask is\n"
-     "    generic(\n"
-     "        n           : positive := DEGREE\n"
-     "    );\n"
-     "    port(\n"
-     "        poly_bcd    : in std_logic_vector(n downto 2);  -- BCD polynomial\n"
-     "        mask        : out std_logic_vector(n downto 0) := (others => '0')\n"
-     "   );\n"
-     "end varmask;\n\n"
-     "architecture behavioral of varmask is\n"
-     "begin\n\n"
-     "    mask <= {0}"
-     "\t\tDCAREVEC;\n\n"
-     "end behavioral;\n")
-
-INDICES_STR = \
-    ("library ieee;\n"
-     "    use ieee.std_logic_1164.all;\n"
-     "    use ieee.numeric_std.all;\n"
-     "library work;\n"
-     "    use work.glob.all;\n\n"
-     "entity indices is\n"
-     "    generic(\n"
-     "        n           : positive := DEGREE;\n"
-     "        clgn        : positive := CEILLGN;  -- ceil(log2(n))\n"
-     "        clgn1       : positive := CEILLGN1   -- ceil(log2(n - 1))\n"
-     "    );\n"
-     "    port(\n"
-     "        poly_bcd    : in std_logic_vector(n downto 2);  -- BCD polynomial\n"
-     "        size        : out std_logic_vector(clgn downto 0);  -- size\n"
-     "        msb         : out std_logic_vector(clgn1 downto 0)  -- msb\n"
-     "    );\n"
-     "end indices;\n\n"
-     "architecture behavioral of indices is\n\n"
-     "    signal prio_enc : std_logic_vector(clgn downto 0) := (others => '-');\n\n"
-     "begin\n\n"
-     "    prio_enc <= {0}"
-     "\t\tDCAREVEC(clgn downto 0);\n\n"
-     "    size <= prio_enc;\n"
-     "    msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);\n\n"
-     "end behavioral;\n")
 
 
 def find_file(name):
@@ -74,26 +29,16 @@ def parse_args(args):
 
     deg = int(args["degree"])
     ceillgn = int(math.ceil(math.log(deg, 2)))
-    ceillgn1 = int(math.ceil(math.log(deg - 1, 2)))
+    ceillgn1 = ceillgn - 1
 
-    for line in fileinput.input(args["glob"], inplace=True):
-
-        if ("constant DEGREE" in line):
-            print("\tconstant DEGREE : positive := {0};".format(deg))
-
-        elif ("constant CEILLGN " in line):
-            print("\tconstant CEILLGN : positive := {0};".format(ceillgn))
-
-        elif ("constant CEILLGN1" in line):
-            print("\tconstant CEILLGN1 : positive := {0};".format(ceillgn1))
-
-        else:
-            print(line, end="")
+    with open(args["glob"], "w") as glob_file:
+        glob_file.write(GLOB_STR.format(
+            deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1))
 
     varmask_enc = ""
     varmask_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
 
-    for index in xrange(deg, 1, -1):
+    for index in range(deg, 1, -1):
 
         if index == deg:
             varmask_enc += varmask_line.format(
@@ -108,13 +53,11 @@ def parse_args(args):
     with open(args["mask"], "w") as varmask_file:
         varmask_file.write(VARMASK_STR.format(varmask_enc))
 
-    print(ceillgn)
     indices_enc = ""
     indices_fmt = "{:0%db}" % (ceillgn + 1)
-    print(indices_fmt)
     indices_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
 
-    for index in xrange(deg, 1, -1):
+    for index in range(deg, 1, -1):
 
         if index == deg:
             indices_enc += indices_line.format(
@@ -194,7 +137,8 @@ if __name__ == "__main__":
     pprint(args.__dict__)
     init_gen = input("Continue? (y/n): ")
     if (init_gen.lower() == 'y'):
-        print("Generating modules...")
+        print("Generating modules...", end="")
         parse_args(args.__dict__)
+        print("Done")
     else:
         print("Please provide the full path to all files")
