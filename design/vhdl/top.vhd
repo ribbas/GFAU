@@ -52,8 +52,9 @@ entity top is
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
-        IO      : inout std_logic_vector(n downto 0);
+        IO      : inout std_logic_vector(n downto 0)
 
+        ;
         -------------- TEMPORARY - JUST FOR TB ------------
 
         ---- universal registers
@@ -281,6 +282,7 @@ begin
         mask => mask
     );
 
+    -- control unit
     cu: control_unit port map(
         clk => CLK,
         opcode => OPCODE(5 downto 1),
@@ -322,6 +324,32 @@ begin
     );
 
 
+    ---------------- Galois operators ----------------
+
+    -- operators
+    operators_unit: operators port map(
+        clk => CLK,
+        op => OPCODE(5 downto 3),
+        out_t => OPCODE(0),
+        en => en_ops,
+        i => i,
+        j => j,
+        i_null => i_null,
+        j_null => j_null,
+        size => size,
+        mask => mask,
+        mem_t => mem_t_con,
+        id_con => id_con,
+        mem_rdy => mem_rdy,
+        addr_con => addr_con,
+        dout_con => dout_con,
+        result => RESULT,
+        err_z => ERRZ,
+        rdy_out => RDYOUT
+    );
+
+
+
     ---------------- memory ----------------
 
     -- memory wrapper
@@ -347,35 +375,11 @@ begin
     );
 
 
-    ---------------- Galois operators ----------------
-
-    operators_unit: operators port map(
-        clk => CLK,
-        op => OPCODE(5 downto 3),
-        out_t => OPCODE(0),
-        en => en_ops,
-        i => i,
-        j => j,
-        i_null => i_null,
-        j_null => j_null,
-        size => size,
-        mask => mask,
-        mem_t => mem_t_con,
-        id_con => id_con,
-        mem_rdy => mem_rdy,
-        addr_con => addr_con,
-        dout_con => dout_con,
-        result => RESULT,
-        err_z => ERRZ,
-        rdy_out => RDYOUT
-    );
-
-
     ------------------ TEMPORARY OUTPUTS ----------------
     t_size <= size;
     t_msb <= msb;
     t_mask <= '0' & poly_bcd_reg;
-    t_1 <= id_cu;
+    t_1 <= id_gen;
     t_n1 <= addr_gen;
     t_n2 <= elem;
 

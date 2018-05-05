@@ -228,6 +228,7 @@ begin
                                 DQ_in <= din_gen;
                                 wr_rd <= '1'; --sets the io port to output mode
                                 mem_rdy <= '0';
+                                report "BANK 0";
 
                                 setup <= wr;
 
@@ -241,13 +242,13 @@ begin
                                 A <= '0' & addr_gen;
                                 DQ_in <= din_gen;
                                 wr_rd <= '1';
-                                mem_rdy <= '1'; --data now written
+                                mem_rdy <= '0'; --data now written
                                 setup <= addr_setup;
                                 wr_state <= wr_mem2;
 
-                            --when others =>
+                            when others =>
 
-                                -- BRIAN: PUT SOMETHING
+                                setup <= addr_setup;
 
                         end case;
 
