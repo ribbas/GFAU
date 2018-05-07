@@ -209,79 +209,65 @@ begin
                 -- data outs are don't care
                 dout_con <= DCAREVEC;
                 dout_cu <= DCAREVEC;
+                wr_rd <= '1'; --sets the io port to output mode
 
                 case wr_state is
 
                     when wr_mem1 => --get address and data ready
 
+                        --hold address, data, and bus control signals
+                        A <= '0' & addr_gen;
+                        DQ_in <= din_gen;
+
+                        -- send control unit's address to memory
+                        mem_rdy <= '0'; -- data not ready
+                        nOE <= '1';
+                        nCE <= '0';
+
                         case setup is
+
 
                             when addr_setup =>
 
                                 -- memory read control signals
-                                nCE <= '0';
-                                nWE <= '1'; --don't write yet
-                                nOE <= '1';
-
-                                -- send control unit's address to memory
-                                A <= '0' & addr_gen;
-                                DQ_in <= din_gen;
-                                wr_rd <= '1'; --sets the io port to output mode
-                                mem_rdy <= '0';
-                                report "BANK 0";
+                                nWE <= '1'; -- don't write yet
 
                                 setup <= wr;
 
                             when wr =>
 
-                                nCE <= '0';
                                 nWE <= '0';
-                                nOE <= '1';
 
-                                --hold address, data, and bus control signals
-                                A <= '0' & addr_gen;
-                                DQ_in <= din_gen;
-                                wr_rd <= '1';
-                                mem_rdy <= '0'; --data now written
                                 setup <= addr_setup;
                                 wr_state <= wr_mem2;
-
-                            when others =>
-
-                                setup <= addr_setup;
 
                         end case;
 
                     when wr_mem2 =>
 
+                        nOE <= '1';
+                        nCE <= '0';
+                        -- send control unit's address to memory
+                        A <= '1' & din_gen;
+                        DQ_in <= addr_gen;
+
                         case setup is
 
                             when addr_setup =>
 
                                 -- memory read control signals
-                                nCE <= '0';
-                                nWE <= '1'; --don't write yet
-                                nOE <= '1';
+                                nWE <= '1'; -- don't write yet
 
-                                -- send control unit's address to memory
-                                A <= '1' & din_gen;
-                                DQ_in <= addr_gen;
-                                wr_rd <= '1'; --sets the io port to output mode
                                 mem_rdy <= '0';
 
                                 setup <= wr;
 
                             when wr =>
 
-                                nCE <= '0';
                                 nWE <= '0';
-                                nOE <= '1';
 
-                                --hold address, data, and bus control signals
-                                A <= '1' & din_gen;
-                                DQ_in <= addr_gen;
-                                wr_rd <= '1';
-                                mem_rdy <= '1'; --data now written
+                                mem_rdy <= '1'; -- data now written
+
                                 setup <= addr_setup;
                                 wr_state <= wr_mem1;
 
