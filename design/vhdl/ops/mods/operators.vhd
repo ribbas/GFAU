@@ -22,7 +22,7 @@ entity operators is
         clk         : in std_logic;
 
         en          : in std_logic;
-
+        rst         : in std_logic;
         -- opcode
         op          : in std_logic_vector(2 downto 0);
         out_t       : in std_logic;
@@ -128,6 +128,7 @@ architecture behavioral of operators is
             clk         : in std_logic;
             en          : in std_logic;
             convert     : in std_logic;
+            rst         : in std_logic;
             mask        : in std_logic_vector(n downto 0);
             out_sel     : in std_logic_vector(n downto 0);
             id_con      : out std_logic;
@@ -148,6 +149,7 @@ architecture behavioral of operators is
     signal out_sel : std_logic_vector(n downto 0);
     signal convert : std_logic;
     signal en_con : std_logic;
+ 
 
 begin
 
@@ -210,6 +212,7 @@ begin
     outconvert_unit : outconvert port map(
         clk => clk,
         en => en_con,
+        rst => rst,
         convert => convert,
         mask => mask,
         out_sel => out_sel,

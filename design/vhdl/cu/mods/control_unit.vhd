@@ -24,6 +24,7 @@ entity control_unit is
         opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
         en          : in std_logic;  -- control unit enable
+        rst         : in std_logic; --reset
 
         -- registers
         mask        : in  std_logic_vector(n downto 0);
@@ -51,7 +52,8 @@ entity control_unit is
         -- exceptions and flags
         err_b       : out std_logic;  -- set membership exception
         opand1_null : out std_logic;  -- operand 1 zero flag
-        opand2_null : out std_logic  -- operand 2 zero flag
+        opand2_null : out std_logic;  -- operand 2 zero flag
+        rst_ops : out std_logic
     );
 end control_unit;
 
@@ -109,6 +111,30 @@ begin
     begin
 
         if (rising_edge(clk)) then
+
+            if(rst = '1') then 
+
+              rst_ops <= '1';
+              en_ops <= '0';
+
+                -- disable generator
+              en_gen <= '0';
+              rst_gen <= '0';
+
+                -- disable arithmetic exceptions
+              opand_b <= ZEROVEC;
+              opand_z1 <= DCAREVEC;
+              opand_z2 <= DCAREVEC;
+
+                -- disable memory lookup
+              mem_t <= '-';
+              id_cu <= '0';
+              addr_cu <= DCAREVEC;
+
+              
+
+
+            end if;
 
             if (en = '1') then
 

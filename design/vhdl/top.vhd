@@ -49,6 +49,7 @@ entity top is
         nOE     : out std_logic := '0';
         nBLE    : out std_logic := '0';
         nBHE    : out std_logic := '0';
+        
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
@@ -98,6 +99,8 @@ architecture behavioral of top is
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
             en          : in std_logic;  -- control unit enable
+            rst         : in std_logic;
+            rst_ops     : out std_logic;
 
             -- registers
             mask        : in  std_logic_vector(n downto 0);
@@ -162,6 +165,7 @@ architecture behavioral of top is
             clk         : in std_logic;
 
             en          : in std_logic;
+            rst         : in std_logic;
 
             -- opcode
             op          : in std_logic_vector(2 downto 0);
@@ -249,6 +253,7 @@ architecture behavioral of top is
     signal j : std_logic_vector(n downto 0);
     signal i_null : std_logic;
     signal j_null : std_logic;
+    signal rst_ops: std_logic;
 
     -- memory control signals
     signal mem_t_cu : std_logic;  -- memory type of control unit
@@ -264,7 +269,7 @@ architecture behavioral of top is
     signal dout_cu : std_logic_vector(n downto 0);
     signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector(n downto 0);
-
+    
 begin
 
     ---------------- universal registers and constants ----------------
@@ -289,10 +294,12 @@ begin
         opand1 => OPAND1,
         opand2 => OPAND2,
         en => ENCU,
+        rst => rst,
         mask => mask,
         en_ops => en_ops,
         en_gen => en_gen,
         rst_gen => rst_gen,
+        rst_ops => rst_ops,
         i => i,
         j => j,
         mem_t => mem_t_cu,
@@ -332,6 +339,7 @@ begin
         op => OPCODE(5 downto 3),
         out_t => OPCODE(0),
         en => en_ops,
+        rst => rst_ops,
         i => i,
         j => j,
         i_null => i_null,
