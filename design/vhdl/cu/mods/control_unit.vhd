@@ -112,27 +112,25 @@ begin
 
         if (rising_edge(clk)) then
 
-            if(rst = '1') then 
+            if (rst = '1') then
 
-              rst_ops <= '1';
-              en_ops <= '0';
+                -- reset operators
+                rst_ops <= '1';
+                en_ops <= '0';
 
                 -- disable generator
-              en_gen <= '0';
-              rst_gen <= '0';
+                en_gen <= '0';
+                rst_gen <= '0';
 
                 -- disable arithmetic exceptions
-              opand_b <= ZEROVEC;
-              opand_z1 <= DCAREVEC;
-              opand_z2 <= DCAREVEC;
+                opand_b <= ZEROVEC;
+                opand_z1 <= DCAREVEC;
+                opand_z2 <= DCAREVEC;
 
                 -- disable memory lookup
-              mem_t <= '-';
-              id_cu <= '0';
-              addr_cu <= DCAREVEC;
-
-              
-
+                mem_t <= '-';
+                id_cu <= '0';
+                addr_cu <= DCAREVEC;
 
             end if;
 

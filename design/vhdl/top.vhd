@@ -49,7 +49,6 @@ entity top is
         nOE     : out std_logic := '0';
         nBLE    : out std_logic := '0';
         nBHE    : out std_logic := '0';
-        
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
@@ -100,7 +99,6 @@ architecture behavioral of top is
 
             en          : in std_logic;  -- control unit enable
             rst         : in std_logic;
-            rst_ops     : out std_logic;
 
             -- registers
             mask        : in  std_logic_vector(n downto 0);
@@ -111,6 +109,7 @@ architecture behavioral of top is
 
             -- operation signals
             en_ops      : out std_logic;  -- operators enable
+            rst_ops     : out std_logic;
             i           : out std_logic_vector(n downto 0);  -- i
             j           : out std_logic_vector(n downto 0);  -- j
 
@@ -145,7 +144,7 @@ architecture behavioral of top is
             poly_bcd    : in std_logic_vector(n downto 1);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
-				poly_bcd_reg : out std_logic_vector(n downto 1);
+			poly_bcd_reg : out std_logic_vector(n downto 1);
             -- memory wrapper control signals
             id_gen      : out std_logic;
             mem_rdy     : in std_logic;
@@ -164,6 +163,8 @@ architecture behavioral of top is
             -- clock
             clk         : in std_logic;
 
+            -- control signals
+            master_rst  : in std_logic;
             en          : in std_logic;
             rst         : in std_logic;
 
@@ -239,7 +240,7 @@ architecture behavioral of top is
     signal mask : std_logic_vector(n downto 0);  -- mask
     signal size : std_logic_vector(clgn downto 0);  -- size
     signal msb : std_logic_vector(clgn1 downto 0);  -- msb
-	 signal poly_bcd_reg : std_logic_vector(n downto 1);
+	signal poly_bcd_reg : std_logic_vector(n downto 1);
 
     -- generator control signals
     signal id_gen : std_logic;
@@ -248,28 +249,27 @@ architecture behavioral of top is
 
     -- internal operation signals
     signal en_ops : std_logic;
+    signal rst_ops: std_logic;
     signal id_cu : std_logic;
+    signal id_con : std_logic;
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
     signal i_null : std_logic;
     signal j_null : std_logic;
-    signal rst_ops: std_logic;
 
     -- memory control signals
     signal mem_t_cu : std_logic;  -- memory type of control unit
     signal mem_t_con : std_logic;  -- memory type of operators
     signal mem_rdy : std_logic;  -- memory type
 
-    signal id_con : std_logic;
-
     -- memory address and data signals
-    signal elem : std_logic_vector(n downto 0);
     signal addr_gen : std_logic_vector(n downto 0);
+    signal elem : std_logic_vector(n downto 0);
     signal addr_cu : std_logic_vector(n downto 0);
     signal dout_cu : std_logic_vector(n downto 0);
     signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector(n downto 0);
-    
+
 begin
 
     ---------------- universal registers and constants ----------------
@@ -338,6 +338,7 @@ begin
         clk => CLK,
         op => OPCODE(5 downto 3),
         out_t => OPCODE(0),
+        master_rst => RST,
         en => en_ops,
         rst => rst_ops,
         i => i,
@@ -355,7 +356,6 @@ begin
         err_z => ERRZ,
         rdy_out => RDYOUT
     );
-
 
 
     ---------------- memory ----------------

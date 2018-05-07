@@ -21,7 +21,7 @@ entity outconvert is
         clk         : in std_logic;
 
         en          : in std_logic;  -- enable
-        rst         : in std_logic; -- reset 
+        rst         : in std_logic; -- reset
         convert     : in std_logic;  -- convert flag
         mask        : in std_logic_vector(n downto 0);  -- operand mask
 
@@ -54,14 +54,13 @@ begin
         if (rising_edge(clk)) then
 
             if (rst = '1') then
+
                 id_con <= '0';
                 addr_con <= DCAREVEC;
                 result <= DCAREVEC;
                 rdy_out <= '0';
-                
 
-
-            end if; 
+            end if;
 
             if (en = '1') then
 
