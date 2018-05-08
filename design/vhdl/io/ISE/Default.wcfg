@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/media/sf_Xilinx/IO_Handler/ISE/FSM_Test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="fsm_test" />
+            <top_module name="std_logic_1164" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="29" />
+   <wvobject fp_name="/fsm_test/opcode_in" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">opcode_in[5:0]</obj_property>
+      <obj_property name="ObjectShortName">opcode_in[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/start" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/t_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">t_clk</obj_property>
+      <obj_property name="ObjectShortName">t_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/g_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">g_rst</obj_property>
+      <obj_property name="ObjectShortName">g_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/inta" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">inta</obj_property>
+      <obj_property name="ObjectShortName">inta</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/op_done" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">op_done</obj_property>
+      <obj_property name="ObjectShortName">op_done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/gen_rdy" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">gen_rdy</obj_property>
+      <obj_property name="ObjectShortName">gen_rdy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/serial_d" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">serial_d</obj_property>
+      <obj_property name="ObjectShortName">serial_d</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/deserial_d" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">deserial_d</obj_property>
+      <obj_property name="ObjectShortName">deserial_d</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/z_err" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">z_err</obj_property>
+      <obj_property name="ObjectShortName">z_err</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/oob_err" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oob_err</obj_property>
+      <obj_property name="ObjectShortName">oob_err</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/ready_sig" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ready_sig</obj_property>
+      <obj_property name="ObjectShortName">ready_sig</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/int" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">int</obj_property>
+      <obj_property name="ObjectShortName">int</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/opcode_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">opcode_out[5:0]</obj_property>
+      <obj_property name="ObjectShortName">opcode_out[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/data_ready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">data_ready</obj_property>
+      <obj_property name="ObjectShortName">data_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/serial_e" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">serial_e</obj_property>
+      <obj_property name="ObjectShortName">serial_e</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/serial_r" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">serial_r</obj_property>
+      <obj_property name="ObjectShortName">serial_r</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/deserial_e" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">deserial_e</obj_property>
+      <obj_property name="ObjectShortName">deserial_e</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/deserial_r" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">deserial_r</obj_property>
+      <obj_property name="ObjectShortName">deserial_r</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/mode_wr" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mode_wr</obj_property>
+      <obj_property name="ObjectShortName">mode_wr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/poly_get" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">poly_get</obj_property>
+      <obj_property name="ObjectShortName">poly_get</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/count_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">count_rst</obj_property>
+      <obj_property name="ObjectShortName">count_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/t_clk_period" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">t_clk_period</obj_property>
+      <obj_property name="ObjectShortName">t_clk_period</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/clk_period" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_period</obj_property>
+      <obj_property name="ObjectShortName">clk_period</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/uut/state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">state[7:0]</obj_property>
+      <obj_property name="ObjectShortName">state[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/uut/s_state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">s_state[7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_state[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fsm_test/uut/n_state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">n_state[7:0]</obj_property>
+      <obj_property name="ObjectShortName">n_state[7:0]</obj_property>
+   </wvobject>
+</wave_config>

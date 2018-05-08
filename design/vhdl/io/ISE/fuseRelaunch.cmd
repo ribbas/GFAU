@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "secureip" -o "/media/sf_Xilinx/IO_Handler/ISE/FSM_Test_isim_beh.exe" -prj "/media/sf_Xilinx/IO_Handler/ISE/FSM_Test_beh.prj" "work.FSM_Test" 
