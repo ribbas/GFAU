@@ -16,33 +16,16 @@
 % specifies the document layout and style
 \input{../../../template/structure.tex}
 
-% names
-\newcommand{\team}{Galois Field Arithmetic Unit}
-\newcommand{\Sabbir}{Sabbir Ahmed}
-\newcommand{\Jeffrey}{Jeffrey Osazuwa}
-\newcommand{\Howard}{Howard To}
-\newcommand{\Brian}{Brian Weber}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+\newcommand{\gf}[1]{GF(#1)}
 \newcommand{\examplepoly}{$x^{3}+x^{2}+x^{0}$}
-
-% document info command
-\newcommand{\documentinfo}[4]{
-    \begin{centering}
-        \parbox{2in}{
-        \begin{spacing}{1}
-            \begin{flushleft}
-                \begin{tabular}{l l} #1 \\ #2 \\ #3 \\ #4 \\
-                \end{tabular} \\
-                \rule{\textwidth}{1pt}
-            \end{flushleft}
-        \end{spacing} }
-    \end{centering} }
 
 \begin{document}
 
     \documentinfo
-    {\textbf{MEMO NAME:} GFAU\_MATHEMATICAL\_BACKGROUND}
+    {\textbf{MEMO:} GFAU System Design Document}
     {\textbf{DATE:} \today}
-    {\textbf{TO:} EFC LaBerge}
+    {\textbf{TO:} Dr. E.F. Charles LaBerge}
     {\textbf{SUBJECT: } Mathematical Background on the Galois Field Arithmetic
     Unit}
     \vspace{-0.1in}
@@ -50,9 +33,10 @@
     % \tableofcontents
     \input{sdd/appendix/background/latex_mods/01-intro}
 
-    \section{Algorithms} Input polynomials will be represented as 16 bit zero-
-    base arrays. For example, the polynomial \examplepoly~ will be represented
-    as
+    \section{Algorithms} Input polynomials will be represented as $n$-bit
+    binary-coded decimal (BCD) arrays.
+
+    For example, the polynomial \examplepoly~ will be represented as
         \begin{equation*}
             \begin{split}
                 <0000 \ 0000 \ 0000 \ 1101> & \text{  (3rd, 2nd, and 0th bits)}
@@ -77,6 +61,6 @@
         \input{sdd/appendix/background/latex_mods/09-upperbound}
 
         \bibliographystyle{abbrv}
-        \bibliography{finitefield,primitive}
+        \bibliography{sdd/appendix/background/finitefield,sdd/appendix/background/primitive}
 
 \end{document}

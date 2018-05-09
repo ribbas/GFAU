@@ -6,7 +6,7 @@ underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
         \alpha^{i} / \alpha^{j} & = \{x_{i, n-1},\ldots x_{i, 2},x_{i,
         1},x_{i, 0}\} / \{x_{j, n-1}, \ldots x_{j, 2}, x_{j, 1}, x_{j, 0}\}
         \\
-        & = \alpha^{(i - j) \ mod \ (2^{n}-1)} \\
+        & = \alpha^{(i - j) \Mod{(2^{n}-1)}} \\
         & = \begin{cases}
             \alpha^{(2^{n}-1) - (j - i)} & \text{if $(i - j) < 0$} \\
             \alpha^{(i - j)} & \text{if $(i - j) > 0$} \\
@@ -28,7 +28,6 @@ underflow. If the difference is zero, then the quotient is $\alpha^{0}$.
 \begin{align*}
     \alpha^{i} / \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} / \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
-    & \Longrightarrow \text{Let } n = |i| = |j| \\
     & = \begin{cases}
             \alpha^{(i + j_{2's})} & \text{if $(i+j_{2's})[n]=1$} \\
             \alpha^{(i + j_{2's} + 1_{2's})} & \text{if $(i+j_{2's})[n]=0$}

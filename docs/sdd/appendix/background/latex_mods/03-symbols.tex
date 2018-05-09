@@ -4,171 +4,176 @@
     The number of terms grow exponentially, $2^{n}-1$, where $n$ is the highest
     degree of the polynomial.
 
-    \subsubsection{Default Symbols}
+    % \subsubsection{Default Symbols}
 
-    Default symbols refer to terms in the field that exist for Galois Fields of
-    all irreducible polynomials of $q^n$, where $2 \leq n
-    \leq 15$. Since the number of elements cannot be smaller than $2$, only
-    zero and the 0th and 1st elements are shared among all fields.
+    % Default symbols refer to terms in the field that exist for Galois Fields of
+    % all irreducible polynomials of $q^n$, where $2 \leq n
+    % \leq 15$. Since the number of elements cannot be smaller than $2$, only
+    % zero and the 0th and 1st elements are shared among all fields.
 
     \begin{table}[h]
         \def\arraystretch{2.5}
-        \caption{Default Symbols Generated for All Irreducible Polynomials}
+        \caption{Generated Symbols for Irreducible Polynomials of Degree $n$ in Memory with $m > n$ Address Pins}
         \centering
-        \begin{tabular*}{300pt}{@{\extracolsep{\fill}} ccc}
+        \begin{tabular*}{400pt}{@{\extracolsep{\fill}} ccc}
 
         \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol}
         \\
-        \hline $0$ & $0_{15} + \ldots + 0_{2} + 0_{1} + 0_{0}$ & $<
-        \overleftarrow{0_{15} \ \ldots \ 0_{2}} 0_{1} 0_{0} >$ \\
+        \hline $0$ & $0_{m} + \ldots + 0_{n} + \ldots + 0_{2} +
+        0_{0} + 0_{0}$ & $< \overleftarrow{0_{m} \ \ldots \
+        0_{n}} \ \ldots \ 0_{2} 0_{1} 0_{0} >$ \\
 
-        $\alpha^{0}$ & $0_{15} + \ldots + 0_{2} + 0_{1} + \alpha^{0}_{0}$ &
-        $<\overleftarrow{0_{15} \ \ldots \ 0_{2}} 0_{1} 1_{0} >$ \\
 
-        $\alpha^{1}$ & $0_{15} + \ldots + 0_{2} + \alpha^{1}_{1} + 0$ &
-        $<\overleftarrow{0_{15} \ \ldots \ 0_{2}} 1_{1} 0_{0} >$ \\
+        $\alpha^{0}$ & $0_{m} + \ldots + 0_{n} + \ldots + 0_{2} +
+        0_{0} + \alpha^{0}_{0}$ & $< \overleftarrow{0_{m} \ \ldots \
+        0_{n}} \ \ldots \ 0_{2} 0_{1} 1_{0} >$ \\
+
+        $\alpha^{1}$ & $0_{m} + \ldots + 0_{n} + \ldots + 0_{2} +
+        \alpha^{1}_{1} + 0_{0}$ & $< \overleftarrow{0_{m} \ \ldots \
+        0_{n}} \ \ldots \ 0_{2} 1_{1} 0_{0} >$ \\
+
+        $\alpha^{2}$ & $0_{m} + \ldots + 0_{n} + \ldots +
+        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $< \overleftarrow{0_{m} \ \ldots \
+        0_{n}} \ \ldots \ 1_{2} 0_{1} 0_{0} >$ \\
+
+        $\ldots$ & $\ldots$ & $\ldots$ \\
+
+        $\alpha^{n-1}$ & $0_{m} + \ldots + \alpha^{n-1}_{n-1} + \ldots
+        + 0_{2} + 0_{1} + 0_{0}$ & $< 0_{m} \ \ldots \ 1_{n-1} \ \ldots \
+          0_{2} 0_{1} 0_{0} >$ \\
+
+        $\alpha^{n}$ & $0_{m} + \ldots + \alpha^{n-1}_{n-1} + \ldots
+        +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $< 0_{m} \ 
+        \ldots \ x_{n-1} \ \ldots \ x_{2} x_{1} x_{0} >$ \\
+
+        $\alpha^{2^n-1}$ & $0_{m} + \ldots + 0_{n} + \ldots + 0_{2} +
+        0_{0} + \alpha^{0}_{0}$ & $< \overleftarrow{0_{m} \ \ldots \
+        0_{n}} \ \ldots \ 0_{2} 0_{1} 1_{0} >$ \\
 
         \end{tabular*}
         \label{table:default_sym}
     \end{table}
 
-    Table \ref{table:default_sym} have all the bits of their values set to $0$
-    except where indicated.
+    % Table \ref{table:default_sym} have all the bits of their values set to $0$
+    % except where indicated.
 
-        \paragraph{Analytical Approach} \leavevmode\\ Using the example
-        polynomial \examplepoly~, show that 0, the 0th element and the first
-        element exist in $GF(2^{3})$.
+    %     \paragraph{Analytical Approach} \leavevmode\\ Using the example
+    %     polynomial \examplepoly~, show that 0, the 0th element and the first
+    %     element exist in $GF(2^{3})$.
 
-        \[ \text{Let }\beta \in GF(2^{3}) \text{ be a root of
-                \examplepoly~ }\implies \beta^{3}+\beta^{2}+\beta^{0} \]
-        \[ \therefore \text{The coefficients are in }GF(2) \implies
-        \beta^{3}=\beta^{2}+\beta^{0} \]
-        \[ \because \text{a field has additive and multiplicative identities:}
-        \]
-        \[ \therefore \{ 0, 1=\beta^{0} \} \in GF(2^{3}) \]
-        \[ \therefore \beta^{1} \in GF(2^{3}) \ (\because \text{closure of  multiplication}) \]
+    %     \[ \text{Let }\beta \in GF(2^{3}) \text{ be a root of
+    %             \examplepoly~ }\implies \beta^{3}+\beta^{2}+\beta^{0} \]
+    %     \[ \therefore \text{The coefficients are in }GF(2) \implies
+    %     \beta^{3}=\beta^{2}+\beta^{0} \]
+    %     \[ \because \text{a field has additive and multiplicative identities:}
+    %     \]
+    %     \[ \therefore \{ 0, 1=\beta^{0} \} \in GF(2^{3}) \]
+    %     \[ \therefore \beta^{1} \in GF(2^{3}) \ (\because \text{closure of  multiplication}) \]
 
-    \subsubsection{Automatic Symbols}
+    % \subsubsection{Automatic Symbols}
 
-    Automatic symbols refer to terms up to $x^{n-1}$. Automatic symbols may be
-    generated concurrently, and consist of the following attributes:
-    \begin{enumerate}
-        \item The symbols for $\{x^{0}, x^{1}, \ldots, x^{n-1}\}$ are generated
-        by setting the corresponding bits to 1.
-        \item The symbol for $x^{n}$ is generated by setting the corresponding
-        bits for the terms in the polynomial after the highest degree term.
-        \item The symbol for $x^{2^{n}-1}$ cycles back to $x^{0}$, and is set
-        to $x^{0}$.
-    \end{enumerate}
+    % Automatic symbols refer to terms up to $x^{n-1}$. Automatic symbols may be
+    % generated concurrently, and consist of the following attributes:
+    % \begin{enumerate}
+    %     \item The symbols for $\{x^{0}, x^{1}, \ldots, x^{n-1}\}$ are generated
+    %     by setting the corresponding bits to 1.
+    %     \item The symbol for $x^{n}$ is generated by setting the corresponding
+    %     bits for the terms in the polynomial after the highest degree term.
+    %     \item The symbol for $x^{2^{n}-1}$ cycles back to $x^{0}$, and is set
+    %     to $x^{0}$.
+    % \end{enumerate}
 
-        Automatic symbols consist of $n+1$ terms. Therefore, the maximum of 15
-        bits would have 16 terms generated by default.
+    %     Automatic symbols consist of $n+1$ terms. Therefore, the maximum of 15
+    %     bits would have 16 terms generated by default.
 
-   \begin{table}[h]
-        \def\arraystretch{2.5}
-        \caption{Automatic Symbols Generated for An Irreducible Polynomial}
-        \centering
-        \begin{tabular*}{450pt}{@{\extracolsep{\fill}} ccc}
+   % \begin{table}[h]
+   %      \def\arraystretch{2.5}
+   %      \caption{Automatic Symbols Generated for An Irreducible Polynomial}
+   %      \centering
+   %      \begin{tabular*}{450pt}{@{\extracolsep{\fill}} ccc}
 
-        \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol}
-        \\
-        \hline
+   %      \textbf{Element} & \textbf{Polynomial Form} & \textbf{Symbol}
+   %      \\
+   %      \hline
 
-        $\alpha^{2}$ & $0_{15} + \ldots + 0_{n-1} + \ldots +
-        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $< \overleftarrow{0_{15} \ \ldots \
-        0_{n-1}} \ \ldots \ 1_{2} 0_{1} 0_{0} >$ \\
 
-        $\ldots$ & $\ldots$ & $\ldots$ \\
+   %      \end{tabular*}
+   %      \label{table:auto_sym}
+   %  \end{table}
 
-        $\alpha^{n-1}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
-        + 0_{2} + 0_{1} + 0_{0}$ & $< 0_{15} \ \ldots \ 1_{n-1} \ \ldots \
-          0_{2} 0_{1} 0_{0} >$ \\
+    %     \paragraph{Analytical Approach} \leavevmode \\ Assuming the preceding
+    %     values exist from the proof above, use the example polynomial
+    %     \examplepoly~ to show that the $n-1$th and the $n$th elements exist in
+    %     $GF(2^{3})$.
+    %     \[ \text{Let } \beta \in GF(2^{3}) \text{ be a root of
+    %     \examplepoly~} \implies \beta^{3} + \beta^{2} + \beta^{0} \]
+    %     \[ \therefore \text{The coefficients are in } GF(2) \implies
+    %     \beta^{3} = \beta^{2} + \beta^{0} \]
+    %     \[ \therefore \beta^{2} \in GF(2^{3}) \ (\because \text{
+    %     closure of  multiplication}) \]
+    %     \[ \therefore \beta^{3} \in GF(2^{3}) \ (\because \beta^{3} =
+    %     \beta^{2} + \beta^{0}) \]
 
-        $\alpha^{n}$ & $0_{15} + \ldots + \alpha^{n-1}_{n-1} + \ldots
-        +\alpha^{2}_{2} + \alpha^{1}_{1} + \alpha^{0}_{0}$ & $< 0_{15} \ 
-        \ldots \ x_{n-1} \ \ldots \ x_{2} x_{1} x_{0} >$ \\
+    % \subsubsection{Generated Symbols} The rest of the symbols for the elements
+    % $x^{n+1}$ to $x^{2^{n}-2}$ must be generated. In total, that would require
+    % $2^{n}-2-n-1+1=2^{n}-2-n$ terms. Therefore, the maximum of 15 bits would
+    % require 32,751 terms to be generated.
 
-        $\alpha^{2^{n}-1}$ & $0_{15} + \ldots + 0_{n-1} + \ldots +
-        \alpha^{2}_{2} + 0_{1} + 0_{0}$ & $< \overleftarrow{0_{15} \ \ldots \
-        0_{2}} 0_{1} 0_{0} >$ \\
+    %     \paragraph{Analytical Approach} \leavevmode \\ Assuming the preceding
+    %     values exist from the proof above, use the example polynomial
+    %     \examplepoly~ to show that the elements up to the $(2^{n-2})$th
+    %     elements exist in $GF(2^{3})$.
+    %     \[ \text{Let }\beta \in GF(2^{3}) \text{ be a root of
+    %     \examplepoly~} \implies \beta^{3} + \beta^{2} + \beta^{0} \]
+    %     \[ \therefore \text{The coefficients are in } GF(2) \implies \beta^{3}
+    %     = \beta^{2} + \beta^{0} \]
+    %     \begin{minipage}[t]{0.5\textwidth}
+    %         \begin{equation*}
+    %             \begin{split}
+    %                 \because \beta^{4} & = \beta^{1} \times \beta^{3} \\
+    %                 & = \beta^{1} (\beta^{2}+\beta^{0}) \\
+    %                 & = \beta^{3}+\beta^{1} \\
+    %                 & = \beta^{2}+\beta^{1}+\beta^{0}
+    %             \end{split}
+    %         \end{equation*}
+    %         \[ \therefore \beta^{4} \in GF(2^{3}) \]
+    %     \end{minipage}
+    %     \begin{minipage}[t]{0.5\textwidth}
+    %         \begin{equation*}
+    %             \begin{split}
+    %                 \because \beta^{5} & = \beta^{1} \times \beta^{4} \\
+    %                 & = \beta^{1} (\beta^{2}+\beta^{1}+\beta^{0}) \\
+    %                 & = \beta^{3}+\beta^{2}+\beta^{1} \\
+    %                 & = \beta^{2}+\beta^{0}+\beta^{2}+\beta^{1} \\
+    %                 & = \beta^{1}+\beta^{0}
+    %             \end{split}
+    %         \end{equation*}
+    %         \[ \therefore \beta^{5} \in GF(2^{3}) \]
+    %     \end{minipage}
 
-        \end{tabular*}
-        \label{table:auto_sym}
-    \end{table}
-
-        \paragraph{Analytical Approach} \leavevmode \\ Assuming the preceding
-        values exist from the proof above, use the example polynomial
-        \examplepoly~ to show that the $n-1$th and the $n$th elements exist in
-        $GF(2^{3})$.
-        \[ \text{Let } \beta \in GF(2^{3}) \text{ be a root of
-        \examplepoly~} \implies \beta^{3} + \beta^{2} + \beta^{0} \]
-        \[ \therefore \text{The coefficients are in } GF(2) \implies
-        \beta^{3} = \beta^{2} + \beta^{0} \]
-        \[ \therefore \beta^{2} \in GF(2^{3}) \ (\because \text{
-        closure of  multiplication}) \]
-        \[ \therefore \beta^{3} \in GF(2^{3}) \ (\because \beta^{3} =
-        \beta^{2} + \beta^{0}) \]
-
-    \subsubsection{Generated Symbols} The rest of the symbols for the elements
-    $x^{n+1}$ to $x^{2^{n}-2}$ must be generated. In total, that would require
-    $2^{n}-2-n-1+1=2^{n}-2-n$ terms. Therefore, the maximum of 15 bits would
-    require 32,751 terms to be generated.
-
-        \paragraph{Analytical Approach} \leavevmode \\ Assuming the preceding
-        values exist from the proof above, use the example polynomial
-        \examplepoly~ to show that the elements up to the $(2^{n-2})$th
-        elements exist in $GF(2^{3})$.
-        \[ \text{Let }\beta \in GF(2^{3}) \text{ be a root of
-        \examplepoly~} \implies \beta^{3} + \beta^{2} + \beta^{0} \]
-        \[ \therefore \text{The coefficients are in } GF(2) \implies \beta^{3}
-        = \beta^{2} + \beta^{0} \]
-        \begin{minipage}[t]{0.5\textwidth}
-            \begin{equation*}
-                \begin{split}
-                    \because \beta^{4} & = \beta^{1} \times \beta^{3} \\
-                    & = \beta^{1} (\beta^{2}+\beta^{0}) \\
-                    & = \beta^{3}+\beta^{1} \\
-                    & = \beta^{2}+\beta^{1}+\beta^{0}
-                \end{split}
-            \end{equation*}
-            \[ \therefore \beta^{4} \in GF(2^{3}) \]
-        \end{minipage}
-        \begin{minipage}[t]{0.5\textwidth}
-            \begin{equation*}
-                \begin{split}
-                    \because \beta^{5} & = \beta^{1} \times \beta^{4} \\
-                    & = \beta^{1} (\beta^{2}+\beta^{1}+\beta^{0}) \\
-                    & = \beta^{3}+\beta^{2}+\beta^{1} \\
-                    & = \beta^{2}+\beta^{0}+\beta^{2}+\beta^{1} \\
-                    & = \beta^{1}+\beta^{0}
-                \end{split}
-            \end{equation*}
-            \[ \therefore \beta^{5} \in GF(2^{3}) \]
-        \end{minipage}
-
-        \begin{minipage}[t]{0.5\textwidth}
-            \begin{equation*}
-                \begin{split}
-                    \because \beta^{6} & = \beta^{1} \times \beta^{5} \\
-                    & = \beta^{1} (\beta^{1}+\beta^{0}) \\
-                    & = \beta^{2}+\beta^{1}
-                \end{split}
-            \end{equation*}
-            \[ \therefore \beta^{6} \in GF(2^{3}) \]
-        \end{minipage}
-        \begin{minipage}[t]{0.5\textwidth}
-            \begin{equation*}
-                \begin{split}
-                    \because \beta^{7} & = \beta^{1} \times \beta^{6} \\
-                    & = \beta^{1} (\beta^{2}+\beta^{1}) \\
-                    & = \beta^{3}+\beta^{2} \\
-                    & = \beta^{2}+\beta^{0}+\beta^{2} \\
-                    & = \beta^{0} = 1
-                \end{split}
-            \end{equation*}
-            \[ \therefore \beta^{7} \in GF(2^{3}) \]
-        \end{minipage}
-        \newpage
+    %     \begin{minipage}[t]{0.5\textwidth}
+    %         \begin{equation*}
+    %             \begin{split}
+    %                 \because \beta^{6} & = \beta^{1} \times \beta^{5} \\
+    %                 & = \beta^{1} (\beta^{1}+\beta^{0}) \\
+    %                 & = \beta^{2}+\beta^{1}
+    %             \end{split}
+    %         \end{equation*}
+    %         \[ \therefore \beta^{6} \in GF(2^{3}) \]
+    %     \end{minipage}
+    %     \begin{minipage}[t]{0.5\textwidth}
+    %         \begin{equation*}
+    %             \begin{split}
+    %                 \because \beta^{7} & = \beta^{1} \times \beta^{6} \\
+    %                 & = \beta^{1} (\beta^{2}+\beta^{1}) \\
+    %                 & = \beta^{3}+\beta^{2} \\
+    %                 & = \beta^{2}+\beta^{0}+\beta^{2} \\
+    %                 & = \beta^{0} = 1
+    %             \end{split}
+    %         \end{equation*}
+    %         \[ \therefore \beta^{7} \in GF(2^{3}) \]
+    %     \end{minipage}
+    %     \newpage
 
         \paragraph{Digital Logic} \leavevmode \\ Generating the rest of the
         symbols may be implemented using the following recurrence relation:
@@ -184,25 +189,25 @@
             \end{split}
         \end{equation*}
 
-        \begin{table}[h]
-            \def\arraystretch{1.5}
-            \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
+        % \begin{table}[h]
+        %     \def\arraystretch{1.5}
+        %     \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
 
-            \centering
-            \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
+        %     \centering
+        %     \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
 
-            \textbf{Element} & \textbf{Symbol} & \textbf{Polynomial Form} &
-            \textbf{Symbol} \\
-            \hline
-            $0$         & {\scriptsize [1]} & $0+0+0$               & 000\\
-            $\beta^{0}$ & 000 & $0 + 0 + \beta^{0}$                 & 001\\
-            $\beta^{1}$ & 001 & $0 + \beta^{1} + 0$                 & 010\\
-            $\beta^{2}$ & 010 & $\beta^{2} + 0 + 0$                 & 100\\
-            $\beta^{3}$ & 011 & $\beta^{2} + 0 + \beta^{0}$         & 101\\
-            $\beta^{4}$ & 100 & $\beta^{2} + \beta^{1} + \beta^{0}$ & 111\\
-            $\beta^{5}$ & 101 & $0 + \beta^{1} + \beta^{0}$         & 011\\
-            $\beta^{6}$ & 110 & $\beta^{2} + \beta^{1} + 0$         & 110\\
-            $\beta^{7}$ & {\scriptsize [2]} & $0 + 0 + \beta^{0}$   & 001\\
-            \end{tabular*}
-        \end{table}
+        %     \textbf{Element} & \textbf{Symbol} & \textbf{Polynomial Form} &
+        %     \textbf{Symbol} \\
+        %     \hline
+        %     $0$         & {\scriptsize [1]} & $0+0+0$               & 000\\
+        %     $\beta^{0}$ & 000 & $0 + 0 + \beta^{0}$                 & 001\\
+        %     $\beta^{1}$ & 001 & $0 + \beta^{1} + 0$                 & 010\\
+        %     $\beta^{2}$ & 010 & $\beta^{2} + 0 + 0$                 & 100\\
+        %     $\beta^{3}$ & 011 & $\beta^{2} + 0 + \beta^{0}$         & 101\\
+        %     $\beta^{4}$ & 100 & $\beta^{2} + \beta^{1} + \beta^{0}$ & 111\\
+        %     $\beta^{5}$ & 101 & $0 + \beta^{1} + \beta^{0}$         & 011\\
+        %     $\beta^{6}$ & 110 & $\beta^{2} + \beta^{1} + 0$         & 110\\
+        %     $\beta^{7}$ & {\scriptsize [2]} & $0 + 0 + \beta^{0}$   & 001\\
+        %     \end{tabular*}
+        % \end{table}
 

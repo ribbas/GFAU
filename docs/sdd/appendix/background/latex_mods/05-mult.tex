@@ -5,7 +5,7 @@ to prevent overflow.
 \begin{align*}
     \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
-    & = \alpha^{(i + j) \ mod \ (2^{n}-1)} \\
+    & = \alpha^{(i + j) \Mod{(2^{n}-1)}} \\
     & = \begin{cases}
             \alpha^{(i + j) - (2^{n}-1)} & \text{if $(i + j) \geq 2^{n}-1$} \\
             \alpha^{(i + j)} & \text{if $(i + j) < 2^{n}-1$}
@@ -24,7 +24,6 @@ to prevent overflow.
 \begin{align*}
     \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
-    & \Longrightarrow \text{Let } n = |i| = |j| \\
     & = \begin{cases}
             \alpha^{(i + j)} & \text{if $\Big((i+j)[n] \ \vee \
             (i+j+1)[n]\Big)=0$} \\

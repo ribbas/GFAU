@@ -17,5 +17,5 @@ bib:
 
 .PHONY: clean
 clean:
-	# clean out cache and temporary files
-	@find . \( -name '*.log' -o -name '*.aux' \) -delete
+	# clean out LaTex cache and temporary files
+	@find . \( -name '*.log' -o -name '*.aux' -o -name '*.bbl' -o -name '*.blg' \) -delete

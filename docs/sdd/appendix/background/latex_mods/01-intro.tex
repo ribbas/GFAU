@@ -1,15 +1,21 @@
-\section{Background} A Galois Field is a field with a finite number of
-elements. The nomenclature $GF(q)$ is used to indicate a Galois Field with $q$
-elements. In $GF(q)$, the parameter $q$ must be a power of a prime. For each
-prime power there exists exactly one finite field. The binary field $GF(2)$ is
-the most frequently used Galois field. \cite{finitefield}
+\section{Background} Galois fields (denoted $\gf{p^n}$, where $p,n \in
+\mathbb{N}_{>0}$, and $p$ is prime) are fields with finite orders of $p^n$.
+They are a key part of number theory, abstract algebra, arithmetic algebraic
+geometry, and cryptography. In error detection and correction, Galois fields
+are utilized in cyclic redundancy check (CRC) which are used in digital
+networks and storage devices to detect accidental changes to raw data.
 
-    \subsection{Purpose and Scope} The Galois Field Arithmetic Unit
-    operates in fields of $q^n$, where $2 \leq n \leq 15$. This document
-    will demonstrate the functionality of the unit by deriving all its
-    functionality through mathematical approaches. The mathematical
-    algorithms will be followed by their corresponding implementations in
-    digital design.
+The Galois Field Arithmetic Unit (GFAU) is a scalable arithmetic logic unit
+(ALU) capable of generating elements in the Galois field of an irreducible
+polynomial in $\gf{2^n}$, where $2 \leq n < (\text{$\#$ of memory address
+pins})$. GFAU supports addition, subtraction, multiplication, division and
+logarithm of these elements for low powered devices.
+
+    \subsection{Purpose and Scope} This document will demonstrate the
+    functionality of the unit by deriving all its functionality through
+    mathematical approaches. The mathematical algorithms will be followed by
+    their corresponding implementations in digital design. The algorithms will
+    be followed by brief documentation on the modules included in the unit.
 
     \subsection{Terms and Keywords}
 
@@ -19,8 +25,8 @@ the most frequently used Galois field. \cite{finitefield}
         \[ c_{n}x^{n}+\ldots+c_{2}x^{2}+c_{1}x^{1}+c_{0}x^{0}, \text{ where }
         c,x \in GF(2)=\{0,1\} \]
 
-        For convenience and simplicity, all the examples provided will
-        refer to the following polynomial: \examplepoly~.
+        For convenience and simplicity, all the examples provided will refer to
+        the polynomial: \examplepoly~.
 
         \subsubsection{Elements} The elements of an input polynomial refer
         to the $2^{n}-1$ elements in the field.
@@ -34,7 +40,7 @@ the most frequently used Galois field. \cite{finitefield}
 
             \begin{table}[h]
                 \def\arraystretch{1.5}
-                \caption{The 8 Element Vectors of \examplepoly~ in $GF(2)[x]$}
+                \caption{The 8 Element Vectors of \examplepoly~ in $\gf{2}[x]$}
 
                 \centering
                 \begin{tabular*}{250pt}{@{\extracolsep{\fill}} c|c|c|c}
@@ -42,7 +48,7 @@ the most frequently used Galois field. \cite{finitefield}
                 \textbf{Element} & \textbf{Symbol} & \textbf{Polynomial Form} &
                 \textbf{Symbol} \\
                 \hline
-                $0$         & {\scriptsize [1]} & $0+0+0$               & 000\\
+                $0$ (NULL)  & {\scriptsize [1]} & $0+0+0$               & 000\\
                 $\beta^{0}$ & 000 & $0 + 0 + \beta^{0}$                 & 001\\
                 $\beta^{1}$ & 001 & $0 + \beta^{1} + 0$                 & 010\\
                 $\beta^{2}$ & 010 & $\beta^{2} + 0 + 0$                 & 100\\
@@ -54,16 +60,17 @@ the most frequently used Galois field. \cite{finitefield}
                 \end{tabular*}
             \end{table}
 
-            {\scriptsize [1]} Zero in its element form is reserved where its
-            binary symbol does not represent its decimal value. \\ {\scriptsize
-            [2]} Elements beyond the $(2^{n}-1)$th element will be handled with
-            special conditions since they cycle back to previous elements.
+            {\scriptsize [1]} The additive identity, 0 (zero), referred to as
+            NULL, in its element form is reserved where its binary symbol does
+            not represent its decimal value. \\ {\scriptsize [2]} Elements
+            beyond the $(2^{n}-1)$th element will be handled with special
+            conditions since they cycle back to previous elements.
 
         \subsubsection{Notations} Several notations are used in this document
         to assist in linking the mathematical and digital design concepts. A
         list of selected notations are provided below:
 
-        \begin{table}[h]
+        \begin{table}[!h]
             \def\arraystretch{2}
             \caption{Mathematical and Logical Notations}
 
