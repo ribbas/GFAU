@@ -44,8 +44,12 @@ architecture fsm of generator is
 
     signal counter : std_logic_vector(n downto 0);
     signal temp_elem : std_logic_vector(n downto 0);
+    signal temp_elem_f : std_logic_vector(n downto 0);
     signal nth_elem : std_logic_vector(n downto 0);
     signal wr_rdy : std_logic := '0';
+
+    type flip_state is (e2p, p2e);
+    signal flippy_flop : flip_state;
 
 begin
 
@@ -54,96 +58,113 @@ begin
 
         if rising_edge(clk) then
 
-            if (en = '1') then
+            if (rst = '1') then
+
+                -- generator control signals
+                gen_rdy <= '0';
+                id_gen <= '0';
+
+                -- start element register at 2 for second element
+                temp_elem <= ONEVEC;
+
+                -- start flippy element register at 1 for second element
+                temp_elem_f <= ONEVEC;
+
+                -- start counter at 1
+                counter <= ZEROVEC;
+                -- first address
+                addr_gen <= DCAREVEC;
+                -- first element
+                elem <= DCAREVEC;
+
+                -- save this for later :)
+                poly_bcd_reg <= poly_bcd;
+
+            end if;
+
+            if (en = '1' and rst = '0') then
 
                 -- elem^n
                 nth_elem <= (poly_bcd & '1') and mask;
 
-                if (rst = '1') then
+                case flippy_flop is
 
-                    -- generator control signals
-                    gen_rdy <= '0';
-                    id_gen <= '1';
+                    when e2p =>
 
-                    -- start element register at 2 for second element
-                    temp_elem <= TWOVEC;
-                    -- start counter at 1
-                    counter <= ONEVEC;
-                    -- first address
-                    addr_gen <= ZEROVEC;
-                    -- first element
-                    elem <= ONEVEC;
+                        if (mem_rdy = '1') then
 
-                    -- save this for later :)
-                    poly_bcd_reg <= poly_bcd;
-
-                else
-
-                    if (mem_rdy = '1') then
-
-                        if (wr_rdy = '1') then
-
-                            -- addr and data of NULL
-                            addr_gen <= HIVEC;
-                            elem <= ZEROVEC;
-
-                            -- generator control signals
-                            gen_rdy <= '1';
-                            id_gen <= '0';
-
-                        else
-
-                            -- when the generator is done
-                            if (and_reduce((temp_elem and mask) xnor ONEVEC) = '1')
-                            then
-
-                                -- generator control signals
-                                gen_rdy <= '0';
-                                id_gen <= '1';
-
-                                -- finish writing
-                                wr_rdy <= '1';
+                            if (wr_rdy = '1') then
 
                                 -- addr and data of NULL
                                 addr_gen <= HIVEC;
                                 elem <= ZEROVEC;
 
+                                -- generator control signals
+                                gen_rdy <= '1';
+                                id_gen <= '0';
+
                             else
 
-                                -- increment counter
-                                counter <= std_logic_vector(unsigned(counter) + 1);
+                                -- when the generator is done
+                                if (counter = mask) then
 
-                                -- if elem^(n+(m-1))[msb] = 1
-                                if (temp_elem(to_integer(unsigned(msb))) = '1') then
+                                    -- generator control signals
+                                    gen_rdy <= '0';
+                                    id_gen <= '1';
 
-                                    -- (elem^(n+(m-1)) << 1) xor elem^n
-                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0')
-                                     xor nth_elem;
+                                    -- finish writing
+                                    wr_rdy <= '1';
+
+                                    -- addr and data of NULL
+                                    addr_gen <= HIVEC;
+                                    elem <= ZEROVEC;
 
                                 else
-                                    -- (elem^(n+(m-1)) << 1)
-                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0');
+                                    -- increment counter
+                                    counter <= std_logic_vector(unsigned(counter) + 1);
+
+                                    -- if elem^(n+(m-1))[msb] = 1
+                                    if (temp_elem(to_integer(unsigned(msb))) = '1') then
+
+                                        -- (elem^(n+(m-1)) << 1) xor elem^n
+                                        temp_elem <= (temp_elem(n - 1 downto 0) & '0')
+                                         xor nth_elem;
+
+                                    else
+                                        -- (elem^(n+(m-1)) << 1)
+                                        temp_elem <= (temp_elem(n - 1 downto 0) & '0');
+
+                                    end if;
+
+                                    -- generator control signals
+                                    gen_rdy <= '0';
+                                    id_gen <= '1';
+
+                                    -- address is counter, element is the temp element
+                                    -- register
+                                    addr_gen <= counter;
+                                    elem <= temp_elem and mask;
 
                                 end if;
 
-                                -- generator control signals
-                                gen_rdy <= '0';
-                                id_gen <= '1';
+                            end if;
 
-                                -- address is counter, element is the temp element
-                                -- register
-                                addr_gen <= counter;
-                                elem <= temp_elem and mask;
+                        end if;
 
-                            end if;  -- generator done
+                        flippy_flop <= p2e;
 
-                        end if;  -- writing done
+                    when p2e =>
 
-                    end if; -- memory is ready
+                        addr_gen <= temp_elem and mask;
+                        elem <= counter;
 
-                end if;  -- rst
+                        flippy_flop <= e2p;
 
-            end if;  -- en
+                    end case;
+
+
+
+            end if;
 
         end if;  -- clk
 

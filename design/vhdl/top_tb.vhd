@@ -182,7 +182,7 @@ begin
 
         OPCODE <= "000XXX";  -- generator
 
-        wait for (CLK_PER * 40);
+        wait for (CLK_PER * 20);
 
         OPCODE <= "001000";  -- add, elem, elem, elem
 

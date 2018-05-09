@@ -110,7 +110,6 @@ begin
         mask <= "000000111";
         msb <= "010";
         poly_bcd <= "00000110";
-        
 
         wait for (CLK_PER * 1);
 
@@ -121,7 +120,7 @@ begin
 
         rst <= '0';
 
-        wait for (CLK_PER * 10);
+        wait for (CLK_PER * 20);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

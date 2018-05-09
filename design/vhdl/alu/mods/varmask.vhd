@@ -19,13 +19,12 @@ entity varmask is
     port(
         poly_bcd    : in std_logic_vector(n downto 2);  -- BCD polynomial
         mask        : out std_logic_vector(n downto 0) := (others => '0')
-     
    );
 end varmask;
 
 architecture behavioral of varmask is
 begin
- 
+
     mask <= "011111111" when (poly_bcd(8) = '1') else   -- 8
             "001111111" when (poly_bcd(7) = '1') else   -- 7
             "000111111" when (poly_bcd(6) = '1') else   -- 6
