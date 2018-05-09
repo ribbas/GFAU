@@ -35,6 +35,7 @@ architecture test of generator_tb is
             -- memory wrapper control signals
             id_gen      : out std_logic;
             mem_rdy     : in std_logic;
+            mem_t       : out std_logic;
 
             -- memory signals
             gen_rdy     : out std_logic;
@@ -75,6 +76,7 @@ begin
         poly_bcd_reg => poly_bcd_reg,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
+        mem_t => mem_t,
         gen_rdy => gen_rdy,
         addr_gen => addr_gen,
         elem => elem
@@ -98,7 +100,7 @@ begin
 
         for i in 1 to nums loop
             mem_rdy <= not mem_rdy;
-            wait for (CLK_PER / 2);
+            wait for (CLK_PER * 2);
         end loop;
 
     end process;
@@ -120,7 +122,7 @@ begin
 
         rst <= '0';
 
-        wait for (CLK_PER * 20);
+        wait for (CLK_PER * 35);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

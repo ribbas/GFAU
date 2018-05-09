@@ -120,7 +120,7 @@ begin
 
                 -- disable generator
                 en_gen <= '0';
-                rst_gen <= '0';
+                rst_gen <= '1';
 
                 -- disable arithmetic exceptions
                 opand_b <= ZEROVEC;
@@ -141,9 +141,6 @@ begin
                     -- initiate element generator
                     when "000" =>
 
-                        -- enable generator
-                        en_gen <= '1';
-
                         case dbnc_state is
 
                             when rst_state =>
@@ -155,6 +152,8 @@ begin
                             when en_state =>
 
                                 rst_gen <= '0';
+                                -- enable generator
+                                en_gen <= '1';
                                 --dbnc_state <= rst_state;
 
                             when others =>

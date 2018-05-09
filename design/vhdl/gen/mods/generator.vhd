@@ -32,6 +32,7 @@ entity generator is
         -- memory wrapper control signals
         id_gen      : out std_logic := '0';
         mem_rdy     : in std_logic;
+        mem_t       : out std_logic;
 
         -- memory signals
         gen_rdy     : out std_logic := '0';
@@ -62,12 +63,12 @@ begin
 
                 -- generator control signals
                 gen_rdy <= '0';
-                id_gen <= '0';
+                id_gen <= '1';
 
                 -- start element register at 2 for second element
                 temp_elem <= ONEVEC;
 
-                -- start flippy element register at 1 for second element
+                -- start flip element register at 1 for second element
                 temp_elem_f <= ONEVEC;
 
                 -- start counter at 1
@@ -93,6 +94,59 @@ begin
 
                         if (mem_rdy = '1') then
 
+                            id_gen <= '1';
+                            mem_t <= '0';
+
+                            -- when the generator is done
+                            if (counter = mask) then
+
+                                -- generator control signals
+                                gen_rdy <= '0';
+
+                                -- finish writing
+                                wr_rdy <= '0';
+
+                                -- addr and data of NULL
+                                addr_gen <= HIVEC;
+                                elem <= ZEROVEC;
+
+                            else
+
+                                -- if elem^(n+(m-1))[msb] = 1
+                                if (temp_elem(to_integer(unsigned(msb))) = '1') then
+
+                                    -- (elem^(n+(m-1)) << 1) xor elem^n
+                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0')
+                                     xor nth_elem;
+
+                                else
+                                    -- (elem^(n+(m-1)) << 1)
+                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0');
+
+                                end if;
+
+                                -- generator control signals
+                                gen_rdy <= '0';
+                                id_gen <= '1';
+
+                                -- address is counter, element is the temp element
+                                -- register
+                                addr_gen <= counter;
+                                elem <= temp_elem and mask;
+                                temp_elem_f <= temp_elem and mask;
+
+                            end if;
+
+                            flippy_flop <= p2e;
+
+                        end if;
+
+                    when p2e =>
+
+                        if (mem_rdy = '1') then
+
+                            mem_t <= '1';
+
                             if (wr_rdy = '1') then
 
                                 -- addr and data of NULL
@@ -116,53 +170,26 @@ begin
                                     wr_rdy <= '1';
 
                                     -- addr and data of NULL
-                                    addr_gen <= HIVEC;
-                                    elem <= ZEROVEC;
+                                    addr_gen <= ZEROVEC;
+                                    elem <= HIVEC;
 
                                 else
+
+                                    addr_gen <= temp_elem_f and mask;
+                                    elem <= counter;
+
                                     -- increment counter
                                     counter <= std_logic_vector(unsigned(counter) + 1);
 
-                                    -- if elem^(n+(m-1))[msb] = 1
-                                    if (temp_elem(to_integer(unsigned(msb))) = '1') then
-
-                                        -- (elem^(n+(m-1)) << 1) xor elem^n
-                                        temp_elem <= (temp_elem(n - 1 downto 0) & '0')
-                                         xor nth_elem;
-
-                                    else
-                                        -- (elem^(n+(m-1)) << 1)
-                                        temp_elem <= (temp_elem(n - 1 downto 0) & '0');
-
-                                    end if;
-
-                                    -- generator control signals
-                                    gen_rdy <= '0';
-                                    id_gen <= '1';
-
-                                    -- address is counter, element is the temp element
-                                    -- register
-                                    addr_gen <= counter;
-                                    elem <= temp_elem and mask;
+                                    flippy_flop <= e2p;
 
                                 end if;
 
                             end if;
 
-                        end if;
-
-                        flippy_flop <= p2e;
-
-                    when p2e =>
-
-                        addr_gen <= temp_elem and mask;
-                        elem <= counter;
-
-                        flippy_flop <= e2p;
+                        end if;  -- memory ready
 
                     end case;
-
-
 
             end if;
 

@@ -148,6 +148,7 @@ architecture behavioral of top is
             -- memory wrapper control signals
             id_gen      : out std_logic;
             mem_rdy     : in std_logic;
+            mem_t       : out std_logic;
 
             -- memory signals
             gen_rdy     : out std_logic;
@@ -212,6 +213,7 @@ architecture behavioral of top is
             -- memory types and methods
             mem_t_cu    : in std_logic;
             mem_t_con   : in std_logic;
+            mem_t_gen   : in std_logic;
             mem_rdy     : out std_logic;  -- ready
 
             -- module signals
@@ -260,6 +262,7 @@ architecture behavioral of top is
     -- memory control signals
     signal mem_t_cu : std_logic;  -- memory type of control unit
     signal mem_t_con : std_logic;  -- memory type of operators
+    signal mem_t_gen : std_logic;  -- memory type of generator
     signal mem_rdy : std_logic;  -- memory type
 
     -- memory address and data signals
@@ -325,6 +328,7 @@ begin
         msb => msb,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
+        mem_t => mem_t_gen,
         gen_rdy => RDYGEN,
         addr_gen => addr_gen,
         elem => elem
@@ -365,6 +369,7 @@ begin
         clk => CLK,
         mem_t_cu => mem_t_cu,
         mem_t_con => mem_t_con,
+        mem_t_gen => mem_t_gen,
         mem_rdy => mem_rdy,
         id_cu => id_cu,
         addr_cu => addr_cu,
@@ -387,7 +392,7 @@ begin
     t_size <= size;
     t_msb <= msb;
     t_mask <= '0' & poly_bcd_reg;
-    t_1 <= id_gen;
+    t_1 <= mem_t_gen;
     t_n1 <= addr_gen;
     t_n2 <= elem;
 

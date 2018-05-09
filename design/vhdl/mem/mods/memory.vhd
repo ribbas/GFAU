@@ -32,6 +32,7 @@ entity memory is
         -- memory types and methods
         mem_t_cu    : in std_logic;
         mem_t_con   : in std_logic;
+        mem_t_gen   : in std_logic;
         mem_rdy     : out std_logic;  -- ready
 
         -- module signals
@@ -209,10 +210,10 @@ begin
                 -- data outs are don't care
                 dout_con <= DCAREVEC;
                 dout_cu <= DCAREVEC;
-                wr_rd <= '1'; --sets the io port to output mode
+                wr_rd <= '1'; -- sets the io port to output mode
 
                 --hold address, data, and bus control signals
-                A <= '0' & addr_gen;
+                A <= mem_t_gen & addr_gen;
                 DQ_in <= din_gen;
 
                 -- send control unit's address to memory
