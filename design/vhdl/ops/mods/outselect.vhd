@@ -215,7 +215,6 @@ begin
 
         else
 
-            report "shouldn't be here";
             -- disable output converter
             en_con <= '0';
 

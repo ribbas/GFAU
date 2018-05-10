@@ -38,16 +38,16 @@ architecture behavior of top_tb is
 
             -- user inputs
             POLYBCD : in std_logic_vector(n downto 0);
-            OPCODE  : in std_logic_vector(5 downto 0);
+            opcode  : in std_logic_vector(5 downto 0);
             OPAND1  : in std_logic_vector(n downto 0);
             OPAND2  : in std_logic_vector(n downto 0);
 
             -- user output
-            RESULT  : out std_logic_vector(n downto 0);
+            result  : out std_logic_vector(n downto 0);
 
             -- IO interrupts
-            RDYGEN  : out std_logic;
-            RDYOUT  : out std_logic;
+            rdy_gen  : out std_logic;
+            rdy_out  : out std_logic;
             ERRB    : out std_logic;
             ERRZ    : out std_logic;
 
@@ -83,7 +83,7 @@ architecture behavior of top_tb is
     signal RST     : std_logic;
     signal ENCU    : std_logic := '0';
     signal POLYBCD : std_logic_vector(n downto 0);
-    signal OPCODE  : std_logic_vector(5 downto 0);
+    signal opcode  : std_logic_vector(5 downto 0);
     signal OPAND1  : std_logic_vector(n downto 0);
     signal OPAND2  : std_logic_vector(n downto 0);
 
@@ -95,9 +95,9 @@ architecture behavior of top_tb is
     signal nBHE   : std_logic;
 
     -- outputs
-    signal RESULT  : std_logic_vector(n downto 0);
-    signal RDYGEN  : std_logic;
-    signal RDYOUT  : std_logic;
+    signal result  : std_logic_vector(n downto 0);
+    signal rdy_gen  : std_logic;
+    signal rdy_out  : std_logic;
     signal ERRB    : std_logic;
     signal ERRZ    : std_logic;
     signal A       : std_logic_vector((n + 1) downto 0);
@@ -126,12 +126,12 @@ begin
         RST => RST,
         ENCU => ENCU,
         POLYBCD => POLYBCD,
-        OPCODE => OPCODE,
+        opcode => opcode,
         OPAND1 => OPAND1,
         OPAND2 => OPAND2,
-        RESULT => RESULT,
-        RDYGEN => RDYGEN,
-        RDYOUT => RDYOUT,
+        result => result,
+        rdy_gen => rdy_gen,
+        rdy_out => rdy_out,
         ERRB => ERRB,
         ERRZ => ERRZ,
         nCE => nCE,
@@ -186,7 +186,8 @@ begin
 
         wait for (CLK_PER * 2);
 
-        OPCODE <= "000XXX";  -- generator
+        ENCU <= '0';
+        opcode <= "000XXX";  -- generator
 
         wait for (CLK_PER * 45);
 
@@ -195,7 +196,7 @@ begin
         wait for (CLK_PER * 2);
 
         RST <= '0';
-        OPCODE <= "001111";  -- add, elem, elem, elem
+        opcode <= "001111";  -- add, elem, elem, elem
 
         wait for (CLK_PER * 20);
         -- stop simulation

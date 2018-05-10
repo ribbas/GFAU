@@ -30,18 +30,18 @@ entity top is
 
         -- user inputs
         POLYBCD : in std_logic_vector(n downto 0);
-        OPCODE  : in std_logic_vector(5 downto 0);
+        opcode  : in std_logic_vector(5 downto 0);
         OPAND1  : in std_logic_vector(n downto 0);
         OPAND2  : in std_logic_vector(n downto 0);
 
         -- user output
-        RESULT  : out std_logic_vector(n downto 0);
+        result  : out std_logic_vector(n downto 0);
 
         -- IO interrupts
-        RDYGEN  : out std_logic;
-        RDYOUT  : out std_logic;
-        ERRB    : out std_logic;
-        ERRZ    : out std_logic;
+        rdy_gen  : out std_logic;
+        rdy_out : out std_logic;
+        errb    : out std_logic;
+        errz    : out std_logic;
 
         -- memory control signals
         nCE     : out std_logic;
@@ -71,6 +71,40 @@ end top;
 
 architecture behavioral of top is
 
+    component IO_Handler_Top is
+        port(
+        --====================================================================
+            --***External Signals***--
+        --====================================================================
+
+            --signals from/to external devices
+            data        :   inout   std_logic_vector(31 downto 0); --external data bus
+            Start       :   in      std_logic;
+            t_clk       :   in      std_logic; --external device clock < 200MHz
+            g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
+            ready_sig   :   out     std_logic; --gfau is ready for input
+            err         :   out     std_logic; --error signal
+
+            --interrupt signals to/from external device
+            INT         :   out     std_logic; --generate an interrupt
+            INTA        :   in      std_logic; --interrupt acknowledge
+
+            --signals to/from gfau
+            clk         :   in      std_logic; --internal 50MHz clock
+            op_done     :   in      std_logic; --normal operation completed
+            opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
+            rst         :   out     std_logic; --propogation of g_rst
+            gen_rdy     :   in      std_logic; --field generation complete
+            gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
+            out_data    :   out     std_logic_vector(31 downto 0);
+            input_size  :   in      std_logic_vector(3 downto 0);
+            --error signals
+            z_err       :   in      std_logic;
+            oob_err     :   in      std_logic
+        );
+    end component;
+
+
     ---------------- universal registers and constants ----------------
 
     -- order and most significant bit index
@@ -97,7 +131,7 @@ architecture behavioral of top is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            en          : in std_logic;  -- control unit enable
+            start       : in std_logic;  -- control unit enable
             rst         : in std_logic;
 
             -- registers
@@ -274,6 +308,28 @@ architecture behavioral of top is
 
 begin
 
+    --io_unit: IO_Handler_Top port map (
+    --    data => DATA,
+    --    Start => START,
+    --    t_clk => T_CLK,
+    --    g_rst => RST,
+    --    ready_sig => RDY,
+    --    err => ERR,
+    --    INT => INT,
+    --    INTA => INTA,
+    --    clk => CLK,
+
+    --    op_done => rdy_out,
+    --    opcode_out => opcode,
+    --    rst => open,
+    --    gen_rdy => rdy_gen,
+    --    gfau_data => result,
+    --    out_data => out_data,
+    --    input_size => input_data,
+    --    z_err => errz,
+    --    oob_err => errb
+    --);
+
     ---------------- universal registers and constants ----------------
 
     -- most significant bit
@@ -292,10 +348,10 @@ begin
     -- control unit
     cu: control_unit port map(
         clk => CLK,
-        opcode => OPCODE(5 downto 1),
+        opcode => opcode(5 downto 1),
         opand1 => OPAND1,
         opand2 => OPAND2,
-        en => ENCU,
+        start => ENCU,
         rst => RST,
         mask => mask,
         en_ops => en_ops,
@@ -309,7 +365,7 @@ begin
         mem_rdy => mem_rdy,
         addr_cu => addr_cu,
         dout_cu => dout_cu,
-        err_b => ERRB,
+        err_b => errb,
         opand1_null => i_null,
         opand2_null => j_null
     );
@@ -328,7 +384,7 @@ begin
         id_gen => id_gen,
         mem_rdy => mem_rdy,
         mem_t => mem_t_gen,
-        gen_rdy => RDYGEN,
+        gen_rdy => rdy_gen,
         addr_gen => addr_gen,
         elem => elem
     );
@@ -339,8 +395,8 @@ begin
     -- operators
     operators_unit: operators port map(
         clk => CLK,
-        op => OPCODE(5 downto 3),
-        out_t => OPCODE(0),
+        op => opcode(5 downto 3),
+        out_t => opcode(0),
         en => en_ops,
         rst => rst_ops,
         i => i,
@@ -354,9 +410,9 @@ begin
         mem_rdy => mem_rdy,
         addr_con => addr_con,
         dout_con => dout_con,
-        result => RESULT,
-        err_z => ERRZ,
-        rdy_out => RDYOUT
+        result => result,
+        err_z => errz,
+        rdy_out => rdy_out
     );
 
 
@@ -386,17 +442,17 @@ begin
     );
 
 
-    ------------------ TEMPORARY OUTPUTS ----------------
-    t_size <= size;
-    t_msb <= msb;
-    t_mask <= '0' & poly_bcd_reg;
-    t_1 <= rst_ops;
-    t_n1 <= i;
-    t_n2 <= j;
+    -------------------- TEMPORARY OUTPUTS ----------------
+    --t_size <= size;
+    --t_msb <= msb;
+    --t_mask <= '0' & poly_bcd_reg;
+    --t_1 <= rst_ops;
+    --t_n1 <= i;
+    --t_n2 <= j;
 
     ----process (clk) begin
     ----for i in 5 downto 0 loop
-    ----    report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
+    ----    report "TOP("&integer'image(i)&")=" & std_logic'image(opcode(i));
     ----end loop;
     ----end process;
 

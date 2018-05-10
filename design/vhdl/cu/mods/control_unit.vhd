@@ -23,7 +23,7 @@ entity control_unit is
         opand1      : in std_logic_vector(n downto 0);   -- operand 1
         opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-        en          : in std_logic;  -- control unit enable
+        start       : in std_logic;  -- control unit enable
         rst         : in std_logic; --reset
 
         -- registers
@@ -75,6 +75,8 @@ architecture behavioral of control_unit is
         );
     end component;
 
+    signal en : std_logic;
+
     signal opand_b : std_logic_vector(n downto 0);  -- address from memory
 
     signal mem_t_z1 : std_logic;
@@ -109,6 +111,12 @@ begin
 
     process (clk)
     begin
+
+        if (start = '1' and rst = '0') then
+
+            en <= '1';
+
+        end if;
 
         if (rising_edge(clk)) then
 
