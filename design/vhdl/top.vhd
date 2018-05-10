@@ -165,7 +165,6 @@ architecture behavioral of top is
             clk         : in std_logic;
 
             -- control signals
-            master_rst  : in std_logic;
             en          : in std_logic;
             rst         : in std_logic;
 
@@ -242,7 +241,7 @@ architecture behavioral of top is
     signal mask : std_logic_vector(n downto 0);  -- mask
     signal size : std_logic_vector(clgn downto 0);  -- size
     signal msb : std_logic_vector(clgn1 downto 0);  -- msb
-	signal poly_bcd_reg : std_logic_vector(n downto 1);
+    signal poly_bcd_reg : std_logic_vector(n downto 1);
 
     -- generator control signals
     signal id_gen : std_logic;
@@ -297,7 +296,7 @@ begin
         opand1 => OPAND1,
         opand2 => OPAND2,
         en => ENCU,
-        rst => rst,
+        rst => RST,
         mask => mask,
         en_ops => en_ops,
         en_gen => en_gen,
@@ -323,7 +322,7 @@ begin
         rst => rst_gen,
         en => en_gen,
         poly_bcd => POLYBCD,
-		  poly_bcd_reg => poly_bcd_reg,
+        poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,
         id_gen => id_gen,
@@ -342,7 +341,6 @@ begin
         clk => CLK,
         op => OPCODE(5 downto 3),
         out_t => OPCODE(0),
-        master_rst => RST,
         en => en_ops,
         rst => rst_ops,
         i => i,
@@ -392,7 +390,7 @@ begin
     t_size <= size;
     t_msb <= msb;
     t_mask <= '0' & poly_bcd_reg;
-    t_1 <= mem_t_gen;
+    t_1 <= rst_gen;
     t_n1 <= addr_gen;
     t_n2 <= elem;
 

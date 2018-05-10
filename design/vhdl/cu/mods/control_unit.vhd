@@ -119,8 +119,8 @@ begin
                 en_ops <= '0';
 
                 -- disable generator
-                en_gen <= '0';
                 rst_gen <= '1';
+                en_gen <= '0';
 
                 -- disable arithmetic exceptions
                 opand_b <= ZEROVEC;
@@ -134,33 +134,17 @@ begin
 
             end if;
 
-            if (en = '1') then
+            if (en = '1' and rst = '0') then
 
                 case opcode(5 downto 3) is  -- instruction bits
 
                     -- initiate element generator
                     when "000" =>
 
-                        case dbnc_state is
+                        rst_gen <= '0';
 
-                            when rst_state =>
-
-                                -- reset generator values
-                                rst_gen <= '1';
-                                dbnc_state <= en_state;
-
-                            when en_state =>
-
-                                rst_gen <= '0';
-                                -- enable generator
-                                en_gen <= '1';
-                                --dbnc_state <= rst_state;
-
-                            when others =>
-
-                                dbnc_state <= rst_state;
-
-                        end case;
+                        -- enable generator
+                        en_gen <= '1';
 
                         -- disable arithmetic exceptions
                         opand_b <= ZEROVEC;
@@ -674,10 +658,11 @@ begin
 
                 -- disable operations
                 en_ops <= '0';
+                rst_ops <= '1';
 
                 -- disable generator
                 en_gen <= '0';
-                rst_gen <= '0';
+                rst_gen <= '1';
 
                 -- disable arithmetic exceptions
                 opand_b <= ZEROVEC;

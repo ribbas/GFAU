@@ -22,7 +22,6 @@ entity operators is
         clk         : in std_logic;
 
         -- control signals
-        master_rst  : in std_logic;
         en          : in std_logic;
         rst         : in std_logic;
 
@@ -214,7 +213,7 @@ begin
     outconvert_unit : outconvert port map(
         clk => clk,
         en => en_con,
-        rst => rst or master_rst,
+        rst => rst,
         convert => convert,
         mask => mask,
         out_sel => out_sel,
