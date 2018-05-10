@@ -6,6 +6,7 @@ entity count_decoder is
 port(
     bus_size    :   in  std_logic_vector(1 downto 0);
     input_size  :   in  std_logic_vector(3 downto 0);
+    gen_poly    :   in  std_logic;
     num_clks    :   out std_logic_vector(1 downto 0)
 );
 
@@ -56,7 +57,7 @@ begin
     b16         <=  not bus_size(1) and bus_size(0);
     b32         <=  bus_size(1) and not bus_size(0);
 
-    num_clks(0) <=  (b8 and ((g4 and not g8) or g12)) or (b16 and g8);
-    num_clks(1) <=  b8 and g8;
+    num_clks(0) <=  (not gen_poly and (((b8 and ((g4 and not g8) or g12))) or (b16 and g8))) or (gen_poly and (b8 and g8));
+    num_clks(1) <=  not gen_poly and (b8 and g8);
 
 end structural;    

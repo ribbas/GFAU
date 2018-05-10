@@ -39,6 +39,7 @@ port(
     bus_size    :   in  std_logic_vector(1 downto 0);
     num_clks    :   in  std_logic_vector(1 downto 0);
     done        :   out std_logic;
+    count_rst   :   out std_logic;
     out_data    :   out std_logic_vector(15 downto 0) --to extern device
 );
 end serialize;
@@ -55,19 +56,23 @@ begin
     begin
         if (falling_edge(clk) and (enable = '1') and (rst = '0')) then
         
+            count_rst <= '0';
             if (bus_size = "00") then -- 8 bit bus
             
                 if (num_clks = "00") then -- 8 bit data, 1 clock
                 
                     output_reg(7 downto 0) <= in_data(7 downto 0);
+                    count_rst <= '1';
                     done <= '1'; --finished taking input
                     
                 else -- 8 bit data, 2 clocks
                 
                     if (count = "00") then -- part 1
+                        count_rst <= '0';
                         output_reg(7 downto 0) <= in_data(7 downto 0);
                     else  -- part 2
                         output_reg(7 downto 0) <= in_data(15 downto 8);
+                        count_rst <= '1';
                         done <= '1';
                     end if;
                     
@@ -76,12 +81,14 @@ begin
             else --16 bit bus or bigger
                 
                 output_reg <= in_data;
+                count_rst <= '1';
                 done <= '1';
                 
             end if;
             
         elsif falling_edge(clk) and (rst = '1') then -- synchronous reset
         
+            count_rst <= '1';
             done <= '0';
             
         end if;

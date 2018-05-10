@@ -1,0 +1,2 @@
+vhdl work "IO_Handler.vhd"
+vhdl work "FSM_Test.vhd"

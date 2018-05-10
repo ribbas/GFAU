@@ -171,7 +171,9 @@ BEGIN
       Start <= '0';
       wait for 26 ns;
       deserial_d <= '1';
-      wait for 42 ns;
+      wait for 13 ns;
+      deserial_d <= '0';
+      wait for 39 ns;
       gen_rdy <= '1';
       wait for 13 ns;
       gen_rdy <= '0';
@@ -189,6 +191,7 @@ BEGIN
       wait for 13 ns;
       op_done <= '1';
       wait for 13 ns;
+      op_done <= '0';
       INTA <= '1';
       wait for 13 ns;
       INTA <= '0';
@@ -207,12 +210,25 @@ BEGIN
       wait for 13 ns;
       op_done <= '1';
       wait for 13 ns;
-      INTA <= '1';
-      wait for 13 ns;
+      op_done <= '0';
       g_rst <= '1';
       wait for 13 ns;
-      
-
+      g_rst <= '0';
+      opcode_in <= "001000";
+      Start <= '1';
+      wait for 13 ns;
+      Start <= '0';
+      wait for 26 ns;
+      deserial_d <= '1';
+      wait for 13 ns;
+      deserial_d <= '0';
+      wait for 13 ns;
+      z_err <= '1';
+      wait for 13 ns;
+      z_err <= '0';
+      INTA <= '1';
+      wait for 13 ns;
+      INTA <= '0';
       wait;
    end process;
 

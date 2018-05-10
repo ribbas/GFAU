@@ -39,6 +39,7 @@ port(
     bus_size    :   in  std_logic_vector(1 downto 0);
     num_clks    :   in  std_logic_vector(1 downto 0);
     done        :   out std_logic;
+    count_rst   :   out std_logic;
     out_data    :   out std_logic_vector(31 downto 0)
 );
 end data_deserialize;
@@ -55,35 +56,41 @@ begin
     begin
         if (falling_edge(clk) and (enable = '1') and (rst = '0')) then
             if (bus_size = "00") then -- 8 bit bus
-            
+  
                 if (num_clks = "00") then -- 8 bit data, 1 clock
                     output_reg(3 downto 0) <= in_data(3 downto 0);
                     output_reg(19 downto 16) <= in_data(7 downto 4);
+                    count_rst <= '1';
                     done <= '1'; --finished taking input
                 elsif (num_clks = "01") then -- 8 bit data, 2 clocks
                 
                     if (count = "00") then -- clock 1, in1
+                        count_rst <= '0';
                         output_reg(7 downto 0) <= in_data(7 downto 0);
                     else  -- clock 2, in2
                         output_reg(23 downto 16) <= in_data(7 downto 0);
+                        count_rst <= '1';
                         done <= '1';
                     end if;
                     
                 elsif (num_clks = "10") then -- 8 bit data, 3 clocks
                 
                     if (count = "00") then -- clock 1, in1 part 2
+                        count_rst <= '0';
                         output_reg(7 downto 0) <= in_data(7 downto 0);
                     elsif (count = "01") then --clock 2, in1 part2, in2 part 1
                         output_reg(11 downto 8) <= in_data(3 downto 0);
                         output_reg(19 downto 16) <= in_data(7 downto 4);
                     else -- clock 3, in2 part 2
                         output_reg(27 downto 20) <= in_data(7 downto 0);
+                        count_rst <= '1';
                         done <= '1';
                     end if;
                     
                 else -- 8 bit data, 4 clocks
                 
                     if (count = "00") then -- clock 1, in1 part 1
+                        count_rst <= '0';
                         output_reg(7 downto 0) <= in_data(7 downto 0);
                     elsif (count = "01") then -- clock 2, in1 part 2
                         output_reg(15 downto 8) <= in_data(7 downto 0);
@@ -91,6 +98,7 @@ begin
                         output_reg(23 downto 16) <= in_data(7 downto 0);
                     else -- clock 4, in2 part 2
                         output_reg(31 downto 24) <= in_data(7 downto 0);
+                        count_rst <= '1';
                         done <= '1';
                     end if;
                     
@@ -102,17 +110,21 @@ begin
                     done <= '1';
                 elsif (num_clks = "01") then -- 16 bit bus, 2 clocks
                     if (count = "00") then -- clock 1, in 1
+                        count_rst <= '0';
                         output_reg(15 downto 0) <= in_data(15 downto 0);
                     else -- clock 2, in 2
                         output_reg(31 downto 16) <= in_data(15 downto 0);
+                        count_rst <= '1';
                         done <= '1';
                     end if;
                 end if;
             else --32 bit bus, always in 1 clock
                 output_reg <= in_data;
+                count_rst <= '1';
                 done <= '1';
             end if;
         elsif falling_edge(clk) and (rst = '1') then -- synchronous reset
+            count_rst <= '1';
             done <= '0';
         end if;
     end process deserialize;
