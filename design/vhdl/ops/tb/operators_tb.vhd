@@ -25,6 +25,7 @@ architecture behavioral of operators_tb is
             clk         : in std_logic;
 
             en          : in std_logic;
+            rst         : in std_logic;
 
             -- opcode
             op      : in std_logic_vector(2 downto 0);
@@ -63,6 +64,7 @@ architecture behavioral of operators_tb is
     signal op : std_logic_vector(2 downto 0);
     signal out_t : std_logic;
     signal en : std_logic := '0';
+    signal rst : std_logic := '0';
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
     signal i_null : std_logic;
@@ -91,6 +93,7 @@ begin
         op => op,
         out_t => out_t,
         en => en,
+        rst => rst,
         i => i,
         j => j,
         i_null => i_null,

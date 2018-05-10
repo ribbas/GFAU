@@ -390,9 +390,9 @@ begin
     t_size <= size;
     t_msb <= msb;
     t_mask <= '0' & poly_bcd_reg;
-    t_1 <= rst_gen;
-    t_n1 <= addr_gen;
-    t_n2 <= elem;
+    t_1 <= rst_ops;
+    t_n1 <= i;
+    t_n2 <= j;
 
     ----process (clk) begin
     ----for i in 5 downto 0 loop

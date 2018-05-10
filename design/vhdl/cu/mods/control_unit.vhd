@@ -35,6 +35,7 @@ entity control_unit is
 
         -- operation signals
         en_ops      : out std_logic;  -- operators enable
+        rst_ops     : out std_logic;
         i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
         j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
@@ -52,8 +53,7 @@ entity control_unit is
         -- exceptions and flags
         err_b       : out std_logic;  -- set membership exception
         opand1_null : out std_logic;  -- operand 1 zero flag
-        opand2_null : out std_logic;  -- operand 2 zero flag
-        rst_ops : out std_logic
+        opand2_null : out std_logic  -- operand 2 zero flag
     );
 end control_unit;
 
@@ -175,8 +175,9 @@ begin
 
                             when op1_state =>
 
-                                -- disable generator
+                                -- disable operators
                                 en_ops <= '0';
+                                rst_ops <= '1';
 
                                 mem_t_z1 <= not opcode(2);
 
@@ -249,6 +250,7 @@ begin
                             when op2_state =>
 
                                 mem_t_z2 <= not opcode(1);
+                                rst_ops <= '0';
 
                                 -- if operand 2 is in element form
                                 if (opcode(1) = '0') then
@@ -262,7 +264,7 @@ begin
                                             addr_cu <= opand2;
                                             j <= DCAREVEC;
 
-                                            -- disable generator
+                                            -- disable operators
                                             en_ops <= '0';
 
                                             rd_state2 <= get_data;
@@ -284,7 +286,7 @@ begin
                                                 op_state <= op1_state;
                                                 rd_state2 <= get_data;
 
-                                                -- enable generator
+                                                -- enable operators
                                                 en_ops <= '1';
 
                                             else
@@ -313,6 +315,7 @@ begin
 
                                     -- enable generator
                                     en_ops <= '1';
+                                    rst_ops <= '0';
 
                                     id_cu <= '0';
 
@@ -352,6 +355,7 @@ begin
 
                                 -- disable generator
                                 en_ops <= '0';
+                                rst_ops <= '1';
 
                                 mem_t_z1 <= opcode(2);
 
@@ -424,6 +428,7 @@ begin
                             when op2_state =>
 
                                 mem_t_z2 <= opcode(1);
+                                rst_ops <= '0';
 
                                 -- if operand 2 is in polynomial form
                                 if (opcode(1) = '1') then
@@ -488,6 +493,7 @@ begin
 
                                     -- enable generator
                                     en_ops <= '1';
+                                    rst_ops <= '0';
 
                                     id_cu <= '0';
 
@@ -535,6 +541,8 @@ begin
                             when op1_state =>
 
                                 mem_t_z1 <= opcode(2);
+                                en_ops <= '1';
+                                rst_ops <= '0';
 
                                 -- if operand 1 is in polynomial form
                                 if (opcode(2) = '1') then

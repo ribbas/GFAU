@@ -172,14 +172,14 @@ begin
         POLYBCD <= "000001101";  -- x^3+x^2+x^0
         --POLYBCD <= "100011101";  -- x^8 + x^4 + x^3 + x^2 + 1
         --POLYBCD <= "011111101"  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
-        OPAND1 <= "111111111";
-        OPAND2 <= "000000011";
+        OPAND2 <= "111111111";
+        OPAND1 <= "000000011";
 
         wait for (CLK_PER * 1);
 
         RST <= '1';
 
-        wait for (CLK_PER * 2);
+        wait for (CLK_PER * 1);
 
         RST <= '0';
         ENCU <= '1';
@@ -192,9 +192,12 @@ begin
 
         RST <= '1';
 
+        wait for (CLK_PER * 2);
+
+        RST <= '0';
         OPCODE <= "001111";  -- add, elem, elem, elem
 
-        wait for (CLK_PER * 10);
+        wait for (CLK_PER * 20);
         -- stop simulation
         assert false report "simulation ended" severity failure;
 
