@@ -1,12 +1,4 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Template LaTeX Template Version 1.0 (December 8 2014)
-%
-% This template has been downloaded from: http://www.LaTeXTemplates.com
-%
-% Original author: Brandon Fryslie With extensive modifications by: Vel
-% (vel@latextemplates.com)
-%
-% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
 %
 % Author: Sabbir Ahmed
 %
@@ -31,34 +23,41 @@
     \vspace{-0.1in}
 
     % \tableofcontents
-    \input{sdd/appendix/background/latex_mods/01-intro}
+    \input{sdd/appendix/background/secs/01-intro}
 
-    \section{Algorithms} Input polynomials will be represented as $n$-bit
+    \section{Design} Input polynomials will be represented as $n$-bit
     binary-coded decimal (BCD) arrays.
 
-    For example, the polynomial \examplepoly~ will be represented as
+    For example, the polynomial \examplepoly~ will be represented in a system
+    with 16-bit data words as
         \begin{equation*}
             \begin{split}
                 <0000 \ 0000 \ 0000 \ 1101> & \text{  (3rd, 2nd, and 0th bits)}
             \end{split}
         \end{equation*}
 
-        \input{sdd/appendix/background/latex_mods/02-primitive}
+        \input{sdd/appendix/background/secs/02-primitive}
 
-        \input{sdd/appendix/background/latex_mods/03-symbols}
-        \subsection{Operations} The Galois Field Arithmetic Unit supports
-        addition, subtraction, multiplication, division and logarithm of Galois
-        terms.
+        \input{sdd/appendix/background/secs/03-symbols}
+        \subsection{Operations} GFAU supports addition, subtraction,
+        multiplication, division and logarithm of elements in Galois fields.
+        The \texttt{operators} module consists of the \texttt{addsub},
+        \texttt{mul}, and \texttt{div} modules that are responsible for their
+        corresponding binary operations. Additional helper module,
+        \texttt{maskedtwoscmp}, is included to compute the two's complement of
+        the second operand required for division. The other two modules,
+        \texttt{outselect} and \texttt{outconvert} act as advanced multiplexers
+        to determine the output of the operation requested.
 
-        \input{sdd/appendix/background/latex_mods/04-addsub}
-        \input{sdd/appendix/background/latex_mods/05-mult}
-        \input{sdd/appendix/background/latex_mods/06-div}
-        \input{sdd/appendix/background/latex_mods/07-log}
+        \input{sdd/appendix/background/secs/04-addsub}
+        \input{sdd/appendix/background/secs/05-mult}
+        \input{sdd/appendix/background/secs/06-div}
+        \input{sdd/appendix/background/secs/07-log}
 
         \subsection{Arithmetic Exceptions}
 
-        \input{sdd/appendix/background/latex_mods/08-zero}
-        \input{sdd/appendix/background/latex_mods/09-upperbound}
+        \input{sdd/appendix/background/secs/08-zero}
+        \input{sdd/appendix/background/secs/09-upperbound}
 
         \bibliographystyle{abbrv}
         \bibliography{sdd/appendix/background/finitefield,sdd/appendix/background/primitive}

@@ -1,0 +1,33 @@
+\subsection{Primitive Polynomial} A polynomial is said to be irreducible if and
+only if there exists no roots for it. A primitive polynomial is an irreducible
+polynomial that generates all elements of an extension field from a base field.
+\cite{primitive}
+
+Determining irreducibility of a polynomial can be achieved by performing
+exclusive disjunctions on all the bits of the polynomial vector.
+
+\begin{align*}
+    \text{irreducible} & =
+    \begin{cases}
+        true, & \text{if } < v_{n} \oplus \ldots \oplus v_{2} \oplus v_{1} \oplus v_{0} > = 1 \\
+        false, & \text{if } < v_{n} \oplus \ldots \oplus v_{2} \oplus v_{1} \oplus v_{0} > = 0
+    \end{cases}
+\end{align*}
+
+However, determining if a polynomial is primitive requires precomputing the
+elements and checking those that are prime factors to $2^n-1$ in a brute forced
+manner.
+
+To determine if an irreducible polynomial of degree $n$ is primitive, $2^n-1$ must be the smallest element in its field to satisfy
+    \begin{equation*}
+        x^{2^n-1} \equiv 1 \Mod{p(x)}
+    \end{equation*}
+
+If the prime factors,
+$\{p_0^{\alpha_0},p_1^{\alpha_1},\ldots,p_k^{\alpha_k}\}$, of $2^n-1$ are
+known, it is sufficient to check that none of them would satisfy the condition
+listed above.
+
+    \subsubsection{Modules} Checking for primitive polynomials is beyond the
+    scope of the project. Therefore, modules for checking irreducibility and
+    primitivity are not implemented in the design.

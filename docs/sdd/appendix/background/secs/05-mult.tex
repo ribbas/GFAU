@@ -12,15 +12,15 @@ to prevent overflow.
         \end{cases}
 \end{align*}
 
-    \paragraph{{\small Digital Design}} \leavevmode \\ Only element forms of
+    \paragraph{{\small Modules}} \leavevmode \\ Only element forms of
     inputs are valid for this operation.
 
     Galois multiplication requires multiple binary additions and condition
-    checks. To find the product of $\alpha^{i}$ and $\alpha^{j}$,
-    a carry-lookahead adder may be used to sum the elements $i+j$. The most
-    significant bits of the sum and the sum $+1$ will then be OR-ed to compute
-    a single-bit control signal. The control signal will be multiplexed with a
-    binary $1$ to be added to the sum.
+    checks. To find the product of $\alpha^{i}$ and $\alpha^{j}$, an adder may
+    be used to sum the elements $i+j$. The most significant bits of the sum and
+    the sum $+1$ will then be OR-ed to compute a single-bit control signal. The
+    control signal will be multiplexed with a binary $1$ to be added to the
+    sum.
 \begin{align*}
     \alpha^{i} \cdot \alpha^{j} & = \{ x_{i, n-1}, \ldots, x_{i, 2}, x_{i, 1},
     x_{i, 0} \} \cdot \{x_{j, n-1}, \ldots, x_{j, 2}, x_{j, 1}, x_{j, 0}\} \\
