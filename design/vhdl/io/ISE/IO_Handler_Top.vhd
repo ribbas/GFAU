@@ -41,6 +41,7 @@ port(
     t_clk       :   in      std_logic; --external device clock < 200MHz
     g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
     ready_sig   :   out     std_logic; --gfau is ready for input
+    err         :   out     std_logic; --error signal
     
     --interrupt signals to/from external device
     INT         :   out     std_logic; --generate an interrupt
@@ -78,9 +79,9 @@ architecture Behavioral of IO_Handler_Top is
     
     component count_decoder
     port(
-        buse_size   :   in  std_logic_vector(1 downto 0);
+        bus_size    :   in  std_logic_vector(1 downto 0);
         input_size  :   in  std_logic_vector(3 downto 0);
-        poly_gen    :   in  std_logic;
+        gen_poly    :   in  std_logic;
         num_clks    :   out std_logic_vector(1 downto 0)
     );
     end component;
@@ -121,8 +122,10 @@ architecture Behavioral of IO_Handler_Top is
         deserial_e  :   out     std_logic := '0'; --deserializer enable
         deserial_r  :   out     std_logic := '1'; --deserializer reset
         deserial_d  :   in      std_logic; --deserialization of data done
-        mode_wr     :   out     std_logic; --writes mode bits
         poly_get    :   out     std_logic; --signal for mux that lets it know only 
+        err         :   out     std_logic;
+        err_type    :   out     std_logic;
+        wr_rd       :   out     std_logic;
         z_err       :   in      std_logic; --zero error
         oob_err     :   in      std_logic  --out of bounds error
     );
@@ -142,6 +145,19 @@ architecture Behavioral of IO_Handler_Top is
         out_data    :   out std_logic_vector(15 downto 0) --to extern device
     );
     end component;
+    
+    component io_port
+    generic(
+        n           :   positive
+    );
+    port(
+        op          :   in      std_logic_vector(n downto 0);
+        oe          :   in      std_logic;
+        ip          :   out     std_logic_vector(n downto 0);
+        pad         :   inout   std_logic_vector(n downto 0)
+    );
+    end component;
+        
 
 --============================================================================--
     --***IO Handler internal signals***--
@@ -172,10 +188,21 @@ architecture Behavioral of IO_Handler_Top is
     signal in_data_ext  :   std_logic_vector(31 downto 0);
     signal out_data_ext :   std_logic_vector(15 downto 0); --data sent to ext
     signal wr_rd        :   std_logic; --rd or write from io port?
+
+    --error handing--
+    signal err_type     :   std_logic;
+    signal err_out      :   std_logic; --allows internal reading of err
+
+    --output selection--
+    signal data_vec     :   std_logic_vector(15 downto 0); 
+    signal err_vec    :   std_logic_vector(31 downto 0);
     
 begin
 
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
+    err <= err_out;
+    err_vec(0) <= err_type;
+    err_vec(31 downto 1) <= "0000000000000000000000000000000";
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
@@ -192,6 +219,8 @@ begin
         rst         => rst,
         gen_rdy     => gen_rdy,
         mode        => mode,
+        err         => err_out,
+        err_type    => err_type,
         
         --internal signals--
         serial_e    => serial_e,
@@ -229,7 +258,7 @@ begin
         num_clks    => num_clks,
         done        => serial_d,
         count_rst   => count_rst1,
-        out_data    => out_data_ext
+        out_data    => data_vec
     );
     
     countd  :   count_decoder port map(
@@ -246,7 +275,7 @@ begin
     );
     
     iop     :   io_port generic map(
-        n           => 31
+        n           => 32
     ) port map (
         op(15 downto 0) => out_data_ext,
         op(31 downto 16)=> "0000000000000000",    
@@ -254,7 +283,15 @@ begin
         ip          => in_data_ext,
         pad         => data
     );
-        
+
+    outmux  :   process(err_out, err_vec, data_vec)
+    begin
+        if err_out = '1' then
+            out_data_ext <= err_vec;
+        else    
+            out_data_ext <= data_vec;
+        end if;
+    end process outmux;
         
 end Behavioral;
 

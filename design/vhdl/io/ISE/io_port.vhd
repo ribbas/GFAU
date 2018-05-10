@@ -18,8 +18,6 @@
 --
 ----------------------------------------------------------------------------------
 library IEEE;
-library work;
-use work.glob.all;
 use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
@@ -33,13 +31,13 @@ use UNISIM.VComponents.all;
 
 entity io_port is
     generic(
-        n       : positive := DEGREE
+        n       : positive := 32
     );
     port(
-        op      :   in      std_logic_vector(n downto 0);  --out to pad
+        op      :   in      std_logic_vector((n - 1) downto 0);  --out to pad
         oe      :   in      std_logic;                     --enable pad output
-        ip      :   out     std_logic_vector(n downto 0);  --in from pad
-        pad     :   inout   std_logic_vector(n downto 0)   --external io pad
+        ip      :   out     std_logic_vector((n - 1) downto 0);  --in from pad
+        pad     :   inout   std_logic_vector((n - 1) downto 0)   --external io pad
     );
 end io_port;
 
@@ -47,7 +45,7 @@ architecture Behavioral of io_port is
 
 begin
 
-    pad <= op when oe = '1' else HIIMPVEC;
+    pad <= op when oe = '1' else (others => 'Z');
     ip <= pad;
 
 end Behavioral;

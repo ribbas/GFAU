@@ -229,8 +229,6 @@ BEGIN
       INTA <= '1';
       wait for 13 ns;
       INTA <= '0';
-      
-
       wait;
    end process;
 

@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "/media/sf_Xilinx/IO_Handler/ISE/FSM_Test_isim_beh.exe" -prj "/media/sf_Xilinx/IO_Handler/ISE/FSM_Test_beh.prj" "work.FSM_Test" 
+-intstyle "ise" -incremental -lib "secureip" -o "/home/brian/gfau/design/vhdl/io/ISE/io_port_isim_beh.exe" -prj "/home/brian/gfau/design/vhdl/io/ISE/io_port_beh.prj" "work.io_port" 

@@ -34,6 +34,7 @@ port(
     t_clk       :   in      std_logic;
     g_rst       :   in      std_logic;
     ready_sig   :   out     std_logic; --ready1 xnor ready2
+    err         :   out     std_logic; --alerts the cpu to an error
 
     --interrupts
     INT         :   out     std_logic; --generate interrupt
@@ -57,6 +58,9 @@ port(
     --***IO Handler internal signals***--
 --============================================================================--
 
+    --error interrupt vector--
+    err_type    :   out     std_logic := '0';
+    
     --serialize/deserialze--
     serial_e    :   out     std_logic := '0'; --serializer enable 
     serial_r    :   out     std_logic := '1'; --serialize reset
@@ -65,13 +69,9 @@ port(
     deserial_r  :   out     std_logic := '1'; --deserializer reset
     deserial_d  :   in      std_logic; --deserialization of data done
     
-    --mode write--
-    --mode_wr     :   out     std_logic; --writes mode bits
-
     --count_decoder
     poly_get    :   out     std_logic; --signal for mux that lets it know only 
                                        --one input is needed
-                                       
     wr_rd       :   out     std_logic --rd or write from io port
     --counter--
     --count_rst   :   out     std_logic := '0'; --reset signal for counter
@@ -80,10 +80,6 @@ end IO_Handler_FSM;
 
 architecture Behavioral of IO_Handler_FSM is
 
-    --type IO_state is   (ready, get_mode, set_poly_ctl, set_norm_ctl, get_input,
-    --                    gen, op, send_result, INT0, INT1);  
-
-    --signal state    :   IO_state := ready; 
     signal poly_gen :   std_logic := '0'; --internal flag used to determine op
     signal wr_reg   :   std_logic := '0'; --register that leads to wr_mode so it can
                                    --easily be turned off after one cycle
@@ -120,23 +116,32 @@ architecture Behavioral of IO_Handler_FSM is
     signal xgen_INT :   std_logic;
     signal xerr_INT :   std_logic;
 
+    --error signals--
+    signal serr     :   std_logic := '0'; --flip to set err
+    signal nerr     :   std_logic := '0'; --flip to unset err
+
 begin
 
     --mode_wr <= wr_reg;
     rst <= g_rst;
     poly_get <= poly_gen;
     
+    --ready signal--
+    state(0) <= s_state(0) xnor n_state(0);
     ready <= s_state(0) xnor n_state(0);
     ready_sig <= ready;
 
+    --interrup signals--
     xop_INT <= op_INT xor nop_INT;
     xgen_INT <= gen_INT xor ngen_INT;
     xerr_INT <= err_INT xor nerr_INT;
-
-    state(7 downto 1) <= s_state(7 downto 1) xor n_state(7 downto 1);
-    state(0) <= s_state(0) xnor n_state(0);
-
     INT <= xop_INT or xgen_INT or xerr_INT;
+
+    --state signals--
+    state(7 downto 1) <= s_state(7 downto 1) xor n_state(7 downto 1);
+
+    --error signal--
+    err <= serr xor nerr;
 
     comm        :   process(t_clk)
     begin
@@ -153,6 +158,7 @@ begin
                 nop_INT <= '0';
                 ngen_INT <= '0';
                 nerr_INT <= '0';
+                nerr <= '0';
             else
                 case state is
                 
@@ -160,12 +166,7 @@ begin
                     --io handler is ready to get input    --
                     --====================================--
                     when "00000001" =>
-                        --if wr_reg = '1' then
-                        --    wr_reg <= '0';
-                        --elsif wr_reg = '1' and wr_reg2 = '1' then
-                        --    wr_reg <= '0';
-                        --    wr_reg <= '0';
-                        --end if;
+                        wr_rd <= '0';
                         if Start = '1' then --extern dev giving op
                             if opcode_in(5 downto 3) = "110" then --set mode
                                 mode <= opcode_in(2 downto 1);
@@ -190,6 +191,7 @@ begin
                     --get input from extern dev           --
                     --====================================--
                     when "00000010"=>
+                        wr_rd <= '0';
                         if deserial_d = '1' then --data is received
                             if poly_gen = '1' then
                                 s_state(2) <= not s_state(2); --set gen state bit
@@ -208,6 +210,7 @@ begin
                     --wait for CPU to be ready for data   --
                     --====================================--
                     when "00010000" =>
+                        wr_rd <= '1';
                         if INTA = '1' then
                             nop_INT <= not nop_INT; --unset INT
                             serial_e <= '1'; --start serializer
@@ -221,6 +224,7 @@ begin
                     --wait for cpu to acknowledge int     --
                     --====================================--
                     when "00100000" =>
+                        wr_rd <= '1';
                         if INTA = '1' then
                             ngen_INT <= not ngen_INT; --unset INT
                             --gen_rst <= '1';
@@ -232,7 +236,9 @@ begin
                     --wait for cpu to acknowledge error   --
                     --====================================--
                     when "01000000" =>
+                        wr_rd <= '1';
                         if INTA = '1' then
+                            nerr <= not nerr;
                             nerr_INT <= not nerr_INT; --unset_INT
                             n_state(6) <= not n_state(6); --unset int state
                             s_state(0) <= not s_state(0); --set ready
@@ -242,6 +248,7 @@ begin
                     --wait for data to be sent            --
                     --====================================--
                     when "10000000" =>
+                        wr_rd <= '1';
                         if serial_d = '1' then
                             serial_e <= '0';
                             serial_r <= '1';
@@ -265,6 +272,7 @@ begin
                 err_INT <= '0';
                 n_state(3 downto 1) <= "000";
                 s_state(6 downto 4) <= "000";
+                serr <= '0';
             else
                 case state is 
 
@@ -278,7 +286,14 @@ begin
                             n_state(1) <= not n_state(1); 
                             s_state(4) <= not s_state(4); --set int0
                         elsif (oob_err or z_err) = '1' then
+                            if oob_err = '1' then
+                                err_type <= '1';
+                            else
+                                err_type <= '0';
+                            end if;
+                            serr <= not serr;
                             err_INT <= not err_INT; --set error interrupt
+                            err <= '1';
                             n_state(3) <= not n_state(3);
                             n_state(1) <= not n_state(1);
                             s_state(6) <= not s_state(6); --set int2
