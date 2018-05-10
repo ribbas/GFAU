@@ -29,7 +29,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VComponents.all;
 
-entity io_port is
+entity io_port_io is
     generic(
         n       : positive := 32
     );
@@ -39,7 +39,7 @@ entity io_port is
         ip      :   out     std_logic_vector((n - 1) downto 0);  --in from pad
         pad     :   inout   std_logic_vector((n - 1) downto 0)   --external io pad
     );
-end io_port;
+end io_port_io;
 
 architecture Behavioral of io_port is
 

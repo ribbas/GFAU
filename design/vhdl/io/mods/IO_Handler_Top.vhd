@@ -147,7 +147,7 @@ architecture Behavioral of IO_Handler_Top is
     );
     end component;
     
-    component io_port
+    component io_port_io
     generic(
         n           :   positive
     );
@@ -203,9 +203,8 @@ begin
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
     err_vec(0) <= err_type;
-    err_vec(31 downto 1) <= "0000000000000000000000000000000";
     cu_start <= deserial_d;
-    --err_vec(15 downto 1) <= (others => '0');
+    err_vec(15 downto 1) <= (others => '0');
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
@@ -277,7 +276,7 @@ begin
         count       => count
     );
     
-    iop     :   io_port generic map(
+    iop     :   io_port_io generic map(
         n           => 32
     ) port map (
         op(15 downto 0) => out_data_ext,
