@@ -16,24 +16,47 @@ try:
 except NameError:
     pass
 
+BASE_DIR = os.getcwd()
+print(BASE_DIR)
 
-def find_file(name):
+
+def find_file(file_name):
     result = []
-    for root, dirs, files in os.walk(".."):
-        if name in files:
-            result.append(os.path.join(root, name))
+    for root, dirs, files in os.walk(BASE_DIR):
+        if file_name in files:
+            result.append(os.path.join(root, file_name))
     return result
 
 
-def parse_args(args):
+def assign_path(args, file_name):
 
-    deg = int(args["degree"])
-    ceillgn = int(math.ceil(math.log(deg, 2)))
-    ceillgn1 = ceillgn - 1
+    if (not os.path.isfile(args.__dict__[file_name])):
+        found_files = find_file("{0}.vhd".format(file_name))
+        if (len(found_files) == 1):
+            print("Picking '{0}.vhd' file found at"
+                  " \x1b[1;32;40m'{1}'\x1b[0m".format(
+                      file_name, found_files[0]))
+            args.__dict__[file_name] = found_files[0]
+            return False
+
+        elif (len(found_files) > 1):
+            print("Multiple '{0}.vhd' found:".format(file_name))
+            pprint(found_files)
+
+        else:
+            print("No '{0}.vhd' files found".format(file_name))
+
+        return True
+
+
+def write_glob(deg, ceillgn, ceillgn1):
 
     with open(args["glob"], "w") as glob_file:
         glob_file.write(GLOB_STR.format(
             deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1))
+
+
+def write_varmask(deg):
 
     varmask_enc = ""
     varmask_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
@@ -50,8 +73,11 @@ def parse_args(args):
                 vec="0" * (deg - index + 1) + "1" * index, bit=str(index)
             )
 
-    with open(args["mask"], "w") as varmask_file:
+    with open(args["varmask"], "w") as varmask_file:
         varmask_file.write(VARMASK_STR.format(varmask_enc))
+
+
+def write_indices(deg, ceillgn):
 
     indices_enc = ""
     indices_fmt = "{:0%db}" % (ceillgn + 1)
@@ -75,6 +101,19 @@ def parse_args(args):
         indices_file.write(INDICES_STR.format(indices_enc))
 
 
+def parse_args(args):
+
+    deg = int(args["degree"])
+    ceillgn = int(math.ceil(math.log(deg, 2)))
+    ceillgn1 = int(math.ceil(math.log(deg - 1, 2)))
+
+    write_glob(deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1)
+
+    write_varmask(deg=deg)
+
+    write_indices(deg=deg, ceillgn=ceillgn)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
@@ -95,50 +134,27 @@ if __name__ == "__main__":
     parser.add_argument("--indices", "-i", default="", metavar="PATH",
                         help="| Path of 'indices.vhd'")
 
-    parser.add_argument("--mask", "-m", default="", metavar="PATH",
+    parser.add_argument("--varmask", "-v", default="", metavar="PATH",
                         help="| Path of 'varmask.vhd'")
 
     # parse arguments to pass into function
     args = parser.parse_args()
+    ambiguous = assign_path(args, "glob")
+    ambiguous = assign_path(args, "varmask")
+    ambiguous = assign_path(args, "indices")
 
-    if (not os.path.isfile(args.glob)):
-        glob_file = find_file("glob.vhd")
-        if (len(glob_file) > 1):
-            print("Multiple 'glob.vhd' found")
-            print("'glob.vhd' files found:")
-            pprint(glob_file)
+    if (not ambiguous):
+
+        print("\nParameters chosen:")
+        pprint(args.__dict__)
+        init_gen = input("Continue? (y/n): ")
+        if (init_gen.lower() == 'y'):
+            print("Generating modules...", end="")
+            parse_args(args.__dict__)
+            print("Done")
         else:
-            print("Picking 'glob.vhd' file found at '{0}'".format(glob_file[0]))
-            args.__dict__["glob"] = glob_file[0]
+            print("\x1b[1;31;40mModule generation canceled\x1b[0m")
 
-    if (not os.path.isfile(args.indices)):
-        indices_file = find_file("indices.vhd")
-        if (len(indices_file) > 1):
-            print("Multiple 'indices.vhd' found")
-            print("'indices.vhd' files found:")
-            pprint(indices_file)
-        else:
-            print("Picking 'indices.vhd' file found at '{0}'".format(
-                indices_file[0]))
-            args.__dict__["indices"] = indices_file[0]
-
-    if (not os.path.isfile(args.mask)):
-        varmask_file = find_file("varmask.vhd")
-        if (len(varmask_file) > 1):
-            print("Multiple 'varmask.vhd' found")
-            print("'varmask.vhd' files found:")
-            pprint(varmask_file)
-        else:
-            print("Picking 'varmask.vhd' file found at '{0}'".format(
-                varmask_file[0]))
-            args.__dict__["mask"] = varmask_file[0]
-
-    print("\x1b[1;31;40mParameters chosen:\x1b[0m")
-    pprint(args.__dict__)
-    init_gen = input("Continue? (y/n): ")
-    if (init_gen.lower() == 'y'):
-        print("Generating modules...", end="")
-        parse_args(args.__dict__)
-        print("Done")
     else:
-        print("Please provide the full path to all files")
+
+        print("\x1b[1;31;40mPlease specify the path to the input files\x1b[0m")
