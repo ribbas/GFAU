@@ -5,14 +5,14 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.05 secs
+Total CPU time to Xst completion: 0.02 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.05 secs
+Total CPU time to Xst completion: 0.02 secs
  
 --> 
 Reading design: IO_Handler_Top.prj
@@ -108,34 +108,34 @@ Slice Utilization Ratio Delta      : 5
 =========================================================================
 *                          HDL Parsing                                  *
 =========================================================================
-Parsing VHDL file "/home/brian/asdf/why/gt8.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/gt8.vhd" into library work
 Parsing entity <gt8>.
 Parsing architecture <structural> of entity <gt8>.
-Parsing VHDL file "/home/brian/asdf/why/gt4.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/gt4.vhd" into library work
 Parsing entity <gt4>.
 Parsing architecture <structural> of entity <gt4>.
-Parsing VHDL file "/home/brian/asdf/why/gt12.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/gt12.vhd" into library work
 Parsing entity <gt12>.
 Parsing architecture <structural> of entity <gt12>.
-Parsing VHDL file "/home/brian/asdf/why/serialize.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/serialize.vhd" into library work
 Parsing entity <serialize>.
 Parsing architecture <Behavioral> of entity <serialize>.
-Parsing VHDL file "/home/brian/asdf/why/io_port.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/io_port.vhd" into library work
 Parsing entity <io_port>.
 Parsing architecture <Behavioral> of entity <io_port>.
-Parsing VHDL file "/home/brian/asdf/why/IO_Handler.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/IO_Handler.vhd" into library work
 Parsing entity <IO_Handler_FSM>.
 Parsing architecture <Behavioral> of entity <io_handler_fsm>.
-Parsing VHDL file "/home/brian/asdf/why/data_deserialize.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/data_deserialize.vhd" into library work
 Parsing entity <data_deserialize>.
 Parsing architecture <Behavioral> of entity <data_deserialize>.
-Parsing VHDL file "/home/brian/asdf/why/count_decoder.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/count_decoder.vhd" into library work
 Parsing entity <count_decoder>.
 Parsing architecture <structural> of entity <count_decoder>.
-Parsing VHDL file "/home/brian/asdf/why/clk_counter.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/clk_counter.vhd" into library work
 Parsing entity <clk_counter>.
 Parsing architecture <Behavioral> of entity <clk_counter>.
-Parsing VHDL file "/home/brian/asdf/why/IO_Handler_Top.vhd" into library work
+Parsing VHDL file "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.vhd" into library work
 Parsing entity <IO_Handler_Top>.
 Parsing architecture <Behavioral> of entity <io_handler_top>.
 
@@ -168,16 +168,16 @@ Elaborating entity <io_port> (architecture <Behavioral>) with generics from libr
 =========================================================================
 
 Synthesizing Unit <IO_Handler_Top>.
-    Related source file is "/home/brian/asdf/why/IO_Handler_Top.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.vhd".
+INFO:Xst:3210 - "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.vhd" line 206: Output port <MSB> of the instance <FSM> is unconnected or connected to loadless signal.
     Summary:
 	inferred   1 Multiplexer(s).
 Unit <IO_Handler_Top> synthesized.
 
 Synthesizing Unit <IO_Handler_FSM>.
-    Related source file is "/home/brian/asdf/why/IO_Handler.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/IO_Handler.vhd".
     Found 1-bit register for signal <deserial_nr>.
     Found 1-bit register for signal <serial_e>.
-    Found 1-bit register for signal <serial_r>.
     Found 1-bit register for signal <s_state<7>>.
     Found 1-bit register for signal <s_state<1>>.
     Found 1-bit register for signal <s_state<0>>.
@@ -194,6 +194,7 @@ Synthesizing Unit <IO_Handler_FSM>.
     Found 2-bit register for signal <mode>.
     Found 6-bit register for signal <opcode_out>.
     Found 1-bit register for signal <poly_gen>.
+    Found 4-bit register for signal <input_size>.
     Found 1-bit register for signal <gen_INT>.
     Found 1-bit register for signal <op_INT>.
     Found 1-bit register for signal <err_INT>.
@@ -210,76 +211,67 @@ Synthesizing Unit <IO_Handler_FSM>.
     Found 1-bit register for signal <deserial_sr>.
     Found 1-bit register for signal <err_type>.
     Found 1-bit register for signal <deserial_se>.
+    Found 4-bit subtractor for signal <MSB> created at line 82.
     Summary:
-	inferred  41 D-type flip-flop(s).
-	inferred  10 Multiplexer(s).
+	inferred   1 Adder/Subtractor(s).
+	inferred  44 D-type flip-flop(s).
+	inferred  12 Multiplexer(s).
 Unit <IO_Handler_FSM> synthesized.
 
 Synthesizing Unit <data_deserialize>.
-    Related source file is "/home/brian/asdf/why/data_deserialize.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/data_deserialize.vhd".
     Found 1-bit register for signal <count_rst>.
     Found 1-bit register for signal <done>.
     Found 32-bit register for signal <output_reg>.
     Found 32-bit 4-to-1 multiplexer for signal <in_data[7]_output_reg[31]_mux_14_OUT> created at line 61.
-    Found 1-bit 4-to-1 multiplexer for signal <PWR_5_o_PWR_5_o_MUX_268_o> created at line 61.
-    Found 1-bit 4-to-1 multiplexer for signal <PWR_5_o_PWR_5_o_MUX_271_o> created at line 61.
+    Found 1-bit 4-to-1 multiplexer for signal <PWR_7_o_PWR_7_o_MUX_271_o> created at line 61.
+    Found 1-bit 4-to-1 multiplexer for signal <PWR_7_o_PWR_7_o_MUX_274_o> created at line 61.
     Summary:
 	inferred  34 D-type flip-flop(s).
 	inferred  76 Multiplexer(s).
 Unit <data_deserialize> synthesized.
 
 Synthesizing Unit <serialize>.
-    Related source file is "/home/brian/asdf/why/serialize.vhd".
-WARNING:Xst:647 - Input <clk> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-WARNING:Xst:647 - Input <rst> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<14>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<13>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<12>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<11>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<10>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<9>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<8>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:737 - Found 1-bit latch for signal <out_data<15>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/serialize.vhd".
     Summary:
-	inferred   8 Latch(s).
-	inferred  19 Multiplexer(s).
+	inferred   5 Multiplexer(s).
 Unit <serialize> synthesized.
 
 Synthesizing Unit <count_decoder>.
-    Related source file is "/home/brian/asdf/why/count_decoder.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/count_decoder.vhd".
     Summary:
 	no macro.
 Unit <count_decoder> synthesized.
 
 Synthesizing Unit <gt4>.
-    Related source file is "/home/brian/asdf/why/gt4.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/gt4.vhd".
     Summary:
 	no macro.
 Unit <gt4> synthesized.
 
 Synthesizing Unit <gt8>.
-    Related source file is "/home/brian/asdf/why/gt8.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/gt8.vhd".
     Summary:
 	no macro.
 Unit <gt8> synthesized.
 
 Synthesizing Unit <gt12>.
-    Related source file is "/home/brian/asdf/why/gt12.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/gt12.vhd".
     Summary:
 	no macro.
 Unit <gt12> synthesized.
 
 Synthesizing Unit <clk_counter>.
-    Related source file is "/home/brian/asdf/why/clk_counter.vhd".
-    Found 3-bit register for signal <count_reg>.
-    Found 3-bit adder for signal <count_reg[2]_GND_20_o_add_1_OUT> created at line 1241.
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/clk_counter.vhd".
+    Found 2-bit register for signal <count_reg>.
+    Found 2-bit adder for signal <count_reg[1]_GND_12_o_add_1_OUT> created at line 1241.
     Summary:
 	inferred   1 Adder/Subtractor(s).
-	inferred   3 D-type flip-flop(s).
+	inferred   2 D-type flip-flop(s).
 Unit <clk_counter> synthesized.
 
 Synthesizing Unit <io_port>.
-    Related source file is "/home/brian/asdf/why/io_port.vhd".
+    Related source file is "/home/brian/gfau/design/vhdl/io/why/io_port.vhd".
         n = 32
     Found 1-bit tristate buffer for signal <pad<31>> created at line 50
     Found 1-bit tristate buffer for signal <pad<30>> created at line 50
@@ -321,20 +313,19 @@ Unit <io_port> synthesized.
 HDL Synthesis Report
 
 Macro Statistics
-# Adders/Subtractors                                   : 1
- 3-bit adder                                           : 1
+# Adders/Subtractors                                   : 2
+ 2-bit adder                                           : 1
+ 4-bit subtractor                                      : 1
 # Registers                                            : 39
- 1-bit register                                        : 35
- 2-bit register                                        : 1
- 3-bit register                                        : 1
+ 1-bit register                                        : 34
+ 2-bit register                                        : 2
  32-bit register                                       : 1
+ 4-bit register                                        : 1
  6-bit register                                        : 1
-# Latches                                              : 8
- 1-bit latch                                           : 8
-# Multiplexers                                         : 106
- 1-bit 2-to-1 multiplexer                              : 97
+# Multiplexers                                         : 94
+ 1-bit 2-to-1 multiplexer                              : 83
  1-bit 4-to-1 multiplexer                              : 2
- 16-bit 2-to-1 multiplexer                             : 2
+ 16-bit 2-to-1 multiplexer                             : 4
  32-bit 2-to-1 multiplexer                             : 4
  32-bit 4-to-1 multiplexer                             : 1
 # Tristates                                            : 32
@@ -358,14 +349,16 @@ Unit <clk_counter> synthesized (advanced).
 Advanced HDL Synthesis Report
 
 Macro Statistics
+# Adders/Subtractors                                   : 1
+ 4-bit subtractor                                      : 1
 # Counters                                             : 1
- 3-bit up counter                                      : 1
-# Registers                                            : 75
- Flip-Flops                                            : 75
-# Multiplexers                                         : 113
- 1-bit 2-to-1 multiplexer                              : 105
+ 2-bit up counter                                      : 1
+# Registers                                            : 78
+ Flip-Flops                                            : 78
+# Multiplexers                                         : 94
+ 1-bit 2-to-1 multiplexer                              : 83
  1-bit 4-to-1 multiplexer                              : 2
- 16-bit 2-to-1 multiplexer                             : 1
+ 16-bit 2-to-1 multiplexer                             : 4
  32-bit 2-to-1 multiplexer                             : 4
  32-bit 4-to-1 multiplexer                             : 1
 # Xors                                                 : 8
@@ -377,23 +370,19 @@ Macro Statistics
 =========================================================================
 *                         Low Level Synthesis                           *
 =========================================================================
-WARNING:Xst:2677 - Node <counter/count_reg_2> of sequential type is unconnected in block <IO_Handler_Top>.
 
 Optimizing unit <IO_Handler_Top> ...
-
-Optimizing unit <serialize> ...
 
 Optimizing unit <IO_Handler_FSM> ...
 
 Optimizing unit <data_deserialize> ...
-WARNING:Xst:2677 - Node <FSM/serial_r> of sequential type is unconnected in block <IO_Handler_Top>.
 INFO:Xst:2261 - The FF/Latch <FSM/nerr> in Unit <IO_Handler_Top> is equivalent to the following 2 FFs/Latches, which will be removed : <FSM/nerr_INT> <FSM/n_state_6> 
 INFO:Xst:2261 - The FF/Latch <FSM/serr> in Unit <IO_Handler_Top> is equivalent to the following 2 FFs/Latches, which will be removed : <FSM/s_state_6> <FSM/err_INT> 
 INFO:Xst:2261 - The FF/Latch <FSM/deserial_ne> in Unit <IO_Handler_Top> is equivalent to the following FF/Latch, which will be removed : <FSM/deserial_sr> 
 INFO:Xst:2261 - The FF/Latch <FSM/s_state_4> in Unit <IO_Handler_Top> is equivalent to the following FF/Latch, which will be removed : <FSM/op_INT> 
 INFO:Xst:2261 - The FF/Latch <FSM/ngen_INT> in Unit <IO_Handler_Top> is equivalent to the following FF/Latch, which will be removed : <FSM/n_state_5> 
 INFO:Xst:2261 - The FF/Latch <FSM/s_state_5> in Unit <IO_Handler_Top> is equivalent to the following 2 FFs/Latches, which will be removed : <FSM/n_state_2> <FSM/gen_INT> 
-INFO:Xst:2261 - The FF/Latch <FSM/nop_INT> in Unit <IO_Handler_Top> is equivalent to the following 2 FFs/Latches, which will be removed : <FSM/n_state_4> <FSM/s_state_7> 
+INFO:Xst:2261 - The FF/Latch <FSM/nop_INT> in Unit <IO_Handler_Top> is equivalent to the following FF/Latch, which will be removed : <FSM/s_state_7> 
 INFO:Xst:2261 - The FF/Latch <FSM/deserial_se> in Unit <IO_Handler_Top> is equivalent to the following 3 FFs/Latches, which will be removed : <FSM/n_state_0> <FSM/s_state_1> <FSM/deserial_nr> 
 
 Mapping all equations...
@@ -401,8 +390,9 @@ Building and optimizing final netlist ...
 Found area constraint ratio of 100 (+ 5) on block IO_Handler_Top, actual ratio is 3.
 FlipFlop FSM/mode_0 has been replicated 1 time(s)
 FlipFlop FSM/mode_1 has been replicated 1 time(s)
-FlipFlop counter/count_reg_0 has been replicated 3 time(s)
-FlipFlop counter/count_reg_1 has been replicated 3 time(s)
+FlipFlop FSM/nerr has been replicated 1 time(s)
+FlipFlop counter/count_reg_0 has been replicated 4 time(s)
+FlipFlop counter/count_reg_1 has been replicated 4 time(s)
 
 Final Macro Processing ...
 
@@ -410,8 +400,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 70
- Flip-Flops                                            : 70
+# Registers                                            : 78
+ Flip-Flops                                            : 78
 
 =========================================================================
 
@@ -434,27 +424,24 @@ Top Level Output File Name         : IO_Handler_Top.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 245
+# BELS                             : 292
 #      GND                         : 1
 #      INV                         : 12
-#      LUT2                        : 30
-#      LUT3                        : 33
-#      LUT4                        : 16
-#      LUT5                        : 48
-#      LUT6                        : 103
+#      LUT2                        : 45
+#      LUT3                        : 13
+#      LUT4                        : 14
+#      LUT5                        : 58
+#      LUT6                        : 148
 #      MUXF7                       : 1
-#      VCC                         : 1
 # FlipFlops/Latches                : 78
-#      FD                          : 1
-#      FDE                         : 43
-#      FDR                         : 16
-#      FDRE                        : 9
+#      FDE                         : 48
+#      FDR                         : 17
+#      FDRE                        : 12
 #      FDSE                        : 1
-#      LD_1                        : 8
 # Clock Buffers                    : 2
 #      BUFGP                       : 2
-# IO Buffers                       : 101
-#      IBUF                        : 27
+# IO Buffers                       : 97
+#      IBUF                        : 23
 #      IOBUF                       : 32
 #      OBUF                        : 42
 
@@ -466,24 +453,22 @@ Selected Device : 6slx9tqg144-3
 
 Slice Logic Utilization: 
  Number of Slice Registers:              78  out of  11440     0%  
- Number of Slice LUTs:                  242  out of   5720     4%  
-    Number used as Logic:               242  out of   5720     4%  
+ Number of Slice LUTs:                  290  out of   5720     5%  
+    Number used as Logic:               290  out of   5720     5%  
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:    252
-   Number with an unused Flip Flop:     174  out of    252    69%  
-   Number with an unused LUT:            10  out of    252     3%  
-   Number of fully used LUT-FF pairs:    68  out of    252    26%  
+ Number of LUT Flip Flop pairs used:    306
+   Number with an unused Flip Flop:     228  out of    306    74%  
+   Number with an unused LUT:            16  out of    306     5%  
+   Number of fully used LUT-FF pairs:    62  out of    306    20%  
    Number of unique control sets:        19
 
 IO Utilization: 
- Number of IOs:                         103
- Number of bonded IOBs:                 103  out of    102   100% (*) 
+ Number of IOs:                          99
+ Number of bonded IOBs:                  99  out of    102    97%  
 
 Specific Feature Utilization:
  Number of BUFG/BUFGCTRLs:                2  out of     16    12%  
-
-WARNING:Xst:1336 -  (*) More than 100% of Device resources are used
 
 ---------------------------
 Partition Resource Summary:
@@ -503,17 +488,12 @@ NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
 
 Clock Information:
 ------------------
---------------------------------------------------------------------------------+---------------------------+-------+
-Clock Signal                                                                    | Clock buffer(FF name)     | Load  |
---------------------------------------------------------------------------------+---------------------------+-------+
-t_clk                                                                           | BUFGP                     | 61    |
-serial/GND_6_o_bus_size[1]_equal_1_o(serial/GND_6_o_bus_size[1]_equal_1_o<1>1:O)| NONE(*)(serial/out_data_8)| 8     |
-clk                                                                             | BUFGP                     | 9     |
---------------------------------------------------------------------------------+---------------------------+-------+
-(*) This 1 clock signal(s) are generated by combinatorial logic,
-and XST is not able to identify which are the primary clock signals.
-Please use the CLOCK_SIGNAL constraint to specify the clock signal(s) generated by combinatorial logic.
-INFO:Xst:2169 - HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
+-----------------------------------+------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)  | Load  |
+-----------------------------------+------------------------+-------+
+t_clk                              | BUFGP                  | 69    |
+clk                                | BUFGP                  | 9     |
+-----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
 ----------------------------------------
@@ -523,10 +503,10 @@ Timing Summary:
 ---------------
 Speed Grade: -3
 
-   Minimum period: 7.258ns (Maximum Frequency: 137.787MHz)
-   Minimum input arrival time before clock: 7.266ns
-   Maximum output required time after clock: 7.939ns
-   Maximum combinational path delay: 9.769ns
+   Minimum period: 5.807ns (Maximum Frequency: 172.197MHz)
+   Minimum input arrival time before clock: 5.685ns
+   Maximum output required time after clock: 8.667ns
+   Maximum combinational path delay: 5.519ns
 
 Timing Details:
 ---------------
@@ -534,199 +514,159 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 't_clk'
-  Clock period: 7.258ns (frequency: 137.787MHz)
-  Total number of paths / destination ports: 1287 / 108
+  Clock period: 5.807ns (frequency: 172.197MHz)
+  Total number of paths / destination ports: 2097 / 119
 -------------------------------------------------------------------------
-Delay:               3.629ns (Levels of Logic = 3)
-  Source:            counter/count_reg_1_1 (FF)
-  Destination:       deser/output_reg_19 (FF)
+Delay:               2.904ns (Levels of Logic = 2)
+  Source:            counter/count_reg_1_2 (FF)
+  Destination:       deser/output_reg_27 (FF)
   Source Clock:      t_clk falling
   Destination Clock: t_clk rising
 
-  Data Path: counter/count_reg_1_1 to deser/output_reg_19
+  Data Path: counter/count_reg_1_2 to deser/output_reg_27
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDR:C->Q             14   0.447   1.205  counter/count_reg_1_1 (counter/count_reg_1_1)
-     LUT6:I2->O            1   0.203   0.684  deser/in_data[31]_in_data[7]_mux_21_OUT<19>_SW0_SW0_F (N296)
-     LUT3:I1->O            1   0.203   0.580  deser/in_data[31]_in_data[7]_mux_21_OUT<19>_SW0_SW01 (N114)
-     LUT6:I5->O            1   0.205   0.000  deser/in_data[31]_in_data[7]_mux_21_OUT<19> (deser/in_data[31]_in_data[7]_mux_21_OUT<19>)
-     FDE:D                     0.102          deser/output_reg_19
+     FDR:C->Q             12   0.447   1.137  counter/count_reg_1_2 (counter/count_reg_1_2)
+     LUT6:I3->O            1   0.205   0.808  deser/in_data[31]_in_data[7]_mux_21_OUT<27>1 (deser/in_data[31]_in_data[7]_mux_21_OUT<27>1)
+     LUT6:I3->O            1   0.205   0.000  deser/in_data[31]_in_data[7]_mux_21_OUT<27>4 (deser/in_data[31]_in_data[7]_mux_21_OUT<27>)
+     FDE:D                     0.102          deser/output_reg_27
     ----------------------------------------
-    Total                      3.629ns (1.160ns logic, 2.469ns route)
-                                       (32.0% logic, 68.0% route)
+    Total                      2.904ns (0.959ns logic, 1.945ns route)
+                                       (33.0% logic, 67.0% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk'
-  Clock period: 4.881ns (frequency: 204.861MHz)
-  Total number of paths / destination ports: 80 / 14
+  Clock period: 5.437ns (frequency: 183.935MHz)
+  Total number of paths / destination ports: 77 / 16
 -------------------------------------------------------------------------
-Delay:               4.881ns (Levels of Logic = 3)
+Delay:               5.437ns (Levels of Logic = 4)
   Source:            FSM/serr (FF)
-  Destination:       FSM/serr (FF)
+  Destination:       FSM/err_type (FF)
   Source Clock:      clk rising
   Destination Clock: clk rising
 
-  Data Path: FSM/serr to FSM/serr
+  Data Path: FSM/serr to FSM/err_type
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRE:C->Q            20   0.447   1.197  FSM/serr (FSM/serr)
-     LUT2:I0->O           11   0.203   0.883  FSM/GND_4_o_n_state[1]_Select_55_o<1>121 (FSM/GND_4_o_n_state[1]_Select_55_o<1>12)
-     LUT6:I5->O            8   0.205   0.803  FSM/GND_4_o_state[7]_equal_43_o<7>1 (FSM/GND_4_o_state[7]_equal_43_o<7>1)
-     LUT6:I5->O            2   0.205   0.616  FSM/_n0291_inv21 (FSM/_n0291_inv2)
-     FDRE:CE                   0.322          FSM/serr
+     FDRE:C->Q            22   0.447   1.134  FSM/serr (FSM/serr)
+     LUT2:I1->O            8   0.205   0.803  FSM/GND_5_o_n_state[1]_Select_60_o121 (FSM/GND_5_o_n_state[1]_Select_60_o12)
+     LUT6:I5->O            5   0.205   0.715  FSM/GND_5_o_state[7]_equal_48_o<7>1 (FSM/GND_5_o_state[7]_equal_48_o<7>1)
+     LUT6:I5->O            2   0.205   0.617  FSM/_n0311_inv21 (FSM/_n0311_inv2)
+     LUT2:I1->O            1   0.205   0.579  FSM/_n0311_inv1 (FSM/_n0311_inv)
+     FDE:CE                    0.322          FSM/err_type
     ----------------------------------------
-    Total                      4.881ns (1.382ns logic, 3.499ns route)
-                                       (28.3% logic, 71.7% route)
-
-=========================================================================
-Timing constraint: Default OFFSET IN BEFORE for Clock 'serial/GND_6_o_bus_size[1]_equal_1_o'
-  Total number of paths / destination ports: 8 / 8
--------------------------------------------------------------------------
-Offset:              1.875ns (Levels of Logic = 1)
-  Source:            gfau_data<8> (PAD)
-  Destination:       serial/out_data_8 (LATCH)
-  Destination Clock: serial/GND_6_o_bus_size[1]_equal_1_o rising
-
-  Data Path: gfau_data<8> to serial/out_data_8
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     IBUF:I->O             2   1.222   0.616  gfau_data_8_IBUF (gfau_data_8_IBUF)
-     LD_1:D                    0.037          serial/out_data_8
-    ----------------------------------------
-    Total                      1.875ns (1.259ns logic, 0.616ns route)
-                                       (67.1% logic, 32.9% route)
+    Total                      5.437ns (1.589ns logic, 3.848ns route)
+                                       (29.2% logic, 70.8% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
-  Total number of paths / destination ports: 25 / 14
+  Total number of paths / destination ports: 25 / 15
 -------------------------------------------------------------------------
-Offset:              3.391ns (Levels of Logic = 2)
+Offset:              4.176ns (Levels of Logic = 3)
   Source:            oob_err (PAD)
-  Destination:       FSM/serr (FF)
+  Destination:       FSM/err_type (FF)
   Destination Clock: clk rising
 
-  Data Path: oob_err to FSM/serr
+  Data Path: oob_err to FSM/err_type
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
      IBUF:I->O             4   1.222   1.028  oob_err_IBUF (oob_err_IBUF)
-     LUT6:I1->O            2   0.203   0.616  FSM/_n0291_inv21 (FSM/_n0291_inv2)
-     FDRE:CE                   0.322          FSM/serr
+     LUT6:I1->O            2   0.203   0.617  FSM/_n0311_inv21 (FSM/_n0311_inv2)
+     LUT2:I1->O            1   0.205   0.579  FSM/_n0311_inv1 (FSM/_n0311_inv)
+     FDE:CE                    0.322          FSM/err_type
     ----------------------------------------
-    Total                      3.391ns (1.747ns logic, 1.644ns route)
-                                       (51.5% logic, 48.5% route)
+    Total                      4.176ns (1.952ns logic, 2.224ns route)
+                                       (46.7% logic, 53.3% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 't_clk'
-  Total number of paths / destination ports: 993 / 73
+  Total number of paths / destination ports: 260 / 80
 -------------------------------------------------------------------------
-Offset:              7.266ns (Levels of Logic = 6)
-  Source:            input_size<0> (PAD)
-  Destination:       deser/output_reg_15 (FF)
+Offset:              5.685ns (Levels of Logic = 5)
+  Source:            data<5> (PAD)
+  Destination:       deser/output_reg_21 (FF)
   Destination Clock: t_clk rising
 
-  Data Path: input_size<0> to deser/output_reg_15
+  Data Path: data<5> to deser/output_reg_21
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O             1   1.222   0.684  input_size_0_IBUF (input_size_0_IBUF)
-     LUT2:I0->O            3   0.203   1.015  num_clks<0>31 (num_clks<0>_bdd5)
-     LUT6:I0->O           78   0.203   1.733  num_clks<0>1 (num_clks<0>)
-     LUT4:I3->O            1   0.205   0.684  deser/Mmux__n02072101_SW5 (N212)
-     LUT6:I4->O            1   0.203   0.808  deser/in_data[31]_in_data[7]_mux_21_OUT<15>1_SW1 (N127)
-     LUT6:I3->O            1   0.205   0.000  deser/in_data[31]_in_data[7]_mux_21_OUT<15>3 (deser/in_data[31]_in_data[7]_mux_21_OUT<15>)
-     FDE:D                     0.102          deser/output_reg_15
+     IOBUF:IO->O          17   1.222   1.372  data_5_IOBUF (N62)
+     LUT6:I1->O            1   0.203   0.684  deser/in_data[31]_in_data[7]_mux_21_OUT<21>_SW0_SW2_SW0 (N339)
+     LUT5:I3->O            1   0.203   0.808  deser/in_data[31]_in_data[7]_mux_21_OUT<21>_SW0_SW2 (N207)
+     LUT5:I2->O            1   0.205   0.684  deser/in_data[31]_in_data[7]_mux_21_OUT<21>_SW0 (N152)
+     LUT5:I3->O            1   0.203   0.000  deser/in_data[31]_in_data[7]_mux_21_OUT<21> (deser/in_data[31]_in_data[7]_mux_21_OUT<21>)
+     FDE:D                     0.102          deser/output_reg_21
     ----------------------------------------
-    Total                      7.266ns (2.343ns logic, 4.923ns route)
-                                       (32.2% logic, 67.8% route)
+    Total                      5.685ns (2.138ns logic, 3.547ns route)
+                                       (37.6% logic, 62.4% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 't_clk'
-  Total number of paths / destination ports: 252 / 73
+  Total number of paths / destination ports: 292 / 73
 -------------------------------------------------------------------------
-Offset:              7.939ns (Levels of Logic = 4)
-  Source:            FSM/mode_0_1 (FF)
-  Destination:       data<0> (PAD)
+Offset:              8.667ns (Levels of Logic = 5)
+  Source:            FSM/input_size_1 (FF)
+  Destination:       data<7> (PAD)
   Source Clock:      t_clk rising
 
-  Data Path: FSM/mode_0_1 to data<0>
+  Data Path: FSM/input_size_1 to data<7>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q              2   0.447   0.845  FSM/mode_0_1 (FSM/mode_0_1)
-     LUT6:I3->O           78   0.205   1.980  num_clks<0>1 (num_clks<0>)
-     LUT6:I2->O            8   0.203   0.907  serial/mux141 (serial/mux14)
-     LUT6:I4->O            1   0.203   0.579  Mmux_out_data_ext11 (out_data_ext<0>)
-     IOBUF:I->IO               2.571          data_0_IOBUF (data<0>)
+     FDE:C->Q             14   0.447   1.062  FSM/input_size_1 (FSM/input_size_1)
+     LUT2:I0->O           22   0.203   1.134  serial/GND_7_o_num_clks[1]_equal_2_o<1>_SW0 (N0)
+     LUT6:I5->O            4   0.205   0.912  serial/GND_7_o_num_clks[1]_equal_2_o<1> (serial/GND_7_o_num_clks[1]_equal_2_o)
+     LUT5:I2->O            8   0.205   1.147  Mmux_out_data_ext171 (Mmux_out_data_ext17)
+     LUT6:I1->O            1   0.203   0.579  Mmux_out_data_ext101 (out_data_ext<3>)
+     IOBUF:I->IO               2.571          data_3_IOBUF (data<3>)
     ----------------------------------------
-    Total                      7.939ns (3.629ns logic, 4.310ns route)
-                                       (45.7% logic, 54.3% route)
-
-=========================================================================
-Timing constraint: Default OFFSET OUT AFTER for Clock 'serial/GND_6_o_bus_size[1]_equal_1_o'
-  Total number of paths / destination ports: 8 / 8
--------------------------------------------------------------------------
-Offset:              4.661ns (Levels of Logic = 2)
-  Source:            serial/out_data_15 (LATCH)
-  Destination:       data<15> (PAD)
-  Source Clock:      serial/GND_6_o_bus_size[1]_equal_1_o rising
-
-  Data Path: serial/out_data_15 to data<15>
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     LD_1:G->Q             1   0.498   0.808  serial/out_data_15 (serial/out_data_15)
-     LUT3:I0->O            1   0.205   0.579  Mmux_out_data_ext71 (out_data_ext<15>)
-     IOBUF:I->IO               2.571          data_15_IOBUF (data<15>)
-    ----------------------------------------
-    Total                      4.661ns (3.274ns logic, 1.387ns route)
-                                       (70.2% logic, 29.8% route)
+    Total                      8.667ns (3.834ns logic, 4.833ns route)
+                                       (44.2% logic, 55.8% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
-  Total number of paths / destination ports: 21 / 18
+  Total number of paths / destination ports: 29 / 18
 -------------------------------------------------------------------------
-Offset:              6.079ns (Levels of Logic = 3)
+Offset:              7.264ns (Levels of Logic = 4)
   Source:            FSM/serr (FF)
-  Destination:       data<0> (PAD)
+  Destination:       data<7> (PAD)
   Source Clock:      clk rising
 
-  Data Path: FSM/serr to data<0>
+  Data Path: FSM/serr to data<7>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRE:C->Q            20   0.447   1.093  FSM/serr (FSM/serr)
-     LUT2:I1->O            2   0.205   0.981  FSM/Mxor_err_xo<0>1 (err_OBUF)
-     LUT6:I0->O            1   0.203   0.579  Mmux_out_data_ext11 (out_data_ext<0>)
+     FDRE:C->Q            22   0.447   1.134  FSM/serr (FSM/serr)
+     LUT2:I1->O            3   0.205   1.015  FSM/Mxor_err_xo<0>1 (err_OBUF)
+     LUT6:I0->O            8   0.203   0.907  Mmux_out_data_ext191 (Mmux_out_data_ext19)
+     LUT6:I4->O            1   0.203   0.579  Mmux_out_data_ext17 (out_data_ext<0>)
      IOBUF:I->IO               2.571          data_0_IOBUF (data<0>)
     ----------------------------------------
-    Total                      6.079ns (3.426ns logic, 2.653ns route)
-                                       (56.4% logic, 43.6% route)
+    Total                      7.264ns (3.629ns logic, 3.635ns route)
+                                       (50.0% logic, 50.0% route)
 
 =========================================================================
 Timing constraint: Default path analysis
-  Total number of paths / destination ports: 145 / 9
+  Total number of paths / destination ports: 25 / 17
 -------------------------------------------------------------------------
-Delay:               9.769ns (Levels of Logic = 6)
-  Source:            input_size<0> (PAD)
-  Destination:       data<0> (PAD)
+Delay:               5.519ns (Levels of Logic = 3)
+  Source:            gfau_data<7> (PAD)
+  Destination:       data<7> (PAD)
 
-  Data Path: input_size<0> to data<0>
+  Data Path: gfau_data<7> to data<7>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O             1   1.222   0.684  input_size_0_IBUF (input_size_0_IBUF)
-     LUT2:I0->O            3   0.203   1.015  num_clks<0>31 (num_clks<0>_bdd5)
-     LUT6:I0->O           78   0.203   1.980  num_clks<0>1 (num_clks<0>)
-     LUT6:I2->O            8   0.203   0.907  serial/mux141 (serial/mux14)
-     LUT6:I4->O            1   0.203   0.579  Mmux_out_data_ext11 (out_data_ext<0>)
-     IOBUF:I->IO               2.571          data_0_IOBUF (data<0>)
+     IBUF:I->O             1   1.222   0.944  gfau_data_7_IBUF (gfau_data_7_IBUF)
+     LUT6:I0->O            1   0.203   0.579  Mmux_out_data_ext141 (out_data_ext<7>)
+     IOBUF:I->IO               2.571          data_7_IOBUF (data<7>)
     ----------------------------------------
-    Total                      9.769ns (4.605ns logic, 5.164ns route)
-                                       (47.1% logic, 52.9% route)
+    Total                      5.519ns (3.996ns logic, 1.523ns route)
+                                       (72.4% logic, 27.6% route)
 
 =========================================================================
 
@@ -738,8 +678,8 @@ Clock to Setup on destination clock clk
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |    4.881|         |         |         |
-t_clk          |    4.846|         |         |         |
+clk            |    5.437|         |         |         |
+t_clk          |    5.688|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock t_clk
@@ -747,15 +687,15 @@ Clock to Setup on destination clock t_clk
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |    5.598|         |         |         |
-t_clk          |    5.437|    3.629|    2.603|         |
+clk            |    6.628|         |         |         |
+t_clk          |    5.753|    2.904|    2.657|         |
 ---------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
 Total REAL time to Xst completion: 6.00 secs
-Total CPU time to Xst completion: 5.55 secs
+Total CPU time to Xst completion: 6.02 secs
  
 --> 
 
@@ -763,6 +703,6 @@ Total CPU time to Xst completion: 5.55 secs
 Total memory usage is 404544 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :   13 (   0 filtered)
+Number of warnings :    0 (   0 filtered)
 Number of infos    :    9 (   0 filtered)
 

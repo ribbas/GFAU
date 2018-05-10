@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-05-10T15:10:35</DateModified>
+  <DateModified>2018-05-10T18:19:45</DateModified>
   <ModuleName>IO_Handler_Top</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>/home/brian/asdf/why/iseconfig/IO_Handler_Top.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/brian/asdf/why</ImplementationReportsDirectory>
+  <SavedFilePath>/home/brian/gfau/design/vhdl/io/why/iseconfig/IO_Handler_Top.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>/home/brian/gfau/design/vhdl/io/why/</ImplementationReportsDirectory>
   <DateInitialized>2018-05-10T15:10:35</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

@@ -25,13 +25,13 @@ entity clk_counter is
 port(
     clk     :   in  std_logic;
     rst     :   in  std_logic;
-    count   :   out std_logic_vector(2 downto 0)
+    count   :   out std_logic_vector(1 downto 0)
 );
 end clk_counter;
 
 architecture Behavioral of clk_counter is
 
-signal count_reg    :   unsigned(2 downto 0);
+signal count_reg    :   unsigned(1 downto 0);
 
 begin
 
@@ -41,7 +41,7 @@ begin
     begin
         if falling_edge(clk) then
             if (rst = '1') then
-                count_reg <= "000";
+                count_reg <= "00";
             else
                 count_reg <= count_reg + 1;
             end if;
