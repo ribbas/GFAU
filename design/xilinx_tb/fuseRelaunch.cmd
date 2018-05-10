@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "secureip" -o "/home/sabbir/projects/GFAU/design/xilinx_tb/top_tb_isim_beh.exe" -prj "/home/sabbir/projects/GFAU/design/xilinx_tb/top_tb_beh.prj" "work.top_tb" 

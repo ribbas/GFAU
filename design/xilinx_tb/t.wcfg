@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/sabbir/projects/GFAU/design/xilinx_tb/generator_tb_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="demo" />
+            <top_module name="demo_tb" />
+            <top_module name="generator_tb" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_unsigned" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="16" />
+   <wvobject fp_name="/generator_tb/poly_bcd" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">poly_bcd[8:0]</obj_property>
+      <obj_property name="ObjectShortName">poly_bcd[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/mask" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mask[8:0]</obj_property>
+      <obj_property name="ObjectShortName">mask[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/msb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">msb[2:0]</obj_property>
+      <obj_property name="ObjectShortName">msb[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/size" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">size[3:0]</obj_property>
+      <obj_property name="ObjectShortName">size[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/mem_rdy" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_rdy</obj_property>
+      <obj_property name="ObjectShortName">mem_rdy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/gen_rdy" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">gen_rdy</obj_property>
+      <obj_property name="ObjectShortName">gen_rdy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/id_gen" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">id_gen</obj_property>
+      <obj_property name="ObjectShortName">id_gen</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/addr_gen" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr_gen[8:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_gen[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/sym" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">sym[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sym[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/en" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/n" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">n</obj_property>
+      <obj_property name="ObjectShortName">n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/clgn" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clgn</obj_property>
+      <obj_property name="ObjectShortName">clgn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/clgn1" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clgn1</obj_property>
+      <obj_property name="ObjectShortName">clgn1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/generator_tb/nums" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">nums</obj_property>
+      <obj_property name="ObjectShortName">nums</obj_property>
+   </wvobject>
+</wave_config>
