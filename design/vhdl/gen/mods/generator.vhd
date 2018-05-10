@@ -24,7 +24,7 @@ entity generator is
         rst         : in std_logic;
 
         -- polynomial data
-        poly_bcd    : in std_logic_vector(n downto 0);
+        poly_bcd    : in std_logic_vector(n downto 1);
         mask        : in std_logic_vector(n downto 0);
         msb         : in std_logic_vector(clgn1 downto 0);
         poly_bcd_reg : out std_logic_vector(n downto 1);
@@ -79,14 +79,14 @@ begin
                 elem <= DCAREVEC;
 
                 -- save this for later :)
-                poly_bcd_reg <= poly_bcd(n downto 1);
+                poly_bcd_reg <= poly_bcd;
 
             end if;
 
             if (en = '1' and rst = '0') then
 
                 -- elem^n
-                nth_elem <= poly_bcd and mask;
+                nth_elem <= (poly_bcd & '1') and mask;
 
                 case flippy_flop is
 

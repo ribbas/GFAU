@@ -25,15 +25,15 @@ entity top is
         -- master reset
         GRST    : in std_logic;
 
-        DATA    :   inout std_logic_vector(31 downto 0); --external data bus
-        START   :   in std_logic;
-        TCLK    :   in std_logic; --external device clock < 200MHz
-        RDY     :   out std_logic; --gfau is ready for input
-        ERR     :   out std_logic; --error signal
+        DATA    : inout std_logic_vector(31 downto 0); --external data bus
+        START   : in std_logic;
+        TCLK    : in std_logic; --external device clock < 200MHz
+        RDY     : out std_logic; --gfau is ready for input
+        ERR     : out std_logic; --error signal
 
         --interrupt signals to/from external device
-        INT     :   out std_logic; --generate an interrupt
-        INTA    :   in std_logic; --interrupt acknowledge
+        INT     : out std_logic; --generate an interrupt
+        INTA    : in std_logic; --interrupt acknowledge
 
         -- memory control signals
         nCE     : out std_logic;
@@ -169,10 +169,11 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n downto 0);
+            poly_bcd    : in std_logic_vector(n downto 1);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
 			poly_bcd_reg : out std_logic_vector(n downto 1);
+
             -- memory wrapper control signals
             id_gen      : out std_logic;
             mem_rdy     : in std_logic;
@@ -307,7 +308,7 @@ architecture behavioral of top is
     signal dout_con : std_logic_vector(n downto 0);
 
     -- user inputs
-    signal poly_bcd : std_logic_vector(n downto 0);
+    signal poly_bcd : std_logic_vector(n downto 1);
     signal opcode  : std_logic_vector(5 downto 0);
     signal opand1  : std_logic_vector(n downto 0);
     signal opand2  : std_logic_vector(n downto 0);
@@ -322,8 +323,6 @@ architecture behavioral of top is
     signal rdy_out : std_logic;
     signal errb    : std_logic;
     signal errz    : std_logic;
-
-
 
 begin
 
