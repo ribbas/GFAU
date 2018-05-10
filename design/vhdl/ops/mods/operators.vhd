@@ -225,11 +225,12 @@ begin
         rdy_out => rdy_out
     );
 
-    --process (clk) begin
+    process (clk) begin
+        report std_logic'image(rst);
     --for i in 2 downto 0 loop
     --    report "OPCODE("&integer'image(i)&") value is" & std_logic'image(op(i));
     --end loop;
-    --end process;
+    end process;
 
 
 end behavioral;

@@ -9,7 +9,7 @@
 library ieee;
     use ieee.numeric_std.all;
     use ieee.std_logic_1164.all;
-     use ieee.std_logic_misc.all;
+    use ieee.std_logic_misc.all;
 library work;
     use work.glob.all;
 
@@ -55,6 +55,8 @@ begin
 
             if (rst = '1') then
 
+                report "rst";
+
                 id_con <= '0';
                 addr_con <= DCAREVEC;
                 result <= DCAREVEC;
@@ -62,7 +64,9 @@ begin
 
             end if;
 
-            if (en = '1') then
+            if (en = '1' and rst = '0') then
+
+                report "pls";
 
                 -- if conversion requested
                 if (convert = '1') then
@@ -134,6 +138,7 @@ begin
 
             else
 
+                report "nope";
                 rdy_out <= '0';
 
             end if;  -- enable
