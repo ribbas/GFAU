@@ -27,7 +27,7 @@ architecture test of generator_tb is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n downto 1);
+            poly_bcd    : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
             poly_bcd_reg : out std_logic_vector(n downto 1);
@@ -111,7 +111,7 @@ begin
 
         mask <= "000000111";
         msb <= "010";
-        poly_bcd <= "00000110";
+        poly_bcd <= "000001101";
 
         wait for (CLK_PER * 1);
 

@@ -37,7 +37,7 @@ architecture behavior of top_tb is
             ENCU    : in std_logic;
 
             -- user inputs
-            POLYBCD : in std_logic_vector(n downto 1);
+            POLYBCD : in std_logic_vector(n downto 0);
             OPCODE  : in std_logic_vector(5 downto 0);
             OPAND1  : in std_logic_vector(n downto 0);
             OPAND2  : in std_logic_vector(n downto 0);
@@ -82,7 +82,7 @@ architecture behavior of top_tb is
     signal CLK     : std_ulogic := '1';
     signal RST     : std_logic;
     signal ENCU    : std_logic := '0';
-    signal POLYBCD : std_logic_vector(n - 1 downto 0);
+    signal POLYBCD : std_logic_vector(n downto 0);
     signal OPCODE  : std_logic_vector(5 downto 0);
     signal OPAND1  : std_logic_vector(n downto 0);
     signal OPAND2  : std_logic_vector(n downto 0);
@@ -169,7 +169,7 @@ begin
     stim_proc: process
     begin
 
-        POLYBCD <= "00000110";  -- x^3+x^2+x^0
+        POLYBCD <= "000001101";  -- x^3+x^2+x^0
         --POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
         OPAND1 <= "111111111";
         OPAND2 <= "000000011";

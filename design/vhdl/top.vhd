@@ -29,7 +29,7 @@ entity top is
         ENCU    : in std_logic;
 
         -- user inputs
-        POLYBCD : in std_logic_vector(n downto 1);
+        POLYBCD : in std_logic_vector(n downto 0);
         OPCODE  : in std_logic_vector(5 downto 0);
         OPAND1  : in std_logic_vector(n downto 0);
         OPAND2  : in std_logic_vector(n downto 0);
@@ -141,7 +141,7 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n downto 1);
+            poly_bcd    : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
 			poly_bcd_reg : out std_logic_vector(n downto 1);
