@@ -293,7 +293,6 @@ begin
                             end if;
                             serr <= not serr;
                             err_INT <= not err_INT; --set error interrupt
-                            err <= '1';
                             n_state(3) <= not n_state(3);
                             n_state(1) <= not n_state(1);
                             s_state(6) <= not s_state(6); --set int2
