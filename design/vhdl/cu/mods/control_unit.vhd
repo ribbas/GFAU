@@ -23,7 +23,7 @@ entity control_unit is
         opand1      : in std_logic_vector(n downto 0);   -- operand 1
         opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-        start       : in std_logic;  -- control unit enable
+        init        : in std_logic;  -- control unit enable
         rst         : in std_logic; --reset
 
         -- registers
@@ -112,7 +112,7 @@ begin
     process (clk)
     begin
 
-        if (start = '1' and rst = '0') then
+        if (init = '1' and rst = '0') then
 
             en <= '1';
 

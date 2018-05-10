@@ -50,6 +50,8 @@ entity memory is
         nCE         : out std_logic;
         nWE         : out std_logic;
         nOE         : out std_logic;
+        nBLE        : out std_logic := '0';
+        nBHE        : out std_logic := '0';
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);

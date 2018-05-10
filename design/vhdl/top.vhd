@@ -23,25 +23,17 @@ entity top is
         CLK     : in std_logic;
 
         -- master reset
-        RST     : in std_logic;
+        GRST    : in std_logic;
 
-        -- control unit enable
-        ENCU    : in std_logic;
+        DATA    :   inout std_logic_vector(31 downto 0); --external data bus
+        START   :   in std_logic;
+        TCLK    :   in std_logic; --external device clock < 200MHz
+        RDY     :   out std_logic; --gfau is ready for input
+        ERR     :   out std_logic; --error signal
 
-        -- user inputs
-        POLYBCD : in std_logic_vector(n downto 0);
-        opcode  : in std_logic_vector(5 downto 0);
-        OPAND1  : in std_logic_vector(n downto 0);
-        OPAND2  : in std_logic_vector(n downto 0);
-
-        -- user output
-        result  : out std_logic_vector(n downto 0);
-
-        -- IO interrupts
-        rdy_gen  : out std_logic;
-        rdy_out : out std_logic;
-        errb    : out std_logic;
-        errz    : out std_logic;
+        --interrupt signals to/from external device
+        INT     :   out std_logic; --generate an interrupt
+        INTA    :   in std_logic; --interrupt acknowledge
 
         -- memory control signals
         nCE     : out std_logic;
@@ -54,17 +46,17 @@ entity top is
         A       : out std_logic_vector((n + 1) downto 0);
         IO      : inout std_logic_vector(n downto 0)
 
-        ;
-        -------------- TEMPORARY - JUST FOR TB ------------
+        --;
+        ---------------- TEMPORARY - JUST FOR TB ------------
 
-        ---- universal registers
-        t_size      : out std_logic_vector(clgn downto 0);
-        t_msb       : out std_logic_vector(clgn1 downto 0);
-        t_mask      : out std_logic_vector(n downto 0);
+        ------ universal registers
+        --t_size      : out std_logic_vector(clgn downto 0);
+        --t_msb       : out std_logic_vector(clgn1 downto 0);
+        --t_mask      : out std_logic_vector(n downto 0);
 
-        t_1         : out std_logic;
-        t_n1      : out std_logic_vector(n downto 0);
-        t_n2      : out std_logic_vector(n downto 0)
+        --t_1         : out std_logic;
+        --t_n1      : out std_logic_vector(n downto 0);
+        --t_n2      : out std_logic_vector(n downto 0)
 
     );
 end top;
@@ -98,6 +90,7 @@ architecture behavioral of top is
             gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
             out_data    :   out     std_logic_vector(31 downto 0);
             input_size  :   in      std_logic_vector(3 downto 0);
+            cu_start    :   out     std_logic;
             --error signals
             z_err       :   in      std_logic;
             oob_err     :   in      std_logic
@@ -112,6 +105,7 @@ architecture behavioral of top is
         port(
             poly_bcd    : in  std_logic_vector(n downto 2);
             size        : out std_logic_vector(clgn downto 0);
+            input_size  : out std_logic_vector(clgn downto 0);
             msb         : out std_logic_vector(clgn1 downto 0)
         );
     end component;
@@ -131,7 +125,7 @@ architecture behavioral of top is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            start       : in std_logic;  -- control unit enable
+            init        : in std_logic;  -- control unit initialize
             rst         : in std_logic;
 
             -- registers
@@ -264,6 +258,8 @@ architecture behavioral of top is
             nCE         : out std_logic;
             nWE         : out std_logic;
             nOE         : out std_logic;
+            nBLE        : out std_logic := '0';
+            nBHE        : out std_logic := '0';
 
             -- memory address and data signals
             A           : out std_logic_vector((n + 1) downto 0);
@@ -274,6 +270,7 @@ architecture behavioral of top is
     -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
     signal size : std_logic_vector(clgn downto 0);  -- size
+    signal input_size : std_logic_vector(clgn downto 0);  -- size
     signal msb : std_logic_vector(clgn1 downto 0);  -- msb
     signal poly_bcd_reg : std_logic_vector(n downto 1);
 
@@ -285,6 +282,9 @@ architecture behavioral of top is
     -- internal operation signals
     signal en_ops : std_logic;
     signal rst_ops: std_logic;
+
+    -- control unit enable
+    signal init_cu : std_logic;
     signal id_cu : std_logic;
     signal id_con : std_logic;
     signal i : std_logic_vector(n downto 0);
@@ -306,29 +306,49 @@ architecture behavioral of top is
     signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector(n downto 0);
 
+    -- user inputs
+    signal poly_bcd : std_logic_vector(n downto 0);
+    signal opcode  : std_logic_vector(5 downto 0);
+    signal opand1  : std_logic_vector(n downto 0);
+    signal opand2  : std_logic_vector(n downto 0);
+    signal out_data : std_logic_vector(31 downto 0);
+    signal rst    : std_logic;
+
+    -- user output
+    signal result  : std_logic_vector(n downto 0);
+
+    -- IO interrupts
+    signal rdy_gen  : std_logic;
+    signal rdy_out : std_logic;
+    signal errb    : std_logic;
+    signal errz    : std_logic;
+
+
+
 begin
 
-    --io_unit: IO_Handler_Top port map (
-    --    data => DATA,
-    --    Start => START,
-    --    t_clk => T_CLK,
-    --    g_rst => RST,
-    --    ready_sig => RDY,
-    --    err => ERR,
-    --    INT => INT,
-    --    INTA => INTA,
-    --    clk => CLK,
+    io_unit: IO_Handler_Top port map(
+        data => DATA,
+        Start => START,
+        t_clk => TCLK,
+        g_rst => GRST,
+        ready_sig => RDY,
+        err => ERR,
+        INT => INT,
+        INTA => INTA,
+        clk => CLK,
 
-    --    op_done => rdy_out,
-    --    opcode_out => opcode,
-    --    rst => open,
-    --    gen_rdy => rdy_gen,
-    --    gfau_data => result,
-    --    out_data => out_data,
-    --    input_size => input_data,
-    --    z_err => errz,
-    --    oob_err => errb
-    --);
+        op_done => rdy_out,
+        opcode_out => opcode,
+        rst => rst,
+        gen_rdy => rdy_gen,
+        gfau_data => ZEROVEC(6 downto 0) & result,
+        out_data => out_data,
+        input_size => input_size,
+        cu_start => init_cu,
+        z_err => errz,
+        oob_err => errb
+    );
 
     ---------------- universal registers and constants ----------------
 
@@ -336,6 +356,7 @@ begin
     indices_unit: indices port map(
         poly_bcd => poly_bcd_reg(n downto 2),
         size => size,
+        input_size => input_size,
         msb => msb
     );
 
@@ -349,10 +370,10 @@ begin
     cu: control_unit port map(
         clk => CLK,
         opcode => opcode(5 downto 1),
-        opand1 => OPAND1,
-        opand2 => OPAND2,
-        start => ENCU,
-        rst => RST,
+        opand1 => out_data(n downto 0),
+        opand2 => out_data((16 + n) downto 16),
+        init => init_cu,
+        rst => rst,
         mask => mask,
         en_ops => en_ops,
         en_gen => en_gen,
@@ -377,7 +398,7 @@ begin
         clk => CLK,
         rst => rst_gen,
         en => en_gen,
-        poly_bcd => POLYBCD,
+        poly_bcd => poly_bcd,
         poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,
@@ -437,6 +458,8 @@ begin
         nCE => nCE,
         nWE => nWE,
         nOE => nOE,
+        nBLE => nBLE,
+        nBHE => nBHE,
         A => A,
         DQ => IO
     );

@@ -21,6 +21,7 @@ entity indices is
     port(
         poly_bcd    : in std_logic_vector(n downto 2);  -- BCD polynomial
         size        : out std_logic_vector(clgn downto 0);  -- size
+        input_size  : out std_logic_vector(clgn downto 0);  -- input size
         msb         : out std_logic_vector(clgn1 downto 0)  -- msb
     );
 end indices;
@@ -42,5 +43,6 @@ begin
 
     size <= prio_enc;
     msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);
+    input_size <= std_logic_vector(unsigned(prio_enc(clgn downto 0)) + 1);
 
 end behavioral;
