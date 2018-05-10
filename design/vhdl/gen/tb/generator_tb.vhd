@@ -45,10 +45,11 @@ architecture test of generator_tb is
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(n downto 1);
+    signal poly_bcd : std_logic_vector(n downto 0);
     signal mask : std_logic_vector(n downto 0);
     signal msb : std_logic_vector(clgn1 downto 0);
     signal mem_rdy : std_logic := '1';
+    signal mem_t : std_logic;
 
     -- outputs
     signal gen_rdy : std_logic;
