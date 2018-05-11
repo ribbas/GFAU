@@ -56,6 +56,7 @@ port(
     gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
     out_data    :   out     std_logic_vector(31 downto 0);
     input_size  :   out     std_logic_vector(3 downto 0);
+    cu_start    :   out     std_logic;
     
     --error signals
     z_err       :   in      std_logic;
@@ -204,6 +205,7 @@ begin
     err <= err_out;
     err_vec(0) <= err_type;
     err_vec(15 downto 1) <= (others => '0');
+    cu_start <= deserial_d;
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
