@@ -4,3 +4,5 @@ xst -intstyle ise -ifn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.xst" -of
 xst -intstyle ise -ifn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.xst" -ofn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.syr" 
 xst -intstyle ise -ifn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.xst" -ofn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.syr" 
 xst -intstyle ise -ifn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.xst" -ofn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.syr" 
+xst -intstyle ise -ifn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.xst" -ofn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.syr" 
+xst -intstyle ise -ifn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.xst" -ofn "/home/sabbir/projects/GFAU/design/xilinx_tb/top.syr" 

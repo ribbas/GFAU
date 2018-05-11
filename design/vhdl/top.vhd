@@ -46,7 +46,9 @@ entity top is
         A       : out std_logic_vector((n + 1) downto 0);
         IO      : inout std_logic_vector((n - 1) downto 0)
 
-        --;
+        ;
+        t_mode        :   out std_logic_vector(1 downto 0)
+
         ---------------- TEMPORARY - JUST FOR TB ------------
 
         ------ universal registers
@@ -94,7 +96,8 @@ architecture behavioral of top is
 
             --error signals
             z_err       :   in      std_logic;
-            oob_err     :   in      std_logic
+            oob_err     :   in      std_logic;
+            t_mode        :   out std_logic_vector(1 downto 0)
         );
     end component;
 

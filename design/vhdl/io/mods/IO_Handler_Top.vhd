@@ -60,7 +60,9 @@ port(
     
     --error signals
     z_err       :   in      std_logic;
-    oob_err     :   in      std_logic
+    oob_err     :   in      std_logic;
+
+    t_mode        : out  std_logic_vector(1 downto 0)
 );
 end IO_Handler_Top;
 
@@ -195,9 +197,9 @@ architecture Behavioral of IO_Handler_Top is
     --output selection--
     signal data_vec     :   std_logic_vector(15 downto 0); 
     signal err_vec      :   std_logic_vector(15 downto 0);
-    
+
     signal input_size_s :   std_logic_vector(3 downto 0);
-    
+
 begin
 
     input_size <= input_size_s;
@@ -206,6 +208,8 @@ begin
     err_vec(0) <= err_type;
     err_vec(15 downto 1) <= (others => '0');
     cu_start <= deserial_d;
+
+    t_mode <= mode;
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
@@ -225,7 +229,7 @@ begin
         mode        => mode,
         err         => err_out,
         err_type    => err_type,
-        
+
         --internal signals--
         serial_e    => serial_e,
         serial_d    => serial_d,
@@ -238,7 +242,7 @@ begin
         insize_out  => input_size_s,
         wr_rd       => wr_rd
     );
-    
+
     deser   :   data_deserialize port map(
         clk         => t_clk,
         enable      => deserial_e,
@@ -251,7 +255,7 @@ begin
         count_rst   => count_rst2,
         out_data    => out_data
     );
-    
+
     serial  :   serialize port map(
         enable      => serial_e,
         in_data     => gfau_data,
@@ -262,25 +266,25 @@ begin
         count_rst   => count_rst1,
         out_data    => data_vec
     );
-    
+
     countd  :   count_decoder port map(
         bus_size    => mode,
         input_size  => input_size_s,
         gen_poly    => poly_get,
         num_clks    => num_clks
     );
-    
+
     counter :   clk_counter port map(
         clk         => t_clk,
         rst         => count_rst,
         count       => count
     );
-    
+
     iop     :   io_port generic map(
         n           => 32
     ) port map (
         op(15 downto 0) => out_data_ext,
-        op(31 downto 16)=> "0000000000000000",    
+        op(31 downto 16)=> "0000000000000000",
         oe          => wr_rd,
         ip          => in_data_ext,
         pad         => data
@@ -290,10 +294,10 @@ begin
     begin
         if err_out = '1' then
             out_data_ext <= err_vec;
-        else    
+        else
             out_data_ext <= data_vec;
         end if;
     end process outmux;
-        
+
 end Behavioral;
 

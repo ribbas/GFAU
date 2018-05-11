@@ -87,5 +87,5 @@ NET "ERR"       LOC = P144  | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P137  | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P133  | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P131  | IOSTANDARD = LVTTL;
-# NET "U"         LOC = P126  | IOSTANDARD = LVTTL;
-# NET "U"         LOC = P123  | IOSTANDARD = LVTTL;
+NET "t_mode<0>"         LOC = P126  | IOSTANDARD = LVTTL;
+NET "t_mode<1>"         LOC = P123  | IOSTANDARD = LVTTL;

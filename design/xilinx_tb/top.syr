@@ -266,13 +266,14 @@ Synthesizing Unit <top>.
         n = 8
         clgn = 3
         clgn1 = 2
+INFO:Xst:3210 - "/home/sabbir/projects/GFAU/design/vhdl/top.vhd" line 331: Output port <t_mode> of the instance <io_unit> is unconnected or connected to loadless signal.
     Summary:
 	no macro.
 Unit <top> synthesized.
 
 Synthesizing Unit <IO_Handler_Top>.
     Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler_Top.vhd".
-INFO:Xst:3210 - "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler_Top.vhd" line 210: Output port <MSB> of the instance <FSM> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler_Top.vhd" line 214: Output port <MSB> of the instance <FSM> is unconnected or connected to loadless signal.
     Summary:
 	inferred   1 Multiplexer(s).
 Unit <IO_Handler_Top> synthesized.
@@ -872,7 +873,7 @@ Slice Logic Distribution:
    Number of unique control sets:        51
 
 IO Utilization: 
- Number of IOs:                          63
+ Number of IOs:                          65
  Number of bonded IOBs:                  63  out of    102    61%  
 
 Specific Feature Utilization:
@@ -1085,15 +1086,15 @@ TCLK           |    6.741|    3.762|    2.452|         |
 =========================================================================
 
 
-Total REAL time to Xst completion: 11.00 secs
-Total CPU time to Xst completion: 10.19 secs
+Total REAL time to Xst completion: 10.00 secs
+Total CPU time to Xst completion: 10.27 secs
  
 --> 
 
 
-Total memory usage is 410240 kilobytes
+Total memory usage is 410256 kilobytes
 
 Number of errors   :    0 (   0 filtered)
 Number of warnings :   28 (   0 filtered)
-Number of infos    :   14 (   0 filtered)
+Number of infos    :   15 (   0 filtered)
 
