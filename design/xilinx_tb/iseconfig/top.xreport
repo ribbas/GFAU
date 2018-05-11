@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-05-11T13:00:23</DateModified>
+  <DateModified>2018-05-11T14:43:12</DateModified>
   <ModuleName>top</ModuleName>
-  <SummaryTimeStamp>2018-05-11T12:59:19</SummaryTimeStamp>
+  <SummaryTimeStamp>2018-05-11T14:42:45</SummaryTimeStamp>
   <SavedFilePath>/home/sabbir/projects/GFAU/design/xilinx_tb/iseconfig/top.xreport</SavedFilePath>
   <ImplementationReportsDirectory>/home/sabbir/projects/GFAU/design/xilinx_tb/</ImplementationReportsDirectory>
   <DateInitialized>2018-05-09T13:01:28</DateInitialized>

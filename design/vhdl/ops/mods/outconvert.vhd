@@ -45,7 +45,7 @@ end outconvert;
 architecture behavioral of outconvert is
 
     -- define the states for writing data
-    signal state : rd_state_type;
+    signal rd_state : rd_state_type := send_addr;
 
 begin
 
@@ -67,7 +67,7 @@ begin
                 -- if conversion requested
                 if (convert = '1') then
 
-                    case state is
+                    case rd_state is
 
                         -- send address to memory wrapper
                         when send_addr =>
@@ -79,7 +79,7 @@ begin
                             addr_con <= out_sel;
                             result <= DCAREVEC;
 
-                            state <= get_data;
+                            rd_state <= get_data;
 
                         when get_data =>
 
@@ -91,12 +91,13 @@ begin
 
                                 result <= dout_con and mask;
                                 rdy_out <= '1';
+                                rd_state <= get_data;
 
                             else
 
                                 result <= DCAREVEC;
                                 rdy_out <= '0';
-                                state <= get_data;
+                                rd_state <= get_data;
 
                             end if;
 
@@ -108,7 +109,7 @@ begin
 
                             addr_con <= DCAREVEC;
                             result <= DCAREVEC;
-                            state <= send_addr;
+                            rd_state <= send_addr;
 
                     end case;
 
