@@ -41,10 +41,10 @@ entity memory is
         dout_cu     : out std_logic_vector(n downto 0);
         id_con      : in std_logic;
         addr_con    : in std_logic_vector(n downto 0);
-        dout_con    : out std_logic_vector(n downto 0);
+        dout_con    : out std_logic_vector((n - 1) downto 0);
         id_gen      : in std_logic;
         addr_gen    : in std_logic_vector(n downto 0);
-        din_gen     : in std_logic_vector(n downto 0);
+        din_gen     : in std_logic_vector((n - 1) downto 0);
 
         -- memory control signals
         nCE         : out std_logic;
@@ -130,7 +130,7 @@ begin
 
                         -- send dout to output converter
                         dout_cu <= '0' & DQ_out; --read from iobus in
-                        dout_con <= DCAREVEC;
+                        dout_con <= DCAREVEC((n - 1) downto 0);
 
                         mem_rdy <= '1';
 
@@ -143,7 +143,7 @@ begin
                         nWE <= '-';
 
                         -- data outs are don't care
-                        dout_con <= DCAREVEC;
+                        dout_con <= DCAREVEC((n - 1) downto 0);
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '0';
@@ -183,7 +183,7 @@ begin
                         wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
-                        dout_con <= '0' & DQ_out; --read from iobus in
+                        dout_con <= DQ_out; --read from iobus in
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '1';
@@ -197,7 +197,7 @@ begin
                         nWE <= '-';
 
                         -- data outs are don't care
-                        dout_con <= DCAREVEC;
+                        dout_con <= DCAREVEC((n - 1) downto 0);
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '0';
@@ -210,7 +210,7 @@ begin
             elsif (id_cu = '0' and id_gen = '1' and id_con = '0') then
 
                 -- data outs are don't care
-                dout_con <= DCAREVEC;
+                dout_con <= DCAREVEC((n - 1) downto 0);
                 dout_cu <= DCAREVEC;
                 wr_rd <= '1'; -- sets the io port to output mode
 
@@ -253,7 +253,7 @@ begin
                 mem_rdy <= '0';
 
                 -- data outs are don't care
-                dout_con <= DCAREVEC;
+                dout_con <= DCAREVEC((n - 1) downto 0);
                 dout_cu <= DCAREVEC;
 
             end if;

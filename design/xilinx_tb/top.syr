@@ -1,0 +1,1099 @@
+Release 14.7 - xst P.20131013 (lin64)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+--> 
+Parameter TMPDIR set to xst/projnav.tmp
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.05 secs
+ 
+--> 
+Parameter xsthdpdir set to xst
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.05 secs
+ 
+--> 
+Reading design: top.prj
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Parsing
+  3) HDL Elaboration
+  4) HDL Synthesis
+       4.1) HDL Synthesis Report
+  5) Advanced HDL Synthesis
+       5.1) Advanced HDL Synthesis Report
+  6) Low Level Synthesis
+  7) Partition Report
+  8) Design Summary
+       8.1) Primitive and Black Box Usage
+       8.2) Device utilization summary
+       8.3) Partition Resource Summary
+       8.4) Timing Report
+            8.4.1) Clock Information
+            8.4.2) Asynchronous Control Signals Information
+            8.4.3) Timing Summary
+            8.4.4) Timing Details
+            8.4.5) Cross Clock Domains Report
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "top.prj"
+Ignore Synthesis Constraint File   : NO
+
+---- Target Parameters
+Output File Name                   : "top"
+Output Format                      : NGC
+Target Device                      : xc6slx9-3-tqg144
+
+---- Source Options
+Top Module Name                    : top
+Automatic FSM Extraction           : YES
+FSM Encoding Algorithm             : Auto
+Safe Implementation                : No
+FSM Style                          : LUT
+RAM Extraction                     : Yes
+RAM Style                          : Auto
+ROM Extraction                     : Yes
+Shift Register Extraction          : YES
+ROM Style                          : Auto
+Resource Sharing                   : YES
+Asynchronous To Synchronous        : NO
+Shift Register Minimum Size        : 2
+Use DSP Block                      : Auto
+Automatic Register Balancing       : No
+
+---- Target Options
+LUT Combining                      : Auto
+Reduce Control Sets                : Auto
+Add IO Buffers                     : YES
+Global Maximum Fanout              : 100000
+Add Generic Clock Buffer(BUFG)     : 16
+Register Duplication               : YES
+Optimize Instantiated Primitives   : NO
+Use Clock Enable                   : Auto
+Use Synchronous Set                : Auto
+Use Synchronous Reset              : Auto
+Pack IO Registers into IOBs        : Auto
+Equivalent register Removal        : YES
+
+---- General Options
+Optimization Goal                  : Speed
+Optimization Effort                : 1
+Power Reduction                    : NO
+Keep Hierarchy                     : No
+Netlist Hierarchy                  : As_Optimized
+RTL Output                         : Yes
+Global Optimization                : AllClockNets
+Read Cores                         : YES
+Write Timing Constraints           : NO
+Cross Clock Analysis               : NO
+Hierarchy Separator                : /
+Bus Delimiter                      : <>
+Case Specifier                     : Maintain
+Slice Utilization Ratio            : 100
+BRAM Utilization Ratio             : 100
+DSP48 Utilization Ratio            : 100
+Auto BRAM Packing                  : NO
+Slice Utilization Ratio Delta      : 5
+
+=========================================================================
+
+
+=========================================================================
+*                          HDL Parsing                                  *
+=========================================================================
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/glob.vhd" into library work
+Parsing package <glob>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/gt8.vhd" into library work
+Parsing entity <gt8>.
+Parsing architecture <structural> of entity <gt8>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/gt4.vhd" into library work
+Parsing entity <gt4>.
+Parsing architecture <structural> of entity <gt4>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/gt12.vhd" into library work
+Parsing entity <gt12>.
+Parsing architecture <structural> of entity <gt12>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/twoscmp.vhd" into library work
+Parsing entity <twoscmp>.
+Parsing architecture <behavioral> of entity <twoscmp>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/outselect.vhd" into library work
+Parsing entity <outselect>.
+Parsing architecture <behavioral> of entity <outselect>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/outconvert.vhd" into library work
+Parsing entity <outconvert>.
+Parsing architecture <behavioral> of entity <outconvert>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/mul.vhd" into library work
+Parsing entity <mul>.
+Parsing architecture <behavioral> of entity <mul>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/div.vhd" into library work
+Parsing entity <div>.
+Parsing architecture <behavioral> of entity <div>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/addsub.vhd" into library work
+Parsing entity <addsub>.
+Parsing architecture <behavioral> of entity <addsub>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io_port.vhd" into library work
+Parsing entity <io_port>.
+Parsing architecture <Behavioral> of entity <io_port>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/serialize.vhd" into library work
+Parsing entity <serialize>.
+Parsing architecture <Behavioral> of entity <serialize>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler.vhd" into library work
+Parsing entity <IO_Handler_FSM>.
+Parsing architecture <Behavioral> of entity <io_handler_fsm>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/data_deserialize.vhd" into library work
+Parsing entity <data_deserialize>.
+Parsing architecture <Behavioral> of entity <data_deserialize>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/count_decoder.vhd" into library work
+Parsing entity <count_decoder>.
+Parsing architecture <structural> of entity <count_decoder>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/clk_counter.vhd" into library work
+Parsing entity <clk_counter>.
+Parsing architecture <Behavioral> of entity <clk_counter>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/maskedtwoscmp.vhd" into library work
+Parsing entity <maskedtwoscmp>.
+Parsing architecture <behavioral> of entity <maskedtwoscmp>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/isnull.vhd" into library work
+Parsing entity <isnull>.
+Parsing architecture <behavioral> of entity <isnull>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/ismember.vhd" into library work
+Parsing entity <ismember>.
+Parsing architecture <behavioral> of entity <ismember>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/operators.vhd" into library work
+Parsing entity <operators>.
+Parsing architecture <behavioral> of entity <operators>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/mem/mods/memory.vhd" into library work
+Parsing entity <memory>.
+Parsing architecture <behavioral> of entity <memory>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler_Top.vhd" into library work
+Parsing entity <IO_Handler_Top>.
+Parsing architecture <Behavioral> of entity <io_handler_top>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/gen/mods/generator.vhd" into library work
+Parsing entity <generator>.
+Parsing architecture <fsm> of entity <generator>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" into library work
+Parsing entity <control_unit>.
+Parsing architecture <behavioral> of entity <control_unit>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/varmask.vhd" into library work
+Parsing entity <varmask>.
+Parsing architecture <behavioral> of entity <varmask>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/indices.vhd" into library work
+Parsing entity <indices>.
+Parsing architecture <behavioral> of entity <indices>.
+Parsing VHDL file "/home/sabbir/projects/GFAU/design/vhdl/top.vhd" into library work
+Parsing entity <top>.
+Parsing architecture <behavioral> of entity <top>.
+
+=========================================================================
+*                            HDL Elaboration                            *
+=========================================================================
+
+Elaborating entity <top> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <IO_Handler_Top> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <IO_Handler_FSM> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <data_deserialize> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <serialize> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <count_decoder> (architecture <structural>) from library <work>.
+
+Elaborating entity <gt4> (architecture <structural>) from library <work>.
+
+Elaborating entity <gt8> (architecture <structural>) from library <work>.
+
+Elaborating entity <gt12> (architecture <structural>) from library <work>.
+
+Elaborating entity <clk_counter> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <io_port> (architecture <Behavioral>) with generics from library <work>.
+
+Elaborating entity <indices> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <varmask> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <control_unit> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <ismember> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <isnull> (architecture <behavioral>) with generics from library <work>.
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 230. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 310. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 340. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 408. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 488. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 518. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd" Line 593. Case statement is complete. others clause is never selected
+
+Elaborating entity <generator> (architecture <fsm>) with generics from library <work>.
+
+Elaborating entity <operators> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <maskedtwoscmp> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <twoscmp> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <addsub> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <mul> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <div> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <outselect> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <outconvert> (architecture <behavioral>) with generics from library <work>.
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/outconvert.vhd" Line 104. Case statement is complete. others clause is never selected
+
+Elaborating entity <memory> (architecture <behavioral>) with generics from library <work>.
+
+Elaborating entity <io_port> (architecture <Behavioral>) with generics from library <work>.
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/mem/mods/memory.vhd" Line 139. Case statement is complete. others clause is never selected
+INFO:HDLCompiler:679 - "/home/sabbir/projects/GFAU/design/vhdl/mem/mods/memory.vhd" Line 193. Case statement is complete. others clause is never selected
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Synthesizing Unit <top>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/top.vhd".
+        n = 8
+        clgn = 3
+        clgn1 = 2
+    Summary:
+	no macro.
+Unit <top> synthesized.
+
+Synthesizing Unit <IO_Handler_Top>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler_Top.vhd".
+INFO:Xst:3210 - "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler_Top.vhd" line 210: Output port <MSB> of the instance <FSM> is unconnected or connected to loadless signal.
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <IO_Handler_Top> synthesized.
+
+Synthesizing Unit <IO_Handler_FSM>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/IO_Handler.vhd".
+    Found 1-bit register for signal <deserial_nr>.
+    Found 1-bit register for signal <serial_e>.
+    Found 1-bit register for signal <s_state<7>>.
+    Found 1-bit register for signal <s_state<1>>.
+    Found 1-bit register for signal <s_state<0>>.
+    Found 1-bit register for signal <n_state<7>>.
+    Found 1-bit register for signal <n_state<6>>.
+    Found 1-bit register for signal <n_state<5>>.
+    Found 1-bit register for signal <n_state<4>>.
+    Found 1-bit register for signal <n_state<0>>.
+    Found 1-bit register for signal <nop_INT>.
+    Found 1-bit register for signal <ngen_INT>.
+    Found 1-bit register for signal <nerr_INT>.
+    Found 1-bit register for signal <nerr>.
+    Found 1-bit register for signal <wr_rd>.
+    Found 2-bit register for signal <mode>.
+    Found 6-bit register for signal <opcode_out>.
+    Found 1-bit register for signal <poly_gen>.
+    Found 4-bit register for signal <input_size>.
+    Found 1-bit register for signal <gen_INT>.
+    Found 1-bit register for signal <op_INT>.
+    Found 1-bit register for signal <err_INT>.
+    Found 1-bit register for signal <n_state<3>>.
+    Found 1-bit register for signal <n_state<2>>.
+    Found 1-bit register for signal <n_state<1>>.
+    Found 1-bit register for signal <s_state<6>>.
+    Found 1-bit register for signal <s_state<5>>.
+    Found 1-bit register for signal <s_state<4>>.
+    Found 1-bit register for signal <s_state<3>>.
+    Found 1-bit register for signal <s_state<2>>.
+    Found 1-bit register for signal <serr>.
+    Found 1-bit register for signal <deserial_ne>.
+    Found 1-bit register for signal <deserial_sr>.
+    Found 1-bit register for signal <err_type>.
+    Found 1-bit register for signal <deserial_se>.
+    Found 4-bit subtractor for signal <MSB> created at line 82.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  44 D-type flip-flop(s).
+	inferred  12 Multiplexer(s).
+Unit <IO_Handler_FSM> synthesized.
+
+Synthesizing Unit <data_deserialize>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/data_deserialize.vhd".
+    Found 1-bit register for signal <count_rst>.
+    Found 1-bit register for signal <done>.
+    Found 32-bit register for signal <output_reg>.
+    Found 32-bit 4-to-1 multiplexer for signal <in_data[7]_output_reg[31]_mux_14_OUT> created at line 61.
+    Found 1-bit 4-to-1 multiplexer for signal <PWR_11_o_PWR_11_o_MUX_271_o> created at line 61.
+    Found 1-bit 4-to-1 multiplexer for signal <PWR_11_o_PWR_11_o_MUX_274_o> created at line 61.
+    Summary:
+	inferred  34 D-type flip-flop(s).
+	inferred  76 Multiplexer(s).
+Unit <data_deserialize> synthesized.
+
+Synthesizing Unit <serialize>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/serialize.vhd".
+    Summary:
+	inferred   5 Multiplexer(s).
+Unit <serialize> synthesized.
+
+Synthesizing Unit <count_decoder>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/count_decoder.vhd".
+    Summary:
+	no macro.
+Unit <count_decoder> synthesized.
+
+Synthesizing Unit <gt4>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/gt4.vhd".
+    Summary:
+	no macro.
+Unit <gt4> synthesized.
+
+Synthesizing Unit <gt8>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/gt8.vhd".
+    Summary:
+	no macro.
+Unit <gt8> synthesized.
+
+Synthesizing Unit <gt12>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/gt12.vhd".
+    Summary:
+	no macro.
+Unit <gt12> synthesized.
+
+Synthesizing Unit <clk_counter>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io/mods/clk_counter.vhd".
+    Found 2-bit register for signal <count_reg>.
+    Found 2-bit adder for signal <count_reg[1]_GND_16_o_add_1_OUT> created at line 1241.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred   2 D-type flip-flop(s).
+Unit <clk_counter> synthesized.
+
+Synthesizing Unit <io_port_1>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io_port.vhd".
+        n = 32
+    Found 1-bit tristate buffer for signal <pad<31>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<30>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<29>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<28>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<27>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<26>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<25>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<24>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<23>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<22>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<21>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<20>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<19>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<18>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<17>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<16>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<15>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<14>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<13>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<12>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<11>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<10>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<9>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<8>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<7>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<6>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<5>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<4>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<3>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<2>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<1>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<0>> created at line 50
+    Summary:
+	inferred  32 Tristate(s).
+Unit <io_port_1> synthesized.
+
+Synthesizing Unit <indices>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/indices.vhd".
+        n = 8
+        clgn1 = 2
+    Found 3-bit subtractor for signal <msb> created at line 22.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+Unit <indices> synthesized.
+
+Synthesizing Unit <varmask>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/varmask.vhd".
+        n = 8
+    Summary:
+	inferred   5 Multiplexer(s).
+Unit <varmask> synthesized.
+
+Synthesizing Unit <control_unit>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/cu/mods/control_unit.vhd".
+        n = 8
+    Found 1-bit register for signal <rst_ops>.
+    Found 1-bit register for signal <en_ops>.
+    Found 1-bit register for signal <rst_gen>.
+    Found 1-bit register for signal <en_gen>.
+    Found 9-bit register for signal <opand_b>.
+    Found 9-bit register for signal <opand_z1>.
+    Found 9-bit register for signal <opand_z2>.
+    Found 1-bit register for signal <mem_t>.
+    Found 1-bit register for signal <id_cu>.
+    Found 9-bit register for signal <addr_cu>.
+    Found 1-bit register for signal <mem_t_z1>.
+    Found 1-bit register for signal <mem_t_z2>.
+    Found 9-bit register for signal <i>.
+    Found 1-bit register for signal <rd_state1>.
+    Found 1-bit register for signal <op_state>.
+    Found 9-bit register for signal <j>.
+    Found 1-bit register for signal <rd_state2>.
+    Found 4x1-bit Read Only RAM for signal <opcode[5]_X_53_o_Mux_98_o>
+    Found 8x2-bit Read Only RAM for signal <_n0409>
+    Summary:
+	inferred   2 RAM(s).
+	inferred  65 D-type flip-flop(s).
+	inferred  94 Multiplexer(s).
+Unit <control_unit> synthesized.
+
+Synthesizing Unit <ismember>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/ismember.vhd".
+        n = 8
+    Summary:
+	no macro.
+Unit <ismember> synthesized.
+
+Synthesizing Unit <isnull>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/isnull.vhd".
+        n = 8
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <isnull> synthesized.
+
+Synthesizing Unit <generator>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/gen/mods/generator.vhd".
+        n = 8
+        clgn1 = 2
+    Found 1-bit register for signal <id_gen>.
+    Found 9-bit register for signal <temp_elem>.
+    Found 9-bit register for signal <temp_elem_f>.
+    Found 9-bit register for signal <counter>.
+    Found 9-bit register for signal <addr_gen>.
+    Found 8-bit register for signal <elem>.
+    Found 8-bit register for signal <poly_bcd_reg>.
+    Found 9-bit register for signal <nth_elem>.
+    Found 1-bit register for signal <mem_t>.
+    Found 1-bit register for signal <wr_rdy>.
+    Found 1-bit register for signal <flippy_flop>.
+    Found 1-bit register for signal <gen_rdy>.
+    Found 9-bit adder for signal <counter[8]_GND_58_o_add_23_OUT> created at line 1241.
+    Found 1-bit 8-to-1 multiplexer for signal <msb[2]_temp_elem[7]_Mux_8_o> created at line 116.
+    Found 9-bit comparator equal for signal <mask[8]_counter[8]_equal_22_o> created at line 163
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  66 D-type flip-flop(s).
+	inferred   1 Comparator(s).
+	inferred  17 Multiplexer(s).
+Unit <generator> synthesized.
+
+Synthesizing Unit <operators>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/operators.vhd".
+        n = 8
+        clgn = 3
+    Summary:
+	no macro.
+Unit <operators> synthesized.
+
+Synthesizing Unit <maskedtwoscmp>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/maskedtwoscmp.vhd".
+        n = 8
+    Summary:
+	no macro.
+Unit <maskedtwoscmp> synthesized.
+
+Synthesizing Unit <twoscmp>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/alu/mods/twoscmp.vhd".
+        n = 8
+    Found 9-bit adder for signal <tcnum> created at line 29.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+Unit <twoscmp> synthesized.
+
+Synthesizing Unit <addsub>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/addsub.vhd".
+        n = 8
+    Summary:
+	inferred   3 Multiplexer(s).
+Unit <addsub> synthesized.
+
+Synthesizing Unit <mul>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/mul.vhd".
+        n = 8
+        clgn = 3
+    Found 9-bit adder for signal <sumij> created at line 35.
+    Found 9-bit adder for signal <sumij1> created at line 1241.
+    Found 1-bit 9-to-1 multiplexer for signal <size[3]_X_63_o_Mux_2_o> created at line 42.
+    Found 1-bit 9-to-1 multiplexer for signal <size[3]_X_63_o_Mux_3_o> created at line 43.
+    Summary:
+	inferred   2 Adder/Subtractor(s).
+	inferred   3 Multiplexer(s).
+Unit <mul> synthesized.
+
+Synthesizing Unit <div>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/div.vhd".
+        n = 8
+        clgn = 3
+    Found 9-bit adder for signal <sumij> created at line 35.
+    Found 9-bit adder for signal <sumij1> created at line 36.
+    Found 1-bit 9-to-1 multiplexer for signal <size[3]_X_64_o_Mux_2_o> created at line 42.
+    Summary:
+	inferred   2 Adder/Subtractor(s).
+	inferred   2 Multiplexer(s).
+Unit <div> synthesized.
+
+Synthesizing Unit <outselect>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/outselect.vhd".
+        n = 8
+    Found 4x1-bit Read Only RAM for signal <mem_t>
+    Summary:
+	inferred   1 RAM(s).
+	inferred  27 Multiplexer(s).
+Unit <outselect> synthesized.
+
+Synthesizing Unit <outconvert>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/ops/mods/outconvert.vhd".
+        n = 8
+WARNING:Xst:647 - Input <mask<8:8>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 9-bit register for signal <addr_con>.
+    Found 8-bit register for signal <result>.
+    Found 1-bit register for signal <rdy_out>.
+    Found 1-bit register for signal <rd_state>.
+    Found 1-bit register for signal <id_con>.
+    Summary:
+	inferred  20 D-type flip-flop(s).
+	inferred   3 Multiplexer(s).
+Unit <outconvert> synthesized.
+
+Synthesizing Unit <memory>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/mem/mods/memory.vhd".
+        n = 8
+WARNING:Xst:2935 - Signal 'nBLE', unconnected in block 'memory', is tied to its initial value (0).
+WARNING:Xst:2935 - Signal 'nBHE', unconnected in block 'memory', is tied to its initial value (0).
+    Found 1-bit register for signal <nOE>.
+    Found 1-bit register for signal <nWE>.
+    Found 1-bit register for signal <wr_rd>.
+    Found 10-bit register for signal <A>.
+    Found 1-bit register for signal <mem_rdy>.
+    Found 1-bit register for signal <rd_state>.
+    Found 9-bit register for signal <dout_cu>.
+    Found 8-bit register for signal <dout_con>.
+    Found 8-bit register for signal <DQ_in>.
+    Found 1-bit register for signal <setup>.
+    Found 1-bit register for signal <nCE>.
+    Summary:
+	inferred  42 D-type flip-flop(s).
+	inferred   6 Multiplexer(s).
+Unit <memory> synthesized.
+
+Synthesizing Unit <io_port_2>.
+    Related source file is "/home/sabbir/projects/GFAU/design/vhdl/io_port.vhd".
+        n = 8
+    Found 1-bit tristate buffer for signal <pad<7>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<6>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<5>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<4>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<3>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<2>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<1>> created at line 50
+    Found 1-bit tristate buffer for signal <pad<0>> created at line 50
+    Summary:
+	inferred   8 Tristate(s).
+Unit <io_port_2> synthesized.
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 4x1-bit single-port Read Only RAM                     : 2
+ 8x2-bit single-port Read Only RAM                     : 1
+# Adders/Subtractors                                   : 9
+ 2-bit adder                                           : 1
+ 3-bit subtractor                                      : 1
+ 4-bit subtractor                                      : 1
+ 9-bit adder                                           : 6
+# Registers                                            : 84
+ 1-bit register                                        : 60
+ 10-bit register                                       : 1
+ 2-bit register                                        : 2
+ 32-bit register                                       : 1
+ 4-bit register                                        : 1
+ 6-bit register                                        : 1
+ 8-bit register                                        : 5
+ 9-bit register                                        : 13
+# Comparators                                          : 1
+ 9-bit comparator equal                                : 1
+# Multiplexers                                         : 256
+ 1-bit 2-to-1 multiplexer                              : 154
+ 1-bit 4-to-1 multiplexer                              : 2
+ 1-bit 8-to-1 multiplexer                              : 1
+ 1-bit 9-to-1 multiplexer                              : 3
+ 10-bit 2-to-1 multiplexer                             : 2
+ 16-bit 2-to-1 multiplexer                             : 4
+ 32-bit 2-to-1 multiplexer                             : 4
+ 32-bit 4-to-1 multiplexer                             : 1
+ 8-bit 2-to-1 multiplexer                              : 3
+ 9-bit 2-to-1 multiplexer                              : 82
+# Tristates                                            : 40
+ 1-bit tristate buffer                                 : 40
+# Xors                                                 : 10
+ 1-bit xor2                                            : 7
+ 7-bit xor2                                            : 1
+ 9-bit xor2                                            : 2
+
+=========================================================================
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+INFO:Xst:2261 - The FF/Latch <nOE> in Unit <mem> is equivalent to the following FF/Latch, which will be removed : <wr_rd> 
+WARNING:Xst:1710 - FF/Latch <dout_cu_8> (without init value) has a constant value of 0 in block <mem>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <poly_bcd_reg_1> of sequential type is unconnected in block <generator_unit>.
+WARNING:Xst:2677 - Node <poly_bcd_reg_2> of sequential type is unconnected in block <generator_unit>.
+WARNING:Xst:2404 -  FFs/Latches <dout_cu<8:8>> (without init value) have a constant value of 0 in block <memory>.
+
+Synthesizing (advanced) Unit <clk_counter>.
+The following registers are absorbed into counter <count_reg>: 1 register on signal <count_reg>.
+Unit <clk_counter> synthesized (advanced).
+
+Synthesizing (advanced) Unit <control_unit>.
+INFO:Xst:3231 - The small RAM <Mram__n0409> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 8-word x 2-bit                      |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <opcode<5:3>>   |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_opcode[5]_X_53_o_Mux_98_o> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 4-word x 1-bit                      |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <opcode<5:4>>   |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+Unit <control_unit> synthesized (advanced).
+
+Synthesizing (advanced) Unit <outselect>.
+INFO:Xst:3231 - The small RAM <Mram_mem_t> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 4-word x 1-bit                      |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <op<2:1>>       |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to signal <mem_t>         |          |
+    -----------------------------------------------------------------------
+Unit <outselect> synthesized (advanced).
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 4x1-bit single-port distributed Read Only RAM         : 2
+ 8x2-bit single-port distributed Read Only RAM         : 1
+# Adders/Subtractors                                   : 8
+ 3-bit subtractor                                      : 1
+ 4-bit subtractor                                      : 1
+ 9-bit adder                                           : 6
+# Counters                                             : 1
+ 2-bit up counter                                      : 1
+# Registers                                            : 270
+ Flip-Flops                                            : 270
+# Comparators                                          : 1
+ 9-bit comparator equal                                : 1
+# Multiplexers                                         : 253
+ 1-bit 2-to-1 multiplexer                              : 151
+ 1-bit 4-to-1 multiplexer                              : 2
+ 1-bit 8-to-1 multiplexer                              : 1
+ 1-bit 9-to-1 multiplexer                              : 3
+ 10-bit 2-to-1 multiplexer                             : 2
+ 16-bit 2-to-1 multiplexer                             : 4
+ 32-bit 2-to-1 multiplexer                             : 4
+ 32-bit 4-to-1 multiplexer                             : 1
+ 8-bit 2-to-1 multiplexer                              : 3
+ 9-bit 2-to-1 multiplexer                              : 82
+# Xors                                                 : 10
+ 1-bit xor2                                            : 7
+ 7-bit xor2                                            : 1
+ 9-bit xor2                                            : 2
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+INFO:Xst:2261 - The FF/Latch <nOE> in Unit <memory> is equivalent to the following FF/Latch, which will be removed : <wr_rd> 
+
+Optimizing unit <top> ...
+
+Optimizing unit <IO_Handler_FSM> ...
+
+Optimizing unit <data_deserialize> ...
+
+Optimizing unit <control_unit> ...
+
+Optimizing unit <generator> ...
+
+Optimizing unit <maskedtwoscmp> ...
+
+Optimizing unit <outconvert> ...
+WARNING:Xst:1710 - FF/Latch <generator_unit/temp_elem_f_8> (without init value) has a constant value of 0 in block <top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <generator_unit/nth_elem_8> (without init value) has a constant value of 0 in block <top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <generator_unit/nth_elem_0> (without init value) has a constant value of 1 in block <top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_31> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_30> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_29> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_28> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_27> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_26> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_25> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_15> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_14> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_13> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_12> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_11> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_10> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <io_unit/deser/output_reg_9> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <generator_unit/poly_bcd_reg_2> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <generator_unit/poly_bcd_reg_1> of sequential type is unconnected in block <top>.
+WARNING:Xst:1898 - Due to constant pushing, FF/Latch <generator_unit/temp_elem_8> is unconnected in block <top>.
+WARNING:Xst:1710 - FF/Latch <generator_unit/counter_8> (without init value) has a constant value of 0 in block <top>. This FF/Latch will be trimmed during the optimization process.
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/ngen_INT> in Unit <top> is equivalent to the following FF/Latch, which will be removed : <io_unit/FSM/n_state_5> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/serr> in Unit <top> is equivalent to the following 2 FFs/Latches, which will be removed : <io_unit/FSM/s_state_6> <io_unit/FSM/err_INT> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/nop_INT> in Unit <top> is equivalent to the following FF/Latch, which will be removed : <io_unit/FSM/s_state_7> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/deserial_se> in Unit <top> is equivalent to the following 3 FFs/Latches, which will be removed : <io_unit/FSM/n_state_0> <io_unit/FSM/s_state_1> <io_unit/FSM/deserial_nr> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/s_state_4> in Unit <top> is equivalent to the following FF/Latch, which will be removed : <io_unit/FSM/op_INT> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/s_state_5> in Unit <top> is equivalent to the following 2 FFs/Latches, which will be removed : <io_unit/FSM/n_state_2> <io_unit/FSM/gen_INT> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/nerr> in Unit <top> is equivalent to the following 2 FFs/Latches, which will be removed : <io_unit/FSM/nerr_INT> <io_unit/FSM/n_state_6> 
+INFO:Xst:2261 - The FF/Latch <io_unit/FSM/deserial_ne> in Unit <top> is equivalent to the following FF/Latch, which will be removed : <io_unit/FSM/deserial_sr> 
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 5) on block top, actual ratio is 10.
+FlipFlop generator_unit/poly_bcd_reg_7 has been replicated 1 time(s)
+FlipFlop generator_unit/poly_bcd_reg_8 has been replicated 1 time(s)
+
+Final Macro Processing ...
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 239
+ Flip-Flops                                            : 239
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Design Summary                             *
+=========================================================================
+
+Top Level Output File Name         : top.ngc
+
+Primitive and Black Box Usage:
+------------------------------
+# BELS                             : 593
+#      GND                         : 1
+#      INV                         : 19
+#      LUT1                        : 1
+#      LUT2                        : 53
+#      LUT3                        : 39
+#      LUT4                        : 55
+#      LUT5                        : 88
+#      LUT6                        : 293
+#      MUXCY                       : 16
+#      MUXF7                       : 9
+#      VCC                         : 1
+#      XORCY                       : 18
+# FlipFlops/Latches                : 239
+#      FD                          : 29
+#      FDE                         : 114
+#      FDR                         : 28
+#      FDRE                        : 64
+#      FDS                         : 3
+#      FDSE                        : 1
+# Clock Buffers                    : 2
+#      BUFGP                       : 2
+# IO Buffers                       : 61
+#      IBUF                        : 3
+#      IOBUF                       : 26
+#      OBUF                        : 18
+#      OBUFT                       : 14
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 6slx9tqg144-3 
+
+
+Slice Logic Utilization: 
+ Number of Slice Registers:             239  out of  11440     2%  
+ Number of Slice LUTs:                  548  out of   5720     9%  
+    Number used as Logic:               548  out of   5720     9%  
+
+Slice Logic Distribution: 
+ Number of LUT Flip Flop pairs used:    581
+   Number with an unused Flip Flop:     342  out of    581    58%  
+   Number with an unused LUT:            33  out of    581     5%  
+   Number of fully used LUT-FF pairs:   206  out of    581    35%  
+   Number of unique control sets:        51
+
+IO Utilization: 
+ Number of IOs:                          63
+ Number of bonded IOBs:                  63  out of    102    61%  
+
+Specific Feature Utilization:
+ Number of BUFG/BUFGCTRLs:                2  out of     16    12%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+Timing Report
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+-----------------------------------+------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)  | Load  |
+-----------------------------------+------------------------+-------+
+TCLK                               | BUFGP                  | 44    |
+CLK                                | BUFGP                  | 195   |
+-----------------------------------+------------------------+-------+
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -3
+
+   Minimum period: 9.531ns (Maximum Frequency: 104.921MHz)
+   Minimum input arrival time before clock: 5.310ns
+   Maximum output required time after clock: 8.035ns
+   Maximum combinational path delay: No path found
+
+Timing Details:
+---------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'TCLK'
+  Clock period: 7.524ns (frequency: 132.906MHz)
+  Total number of paths / destination ports: 1213 / 72
+-------------------------------------------------------------------------
+Delay:               3.762ns (Levels of Logic = 3)
+  Source:            io_unit/counter/count_reg_0 (FF)
+  Destination:       io_unit/deser/output_reg_19 (FF)
+  Source Clock:      TCLK falling
+  Destination Clock: TCLK rising
+
+  Data Path: io_unit/counter/count_reg_0 to io_unit/deser/output_reg_19
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDR:C->Q             21   0.447   1.218  io_unit/counter/count_reg_0 (io_unit/counter/count_reg_0)
+     LUT6:I4->O            8   0.203   0.803  io_unit/deser/in_data[31]_in_data[7]_mux_21_OUT<16>11 (io_unit/deser/in_data[31]_in_data[7]_mux_21_OUT<16>1)
+     LUT4:I3->O            1   0.205   0.580  io_unit/deser/in_data[31]_in_data[7]_mux_21_OUT<19>_SW0_SW0 (N203)
+     LUT6:I5->O            1   0.205   0.000  io_unit/deser/in_data[31]_in_data[7]_mux_21_OUT<19> (io_unit/deser/in_data[31]_in_data[7]_mux_21_OUT<19>)
+     FDE:D                     0.102          io_unit/deser/output_reg_19
+    ----------------------------------------
+    Total                      3.762ns (1.162ns logic, 2.600ns route)
+                                       (30.9% logic, 69.1% route)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'CLK'
+  Clock period: 9.531ns (frequency: 104.921MHz)
+  Total number of paths / destination ports: 108491 / 365
+-------------------------------------------------------------------------
+Delay:               9.531ns (Levels of Logic = 11)
+  Source:            generator_unit/poly_bcd_reg_7 (FF)
+  Destination:       operators_unit/outconvert_unit/result_2 (FF)
+  Source Clock:      CLK rising
+  Destination Clock: CLK rising
+
+  Data Path: generator_unit/poly_bcd_reg_7 to operators_unit/outconvert_unit/result_2
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDE:C->Q             19   0.447   1.072  generator_unit/poly_bcd_reg_7 (generator_unit/poly_bcd_reg_7)
+     LUT5:I4->O           11   0.205   0.883  varmask_unit/Mmux_mask21 (mask<3>)
+     LUT6:I5->O            1   0.205   0.000  operators_unit/div_unit/Madd_sumij_lut<3> (operators_unit/div_unit/Madd_sumij_lut<3>)
+     MUXCY:S->O            1   0.172   0.000  operators_unit/div_unit/Madd_sumij_cy<3> (operators_unit/div_unit/Madd_sumij_cy<3>)
+     XORCY:CI->O          11   0.180   1.227  operators_unit/div_unit/Madd_sumij_xor<4> (operators_unit/div_unit/sumij<4>)
+     LUT6:I1->O            1   0.203   0.684  operators_unit/div_unit/Mmux_size[3]_X_64_o_Mux_2_o23_SW5_F (N326)
+     LUT3:I1->O            1   0.203   0.684  operators_unit/div_unit/Mmux_size[3]_X_64_o_Mux_2_o23_SW51 (N240)
+     LUT6:I4->O            2   0.203   0.721  operators_unit/outselect_unit/Mmux_out_sel57 (operators_unit/outselect_unit/Mmux_out_sel56)
+     LUT6:I4->O            8   0.203   0.907  operators_unit/outselect_unit/Mmux_out_sel58 (operators_unit/out_sel<4>)
+     LUT6:I4->O            1   0.203   0.000  operators_unit/outconvert_unit/Mmux_out_sel[7]_X_66_o_mux_11_OUT11_SW4_G (N311)
+     MUXF7:I1->O           1   0.140   0.684  operators_unit/outconvert_unit/Mmux_out_sel[7]_X_66_o_mux_11_OUT11_SW4 (N156)
+     LUT6:I4->O            1   0.203   0.000  operators_unit/outconvert_unit/Mmux_out_sel[7]_X_66_o_mux_11_OUT31 (operators_unit/outconvert_unit/out_sel[7]_X_66_o_mux_11_OUT<2>)
+     FDRE:D                    0.102          operators_unit/outconvert_unit/result_2
+    ----------------------------------------
+    Total                      9.531ns (2.669ns logic, 6.862ns route)
+                                       (28.0% logic, 72.0% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'CLK'
+  Total number of paths / destination ports: 74 / 74
+-------------------------------------------------------------------------
+Offset:              5.310ns (Levels of Logic = 3)
+  Source:            GRST (PAD)
+  Destination:       cu/j_8 (FF)
+  Destination Clock: CLK rising
+
+  Data Path: GRST to cu/j_8
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            53   1.222   1.568  GRST_IBUF (GRST_IBUF)
+     LUT3:I2->O            2   0.205   0.961  cu/_n0380_inv21 (cu/_n0380_inv2)
+     LUT5:I0->O            9   0.203   0.829  cu/_n0380_inv1 (cu/_n0380_inv)
+     FDE:CE                    0.322          cu/j_0
+    ----------------------------------------
+    Total                      5.310ns (1.952ns logic, 3.358ns route)
+                                       (36.8% logic, 63.2% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'TCLK'
+  Total number of paths / destination ports: 133 / 60
+-------------------------------------------------------------------------
+Offset:              4.451ns (Levels of Logic = 2)
+  Source:            GRST (PAD)
+  Destination:       io_unit/FSM/poly_gen (FF)
+  Destination Clock: TCLK rising
+
+  Data Path: GRST to io_unit/FSM/poly_gen
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            53   1.222   1.932  GRST_IBUF (GRST_IBUF)
+     LUT6:I0->O            7   0.203   0.773  io_unit/FSM/_n0287_inv1 (io_unit/FSM/_n0287_inv)
+     FDE:CE                    0.322          io_unit/FSM/opcode_out_0
+    ----------------------------------------
+    Total                      4.451ns (1.747ns logic, 2.704ns route)
+                                       (39.2% logic, 60.8% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'TCLK'
+  Total number of paths / destination ports: 158 / 35
+-------------------------------------------------------------------------
+Offset:              8.035ns (Levels of Logic = 4)
+  Source:            io_unit/FSM/input_size_0 (FF)
+  Destination:       DATA<7> (PAD)
+  Source Clock:      TCLK rising
+
+  Data Path: io_unit/FSM/input_size_0 to DATA<7>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDE:C->Q             24   0.447   1.401  io_unit/FSM/input_size_0 (io_unit/FSM/input_size_0)
+     LUT5:I2->O           18   0.205   1.394  io_unit/countd/num_clks<0>321 (io_unit/countd/num_clks<0>31)
+     LUT6:I1->O            8   0.203   1.031  io_unit/serial/Mmux_out_data111 (io_unit/serial/Mmux_out_data11)
+     LUT4:I1->O            1   0.205   0.579  io_unit/Mmux_out_data_ext81 (io_unit/out_data_ext<1>)
+     IOBUF:I->IO               2.571          DATA_1_IOBUF (DATA<1>)
+    ----------------------------------------
+    Total                      8.035ns (3.631ns logic, 4.404ns route)
+                                       (45.2% logic, 54.8% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'CLK'
+  Total number of paths / destination ports: 50 / 31
+-------------------------------------------------------------------------
+Offset:              5.005ns (Levels of Logic = 2)
+  Source:            io_unit/FSM/serr (FF)
+  Destination:       DATA<0> (PAD)
+  Source Clock:      CLK rising
+
+  Data Path: io_unit/FSM/serr to DATA<0>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDRE:C->Q            14   0.447   1.205  io_unit/FSM/serr (io_unit/FSM/serr)
+     LUT6:I2->O            1   0.203   0.579  io_unit/FSM/INT1 (INT_OBUF)
+     OBUF:I->O                 2.571          INT_OBUF (INT)
+    ----------------------------------------
+    Total                      5.005ns (3.221ns logic, 1.784ns route)
+                                       (64.4% logic, 35.6% route)
+
+=========================================================================
+
+Cross Clock Domains Report:
+--------------------------
+
+Clock to Setup on destination clock CLK
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+CLK            |    9.531|         |         |         |
+TCLK           |    8.816|         |         |         |
+---------------+---------+---------+---------+---------+
+
+Clock to Setup on destination clock TCLK
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+CLK            |    6.795|         |         |         |
+TCLK           |    6.741|    3.762|    2.452|         |
+---------------+---------+---------+---------+---------+
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 11.00 secs
+Total CPU time to Xst completion: 10.19 secs
+ 
+--> 
+
+
+Total memory usage is 410240 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :   28 (   0 filtered)
+Number of infos    :   14 (   0 filtered)
+

@@ -37,7 +37,7 @@ entity generator is
         -- memory signals
         gen_rdy     : out std_logic := '0';
         addr_gen    : out std_logic_vector(n downto 0) := DCAREVEC;
-        elem        : out std_logic_vector(n downto 0) := DCAREVEC
+        elem        : out std_logic_vector((n - 1) downto 0) := DCAREVEC((n - 1) downto 0)
     );
 end generator;
 
@@ -76,7 +76,7 @@ begin
                 -- first address
                 addr_gen <= DCAREVEC;
                 -- first element
-                elem <= DCAREVEC;
+                elem <= DCAREVEC((n - 1) downto 0);
 
                 -- save this for later :)
                 poly_bcd_reg <= poly_bcd;
@@ -108,7 +108,7 @@ begin
 
                                 -- addr and data of NULL
                                 addr_gen <= HIVEC;
-                                elem <= ZEROVEC;
+                                elem <= ZEROVEC((n - 1) downto 0);
 
                             else
 
@@ -132,7 +132,7 @@ begin
                                 -- address is counter, element is the temp element
                                 -- register
                                 addr_gen <= counter;
-                                elem <= temp_elem and mask;
+                                elem <= temp_elem((n - 1) downto 0) and mask((n - 1) downto 0);
                                 temp_elem_f <= temp_elem and mask;
 
                             end if;
@@ -151,7 +151,7 @@ begin
 
                                 -- addr and data of NULL
                                 addr_gen <= HIVEC;
-                                elem <= ZEROVEC;
+                                elem <= ZEROVEC((n - 1) downto 0);
 
                                 -- generator control signals
                                 gen_rdy <= '1';
@@ -171,12 +171,12 @@ begin
 
                                     -- addr and data of NULL
                                     addr_gen <= ZEROVEC;
-                                    elem <= HIVEC;
+                                    elem <= HIVEC((n - 1) downto 0);
 
                                 else
 
                                     addr_gen <= temp_elem_f and mask;
-                                    elem <= counter;
+                                    elem <= counter((n - 1) downto 0);
 
                                     -- increment counter
                                     counter <= std_logic_vector(unsigned(counter) + 1);

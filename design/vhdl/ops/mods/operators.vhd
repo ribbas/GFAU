@@ -50,9 +50,9 @@ entity operators is
 
         -- memory address and data signals
         addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector(n downto 0);
+        dout_con    : inout std_logic_vector((n - 1) downto 0);
 
-        result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
+        result      : out std_logic_vector((n - 1) downto 0) := DCAREVEC; -- selected output
         err_z       : out std_logic; -- zero exception
         rdy_out     : out std_logic -- result ready interrupt
     );
@@ -136,8 +136,8 @@ architecture behavioral of operators is
             id_con      : out std_logic;
             mem_rdy     : in std_logic;
             addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : inout std_logic_vector(n downto 0);
-            result      : out std_logic_vector(n downto 0);
+            dout_con    : inout std_logic_vector((n - 1) downto 0);
+            result      : out std_logic_vector((n - 1) downto 0);
             rdy_out     : out std_logic -- result ready interrupt
         );
     end component;

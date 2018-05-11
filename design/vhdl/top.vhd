@@ -181,7 +181,7 @@ architecture behavioral of top is
             -- memory signals
             gen_rdy     : out std_logic;
             addr_gen    : out std_logic_vector(n downto 0);
-            elem        : out std_logic_vector(n downto 0)
+            elem        : out std_logic_vector((n - 1) downto 0)
         );
     end component;
 
@@ -221,9 +221,9 @@ architecture behavioral of top is
 
             -- memory address and data signals
             addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : inout std_logic_vector(n downto 0);
+            dout_con    : inout std_logic_vector((n - 1) downto 0);
 
-            result      : out std_logic_vector(n downto 0); -- selected output
+            result      : out std_logic_vector((n - 1) downto 0); -- selected output
             err_z       : out std_logic; -- zero exception
             rdy_out     : out std_logic -- result ready interrupt
         );
@@ -249,10 +249,10 @@ architecture behavioral of top is
             dout_cu     : out std_logic_vector(n downto 0);
             id_con      : in std_logic;
             addr_con    : in std_logic_vector(n downto 0);
-            dout_con    : out std_logic_vector(n downto 0);
+            dout_con    : out std_logic_vector((n - 1) downto 0);
             id_gen      : in std_logic;
             addr_gen    : in std_logic_vector(n downto 0);
-            din_gen     : in std_logic_vector(n downto 0);
+            din_gen     : in std_logic_vector((n - 1) downto 0);
 
             -- memory control signals
             nCE         : out std_logic;
@@ -300,11 +300,11 @@ architecture behavioral of top is
 
     -- memory address and data signals
     signal addr_gen : std_logic_vector(n downto 0);
-    signal elem : std_logic_vector(n downto 0);
+    signal elem : std_logic_vector((n - 1) downto 0);
     signal addr_cu : std_logic_vector(n downto 0);
     signal dout_cu : std_logic_vector(n downto 0);
     signal addr_con : std_logic_vector(n downto 0);
-    signal dout_con : std_logic_vector(n downto 0);
+    signal dout_con : std_logic_vector((n - 1) downto 0);
 
     -- user inputs
     signal poly_bcd : std_logic_vector(n downto 1);
@@ -315,7 +315,7 @@ architecture behavioral of top is
     signal rst    : std_logic;
 
     -- user output
-    signal result  : std_logic_vector(n downto 0);
+    signal result  : std_logic_vector((n - 1) downto 0);
 
     -- IO interrupts
     signal rdy_gen  : std_logic;
@@ -340,8 +340,8 @@ begin
         opcode_out => opcode,
         rst => rst,
         gen_rdy => rdy_gen,
-        gfau_data(15 downto 9) => ZEROVEC(6 downto 0),
-        gfau_data(8 downto 0) => result,
+        gfau_data(15 downto n) => ZEROVEC(7 downto 0),
+        gfau_data((n - 1) downto 0) => result,
         out_data => out_data,
         input_size => size,
         cu_start => init_cu,
