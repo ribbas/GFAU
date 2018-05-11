@@ -14,7 +14,7 @@ __pycache__/
 *.vcd
 
 # Xilinx files
-# xilinx_tb/
+xilinx_tb/
 
 # CLion temp files
 .idea/
