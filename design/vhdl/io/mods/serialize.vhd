@@ -31,9 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity serialize is
 port(
-    clk         :   in  std_logic;
     enable      :   in  std_logic;
-    rst         :   in  std_logic;
     in_data     :   in  std_logic_vector(15 downto 0); --from gfau
     count       :   in  std_logic_vector(1 downto 0);
     bus_size    :   in  std_logic_vector(1 downto 0);
@@ -59,10 +57,11 @@ begin
         
             --count_rst <= '0';
             if (bus_size = "00") then -- 8 bit bus
-            
+                out_data(15 downto 8) <= (others => '0');
                 if (num_clks = "00") then -- 8 bit data, 1 clock
                 
                     out_data(7 downto 0) <= in_data(7 downto 0);
+                  
                     --count_rst <= '1';
                     done <= '1'; --finished taking input
                     

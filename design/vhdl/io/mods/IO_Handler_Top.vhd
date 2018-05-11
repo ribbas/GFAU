@@ -19,8 +19,6 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-library work;
-use work.glob.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -57,8 +55,6 @@ port(
     gen_rdy     :   in      std_logic; --field generation complete
     gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
     out_data    :   out     std_logic_vector(31 downto 0);
-    input_size  :   in      std_logic_vector(3 downto 0);
-    cu_start    :   out     std_logic;
     
     --error signals
     z_err       :   in      std_logic;
@@ -76,7 +72,7 @@ architecture Behavioral of IO_Handler_Top is
     port(
         clk     :   in  std_logic;
         rst     :   in  std_logic;
-        count   :   out std_logic_vector(2 downto 0)
+        count   :   out std_logic_vector(1 downto 0)
     );
     end component;
     
@@ -120,7 +116,6 @@ architecture Behavioral of IO_Handler_Top is
         gen_rdy     :   in      std_logic; --field finished generating
         mode        :   out     std_logic_vector(1 downto 0);
         serial_e    :   out     std_logic := '0'; --serializer enable 
-        serial_r    :   out     std_logic := '1'; --serialize reset
         serial_d    :   in      std_logic; --serialization of data done
         deserial_e  :   out     std_logic := '0'; --deserializer enable
         deserial_r  :   out     std_logic := '1'; --deserializer reset
@@ -130,15 +125,15 @@ architecture Behavioral of IO_Handler_Top is
         err_type    :   out     std_logic;
         wr_rd       :   out     std_logic;
         z_err       :   in      std_logic; --zero error
+        insize_in   :   in      std_logic_vector(3 downto 0);
+        insize_out  :   out     std_logic_vector(3 downto 0);
         oob_err     :   in      std_logic  --out of bounds error
     );
     end component;
     
     component serialize
     port(
-        clk         :   in  std_logic;
         enable      :   in  std_logic;
-        rst         :   in  std_logic;
         in_data     :   in  std_logic_vector(15 downto 0); --from gfau
         count       :   in  std_logic_vector(1 downto 0);
         bus_size    :   in  std_logic_vector(1 downto 0);
@@ -151,7 +146,7 @@ architecture Behavioral of IO_Handler_Top is
     
     component io_port
     generic(
-        n           :   positive := DEGREE
+        n           :   positive
     );
     port(
         op          :   in      std_logic_vector((n - 1) downto 0);
@@ -168,7 +163,6 @@ architecture Behavioral of IO_Handler_Top is
 
     --serialize/deserialize--
     signal serial_e     :   std_logic;
-    signal serial_r     :   std_logic;
     signal serial_d     :   std_logic;
     signal deserial_e   :   std_logic;
     signal deserial_r   :   std_logic;
@@ -185,7 +179,7 @@ architecture Behavioral of IO_Handler_Top is
     signal count_rst    :   std_logic;
     signal count_rst1   :   std_logic; --reset from serialize
     signal count_rst2   :   std_logic; --reset from deserialize
-    signal count        :   std_logic_vector(2 downto 0); --clk_count
+    signal count        :   std_logic_vector(1 downto 0); --clk_count
     
     --io port--
     signal in_data_ext  :   std_logic_vector(31 downto 0);
@@ -198,19 +192,21 @@ architecture Behavioral of IO_Handler_Top is
 
     --output selection--
     signal data_vec     :   std_logic_vector(15 downto 0); 
-    signal err_vec    :   std_logic_vector(15 downto 0);
+    signal err_vec      :   std_logic_vector(15 downto 0);
+    
+    signal input_size   :   std_logic_vector(3 downto 0);
     
 begin
 
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
     err_vec(0) <= err_type;
-    cu_start <= deserial_d;
     err_vec(15 downto 1) <= (others => '0');
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
         opcode_in   => data(5 downto 0),
+        insize_in   => data(3 downto 0),
         Start       => Start,
         t_clk       => t_clk,
         g_rst       => g_rst,
@@ -228,7 +224,6 @@ begin
         
         --internal signals--
         serial_e    => serial_e,
-        serial_r    => serial_r,
         serial_d    => serial_d,
         deserial_e  => deserial_e,
         deserial_r  => deserial_r,
@@ -236,6 +231,7 @@ begin
         poly_get    => poly_get,
         z_err       => z_err,
         oob_err     => oob_err,
+        insize_out  => input_size,
         wr_rd       => wr_rd
     );
     
@@ -253,9 +249,7 @@ begin
     );
     
     serial  :   serialize port map(
-        clk         => t_clk,
         enable      => serial_e,
-        rst         => serial_r,
         in_data     => gfau_data,
         count       => count(1 downto 0),
         bus_size    => mode,

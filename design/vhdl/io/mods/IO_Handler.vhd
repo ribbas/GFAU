@@ -19,6 +19,7 @@
 -------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 entity IO_Handler_FSM is
 port(
@@ -29,6 +30,7 @@ port(
 
     --signals from/to extern device
     opcode_in   :   in      std_logic_vector(5 downto 0);
+    insize_in   :   in      std_logic_vector(3 downto 0);
     Start       :   in      std_logic;
     --Done        :   in      std_logic;
     t_clk       :   in      std_logic;
@@ -63,7 +65,6 @@ port(
     
     --serialize/deserialze--
     serial_e    :   out     std_logic := '0'; --serializer enable 
-    serial_r    :   out     std_logic := '1'; --serialize reset
     serial_d    :   in      std_logic; --serialization of data done
     deserial_e  :   out     std_logic := '0'; --deserializer enable
     deserial_r  :   out     std_logic := '1'; --deserializer reset
@@ -72,9 +73,14 @@ port(
     --count_decoder
     poly_get    :   out     std_logic; --signal for mux that lets it know only 
                                        --one input is needed
-    wr_rd       :   out     std_logic := '0' --rd or write from io port
+    wr_rd       :   out     std_logic := '0'; --rd or write from io port
     --counter--
     --count_rst   :   out     std_logic := '0'; --reset signal for counter
+
+    --input size and msb out
+    insize_out  :   out     std_logic_vector(3 downto 0);
+    MSB         :   out     std_logic_vector(3 downto 0)
+
 );
 end IO_Handler_FSM;
 
@@ -126,8 +132,13 @@ architecture Behavioral of IO_Handler_FSM is
     signal deserial_sr  :   std_logic := '0';
     signal deserial_nr  :   std_logic := '0';
 
+    --input size and msb index of operands/generating polynomial--
+    signal input_size   :   std_logic_vector(3 downto 0);
 
 begin
+
+    MSB <= std_logic_vector(unsigned(input_size) - 1);
+    insize_out <= input_size;
 
     --mode_wr <= wr_reg;
     rst <= g_rst;
@@ -161,7 +172,6 @@ begin
                 deserial_se <= '0';
                 deserial_nr <= '0';
                 serial_e <= '0';
-                serial_r <= '1';
                 s_state(1 downto 0) <= "00";
                 s_state(7) <= '0';
                 n_state(7 downto 4) <= "0000";
@@ -188,6 +198,7 @@ begin
                                 deserial_se <= not deserial_se;
                                 deserial_nr <= not deserial_nr;
                                 s_state(1) <= not s_state(1); --get input
+                                n_state(4) <= not n_state(4); -- hacking in extra state
                                 n_state(0) <= not n_state(0); --not ready
                             else --normal operation
                                 opcode_out <= opcode_in;
@@ -198,6 +209,10 @@ begin
                                 n_state(0) <= not n_state(0); --not ready
                             end if;
                         end if;
+
+                    when "00010010" => --get size
+                        input_size <= insize_in;
+                        n_state(4) <= not n_state(4);
                     
                         
                     --====================================--
@@ -208,7 +223,6 @@ begin
                         if INTA = '1' then
                             nop_INT <= not nop_INT; --unset INT
                             serial_e <= '1'; --start serializer
-                            serial_r <= '0';
                             wr_rd <= '1';
                             n_state(4) <= not n_state(4); --unset int state
                             s_state(7) <= not s_state(7); --set wait for send state
@@ -243,7 +257,6 @@ begin
                     when "10000000" =>
                         if serial_d = '1' then
                             serial_e <= '0';
-                            serial_r <= '1';
                             wr_rd <= '0';
                             n_state(7) <= not n_state(7);
                             s_state(0) <= not s_state(0); --set ready
