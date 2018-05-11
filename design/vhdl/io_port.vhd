@@ -47,7 +47,7 @@ architecture Behavioral of io_port is
 
 begin
 
-    pad <= op when oe = '1' else HIIMPVEC;
+    pad <= op when oe = '1' else (others => 'Z');
     ip <= pad;
 
 end Behavioral;

@@ -44,7 +44,7 @@ entity top is
 
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
-        IO      : inout std_logic_vector(n downto 0)
+        IO      : inout std_logic_vector((n - 1) downto 0)
 
         --;
         ---------------- TEMPORARY - JUST FOR TB ------------
@@ -264,7 +264,7 @@ architecture behavioral of top is
 
             -- memory address and data signals
             A           : out std_logic_vector((n + 1) downto 0);
-            DQ          : inout std_logic_vector(n downto 0)
+            DQ          : inout std_logic_vector((n - 1) downto 0)
         );
     end component;
 
@@ -397,7 +397,7 @@ begin
         clk => CLK,
         rst => rst_gen,
         en => en_gen,
-        poly_bcd => poly_bcd,
+        poly_bcd => out_data(n downto 1),
         poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,

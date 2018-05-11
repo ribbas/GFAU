@@ -38,13 +38,13 @@ entity memory is
         -- module signals
         id_cu       : in std_logic;
         addr_cu     : in std_logic_vector(n downto 0);
-        dout_cu     : out std_logic_vector((n downto 0);
+        dout_cu     : out std_logic_vector(n downto 0);
         id_con      : in std_logic;
-        addr_con    : in std_logic_vector((n downto 0);
-        dout_con    : out std_logic_vector((n downto 0);
+        addr_con    : in std_logic_vector(n downto 0);
+        dout_con    : out std_logic_vector(n downto 0);
         id_gen      : in std_logic;
-        addr_gen    : in std_logic_vector((n downto 0);
-        din_gen     : in std_logic_vector((n downto 0);
+        addr_gen    : in std_logic_vector(n downto 0);
+        din_gen     : in std_logic_vector(n downto 0);
 
         -- memory control signals
         nCE         : out std_logic;
@@ -129,7 +129,7 @@ begin
                         wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
-                        dout_cu <= DQ_out; --read from iobus in
+                        dout_cu <= '0' & DQ_out; --read from iobus in
                         dout_con <= DCAREVEC;
 
                         mem_rdy <= '1';
@@ -183,7 +183,7 @@ begin
                         wr_rd <= '0'; --set iobus mode to read
 
                         -- send dout to output converter
-                        dout_con <= DQ_out; --read from iobus in
+                        dout_con <= '0' & DQ_out; --read from iobus in
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '1';
@@ -216,7 +216,7 @@ begin
 
                 --hold address, data, and bus control signals
                 A <= mem_t_gen & addr_gen;
-                DQ_in <= din_gen;
+                DQ_in <= din_gen((n - 1) downto 0);
 
                 -- send control unit's address to memory
                 nOE <= '1';
@@ -247,8 +247,8 @@ begin
                 nCE <= '1';
                 nWE <= '-';
 
-                A <= '-' & DCAREVEC;
-                DQ <= HIIMPVEC;
+                --A <= '-' & DCAREVEC;
+                --DQ <= 'Z' & HIIMPVEC;
 
                 mem_rdy <= '0';
 
