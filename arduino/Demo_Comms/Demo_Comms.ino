@@ -45,7 +45,7 @@ void setup() {
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
-    pinMode(7, OUTPUT);
+    pinMode(7, OUTPUT)
     pinMode(8, OUTPUT);
 
     pinMode(INT, INPUT); //INT
@@ -59,14 +59,14 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  
 }
 
 //swap bus direction to:
 //0: INPUT
 //ELSE: OUTPUT
 void swapDirections(uint8_t i){
+    
     if(i == 0){
         for(int i = 0; i < BUS_SIZE; i++){
             pinMode(data_pins[i], INPUT);
@@ -100,7 +100,10 @@ void ISR(){
 
 setMode(uint8_t mode){
     mode &= 0xF8; //clear all but bottom 3 bits;
-    op = MODE_OP | 
+    op = MODE_OP | mode;
+    writeUint8(op);
+    digitalWrite(TCLK, HIGH);
+    digitalWrite(TCLK, LOW);
 }
 
 
