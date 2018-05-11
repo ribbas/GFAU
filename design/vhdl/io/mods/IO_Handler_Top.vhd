@@ -147,9 +147,9 @@ architecture Behavioral of IO_Handler_Top is
     );
     end component;
     
-    component io_port_io
+    component io_port
     generic(
-        n           :   positive
+        n           :   positive := DEGREE
     );
     port(
         op          :   in      std_logic_vector((n - 1) downto 0);
@@ -276,7 +276,7 @@ begin
         count       => count
     );
     
-    iop     :   io_port_io generic map(
+    iop     :   io_port generic map(
         n           => 32
     ) port map (
         op(15 downto 0) => out_data_ext,

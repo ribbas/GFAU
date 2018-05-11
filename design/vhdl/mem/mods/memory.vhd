@@ -37,14 +37,14 @@ entity memory is
 
         -- module signals
         id_cu       : in std_logic;
-        addr_cu     : in std_logic_vector(n downto 0);
-        dout_cu     : out std_logic_vector(n downto 0);
+        addr_cu     : in std_logic_vector((n - 1) downto 0);
+        dout_cu     : out std_logic_vector((n - 1) downto 0);
         id_con      : in std_logic;
-        addr_con    : in std_logic_vector(n downto 0);
-        dout_con    : out std_logic_vector(n downto 0);
+        addr_con    : in std_logic_vector((n - 1) downto 0);
+        dout_con    : out std_logic_vector((n - 1) downto 0);
         id_gen      : in std_logic;
-        addr_gen    : in std_logic_vector(n downto 0);
-        din_gen     : in std_logic_vector(n downto 0);
+        addr_gen    : in std_logic_vector((n - 1) downto 0);
+        din_gen     : in std_logic_vector((n - 1) downto 0);
 
         -- memory control signals
         nCE         : out std_logic;
@@ -55,7 +55,7 @@ entity memory is
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);
-        DQ          : inout std_logic_vector(n downto 0)
+        DQ          : inout std_logic_vector((n - 1) downto 0)
     );
 end memory;
 
@@ -72,16 +72,16 @@ architecture behavioral of memory is
     signal ioport_oe    : std_logic;
 
 	--internal DQ signals
-	signal DQ_in		: std_logic_vector(n downto 0);
-	signal DQ_out		: std_logic_vector(n downto 0);
+	signal DQ_in		: std_logic_vector((n - 1) downto 0);
+	signal DQ_out		: std_logic_vector((n - 1) downto 0);
 	signal wr_rd		: std_logic;
 
     component io_port
         port(
-            op  : in std_logic_vector(n downto 0);  --out to pad
+            op  : in std_logic_vector((n - 1) downto 0);  --out to pad
             oe      : in std_logic;                         --enable pad output
-            ip   : out std_logic_vector(n downto 0);  --in from pad
-            pad     : inout std_logic_vector(n downto 0)   --external io pad
+            ip   : out std_logic_vector((n - 1) downto 0);  --in from pad
+            pad     : inout std_logic_vector((n - 1) downto 0)   --external io pad
         );
     end component;
 
