@@ -265,7 +265,7 @@ begin
     
     countd  :   count_decoder port map(
         bus_size    => mode,
-        input_size  => input_size,
+        input_size  => input_size_s,
         gen_poly    => poly_get,
         num_clks    => num_clks
     );
