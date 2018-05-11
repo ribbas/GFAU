@@ -1,4 +1,0 @@
-vhdl isim_temp "../vhdl/glob.vhd"
-vhdl isim_temp "../vhdl/gen/mods/generator.vhd"
-vhdl isim_temp "../vhdl/demo_tb.vhd"
-vhdl isim_temp "../vhdl/gen/tb/generator_tb.vhd"

@@ -112,13 +112,13 @@ begin
     process (clk)
     begin
 
-        if (init = '1' and rst = '0') then
-
-            en <= '1';
-
-        end if;
-
         if (rising_edge(clk)) then
+
+            if (init = '1' and rst = '0') then
+
+                en <= '1';
+
+            end if;
 
             if (rst = '1') then
 
