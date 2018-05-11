@@ -55,6 +55,7 @@ port(
     gen_rdy     :   in      std_logic; --field generation complete
     gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
     out_data    :   out     std_logic_vector(31 downto 0);
+    input_size  :   out     std_logic_vector(3 downto 0);
     
     --error signals
     z_err       :   in      std_logic;
@@ -194,10 +195,11 @@ architecture Behavioral of IO_Handler_Top is
     signal data_vec     :   std_logic_vector(15 downto 0); 
     signal err_vec      :   std_logic_vector(15 downto 0);
     
-    signal input_size   :   std_logic_vector(3 downto 0);
+    signal input_size_s :   std_logic_vector(3 downto 0);
     
 begin
 
+    input_size <= input_size_s;
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
     err_vec(0) <= err_type;
@@ -231,7 +233,7 @@ begin
         poly_get    => poly_get,
         z_err       => z_err,
         oob_err     => oob_err,
-        insize_out  => input_size,
+        insize_out  => input_size_s,
         wr_rd       => wr_rd
     );
     

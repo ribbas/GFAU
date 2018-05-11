@@ -5,31 +5,31 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.vhd</arg>&quot; line <arg fmt="%s" index="2">206</arg>: Output port &lt;<arg fmt="%s" index="3">MSB</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">FSM</arg>&gt; is unconnected or connected to loadless signal.
+<msg type="info" file="Xst" num="3210" delta="old" >&quot;<arg fmt="%s" index="1">/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.vhd</arg>&quot; line <arg fmt="%s" index="2">206</arg>: Output port &lt;<arg fmt="%s" index="3">MSB</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">FSM</arg>&gt; is unconnected or connected to loadless signal.
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/nerr</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/nerr_INT&gt; &lt;FSM/n_state_6&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/nerr</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/nerr_INT&gt; &lt;FSM/n_state_6&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/serr</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/s_state_6&gt; &lt;FSM/err_INT&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/serr</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/s_state_6&gt; &lt;FSM/err_INT&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/deserial_ne</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/deserial_sr&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/deserial_ne</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/deserial_sr&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/s_state_4</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/op_INT&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/s_state_4</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/op_INT&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/ngen_INT</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/n_state_5&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/ngen_INT</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/n_state_5&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/s_state_5</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/n_state_2&gt; &lt;FSM/gen_INT&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/s_state_5</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/n_state_2&gt; &lt;FSM/gen_INT&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/nop_INT</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/s_state_7&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/nop_INT</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/s_state_7&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/deserial_se</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">3 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/n_state_0&gt; &lt;FSM/s_state_1&gt; &lt;FSM/deserial_nr&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">FSM/deserial_se</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">IO_Handler_Top</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">3 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;FSM/n_state_0&gt; &lt;FSM/s_state_1&gt; &lt;FSM/deserial_nr&gt; </arg>
 </msg>
 
 </messages>

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-05-10T18:19:45</DateModified>
+  <DateModified>2018-05-11T13:34:53</DateModified>
   <ModuleName>IO_Handler_Top</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
   <SavedFilePath>/home/brian/gfau/design/vhdl/io/why/iseconfig/IO_Handler_Top.xreport</SavedFilePath>
