@@ -76,11 +76,11 @@ architecture behavioral of top is
             g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
             ready_sig   :   out     std_logic; --gfau is ready for input
             err         :   out     std_logic; --error signal
-
+            
             --interrupt signals to/from external device
             INT         :   out     std_logic; --generate an interrupt
             INTA        :   in      std_logic; --interrupt acknowledge
-
+            
             --signals to/from gfau
             clk         :   in      std_logic; --internal 50MHz clock
             op_done     :   in      std_logic; --normal operation completed
@@ -89,8 +89,9 @@ architecture behavioral of top is
             gen_rdy     :   in      std_logic; --field generation complete
             gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
             out_data    :   out     std_logic_vector(31 downto 0);
-            input_size  :   in      std_logic_vector(3 downto 0);
+            input_size  :   out     std_logic_vector(3 downto 0);
             cu_start    :   out     std_logic;
+            
             --error signals
             z_err       :   in      std_logic;
             oob_err     :   in      std_logic
@@ -343,7 +344,7 @@ begin
         gen_rdy => rdy_gen,
         gfau_data => ZEROVEC(6 downto 0) & result,
         out_data => out_data,
-        input_size => input_size,
+        input_size => size,
         cu_start => init_cu,
         z_err => errz,
         oob_err => errb
@@ -354,8 +355,8 @@ begin
     -- most significant bit
     indices_unit: indices port map(
         poly_bcd => poly_bcd_reg(n downto 2),
-        size => size,
-        input_size => input_size,
+        size => open,
+        input_size => open,
         msb => msb
     );
 
