@@ -49,8 +49,8 @@ entity memory is
         nCE         : out std_logic;
         nWE         : out std_logic;
         nOE         : out std_logic;
-        nBLE        : out std_logic := '0';
-        nBHE        : out std_logic := '0';
+        nBLE        : out std_logic;
+        nBHE        : out std_logic;
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);
@@ -106,8 +106,10 @@ begin
                 nCE <= '0';
                 nOE <= '0';
                 nWE <= '1';
+                nBLE <= '0';
+                nBHE <= '0';
 
-                wr_rd <= '0'; --set iobus mode to read
+                wr_rd <= '0'; -- set iobus mode to read
 
                 -- send output converter's address to memory
                 A <= addr_cu;
@@ -115,7 +117,6 @@ begin
                 case rd_state is
 
                     when send_addr =>
-
 
                         mem_rdy <= '0';
 
@@ -155,6 +156,8 @@ begin
                 nCE <= '0';
                 nOE <= '0';
                 nWE <= '1';
+                nBLE <= '0';
+                nBHE <= '0';
 
                 wr_rd <= '0'; --set iobus mode to read
 
@@ -208,6 +211,8 @@ begin
                 -- send control unit's address to memory
                 nOE <= '1';
                 nCE <= '0';
+                nBLE <= '0';
+                nBHE <= '0';
 
                 case setup is
 
@@ -233,9 +238,9 @@ begin
                 -- stand-by control signals
                 nCE <= '1';
                 nWE <= '-';
-
-                --A <= '-' & DCAREVEC;
-                --DQ <= 'Z' & HIIMPVEC;
+                nOE <= '-';
+                nBLE <= '0';
+                nBHE <= '0';
 
                 mem_rdy <= '0';
 

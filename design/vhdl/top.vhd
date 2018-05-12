@@ -259,8 +259,8 @@ architecture behavioral of top is
             nCE         : out std_logic;
             nWE         : out std_logic;
             nOE         : out std_logic;
-            nBLE        : out std_logic := '0';
-            nBHE        : out std_logic := '0';
+            nBLE        : out std_logic;
+            nBHE        : out std_logic;
 
             -- memory address and data signals
             A           : out std_logic_vector((n + 1) downto 0);
@@ -452,6 +452,8 @@ begin
         nCE => nCE,
         nWE => nWE,
         nOE => nOE,
+        nBLE => nBLE,
+        nBHE => nBHE,
         A => A,
         DQ => IO
     );
