@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company:
--- Engineer:
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    19:44:31 05/07/2018 
+-- Design Name: 
+-- Module Name:    IO_Handler_Top - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
 --
--- Create Date:    19:44:31 05/07/2018
--- Design Name:
--- Module Name:    IO_Handler_Top - Behavioral
--- Project Name:
--- Target Devices:
--- Tool versions:
--- Description:
+-- Dependencies: 
 --
--- Dependencies:
---
--- Revision:
+-- Revision: 
 -- Revision 0.01 - File Created
--- Additional Comments:
+-- Additional Comments: 
 --
 ----------------------------------------------------------------------------------
 library IEEE;
@@ -26,8 +26,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
-library UNISIM;
-use UNISIM.VComponents.all;
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity IO_Handler_Top is
 port(
@@ -38,32 +38,29 @@ port(
     --signals from/to external devices
     data        :   inout   std_logic_vector(31 downto 0); --external data bus
     Start       :   in      std_logic;
-    t_clk_in    :   in      std_logic; --external device clock < 200MHz
+    t_clk       :   in      std_logic; --external device clock < 200MHz
     g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
     ready_sig   :   out     std_logic; --gfau is ready for input
     err         :   out     std_logic; --error signal
-
+    
     --interrupt signals to/from external device
     INT         :   out     std_logic; --generate an interrupt
     INTA        :   in      std_logic; --interrupt acknowledge
-
-    mode_out    :   out     std_logic_vector(1 downto 0);
-
+    
     --signals to/from gfau
     clk         :   in      std_logic; --internal 50MHz clock
     op_done     :   in      std_logic; --normal operation completed
     opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
     rst         :   out     std_logic; --propogation of g_rst
     gen_rdy     :   in      std_logic; --field generation complete
-    gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
+    --gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
     out_data    :   out     std_logic_vector(31 downto 0);
     input_size  :   out     std_logic_vector(3 downto 0);
     cu_start    :   out     std_logic;
-
+    
     --error signals
     z_err       :   in      std_logic;
     oob_err     :   in      std_logic
-
 );
 end IO_Handler_Top;
 
@@ -80,7 +77,7 @@ architecture Behavioral of IO_Handler_Top is
         count   :   out std_logic_vector(1 downto 0)
     );
     end component;
-
+    
     component count_decoder
     port(
         bus_size    :   in  std_logic_vector(1 downto 0);
@@ -89,7 +86,7 @@ architecture Behavioral of IO_Handler_Top is
         num_clks    :   out std_logic_vector(1 downto 0)
     );
     end component;
-
+    
     component data_deserialize
     port(
         clk         :   in  std_logic;
@@ -104,7 +101,7 @@ architecture Behavioral of IO_Handler_Top is
         out_data    :   out std_logic_vector(31 downto 0)
     );
     end component;
-
+    
     component IO_Handler_FSM
     port(
         opcode_in   :   in      std_logic_vector(5 downto 0);
@@ -120,12 +117,12 @@ architecture Behavioral of IO_Handler_Top is
         rst         :   out     std_logic; --internal reset
         gen_rdy     :   in      std_logic; --field finished generating
         mode        :   out     std_logic_vector(1 downto 0);
-        serial_e    :   out     std_logic := '0'; --serializer enable
+        serial_e    :   out     std_logic := '0'; --serializer enable 
         serial_d    :   in      std_logic; --serialization of data done
         deserial_e  :   out     std_logic := '0'; --deserializer enable
         deserial_r  :   out     std_logic := '1'; --deserializer reset
         deserial_d  :   in      std_logic; --deserialization of data done
-        poly_get    :   out     std_logic; --signal for mux that lets it know only
+        poly_get    :   out     std_logic; --signal for mux that lets it know only 
         err         :   out     std_logic;
         err_type    :   out     std_logic;
         wr_rd       :   out     std_logic;
@@ -135,7 +132,7 @@ architecture Behavioral of IO_Handler_Top is
         oob_err     :   in      std_logic  --out of bounds error
     );
     end component;
-
+    
     component serialize
     port(
         enable      :   in  std_logic;
@@ -148,26 +145,19 @@ architecture Behavioral of IO_Handler_Top is
         out_data    :   out std_logic_vector(15 downto 0) --to extern device
     );
     end component;
-
+    
     component io_port
     generic(
         n           :   positive
     );
     port(
-        op          :   in      std_logic_vector(n downto 0);
+        op          :   in      std_logic_vector((n - 1) downto 0);
         oe          :   in      std_logic;
-        ip          :   out     std_logic_vector(n downto 0);
-        pad         :   inout   std_logic_vector(n downto 0)
+        ip          :   out     std_logic_vector((n - 1) downto 0);
+        pad         :   inout   std_logic_vector((n - 1) downto 0)
     );
     end component;
-
-    component BUFG
-    port(
-        I   :   in  std_logic;
-        O   :   out std_logic
-    );
-    end component;
-
+        
 
 --============================================================================--
     --***IO Handler internal signals***--
@@ -179,20 +169,20 @@ architecture Behavioral of IO_Handler_Top is
     signal deserial_e   :   std_logic;
     signal deserial_r   :   std_logic;
     signal deserial_d   :   std_logic;
-
+    
     --mode write--
     signal mode         :   std_logic_vector(1 downto 0);
-
-    --count_decoder--
+    
+    --count_decoder--   
     signal poly_get     :   std_logic;
     signal num_clks     :   std_logic_vector(1 downto 0); --clks to input/outp
-
+    
     --counter--
     signal count_rst    :   std_logic;
     signal count_rst1   :   std_logic; --reset from serialize
     signal count_rst2   :   std_logic; --reset from deserialize
     signal count        :   std_logic_vector(1 downto 0); --clk_count
-
+    
     --io port--
     signal in_data_ext  :   std_logic_vector(31 downto 0);
     signal out_data_ext :   std_logic_vector(15 downto 0); --data sent to ext
@@ -203,19 +193,13 @@ architecture Behavioral of IO_Handler_Top is
     signal err_out      :   std_logic; --allows internal reading of err
 
     --output selection--
-    signal data_vec     :   std_logic_vector(15 downto 0);
+    signal data_vec     :   std_logic_vector(15 downto 0); 
     signal err_vec      :   std_logic_vector(15 downto 0);
-
+    
     signal input_size_s :   std_logic_vector(3 downto 0);
-
-    --tclk prev
-    signal tclk_prev    :   std_logic;
-    signal t_clk_buf    :   std_logic;
-    signal t_clk        :   std_logic;
-
+    
 begin
 
-    mode_out <= mode;
     input_size <= input_size_s;
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
@@ -241,7 +225,7 @@ begin
         mode        => mode,
         err         => err_out,
         err_type    => err_type,
-
+        
         --internal signals--
         serial_e    => serial_e,
         serial_d    => serial_d,
@@ -254,7 +238,7 @@ begin
         insize_out  => input_size_s,
         wr_rd       => wr_rd
     );
-
+    
     deser   :   data_deserialize port map(
         clk         => t_clk,
         enable      => deserial_e,
@@ -267,7 +251,7 @@ begin
         count_rst   => count_rst2,
         out_data    => out_data
     );
-
+    
     serial  :   serialize port map(
         enable      => serial_e,
         in_data     => gfau_data,
@@ -278,55 +262,38 @@ begin
         count_rst   => count_rst1,
         out_data    => data_vec
     );
-
+    
     countd  :   count_decoder port map(
         bus_size    => mode,
         input_size  => input_size_s,
         gen_poly    => poly_get,
         num_clks    => num_clks
     );
-
+    
     counter :   clk_counter port map(
         clk         => t_clk,
         rst         => count_rst,
         count       => count
     );
-
+    
     iop     :   io_port generic map(
-        n           => 31
+        n           => 32
     ) port map (
         op(15 downto 0) => out_data_ext,
-        op(31 downto 16)=> "0000000000000000",
+        op(31 downto 16)=> "0000000000000000",    
         oe          => wr_rd,
         ip          => in_data_ext,
         pad         => data
     );
 
-    tclkbuf :   BUFG port map(t_clk_buf, t_clk);
-
-
     outmux  :   process(err_out, err_vec, data_vec)
     begin
         if err_out = '1' then
             out_data_ext <= err_vec;
-        else
+        else    
             out_data_ext <= data_vec;
         end if;
     end process outmux;
-
-    --synchronize tclk
-    tclk_gen    :   process(clk)
-    begin
-        if rising_edge(clk) then
-            if (tclk_prev = '0') and (t_clk_in = '1') then
-                t_clk_buf <= '1';
-            else
-                t_clk_buf <= '0';
-            end if;
-            tclk_prev <= t_clk_in;
-        end if;
-    end process tclk_gen;
-
-
+        
 end Behavioral;
 

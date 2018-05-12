@@ -73,33 +73,34 @@ architecture behavioral of top is
             --***External Signals***--
         --====================================================================
 
-            --signals from/to external devices
-            data        :   inout   std_logic_vector(31 downto 0); --external data bus
-            Start       :   in      std_logic;
-            t_clk       :   in      std_logic; --external device clock < 200MHz
-            g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
-            ready_sig   :   out     std_logic; --gfau is ready for input
-            err         :   out     std_logic; --error signal
+        --signals from/to external devices
+        data        :   inout   std_logic_vector(31 downto 0); --external data bus
+        Start       :   in      std_logic;
+        t_clk_in    :   in      std_logic; --external device clock < 200MHz
+        g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
+        ready_sig   :   out     std_logic; --gfau is ready for input
+        err         :   out     std_logic; --error signal
 
-            --interrupt signals to/from external device
-            INT         :   out     std_logic; --generate an interrupt
-            INTA        :   in      std_logic; --interrupt acknowledge
+        --interrupt signals to/from external device
+        INT         :   out     std_logic; --generate an interrupt
+        INTA        :   in      std_logic; --interrupt acknowledge
 
-            --signals to/from gfau
-            clk         :   in      std_logic; --internal 50MHz clock
-            op_done     :   in      std_logic; --normal operation completed
-            opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
-            rst         :   out     std_logic; --propogation of g_rst
-            gen_rdy     :   in      std_logic; --field generation complete
-            gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
-            out_data    :   out     std_logic_vector(31 downto 0);
-            input_size  :   out     std_logic_vector(3 downto 0);
-            cu_start    :   out     std_logic;
+        mode_out    :   out     std_logic_vector(1 downto 0);
 
-            --error signals
-            z_err       :   in      std_logic;
-            oob_err     :   in      std_logic;
-            t_mode        :   out std_logic_vector(1 downto 0)
+        --signals to/from gfau
+        clk         :   in      std_logic; --internal 50MHz clock
+        op_done     :   in      std_logic; --normal operation completed
+        opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
+        rst         :   out     std_logic; --propogation of g_rst
+        gen_rdy     :   in      std_logic; --field generation complete
+        gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
+        out_data    :   out     std_logic_vector(31 downto 0);
+        input_size  :   out     std_logic_vector(3 downto 0);
+        cu_start    :   out     std_logic;
+
+        --error signals
+        z_err       :   in      std_logic;
+        oob_err     :   in      std_logic
         );
     end component;
 
@@ -329,7 +330,7 @@ begin
     io_unit: IO_Handler_Top port map(
         data => DATA,
         Start => START,
-        t_clk => TCLK,
+        t_clk_in => TCLK,
         g_rst => GRST,
         ready_sig => RDY,
         err => ERR,
