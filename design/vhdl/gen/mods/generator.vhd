@@ -24,20 +24,19 @@ entity generator is
         rst         : in std_logic;
 
         -- polynomial data
-        poly_bcd    : in std_logic_vector(n downto 1);
+        poly_bcd    : in std_logic_vector((n - 1) downto 0);
         mask        : in std_logic_vector(n downto 0);
         msb         : in std_logic_vector(clgn1 downto 0);
-        poly_bcd_reg : out std_logic_vector(n downto 1);
+        poly_bcd_reg : out std_logic_vector((n - 1) downto 0);
 
         -- memory wrapper control signals
         id_gen      : out std_logic := '0';
         mem_rdy     : in std_logic;
-        mem_t       : out std_logic;
 
         -- memory signals
         gen_rdy     : out std_logic := '0';
-        addr_gen    : out std_logic_vector(n downto 0) := DCAREVEC;
-        elem        : out std_logic_vector((n - 1) downto 0) := DCAREVEC((n - 1) downto 0)
+        addr_gen    : out std_logic_vector((n + 1) downto 0) := '-' & DCAREVEC;
+        elem        : out std_logic_vector(n downto 0) := DCAREVEC
     );
 end generator;
 
@@ -74,9 +73,9 @@ begin
                 -- start counter at 1
                 counter <= ZEROVEC;
                 -- first address
-                addr_gen <= DCAREVEC;
+                addr_gen <= '-' & DCAREVEC;
                 -- first element
-                elem <= DCAREVEC((n - 1) downto 0);
+                elem <= DCAREVEC;
 
                 -- save this for later :)
                 poly_bcd_reg <= poly_bcd;
@@ -95,7 +94,6 @@ begin
                         if (mem_rdy = '1') then
 
                             id_gen <= '1';
-                            mem_t <= '0';
 
                             -- when the generator is done
                             if (counter = mask) then
@@ -107,10 +105,11 @@ begin
                                 wr_rdy <= '0';
 
                                 -- addr and data of NULL
-                                addr_gen <= HIVEC;
-                                elem <= ZEROVEC((n - 1) downto 0);
+                                addr_gen <= '1' & HIVEC;
+                                elem <= ZEROVEC;
 
                             else
+
 
                                 -- if elem^(n+(m-1))[msb] = 1
                                 if (temp_elem(to_integer(unsigned(msb))) = '1') then
@@ -131,8 +130,8 @@ begin
 
                                 -- address is counter, element is the temp element
                                 -- register
-                                addr_gen <= counter;
-                                elem <= temp_elem((n - 1) downto 0) and mask((n - 1) downto 0);
+                                addr_gen <= '0' & counter;
+                                elem <= temp_elem and mask;
                                 temp_elem_f <= temp_elem and mask;
 
                             end if;
@@ -145,13 +144,11 @@ begin
 
                         if (mem_rdy = '1') then
 
-                            mem_t <= '1';
-
                             if (wr_rdy = '1') then
 
                                 -- addr and data of NULL
-                                addr_gen <= HIVEC;
-                                elem <= ZEROVEC((n - 1) downto 0);
+                                addr_gen <= '1' & HIVEC;
+                                elem <= ZEROVEC;
 
                                 -- generator control signals
                                 gen_rdy <= '1';
@@ -170,13 +167,14 @@ begin
                                     wr_rdy <= '1';
 
                                     -- addr and data of NULL
-                                    addr_gen <= ZEROVEC;
-                                    elem <= HIVEC((n - 1) downto 0);
+                                    addr_gen <= '0' & ZEROVEC;
+                                    elem <= HIVEC;
 
                                 else
 
-                                    addr_gen <= temp_elem_f and mask;
-                                    elem <= counter((n - 1) downto 0);
+                                report "shift here";
+                                    addr_gen <= '1' & (temp_elem_f and mask);
+                                    elem <= counter;
 
                                     -- increment counter
                                     counter <= std_logic_vector(unsigned(counter) + 1);

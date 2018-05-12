@@ -27,36 +27,34 @@ architecture test of generator_tb is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector(n downto 1);
+            poly_bcd    : in std_logic_vector((n - 1) downto 0);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
-            poly_bcd_reg : out std_logic_vector(n downto 1);
+            poly_bcd_reg : out std_logic_vector((n - 1) downto 0);
 
             -- memory wrapper control signals
-            id_gen      : out std_logic;
+            id_gen      : out std_logic := '0';
             mem_rdy     : in std_logic;
-            mem_t       : out std_logic;
 
             -- memory signals
-            gen_rdy     : out std_logic;
-            addr_gen    : out std_logic_vector(n downto 0);
-            elem        : out std_logic_vector((n - 1) downto 0)
+            gen_rdy     : out std_logic := '0';
+            addr_gen    : out std_logic_vector((n + 1) downto 0) := '-' & DCAREVEC;
+            elem        : out std_logic_vector(n downto 0) := DCAREVEC
         );
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(n downto 1);
+    signal poly_bcd : std_logic_vector((n - 1) downto 0);
     signal mask : std_logic_vector(n downto 0);
     signal msb : std_logic_vector(clgn1 downto 0);
     signal mem_rdy : std_logic := '1';
-    signal mem_t : std_logic;
 
     -- outputs
     signal gen_rdy : std_logic;
     signal id_gen : std_logic;
-    signal addr_gen : std_logic_vector(n downto 0);
-    signal elem : std_logic_vector((n - 1) downto 0);
-    signal poly_bcd_reg: std_logic_vector(n downto 1);
+    signal addr_gen : std_logic_vector((n + 1) downto 0);
+    signal elem : std_logic_vector(n downto 0);
+    signal poly_bcd_reg: std_logic_vector((n - 1) downto 0);
 
     -- testbench clocks
     constant nums : integer := 640;
@@ -69,15 +67,14 @@ begin
     -- instantiate the unit under test (uut)
     uut: generator port map(
         clk => clk,
-        rst => rst,
         en => en,
+        rst => rst,
         poly_bcd => poly_bcd,
         mask => mask,
         msb => msb,
         poly_bcd_reg => poly_bcd_reg,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
-        mem_t => mem_t,
         gen_rdy => gen_rdy,
         addr_gen => addr_gen,
         elem => elem
@@ -110,17 +107,15 @@ begin
     stim_proc: process
     begin
 
-        mask <= "000000111";
+        mask <= "00000111";
         msb <= "010";
-        poly_bcd <= "00000110";
-
-        wait for (CLK_PER * 1);
-
-        en <= '1';
+        poly_bcd <= "0000110";
+        rst <= '1';
 
         -- hold reset state for 10 ns.
         wait for (CLK_PER * 1);
 
+        en <= '1';
         rst <= '0';
 
         wait for (CLK_PER * 35);

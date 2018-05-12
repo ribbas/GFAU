@@ -20,13 +20,13 @@ architecture behavioral of varmask_tb is
     -- component declaration for the unit under test (uut)
     component varmask
         port(
-            poly_bcd    : in  std_logic_vector(n - 1 downto 0);
+            poly_bcd    : in  std_logic_vector(n downto 1);
             mask        : out std_logic_vector(n downto 0)
         );
     end component;
 
     -- inputs
-    signal poly_bcd : std_logic_vector(n - 1 downto 0) := (others => '0');
+    signal poly_bcd : std_logic_vector(n downto 1) := (others => '0');
 
     -- outputs
     signal mask    : std_logic_vector(n downto 0);
@@ -62,16 +62,16 @@ begin
         -- hold reset state for 100 ns.
         wait for (CLK_PER * 2);
 
-        -- x^2
-        poly_bcd <= "00000010";
+        -- x^3 + x^2 + 1
+        poly_bcd <= "0000011";
         wait for (CLK_PER * 2);
 
         -- x^7
-        poly_bcd <= "01000010";
+        poly_bcd <= "0100001";
         wait for (CLK_PER * 2);
 
         -- x^8
-        poly_bcd <= "11111111";
+        poly_bcd <= "1111111";
 
         wait for (CLK_PER * 2);
 

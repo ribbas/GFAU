@@ -30,7 +30,6 @@ entity memory is
         clk         : in std_logic;
 
         -- memory types and methods
-        mem_t_cu    : in std_logic;
         mem_t_con   : in std_logic;
         mem_t_gen   : in std_logic;
         mem_rdy     : out std_logic;  -- ready
@@ -44,7 +43,7 @@ entity memory is
         dout_con    : out std_logic_vector((n + 1) downto 0);
         id_gen      : in std_logic;
         addr_gen    : in std_logic_vector(n downto 0);
-        din_gen     : in std_logic_vector((n - 1) downto 0);
+        din_gen     : in std_logic_vector((n + 1) downto 0);
 
         -- memory control signals
         nCE         : out std_logic;
@@ -113,7 +112,7 @@ begin
                         wr_rd <= '0'; --set iobus mode to read
 
                         -- send output converter's address to memory
-                        A <= mem_t_cu & addr_cu;
+                        A <= addr_cu;
 
                         mem_rdy <= '0';
 
