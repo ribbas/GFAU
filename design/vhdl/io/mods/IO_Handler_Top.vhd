@@ -19,6 +19,8 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+library work;
+    use work.glob.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -150,13 +152,13 @@ architecture Behavioral of IO_Handler_Top is
     
     component io_port
     generic(
-        n           :   positive
+        n           :   positive := DEGREE
     );
     port(
-        op          :   in      std_logic_vector((n - 1) downto 0);
+        op          :   in      std_logic_vector(n downto 0);
         oe          :   in      std_logic;
-        ip          :   out     std_logic_vector((n - 1) downto 0);
-        pad         :   inout   std_logic_vector((n - 1) downto 0)
+        ip          :   out     std_logic_vector(n downto 0);
+        pad         :   inout   std_logic_vector(n downto 0)
     );
     end component;
         
@@ -281,7 +283,7 @@ begin
     );
 
     iop     :   io_port generic map(
-        n           => 32
+        n           => 31
     ) port map (
         op(15 downto 0) => out_data_ext,
         op(31 downto 16)=> "0000000000000000",

@@ -38,16 +38,16 @@ architecture behavior of top_tb is
 
             -- user inputs
             POLYBCD : in std_logic_vector(n downto 0);
-            opcode  : in std_logic_vector(5 downto 0);
+            OPCODE  : in std_logic_vector(5 downto 0);
             OPAND1  : in std_logic_vector(n downto 0);
             OPAND2  : in std_logic_vector(n downto 0);
 
             -- user output
-            result  : out std_logic_vector(n downto 0);
+            RESULT  : out std_logic_vector(n downto 0);
 
             -- IO interrupts
-            rdy_gen  : out std_logic;
-            rdy_out  : out std_logic;
+            RDYGEN  : out std_logic;
+            RDYOUT  : out std_logic;
             ERRB    : out std_logic;
             ERRZ    : out std_logic;
 
@@ -73,7 +73,7 @@ architecture behavior of top_tb is
             --t_addr      : out std_logic_vector(n downto 0);
             --t_sym       : out std_logic_vector(n downto 0)
             t_1         : out std_logic;
-            t_n1      : out std_logic_vector(n downto 0);
+            t_n1      : out std_logic_vector(n + 1 downto 0);
             t_n2      : out std_logic_vector(n downto 0)
         );
     end component;
@@ -83,7 +83,7 @@ architecture behavior of top_tb is
     signal RST     : std_logic;
     signal ENCU    : std_logic := '0';
     signal POLYBCD : std_logic_vector(n downto 0);
-    signal opcode  : std_logic_vector(5 downto 0);
+    signal OPCODE  : std_logic_vector(5 downto 0);
     signal OPAND1  : std_logic_vector(n downto 0);
     signal OPAND2  : std_logic_vector(n downto 0);
 
@@ -95,9 +95,9 @@ architecture behavior of top_tb is
     signal nBHE   : std_logic;
 
     -- outputs
-    signal result  : std_logic_vector(n downto 0);
-    signal rdy_gen  : std_logic;
-    signal rdy_out  : std_logic;
+    signal RESULT  : std_logic_vector(n downto 0);
+    signal RDYGEN  : std_logic;
+    signal RDYOUT  : std_logic;
     signal ERRB    : std_logic;
     signal ERRZ    : std_logic;
     signal A       : std_logic_vector((n + 1) downto 0);
@@ -111,7 +111,7 @@ architecture behavior of top_tb is
     signal t_mask : std_logic_vector(n downto 0);
 
     signal t_1 : std_logic;
-    signal t_n1 : std_logic_vector(n downto 0);
+    signal t_n1 : std_logic_vector(n + 1 downto 0);
     signal t_n2 : std_logic_vector(n downto 0);
 
     ---- memory signals
@@ -126,12 +126,12 @@ begin
         RST => RST,
         ENCU => ENCU,
         POLYBCD => POLYBCD,
-        opcode => opcode,
+        OPCODE => OPCODE,
         OPAND1 => OPAND1,
         OPAND2 => OPAND2,
-        result => result,
-        rdy_gen => rdy_gen,
-        rdy_out => rdy_out,
+        RESULT => RESULT,
+        RDYGEN => RDYGEN,
+        RDYOUT => RDYOUT,
         ERRB => ERRB,
         ERRZ => ERRZ,
         nCE => nCE,
@@ -169,11 +169,11 @@ begin
     stim_proc: process
     begin
 
-        POLYBCD <= "000001101";  -- x^3+x^2+x^0
-        --POLYBCD <= "100011101";  -- x^8 + x^4 + x^3 + x^2 + 1
-        --POLYBCD <= "011111101"  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
-        OPAND2 <= "111111111";
-        OPAND1 <= "000000011";
+        POLYBCD <= "00000110";  -- x^3+x^2+x^0
+        --POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
+        --POLYBCD <= "01111110"  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
+        OPAND1 <= "00000011";
+        OPAND2 <= "00000101";
 
         wait for (CLK_PER * 1);
 
@@ -186,8 +186,7 @@ begin
 
         wait for (CLK_PER * 2);
 
-        ENCU <= '0';
-        opcode <= "000XXX";  -- generator
+        OPCODE <= "000XXX";  -- generator
 
         wait for (CLK_PER * 45);
 
@@ -196,7 +195,7 @@ begin
         wait for (CLK_PER * 2);
 
         RST <= '0';
-        opcode <= "001111";  -- add, elem, elem, elem
+        OPCODE <= "001111";  -- add, elem, elem, elem
 
         wait for (CLK_PER * 20);
         -- stop simulation

@@ -172,7 +172,6 @@ begin
 
                                 else
 
-                                report "shift here";
                                     addr_gen <= '1' & (temp_elem_f and mask);
                                     elem <= counter;
 
