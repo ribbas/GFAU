@@ -168,6 +168,7 @@ begin
     comm        :   process(t_clk)
     begin
         if rising_edge(t_clk) then
+            --if (t_clk = '1') then
             if g_rst = '1' then
                 deserial_se <= '0';
                 deserial_nr <= '0';
@@ -266,6 +267,7 @@ begin
                         --do nothing will never happen
                 end case;
             end if;
+        --end if;
         end if;
     end process comm;
 

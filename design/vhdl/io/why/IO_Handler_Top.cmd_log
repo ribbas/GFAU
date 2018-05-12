@@ -30,3 +30,38 @@ xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" 
 xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
 xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
 xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+map -intstyle ise -p xc6slx9-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o IO_Handler_Top_map.ncd IO_Handler_Top.ngd IO_Handler_Top.pcf 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+map -intstyle ise -p xc6slx9-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o IO_Handler_Top_map.ncd IO_Handler_Top.ngd IO_Handler_Top.pcf 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+map -intstyle ise -p xc6slx9-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o IO_Handler_Top_map.ncd IO_Handler_Top.ngd IO_Handler_Top.pcf 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+xst -intstyle ise -ifn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.xst" -ofn "/home/brian/gfau/design/vhdl/io/why/IO_Handler_Top.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+map -intstyle ise -p xc6slx9-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o IO_Handler_Top_map.ncd IO_Handler_Top.ngd IO_Handler_Top.pcf 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+map -intstyle ise -p xc6slx9-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o IO_Handler_Top_map.ncd IO_Handler_Top.ngd IO_Handler_Top.pcf 
+par -w -intstyle ise -ol high -mt off IO_Handler_Top_map.ncd IO_Handler_Top.ncd IO_Handler_Top.pcf 
+trce -intstyle ise -v 3 -s 3 -n 3 -fastpaths -xml IO_Handler_Top.twx IO_Handler_Top.ncd -o IO_Handler_Top.twr IO_Handler_Top.pcf -ucf mojo.ucf 
+bitgen -intstyle ise -f IO_Handler_Top.ut IO_Handler_Top.ncd 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc mojo.ucf -p xc6slx9-tqg144-3 IO_Handler_Top.ngc IO_Handler_Top.ngd  
+map -intstyle ise -p xc6slx9-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o IO_Handler_Top_map.ncd IO_Handler_Top.ngd IO_Handler_Top.pcf 
+par -w -intstyle ise -ol high -mt off IO_Handler_Top_map.ncd IO_Handler_Top.ncd IO_Handler_Top.pcf 
+trce -intstyle ise -v 3 -s 3 -n 3 -fastpaths -xml IO_Handler_Top.twx IO_Handler_Top.ncd -o IO_Handler_Top.twr IO_Handler_Top.pcf -ucf mojo.ucf 
+bitgen -intstyle ise -f IO_Handler_Top.ut IO_Handler_Top.ncd 

@@ -26,8 +26,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
-library UNISIM;
-use UNISIM.VComponents.all;
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity IO_Handler_Top is
 port(
@@ -38,7 +38,7 @@ port(
     --signals from/to external devices
     data        :   inout   std_logic_vector(31 downto 0); --external data bus
     Start       :   in      std_logic;
-    t_clk_in    :   in      std_logic; --external device clock < 200MHz
+    t_clk       :   in      std_logic; --external device clock < 200MHz
     g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
     ready_sig   :   out     std_logic; --gfau is ready for input
     err         :   out     std_logic; --error signal
@@ -47,15 +47,13 @@ port(
     INT         :   out     std_logic; --generate an interrupt
     INTA        :   in      std_logic; --interrupt acknowledge
     
-    mode_out    :   out     std_logic_vector(1 downto 0);
-    
     --signals to/from gfau
     clk         :   in      std_logic; --internal 50MHz clock
     op_done     :   in      std_logic; --normal operation completed
-    --opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
+    opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
     rst         :   out     std_logic; --propogation of g_rst
     gen_rdy     :   in      std_logic; --field generation complete
-    gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
+    --gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
     out_data    :   out     std_logic_vector(31 downto 0);
     input_size  :   out     std_logic_vector(3 downto 0);
     cu_start    :   out     std_logic;
@@ -63,7 +61,6 @@ port(
     --error signals
     z_err       :   in      std_logic;
     oob_err     :   in      std_logic
-    
 );
 end IO_Handler_Top;
 
@@ -160,13 +157,6 @@ architecture Behavioral of IO_Handler_Top is
         pad         :   inout   std_logic_vector((n - 1) downto 0)
     );
     end component;
-    
-    component BUFG
-    port(
-        I   :   in  std_logic;
-        O   :   out std_logic
-    );
-    end component;
         
 
 --============================================================================--
@@ -208,14 +198,8 @@ architecture Behavioral of IO_Handler_Top is
     
     signal input_size_s :   std_logic_vector(3 downto 0);
     
-    --tclk prev
-    signal tclk_prev    :   std_logic;
-    signal t_clk_buf    :   std_logic;
-    signal t_clk        :   std_logic;
-    
 begin
 
-    mode_out <= mode;
     input_size <= input_size_s;
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
@@ -235,7 +219,7 @@ begin
         INTA        => INTA,
         clk         => clk,
         op_done     => op_done,
-        opcode_out  => open, --opcode_out,
+        opcode_out  => opcode_out,
         rst         => rst,
         gen_rdy     => gen_rdy,
         mode        => mode,
@@ -301,10 +285,7 @@ begin
         ip          => in_data_ext,
         pad         => data
     );
-    
-    tclkbuf :   BUFG port map(t_clk_buf, t_clk);
 
-    
     outmux  :   process(err_out, err_vec, data_vec)
     begin
         if err_out = '1' then
@@ -313,20 +294,6 @@ begin
             out_data_ext <= data_vec;
         end if;
     end process outmux;
-    
-    --synchronize tclk 
-    tclk_gen    :   process(clk)
-    begin
-        if rising_edge(clk) then
-            if (tclk_prev = '0') and (t_clk_in = '1') then
-                t_clk_buf <= '1';
-            else 
-                t_clk_buf <= '0';
-            end if;
-            tclk_prev <= t_clk_in;
-        end if;
-    end process tclk_gen;
-        
         
 end Behavioral;
 
