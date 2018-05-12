@@ -41,7 +41,7 @@ entity memory is
         dout_cu     : out std_logic_vector(n downto 0);
         id_con      : in std_logic;
         addr_con    : in std_logic_vector(n downto 0);
-        dout_con    : out std_logic_vector((n - 1) downto 0);
+        dout_con    : out std_logic_vector((n + 1) downto 0);
         id_gen      : in std_logic;
         addr_gen    : in std_logic_vector(n downto 0);
         din_gen     : in std_logic_vector((n - 1) downto 0);
@@ -153,7 +153,7 @@ begin
                 end case;
 
             -- output converter
-            elsif (id_cu = '0' and id_gen = '0' and id_con = '1') then
+            elsif (id_gen = '0' and id_con = '1') then
 
                 case rd_state is
 

@@ -40,14 +40,14 @@ entity control_unit is
         j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
         -- memory types and methods
-        mem_t       : out std_logic; -- memory type
+        --mem_t       : out std_logic; -- memory type
 
         -- memory wrapper control signals
         id_cu       : out std_logic := '0';
         mem_rdy     : in std_logic;
 
         -- memory address and data signals
-        addr_cu     : out std_logic_vector(n downto 0);  -- address in memory
+        addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
         dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
 
         -- exceptions and flags
@@ -79,14 +79,13 @@ architecture behavioral of control_unit is
 
     signal opand_b : std_logic_vector(n downto 0);  -- address from memory
 
-    signal mem_t_z1 : std_logic;
-    signal opand_z1 : std_logic_vector(n downto 0); -- zero flag for operand 1
+    signal mem_t_z1 : std_logic := '0';
+    signal opand_z1 : std_logic_vector(n downto 0) := ZEROVEC; -- zero flag for operand 1
 
-    signal mem_t_z2 : std_logic;
-    signal opand_z2 : std_logic_vector(n downto 0); -- zero flag for operand 2
+    signal mem_t_z2 : std_logic := '0';
+    signal opand_z2 : std_logic_vector(n downto 0) := ZEROVEC; -- zero flag for operand 2
 
     signal op_state : op_state_type;
-    signal dbnc_state : debounce_state_type;
     signal rd_state1, rd_state2 : rd_state_type;
 
 begin
@@ -132,13 +131,17 @@ begin
 
                 -- disable arithmetic exceptions
                 opand_b <= ZEROVEC;
-                opand_z1 <= DCAREVEC;
-                opand_z2 <= DCAREVEC;
+                mem_t_z1 <= '0';
+                opand_z1 <= ZEROVEC;
+                mem_t_z2 <= '0';
+                opand_z2 <= ZEROVEC;
 
                 -- disable memory lookup
-                mem_t <= '-';
                 id_cu <= '0';
-                addr_cu <= DCAREVEC;
+                addr_cu <= '-' & DCAREVEC;
+
+                -- reset operand state
+                op_state <= op1_state;
 
             end if;
 
@@ -156,18 +159,17 @@ begin
 
                         -- disable arithmetic exceptions
                         opand_b <= ZEROVEC;
-                        mem_t_z1 <= '-';
-                        opand_z1 <= DCAREVEC;
-                        mem_t_z2 <= '-';
-                        opand_z2 <= DCAREVEC;
+                        mem_t_z1 <= '0';
+                        opand_z1 <= ZEROVEC;
+                        mem_t_z2 <= '0';
+                        opand_z2 <= ZEROVEC;
 
                         -- disable operators
                         en_ops <= '0';
 
                         -- disable memory lookup
-                        mem_t <= '-';
                         id_cu <= '0';
-                        addr_cu <= DCAREVEC;
+                        addr_cu <= '-' & DCAREVEC;
 
                     -- add / sub
                     when "001" =>
@@ -176,8 +178,6 @@ begin
                         en_gen <= '0';
                         rst_gen <= '0';
 
-                        -- mem2, addr = element, data = polynomial
-                        mem_t <= '1';
 
                         case op_state is
 
@@ -192,13 +192,15 @@ begin
                                 -- if operand 1 is in element form
                                 if (opcode(2) = '0') then
 
+                                    id_cu <= '1';
+                                    -- mem2, addr = element, data = polynomial
+                                    addr_cu <= '1' & opand1;
+
                                     case rd_state1 is
 
                                         -- send address to memory wrapper
                                         when send_addr =>
 
-                                            id_cu <= '1';
-                                            addr_cu <= opand1;
                                             i <= DCAREVEC;
 
                                             rd_state1 <= get_data;
@@ -230,7 +232,7 @@ begin
                                         when others =>
 
                                             id_cu <= '0';
-                                            addr_cu <= HIIMPVEC;
+                                            addr_cu <= 'Z' & HIIMPVEC;
                                             i <= DCAREVEC;
 
                                             rd_state1 <= send_addr;
@@ -263,13 +265,14 @@ begin
                                 -- if operand 2 is in element form
                                 if (opcode(1) = '0') then
 
+                                    id_cu <= '1';
+                                    addr_cu <= '1' & opand2;
+
                                     case rd_state2 is
 
                                         -- send address to memory wrapper
                                         when send_addr =>
 
-                                            id_cu <= '1';
-                                            addr_cu <= opand2;
                                             j <= DCAREVEC;
 
                                             -- disable operators
@@ -291,7 +294,6 @@ begin
                                                 opand_b <= dout_cu;
                                                 opand_z2 <= dout_cu;
 
-                                                op_state <= op1_state;
                                                 rd_state2 <= get_data;
 
                                                 -- enable operators
@@ -310,7 +312,7 @@ begin
                                         when others =>
 
                                             id_cu <= '0';
-                                            addr_cu <= HIIMPVEC;
+                                            addr_cu <= 'Z' & HIIMPVEC;
                                             j <= DCAREVEC;
 
                                             rd_state2 <= send_addr;
@@ -334,13 +336,11 @@ begin
                                     -- exceptions
                                     opand_b <= opand2;
                                     opand_z2 <= opand2;
+                                    op_state <= op1_state;
 
                                 end if;
 
                             when others =>
-
-                                -- address = element
-                                addr_cu <= opand1;
 
                                 -- op_state initializes to op1_state
                                 op_state <= op1_state;
@@ -353,9 +353,6 @@ begin
                         -- disable generator
                         en_gen <= '0';
                         rst_gen <= '0';
-
-                        -- mem1, addr = polynomial, data = element
-                        mem_t <= '0';
 
                         case op_state is
 
@@ -370,13 +367,15 @@ begin
                                 -- if operand 1 is in polynomial form
                                 if (opcode(2) = '1') then
 
+                                    id_cu <= '1';
+                                    -- mem1, addr = polynomial, data = element
+                                    addr_cu <= '0' & opand1;
+
                                     case rd_state1 is
 
                                         -- send address to memory wrapper
                                         when send_addr =>
 
-                                            id_cu <= '1';
-                                            addr_cu <= opand1;
                                             i <= DCAREVEC;
 
                                             rd_state1 <= get_data;
@@ -408,7 +407,7 @@ begin
                                         when others =>
 
                                             id_cu <= '0';
-                                            addr_cu <= HIIMPVEC;
+                                            addr_cu <= 'Z' & HIIMPVEC;
                                             i <= DCAREVEC;
 
                                             rd_state1 <= send_addr;
@@ -441,13 +440,14 @@ begin
                                 -- if operand 2 is in polynomial form
                                 if (opcode(1) = '1') then
 
+                                    id_cu <= '1';
+                                    addr_cu <= '0' & opand2;
+
                                     case rd_state2 is
 
                                         -- send address to memory wrapper
                                         when send_addr =>
 
-                                            id_cu <= '1';
-                                            addr_cu <= opand2;
                                             j <= DCAREVEC;
 
                                             -- disable generator
@@ -469,7 +469,6 @@ begin
                                                 opand_b <= dout_cu;
                                                 opand_z2 <= dout_cu;
 
-                                                op_state <= op1_state;
                                                 rd_state2 <= get_data;
 
                                                 -- enable generator
@@ -488,7 +487,7 @@ begin
                                         when others =>
 
                                             id_cu <= '0';
-                                            addr_cu <= HIIMPVEC;
+                                            addr_cu <= 'Z' & HIIMPVEC;
                                             j <= DCAREVEC;
 
                                             rd_state2 <= send_addr;
@@ -512,13 +511,11 @@ begin
                                     -- exceptions
                                     opand_b <= opand2;
                                     opand_z2 <= opand2;
+                                    op_state <= op1_state;
 
                                 end if;
 
                             when others =>
-
-                                -- address = element
-                                addr_cu <= opand1;
 
                                 -- op_state initializes to op1_state
                                 op_state <= op1_state;
@@ -532,9 +529,6 @@ begin
                         en_gen <= '0';
                         rst_gen <= '0';
 
-                        -- mem1, addr = polynomial, data = element
-                        mem_t <= '0';
-
                         -- default values for opand2
                         -- j is the user input
                         j <= DCAREVEC;
@@ -542,7 +536,7 @@ begin
                         -- check operand 2 for set membership
                         -- exceptions
                         opand_b <= ZEROVEC;
-                        opand_z2 <= DCAREVEC;
+                        opand_z2 <= ZEROVEC;
 
                         case op_state is
 
@@ -555,13 +549,16 @@ begin
                                 -- if operand 1 is in polynomial form
                                 if (opcode(2) = '1') then
 
+                                    id_cu <= '1';
+
+                                    -- mem1, addr = polynomial, data = element
+                                    addr_cu <= '0' & opand1;
+
                                     case rd_state1 is
 
                                         -- send address to memory wrapper
                                         when send_addr =>
 
-                                            id_cu <= '1';
-                                            addr_cu <= opand1;
                                             i <= DCAREVEC;
 
                                             rd_state1 <= get_data;
@@ -593,7 +590,7 @@ begin
                                         when others =>
 
                                             id_cu <= '0';
-                                            addr_cu <= HIIMPVEC;
+                                            addr_cu <= 'Z' & HIIMPVEC;
                                             i <= DCAREVEC;
 
                                             rd_state1 <= send_addr;
@@ -620,9 +617,6 @@ begin
 
                             when others =>
 
-                                -- address = element
-                                addr_cu <= opand1;
-
                                 -- op_state initializes to op1_state
                                 op_state <= op1_state;
 
@@ -640,13 +634,14 @@ begin
 
                         -- disable arithmetic exceptions
                         opand_b <= ZEROVEC;
-                        opand_z1 <= DCAREVEC;
-                        opand_z2 <= DCAREVEC;
+                        mem_t_z1 <= '0';
+                        opand_z1 <= ZEROVEC;
+                        mem_t_z2 <= '0';
+                        opand_z2 <= ZEROVEC;
 
                         -- disable memory lookup
-                        mem_t <= '-';
                         id_cu <= '0';
-                        addr_cu <= DCAREVEC;
+                        addr_cu <= '-' & DCAREVEC;
 
                     when others =>
 
@@ -659,13 +654,14 @@ begin
 
                         -- disable arithmetic exceptions
                         opand_b <= ZEROVEC;
-                        opand_z1 <= DCAREVEC;
-                        opand_z2 <= DCAREVEC;
+                        mem_t_z1 <= '0';
+                        opand_z1 <= ZEROVEC;
+                        mem_t_z2 <= '0';
+                        opand_z2 <= ZEROVEC;
 
                         -- disable memory lookup
-                        mem_t <= '-';
                         id_cu <= '0';
-                        addr_cu <= DCAREVEC;
+                        addr_cu <= '-' & DCAREVEC;
 
                 end case;
 
@@ -682,13 +678,14 @@ begin
 
                 -- disable arithmetic exceptions
                 opand_b <= ZEROVEC;
-                opand_z1 <= DCAREVEC;
-                opand_z2 <= DCAREVEC;
+                mem_t_z1 <= '0';
+                opand_z1 <= ZEROVEC;
+                mem_t_z2 <= '0';
+                opand_z2 <= ZEROVEC;
 
                 -- disable memory lookup
-                mem_t <= '-';
                 id_cu <= '0';
-                addr_cu <= DCAREVEC;
+                addr_cu <= '-' & DCAREVEC;
 
             end if;  -- enable
 

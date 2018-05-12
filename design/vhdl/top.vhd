@@ -127,8 +127,8 @@ architecture behavioral of top is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            init        : in std_logic;  -- control unit initialize
-            rst         : in std_logic;
+            init        : in std_logic;  -- control unit enable
+            rst         : in std_logic;  --reset
 
             -- registers
             mask        : in  std_logic_vector(n downto 0);
@@ -140,19 +140,17 @@ architecture behavioral of top is
             -- operation signals
             en_ops      : out std_logic;  -- operators enable
             rst_ops     : out std_logic;
-            i           : out std_logic_vector(n downto 0);  -- i
-            j           : out std_logic_vector(n downto 0);  -- j
+            i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
+            j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
-            -- memory types and methods
-            mem_t       : out std_logic; -- memory type
 
             -- memory wrapper control signals
-            id_cu       : out std_logic;
+            id_cu       : out std_logic := '0';
             mem_rdy     : in std_logic;
 
             -- memory address and data signals
-            addr_cu     : out std_logic_vector(n downto 0);
-            dout_cu     : in std_logic_vector(n downto 0);
+            addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
+            dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
 
             -- exceptions and flags
             err_b       : out std_logic;  -- set membership exception
@@ -296,7 +294,7 @@ architecture behavioral of top is
     signal j_null : std_logic;
 
     -- memory control signals
-    signal mem_t_cu : std_logic;  -- memory type of control unit
+    --signal mem_t_cu : std_logic;  -- memory type of control unit
     signal mem_t_con : std_logic;  -- memory type of operators
     signal mem_t_gen : std_logic;  -- memory type of generator
     signal mem_rdy : std_logic;  -- memory type
@@ -305,7 +303,7 @@ architecture behavioral of top is
     signal addr_gen : std_logic_vector(n downto 0);
     signal elem : std_logic_vector((n - 1) downto 0);
     signal addr_cu : std_logic_vector(n downto 0);
-    signal dout_cu : std_logic_vector(n downto 0);
+    signal dout_cu : std_logic_vector((n + 1) downto 0);
     signal addr_con : std_logic_vector(n downto 0);
     signal dout_con : std_logic_vector((n - 1) downto 0);
 

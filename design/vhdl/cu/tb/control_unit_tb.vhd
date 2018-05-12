@@ -26,7 +26,8 @@ architecture behavior of control_unit_tb is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            en          : in std_logic;  -- control unit enable
+            init        : in std_logic;  -- control unit enable
+            rst         : in std_logic;  --reset
 
             -- registers
             mask        : in  std_logic_vector(n downto 0);
@@ -37,19 +38,18 @@ architecture behavior of control_unit_tb is
 
             -- operation signals
             en_ops      : out std_logic;  -- operators enable
-            i           : out std_logic_vector(n downto 0);  -- i
-            j           : out std_logic_vector(n downto 0);  -- j
+            rst_ops     : out std_logic;
+            i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
+            j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
-            -- memory types and methods
-            mem_t       : out std_logic; -- memory type
 
             -- memory wrapper control signals
-            id_cu       : out std_logic;
+            id_cu       : out std_logic := '0';
             mem_rdy     : in std_logic;
 
             -- memory address and data signals
-            addr_cu     : out std_logic_vector(n downto 0);
-            dout_cu     : in std_logic_vector(n downto 0);
+            addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
+            dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
 
             -- exceptions and flags
             err_b       : out std_logic;  -- set membership exception
@@ -63,7 +63,8 @@ architecture behavior of control_unit_tb is
     signal opand1 : std_logic_vector(n downto 0);   -- operand 1
     signal opand2 : std_logic_vector(n downto 0);   -- operand 2
     signal mask : std_logic_vector(n downto 0);   -- mask
-    signal en : std_logic := '0';
+    signal init : std_logic := '0';
+    signal rst : std_logic := '0';
 
     -- outputs
     signal en_ops : std_logic;
@@ -77,10 +78,9 @@ architecture behavior of control_unit_tb is
 
     -- memory signals
     signal mem_rdy : std_logic := '1';  -- read signal to memory
-    signal mem_t : std_logic;  -- which memory - 0 for elem, 1 for poly
     signal id_cu : std_logic;  -- read signal to memory
-    signal addr_cu : std_logic_vector(n downto 0);  -- address in memory
-    signal dout_cu : std_logic_vector(n downto 0) := "000000000";  -- data
+    signal addr_cu : std_logic_vector((n + 1) downto 0);  -- address in memory
+    signal dout_cu : std_logic_vector(n downto 0) := "00000000";  -- data
 
     -- clocks
     signal clk : std_ulogic := '1';
@@ -93,14 +93,14 @@ begin
         opcode => opcode,
         opand1 => opand1,
         opand2 => opand2,
-        en => en,
+        init => init,
+        rst => rst,
         mask => mask,
         en_ops => en_ops,
         en_gen => en_gen,
         rst_gen => rst_gen,
         i => i,
         j => j,
-        mem_t => mem_t,
         id_cu => id_cu,
         mem_rdy => mem_rdy,
         addr_cu => addr_cu,
@@ -127,7 +127,7 @@ begin
 
         for i in 1 to TNUMS loop
             dout_cu <= std_logic_vector(unsigned(dout_cu) + 1);
-            wait for (CLK_PER * 2);
+            wait for (CLK_PER * 4);
         end loop;
 
     end process;
@@ -146,20 +146,25 @@ begin
     test : process
     begin
 
-        mask <= "000000111";
-        opand1 <= "000000101";
-        opand2 <= "000000011";
+        mask <= "00000111";
+        opand1 <= "00000101";
+        opand2 <= "00000011";
         opcode <= "00100";  -- add/sub, operands in polynomial
+        rst <= '0';
+        init <= '1';
+
+        wait for (CLK_PER * 8);
+
+        rst <= '1';
 
         wait for (CLK_PER * 1);
-        en <= '1';
 
-        wait for (CLK_PER * 4);
+        rst <= '0';
 
-        opand1 <= "000000111";  -- 2^n-1
-        opand2 <= "111111111";  -- zero in element
-        opcode <= "01100";  -- division, operands in element
-        wait for (CLK_PER * 4);
+        opand1 <= "00000111";  -- 2^n-1
+        opand2 <= "11111111";  -- zero in element
+        opcode <= "01111";  -- division, operands in element
+        wait for (CLK_PER * 8);
 
         opcode <= "000XX";  -- generator
         wait for (CLK_PER * 2);

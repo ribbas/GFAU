@@ -15,7 +15,7 @@ package glob is
     -------- glob constants --------
 
     -- maximum degree of polynomial
-    constant DEGREE : positive := 8;
+    constant DEGREE : positive := 7;
 
     -- ceil(log2(degree))
     constant CEILLGN : positive := 3;
