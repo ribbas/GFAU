@@ -27,12 +27,12 @@ end div;
 
 architecture behavioral of div is
 
-    signal sumij : std_logic_vector(n downto 0);
-    signal sumij1 : std_logic_vector(n downto 0);
+    signal sumij : std_logic_vector((n + 1) downto 0);
+    signal sumij1 : std_logic_vector((n + 1) downto 0);
 
 begin
 
-    sumij <= std_logic_vector(unsigned(i) + unsigned(j));
+    sumij <= std_logic_vector(unsigned('0' & i) + unsigned(j));
     sumij1 <= std_logic_vector(unsigned(sumij) + unsigned(HIVEC));
 
     process (size, sumij, sumij1)
@@ -42,12 +42,12 @@ begin
         if (sumij(to_integer(unsigned(size))) = '1') then
 
             -- quot = i + two's-cmp(j)
-            quot <= sumij;
+            quot <= sumij(n downto 0);
 
         else
 
             -- quot = i + two's-cmp(j) + two's-cmp(1)
-            quot <= sumij1;
+            quot <= sumij1(n downto 0);
 
         end if;
 

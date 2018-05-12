@@ -125,12 +125,12 @@ begin
     stim_proc: process
     begin
 
-        i <= "000000101";
-        j <= "000000011";
+        i <= "00000101";
+        j <= "00000011";
         i_null <= '0';
         j_null <= '0';
         size <= "0011";
-        mask <= "000000111";
+        mask <= "00000111";
 
         -- hold state for 10 ns
         wait for (CLK_PER * 1);
@@ -157,7 +157,7 @@ begin
         -- hold state for 10 ns
         wait for (CLK_PER * 1);
 
-        dout_con <= "000000100";
+        dout_con <= "00000100";
         mem_rdy <= '1';
         -- div, elem
         op <= "011";

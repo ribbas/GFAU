@@ -27,12 +27,12 @@ end mul;
 
 architecture behavioral of mul is
 
-    signal sumij : std_logic_vector(n downto 0);
-    signal sumij1 : std_logic_vector(n downto 0);
+    signal sumij : std_logic_vector((n + 1) downto 0);
+    signal sumij1 : std_logic_vector((n + 1) downto 0);
 
 begin
 
-    sumij <= std_logic_vector(unsigned(i) + unsigned(j));
+    sumij <= std_logic_vector(unsigned('0' & i) + unsigned(j));
     sumij1 <= std_logic_vector(unsigned(sumij) + 1);
 
     process(size, sumij, sumij1)
@@ -43,12 +43,12 @@ begin
             sumij1(to_integer(unsigned(size)))) = '0') then
 
             -- prod = i + j
-            prod <= sumij;
+            prod <= sumij(n downto 0);
 
         else
 
             -- prod = i + j + 1
-            prod <= sumij1;
+            prod <= sumij1(n downto 0);
 
         end if;
 

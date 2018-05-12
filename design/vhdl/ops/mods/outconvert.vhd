@@ -34,10 +34,10 @@ entity outconvert is
 
         -- memory address and data signals
         addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector((n - 1) downto 0) := HIIMPVEC((n - 1) downto 0);
+        dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
 
         -- final output
-        result      : out std_logic_vector((n - 1) downto 0);
+        result      : out std_logic_vector(n downto 0);
         rdy_out     : out std_logic := '0' -- result ready interrupt
     );
 end outconvert;
@@ -57,7 +57,7 @@ begin
 
                 id_con <= '0';
                 addr_con <= DCAREVEC;
-                result <= DCAREVEC((n - 1) downto 0);
+                result <= DCAREVEC;
                 rdy_out <= '0';
 
             end if;
@@ -77,7 +77,7 @@ begin
                             rdy_out <= '0';
 
                             addr_con <= out_sel;
-                            result <= DCAREVEC((n - 1) downto 0);
+                            result <= DCAREVEC;
 
                             rd_state <= get_data;
 
@@ -89,13 +89,13 @@ begin
 
                             if (mem_rdy = '1') then
 
-                                result <= dout_con and mask((n - 1) downto 0);
+                                result <= dout_con and mask;
                                 rdy_out <= '1';
                                 rd_state <= get_data;
 
                             else
 
-                                result <= DCAREVEC((n - 1) downto 0);
+                                result <= DCAREVEC;
                                 rdy_out <= '0';
                                 rd_state <= get_data;
 
@@ -108,7 +108,7 @@ begin
                             rdy_out <= '0';
 
                             addr_con <= DCAREVEC;
-                            result <= DCAREVEC((n - 1) downto 0);
+                            result <= DCAREVEC;
                             rd_state <= send_addr;
 
                     end case;
@@ -123,11 +123,11 @@ begin
 
                     if (and_reduce(out_sel) = '0') then
 
-                        result <= out_sel((n - 1) downto 0) and mask((n - 1) downto 0);
+                        result <= out_sel and mask;
 
                     else
 
-                        result <= out_sel((n - 1) downto 0);
+                        result <= out_sel;
 
                     end if;
 

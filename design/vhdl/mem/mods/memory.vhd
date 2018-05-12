@@ -31,19 +31,19 @@ entity memory is
 
         -- memory types and methods
         mem_t_con   : in std_logic;
-        mem_t_gen   : in std_logic;
+        --mem_t_gen   : in std_logic;
         mem_rdy     : out std_logic;  -- ready
 
         -- module signals
         id_cu       : in std_logic;
-        addr_cu     : in std_logic_vector(n downto 0);
+        addr_cu     : in std_logic_vector((n + 1) downto 0);
         dout_cu     : out std_logic_vector(n downto 0);
         id_con      : in std_logic;
         addr_con    : in std_logic_vector(n downto 0);
-        dout_con    : out std_logic_vector((n + 1) downto 0);
+        dout_con    : out std_logic_vector(n downto 0);
         id_gen      : in std_logic;
-        addr_gen    : in std_logic_vector(n downto 0);
-        din_gen     : in std_logic_vector((n + 1) downto 0);
+        addr_gen    : in std_logic_vector((n + 1) downto 0);
+        din_gen     : in std_logic_vector(n downto 0);
 
         -- memory control signals
         nCE         : out std_logic;
@@ -54,7 +54,7 @@ entity memory is
 
         -- memory address and data signals
         A           : out std_logic_vector((n + 1) downto 0);
-        DQ          : inout std_logic_vector((n - 1) downto 0)
+        DQ          : inout std_logic_vector(n downto 0)
     );
 end memory;
 
@@ -67,20 +67,20 @@ architecture behavioral of memory is
     signal wr_state     : wr_state_type;
 
     --used for setting up address before writing
-    signal setup        : setup_type := addr_setup;
+    signal setup        : setup_type;
     signal ioport_oe    : std_logic;
 
 	--internal DQ signals
-	signal DQ_in		: std_logic_vector((n - 1) downto 0);
-	signal DQ_out		: std_logic_vector((n - 1) downto 0);
+	signal DQ_in		: std_logic_vector(n downto 0);
+	signal DQ_out		: std_logic_vector(n downto 0);
 	signal wr_rd		: std_logic;
 
     component io_port
         port(
-            op  : in std_logic_vector((n - 1) downto 0);  --out to pad
-            oe      : in std_logic;                         --enable pad output
-            ip   : out std_logic_vector((n - 1) downto 0);  --in from pad
-            pad     : inout std_logic_vector((n - 1) downto 0)   --external io pad
+            op  : in std_logic_vector(n downto 0);  --out to pad
+            oe  : in std_logic;                         --enable pad output
+            ip  : out std_logic_vector(n downto 0);  --in from pad
+            pad : inout std_logic_vector(n downto 0)   --external io pad
         );
     end component;
 
@@ -100,19 +100,22 @@ begin
             -- control unit
             if (id_cu = '1' and id_gen = '0' and id_con = '0') then
 
+                dout_con <= DCAREVEC;
+
+                -- memory read control signals
+                nCE <= '0';
+                nOE <= '0';
+                nWE <= '1';
+
+                wr_rd <= '0'; --set iobus mode to read
+
+                -- send output converter's address to memory
+                A <= addr_cu;
+
                 case rd_state is
 
                     when send_addr =>
 
-                        -- memory read control signals
-                        nCE <= '0';
-                        nOE <= '0';
-                        nWE <= '1';
-
-                        wr_rd <= '0'; --set iobus mode to read
-
-                        -- send output converter's address to memory
-                        A <= addr_cu;
 
                         mem_rdy <= '0';
 
@@ -120,16 +123,8 @@ begin
 
                     when get_data =>
 
-                        -- memory read control signals
-                        nCE <= '0';
-                        nOE <= '0';
-                        nWE <= '1';
-
-                        wr_rd <= '0'; --set iobus mode to read
-
                         -- send dout to output converter
-                        dout_cu <= '0' & DQ_out; --read from iobus in
-                        dout_con <= DCAREVEC((n - 1) downto 0);
+                        dout_cu <= DQ_out; --read from iobus in
 
                         mem_rdy <= '1';
 
@@ -142,7 +137,7 @@ begin
                         nWE <= '-';
 
                         -- data outs are don't care
-                        dout_con <= DCAREVEC((n - 1) downto 0);
+                        dout_con <= DCAREVEC;
                         dout_cu <= DCAREVEC;
 
                         mem_rdy <= '0';
@@ -154,19 +149,21 @@ begin
             -- output converter
             elsif (id_gen = '0' and id_con = '1') then
 
+                dout_cu <= DCAREVEC;
+
+                -- memory read control signals
+                nCE <= '0';
+                nOE <= '0';
+                nWE <= '1';
+
+                wr_rd <= '0'; --set iobus mode to read
+
+                -- send output converter's address to memory
+                A <= mem_t_con & addr_con;
+
                 case rd_state is
 
                     when send_addr =>
-
-                        -- memory read control signals
-                        nCE <= '0';
-                        nOE <= '0';
-                        nWE <= '1';
-
-                        wr_rd <= '0'; --set iobus mode to read
-
-                        -- send output converter's address to memory
-                        A <= mem_t_con & addr_con;
 
                         mem_rdy <= '0';
 
@@ -174,16 +171,8 @@ begin
 
                     when get_data =>
 
-                        -- memory read control signals
-                        nCE <= '0';
-                        nOE <= '0';
-                        nWE <= '1';
-
-                        wr_rd <= '0'; --set iobus mode to read
-
                         -- send dout to output converter
                         dout_con <= DQ_out; --read from iobus in
-                        dout_cu <= DCAREVEC;
 
                         mem_rdy <= '1';
 
@@ -196,8 +185,7 @@ begin
                         nWE <= '-';
 
                         -- data outs are don't care
-                        dout_con <= DCAREVEC((n - 1) downto 0);
-                        dout_cu <= DCAREVEC;
+                        dout_con <= DCAREVEC;
 
                         mem_rdy <= '0';
 
@@ -209,13 +197,13 @@ begin
             elsif (id_cu = '0' and id_gen = '1' and id_con = '0') then
 
                 -- data outs are don't care
-                dout_con <= DCAREVEC((n - 1) downto 0);
+                dout_con <= DCAREVEC;
                 dout_cu <= DCAREVEC;
                 wr_rd <= '1'; -- sets the io port to output mode
 
                 --hold address, data, and bus control signals
-                A <= mem_t_gen & addr_gen;
-                DQ_in <= din_gen((n - 1) downto 0);
+                A <= addr_gen;
+                DQ_in <= din_gen(n downto 0);
 
                 -- send control unit's address to memory
                 nOE <= '1';
@@ -252,7 +240,7 @@ begin
                 mem_rdy <= '0';
 
                 -- data outs are don't care
-                dout_con <= DCAREVEC((n - 1) downto 0);
+                dout_con <= DCAREVEC;
                 dout_cu <= DCAREVEC;
 
             end if;
