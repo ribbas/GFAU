@@ -12,7 +12,7 @@ library ieee;
 library work;
     use work.glob.all;
 
-entity top is
+entity topdbg is
     generic(
         n       : positive := DEGREE;
         clgn    : positive := CEILLGN;  -- ceil(log2(n))
@@ -67,9 +67,9 @@ entity top is
         t_n2      : out std_logic_vector(n downto 0)
 
     );
-end top;
+end topdbg;
 
-architecture behavioral of top is
+architecture behavioral of topdbg is
 
     ---------------- universal registers and constants ----------------
 
@@ -140,10 +140,10 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector((n - 1) downto 0);
+            poly_bcd    : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
-            poly_bcd_reg : out std_logic_vector((n - 1) downto 0);
+            poly_bcd_reg : out std_logic_vector(n downto 1);
 
             -- memory wrapper control signals
             id_gen      : out std_logic := '0';
@@ -281,7 +281,7 @@ begin
 
     -- mask
     varmask_unit: varmask port map(
-        poly_bcd => poly_bcd_reg(n downto 1),
+        poly_bcd => poly_bcd_reg,
         mask => mask
     );
 
@@ -316,7 +316,7 @@ begin
         clk => CLK,
         rst => rst_gen,
         en => en_gen,
-        poly_bcd => POLYBCD((n - 1) downto 0),
+        poly_bcd => POLYBCD,
         poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,

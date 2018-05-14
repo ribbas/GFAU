@@ -20,7 +20,7 @@ architecture behavior of top_tb is
     constant clgn : positive := CEILLGN;
     constant clgn1 : positive := CEILLGN1;
 
-    component top
+    component topdbg
         generic(
             n       : positive := DEGREE;
             clgn    : positive := CEILLGN;  -- ceil(log2(n))
@@ -121,7 +121,7 @@ architecture behavior of top_tb is
 begin
 
     -- instantiate the unit under test (uut)
-    uut: top port map (
+    uut: topdbg port map (
         CLK => CLK,
         RST => RST,
         ENCU => ENCU,
@@ -169,9 +169,9 @@ begin
     stim_proc: process
     begin
 
-        POLYBCD <= "00000110";  -- x^3+x^2+x^0
+        --POLYBCD <= "00000110";  -- x^3+x^2+x^0
         --POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
-        --POLYBCD <= "01111110"  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
+        POLYBCD <= "01111110";  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
         OPAND1 <= "00000011";
         OPAND2 <= "00000101";
 

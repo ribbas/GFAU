@@ -47,18 +47,6 @@ entity top is
         IO      : inout std_logic_vector(n downto 0)
 
         --;
-        --t_mode        :   out std_logic_vector(1 downto 0)
-
-        ---------------- TEMPORARY - JUST FOR TB ------------
-
-        ------ universal registers
-        --t_size      : out std_logic_vector(clgn downto 0);
-        --t_msb       : out std_logic_vector(clgn1 downto 0);
-        --t_mask      : out std_logic_vector(n downto 0);
-
-        --t_1         : out std_logic;
-        --t_n1      : out std_logic_vector(n downto 0);
-        --t_n2      : out std_logic_vector(n downto 0)
 
     );
 end top;
@@ -173,10 +161,10 @@ architecture behavioral of top is
             rst         : in std_logic;
 
             -- polynomial data
-            poly_bcd    : in std_logic_vector((n - 1) downto 0);
+            poly_bcd    : in std_logic_vector(n downto 0);
             mask        : in std_logic_vector(n downto 0);
             msb         : in std_logic_vector(clgn1 downto 0);
-            poly_bcd_reg : out std_logic_vector((n - 1) downto 0);
+            poly_bcd_reg : out std_logic_vector(n downto 1);
 
             -- memory wrapper control signals
             id_gen      : out std_logic := '0';
@@ -361,7 +349,7 @@ begin
 
     -- mask
     varmask_unit: varmask port map(
-        poly_bcd => poly_bcd_reg(n downto 1),
+        poly_bcd => poly_bcd_reg,
         mask => mask
     );
 
@@ -396,7 +384,7 @@ begin
         clk => CLK,
         rst => rst_gen,
         en => en_gen,
-        poly_bcd => out_data(n downto 1),
+        poly_bcd => out_data(n downto 0),
         poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,
@@ -458,21 +446,5 @@ begin
         A => A,
         DQ => IO
     );
-
-
-    -------------------- TEMPORARY OUTPUTS ----------------
-    --t_size <= size;
-    --t_msb <= msb;
-    --t_mask <= mask;
-    --t_1 <= rst_ops;
-    --t_n1 <= addr_gen;
-    --t_n2 <= elem;
-
-    ----process (clk) begin
-    ----for i in 5 downto 0 loop
-    ----    report "TOP("&integer'image(i)&")=" & std_logic'image(OPCODE(i));
-    ----end loop;
-    ----end process;
-
 
 end behavioral;
