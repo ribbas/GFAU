@@ -1,4 +1,0 @@
-vhdl work "serialize.vhd"
-vhdl work "IO_Handler.vhd"
-vhdl work "data_deserialize.vhd"
-vhdl work "IO_Handler_Top.vhd"
