@@ -39,9 +39,6 @@ entity control_unit is
         i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
         j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
 
-        -- memory types and methods
-        --mem_t       : out std_logic; -- memory type
-
         -- memory wrapper control signals
         id_cu       : out std_logic := '0';
         mem_rdy     : in std_logic;
@@ -117,6 +114,9 @@ begin
 
                 en <= '1';
 
+                -- reset operand state
+                op_state <= op1_state;
+
             end if;
 
             if (rst = '1') then
@@ -139,9 +139,6 @@ begin
                 -- disable memory lookup
                 id_cu <= '0';
                 addr_cu <= '-' & DCAREVEC;
-
-                -- reset operand state
-                op_state <= op1_state;
 
             end if;
 

@@ -147,23 +147,28 @@ begin
     begin
 
         mask <= "00000111";
+
+        init <= '1';
         opand1 <= "00000101";
         opand2 <= "00000011";
         opcode <= "00100";  -- add/sub, operands in polynomial
-        rst <= '0';
-        init <= '1';
-
-        wait for (CLK_PER * 8);
-
-        rst <= '1';
 
         wait for (CLK_PER * 1);
 
-        rst <= '0';
+        init <= '0';
+
+        wait for (CLK_PER * 8);
+
+        init <= '1';
 
         opand1 <= "00000111";  -- 2^n-1
         opand2 <= "11111111";  -- zero in element
-        opcode <= "01111";  -- division, operands in element
+        opcode <= "00111";  -- division, operands in element
+
+        wait for (CLK_PER * 1);
+
+        init <= '0';
+
         wait for (CLK_PER * 8);
 
         opcode <= "000XX";  -- generator

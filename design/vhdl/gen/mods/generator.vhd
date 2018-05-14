@@ -53,8 +53,7 @@ architecture fsm of generator is
 
 begin
 
-    process (clk)
-    begin
+    process (clk) begin
 
         if rising_edge(clk) then
 

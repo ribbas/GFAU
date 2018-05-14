@@ -63,7 +63,7 @@ entity topdbg is
         t_mask      : out std_logic_vector(n downto 0);
 
         t_1         : out std_logic;
-        t_n1      : out std_logic_vector(n + 1 downto 0);
+        t_n1      : out std_logic_vector(n downto 0);
         t_n2      : out std_logic_vector(n downto 0)
 
     );
@@ -383,8 +383,8 @@ begin
     t_msb <= msb;
     t_mask <= mask;
     t_1 <= rst_ops;
-    t_n1 <= addr_gen;
-    t_n2 <= elem;
+    t_n1 <= i;
+    t_n2 <= j;
 
     ----process (clk) begin
     ----for i in 5 downto 0 loop

@@ -73,7 +73,7 @@ architecture behavior of top_tb is
             --t_addr      : out std_logic_vector(n downto 0);
             --t_sym       : out std_logic_vector(n downto 0)
             t_1         : out std_logic;
-            t_n1      : out std_logic_vector(n + 1 downto 0);
+            t_n1      : out std_logic_vector(n downto 0);
             t_n2      : out std_logic_vector(n downto 0)
         );
     end component;
@@ -111,7 +111,7 @@ architecture behavior of top_tb is
     signal t_mask : std_logic_vector(n downto 0);
 
     signal t_1 : std_logic;
-    signal t_n1 : std_logic_vector(n + 1 downto 0);
+    signal t_n1 : std_logic_vector(n downto 0);
     signal t_n2 : std_logic_vector(n downto 0);
 
     ---- memory signals
@@ -188,16 +188,21 @@ begin
 
         OPCODE <= "000XXX";  -- generator
 
-        wait for (CLK_PER * 45);
+        wait for (CLK_PER * 30);
 
-        RST <= '1';
+        ENCU <= '1';
 
-        wait for (CLK_PER * 2);
+        OPCODE <= "010000";  -- add, poly, poly, poly
 
-        RST <= '0';
-        OPCODE <= "001111";  -- add, elem, elem, elem
+        wait for (CLK_PER * 6);
 
-        wait for (CLK_PER * 20);
+        ENCU <= '1';
+        --OPCODE <= "001111";  -- mul, elem, elem, elem
+        OPAND1 <= "00000101";
+        OPAND2 <= "00000110";
+
+        wait for (CLK_PER * 8);
+
         -- stop simulation
         assert false report "simulation ended" severity failure;
 
