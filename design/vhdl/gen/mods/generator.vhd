@@ -80,12 +80,12 @@ begin
                 -- save this for later :)
                 poly_bcd_reg <= poly_bcd(n downto 1);
 
+                -- elem^n
+                nth_elem <= (poly_bcd((n - 1) downto 0) & '1') and mask;
+
             end if;
 
             if (en = '1' and rst = '0') then
-
-                -- elem^n
-                nth_elem <= (poly_bcd((n - 1) downto 0) & '1') and mask;
 
                 case flippy_flop is
 
