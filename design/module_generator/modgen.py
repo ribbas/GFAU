@@ -8,7 +8,7 @@ import math
 import os
 from pprint import pprint
 
-from modstr import GLOB_STR, INDICES_STR, VARMASK_STR
+from modstr import GLOB_STR, VARMASK_STR
 
 try:
     input = raw_input
@@ -30,13 +30,13 @@ def find_file(file_name):
 
 def assign_path(args, file_name):
 
-    if (not os.path.isfile(args.__dict__[file_name])):
+    if (not os.path.isfile(args[file_name])):
         found_files = find_file("{0}.vhd".format(file_name))
         if (len(found_files) == 1):
             print("Picking '{0}.vhd' file found at"
                   " \x1b[1;32;40m'{1}'\x1b[0m".format(
                       file_name, found_files[0]))
-            args.__dict__[file_name] = found_files[0]
+            args[file_name] = found_files[0]
             return False
 
         elif (len(found_files) > 1):
@@ -61,44 +61,21 @@ def write_varmask(deg):
     varmask_enc = ""
     varmask_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
 
-    for index in range(deg, 1, -1):
+    for index in range(deg, 0, -1):
+        case_str = varmask_line.format(
+            vec="0" * (deg - index) + "1" * (index + 1), bit=str(index)
+        )
 
-        if index == deg:
-            varmask_enc += varmask_line.format(
-                vec="0" * (deg - index + 1) + "1" * index, bit=str(index)
-            )
+        if index != deg:
+            varmask_enc += " " * 12 + case_str
 
         else:
-            varmask_enc += "\t\t" + varmask_line.format(
-                vec="0" * (deg - index + 1) + "1" * index, bit=str(index)
-            )
+            varmask_enc += case_str
+
+    print(varmask_enc)
 
     with open(args["varmask"], "w") as varmask_file:
         varmask_file.write(VARMASK_STR.format(varmask_enc))
-
-
-def write_indices(deg, ceillgn):
-
-    indices_enc = ""
-    indices_fmt = "{:0%db}" % (ceillgn + 1)
-    indices_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
-
-    for index in range(deg, 1, -1):
-
-        if index == deg:
-            indices_enc += indices_line.format(
-                vec=indices_fmt.format(index),
-                bit=str(index)
-            )
-
-        else:
-            indices_enc += "\t\t" + indices_line.format(
-                vec=indices_fmt.format(index),
-                bit=str(index)
-            )
-
-    with open(args["indices"], "w") as indices_file:
-        indices_file.write(INDICES_STR.format(indices_enc))
 
 
 def parse_args(args):
@@ -110,8 +87,6 @@ def parse_args(args):
     write_glob(deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1)
 
     write_varmask(deg=deg)
-
-    write_indices(deg=deg, ceillgn=ceillgn)
 
 
 if __name__ == "__main__":
@@ -131,26 +106,23 @@ if __name__ == "__main__":
     parser.add_argument("--glob", "-g", default="", metavar="PATH",
                         help="| Path of 'glob.vhd'")
 
-    parser.add_argument("--indices", "-i", default="", metavar="PATH",
-                        help="| Path of 'indices.vhd'")
-
     parser.add_argument("--varmask", "-v", default="", metavar="PATH",
                         help="| Path of 'varmask.vhd'")
 
     # parse arguments to pass into function
-    args = parser.parse_args()
+    args = parser.parse_args().__dict__
     ambiguous = assign_path(args, "glob")
     ambiguous = assign_path(args, "varmask")
-    ambiguous = assign_path(args, "indices")
 
     if (not ambiguous):
 
         print("\nParameters chosen:")
-        pprint(args.__dict__)
+        pprint(args)
         init_gen = input("Continue? (y/n): ")
         if (init_gen.lower() == 'y'):
+            args["degree"] -= 1
             print("Generating modules...", end="")
-            parse_args(args.__dict__)
+            parse_args(args)
             print("Done")
         else:
             print("\x1b[1;31;40mModule generation canceled\x1b[0m")

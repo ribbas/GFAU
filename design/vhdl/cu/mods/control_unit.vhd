@@ -105,8 +105,7 @@ begin
         is_null => opand2_null
     );
 
-    process (clk)
-    begin
+    process (clk) begin
 
         if (rising_edge(clk)) then
 
