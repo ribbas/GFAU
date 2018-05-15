@@ -1,49 +1,49 @@
 --------------------------------------------------------------------------------
--- Company: 
+-- Company:
 -- Engineer:
 --
 -- Create Date:   12:29:31 05/09/2018
--- Design Name:   
+-- Design Name:
 -- Module Name:   /home/brian/gfau/design/vhdl/io/ISE/IO_Handler_Test.vhd
 -- Project Name:  IO_Handler
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
+-- Target Device:
+-- Tool versions:
+-- Description:
+--
 -- VHDL Test Bench Created by ISE for module: IO_Handler_Top
--- 
+--
 -- Dependencies:
--- 
+--
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
 --
--- Notes: 
+-- Notes:
 -- This testbench has been automatically generated using types std_logic and
 -- std_logic_vector for the ports of the unit under test.  Xilinx recommends
 -- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
+-- to guarantee that the testbench will bind correctly to the post-implementation
 -- simulation model.
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
- 
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
- 
+
 ENTITY IO_Handler_Test IS
 END IO_Handler_Test;
- 
-ARCHITECTURE behavior OF IO_Handler_Test IS 
- 
+
+ARCHITECTURE behavior OF IO_Handler_Test IS
+
     -- Component Declaration for the Unit Under Test (UUT)
- 
+
     COMPONENT IO_Handler_Top
     PORT(
          data : INOUT  std_logic_vector(31 downto 0);
          Start : IN  std_logic;
-         t_clk : IN  std_logic;
+         t_clk_in : IN  std_logic;
          g_rst : IN  std_logic;
          ready_sig : OUT  std_logic;
          err : OUT  std_logic;
@@ -61,7 +61,7 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
          oob_err : IN  std_logic
         );
     END COMPONENT;
-    
+
     component io_port
     generic(
         n           :   positive
@@ -73,10 +73,10 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
         pad         :   inout   std_logic_vector((n - 1) downto 0)
     );
     end component;
-        
+
    --Inputs
    signal Start : std_logic := '0';
-   signal t_clk : std_logic := '0';
+   signal t_clk_in : std_logic := '0';
    signal g_rst : std_logic := '0';
    signal INTA : std_logic := '0';
    signal clk : std_logic := '0';
@@ -105,14 +105,14 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
    -- Clock period definitions
    constant t_clk_period : time := 13 ns;
    constant clk_period : time := 10 ns;
- 
+
 BEGIN
- 
+
 	-- Instantiate the Unit Under Test (UUT)
    uut: IO_Handler_Top PORT MAP (
           data => data,
           Start => Start,
-          t_clk => t_clk,
+          t_clk_in => t_clk_in,
           g_rst => g_rst,
           ready_sig => ready_sig,
           err => err,
@@ -142,12 +142,12 @@ BEGIN
    -- Clock process definitions
    t_clk_process :process
    begin
-		t_clk <= '0';
+		t_clk_in <= '0';
 		wait for t_clk_period/2;
-		t_clk <= '1';
+		t_clk_in <= '1';
 		wait for t_clk_period/2;
    end process;
- 
+
    clk_process :process
    begin
 		clk <= '0';
@@ -155,11 +155,11 @@ BEGIN
 		clk <= '1';
 		wait for clk_period/2;
    end process;
- 
+
 
    -- Stimulus process
    stim_proc: process
-   begin		
+   begin
       input_size <= "1101";
       gfau_data <= "0001010101010101";
       -- hold reset state for 100 ns.
@@ -167,47 +167,47 @@ BEGIN
       wrrd <= '1';
       wait for 40 ns;
       g_rst <= '0';
-      
+
       --set mode
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(5 downto 0) <= "110000";
       Start <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(5 downto 0) <= "001000";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       Start <= '0';
       outdata(31 downto 0) <= "00000000000000000000000010000001";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(7 downto 0) <= "00010001";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(7 downto 0) <= "10000001";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(7 downto 0) <= "00010001";
       wait for 40 ns;
       wrrd <= '0';
       wait until rising_edge(clk);
       op_done <= '1';
-      wait until falling_edge(t_clk);
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
+      wait until falling_edge(t_clk_in);
       INTA <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       INTA <= '0';
       wait until rising_edge(ready_sig);
       wrrd <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(5 downto 0) <= "000000";
       Start <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       Start <= '0';
       outdata(12 downto 0) <= "1001100011111";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       wait for 40 ns;
       wait until rising_edge(clk);
       gen_rdy <= '1';
       wait until rising_edge(int);
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       INTA <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       INTA <= '0';
       --Start <= '0';
       --wait for 26 ns;
