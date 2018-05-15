@@ -20,7 +20,7 @@ architecture behavior of top_tb is
     constant clgn : positive := CEILLGN;
     constant clgn1 : positive := CEILLGN1;
 
-    component topdbg
+    component top
         generic(
             n       : positive := DEGREE;
             clgn    : positive := CEILLGN;  -- ceil(log2(n))
@@ -31,127 +31,91 @@ architecture behavior of top_tb is
             CLK     : in std_logic;
 
             -- master reset
-            RST     : in std_logic;
+            GRST    : in std_logic;
 
-            -- control unit enable
-            ENCU    : in std_logic;
+            DATA    : inout std_logic_vector(31 downto 0); --external data bus
+            START   : in std_logic;
+            TCLK    : in std_logic; --external device clock < 200MHz
+            RDY     : out std_logic; --gfau is ready for input
+            ERR     : out std_logic; --error signal
 
-            -- user inputs
-            POLYBCD : in std_logic_vector(n downto 0);
-            OPCODE  : in std_logic_vector(5 downto 0);
-            OPAND1  : in std_logic_vector(n downto 0);
-            OPAND2  : in std_logic_vector(n downto 0);
-
-            -- user output
-            RESULT  : out std_logic_vector(n downto 0);
-
-            -- IO interrupts
-            RDYGEN  : out std_logic;
-            RDYOUT  : out std_logic;
-            ERRB    : out std_logic;
-            ERRZ    : out std_logic;
+            --interrupt signals to/from external device
+            INT     : out std_logic; --generate an interrupt
+            INTA    : in std_logic; --interrupt acknowledge
 
             -- memory control signals
             nCE     : out std_logic;
             nWE     : out std_logic;
-            nOE     : out std_logic;
-            nBLE    : out std_logic;
-            nBHE    : out std_logic;
+            nOE     : out std_logic := '0';
+            nBLE    : out std_logic := '0';
+            nBHE    : out std_logic := '0';
 
             -- memory address and data signals
             A       : out std_logic_vector((n + 1) downto 0);
-            IO      : inout std_logic_vector(n downto 0);
-
-            -------------- TEMPORARY - JUST FOR TB ------------
-
-            ---- universal registers
-            t_size      : out std_logic_vector(clgn downto 0);
-            t_msb       : out std_logic_vector(clgn1 downto 0);
-            t_mask      : out std_logic_vector(n downto 0);
-
-            ---- generated terms
-            --t_addr      : out std_logic_vector(n downto 0);
-            --t_sym       : out std_logic_vector(n downto 0)
-            t_1         : out std_logic;
-            t_n1      : out std_logic_vector(n downto 0);
-            t_n2      : out std_logic_vector(n downto 0)
+            IO      : inout std_logic_vector(n downto 0)
         );
     end component;
 
-    --inputs
-    signal CLK     : std_ulogic := '1';
-    signal RST     : std_logic;
-    signal ENCU    : std_logic := '0';
-    signal POLYBCD : std_logic_vector(n downto 0);
-    signal OPCODE  : std_logic_vector(5 downto 0);
-    signal OPAND1  : std_logic_vector(n downto 0);
-    signal OPAND2  : std_logic_vector(n downto 0);
+    -- master clock
+    signal CLK : std_logic := '0';
+
+    -- master reset
+    signal GRST : std_logic;
+
+    signal DATA : std_logic_vector(31 downto 0); --external data bus
+    signal START : std_logic;
+    signal TCLK : std_logic; --external device clock < 200MHz
+    signal RDY : std_logic; --gfau is ready for input
+    signal ERR : std_logic; --error signal
+
+    --interrupt signals to/from external device
+    signal INT : std_logic; --generate an interrupt
+    signal INTA : std_logic; --interrupt acknowledge
 
     -- memory control signals
-    signal nCE    : std_logic;
-    signal nWE    : std_logic;
-    signal nOE    : std_logic;
-    signal nBLE   : std_logic;
-    signal nBHE   : std_logic;
+    signal nCE : std_logic;
+    signal nWE : std_logic;
+    signal nOE : std_logic := '0';
+    signal nBLE : std_logic := '0';
+    signal nBHE : std_logic := '0';
 
-    -- outputs
-    signal RESULT  : std_logic_vector(n downto 0);
-    signal RDYGEN  : std_logic;
-    signal RDYOUT  : std_logic;
-    signal ERRB    : std_logic;
-    signal ERRZ    : std_logic;
-    signal A       : std_logic_vector((n + 1) downto 0);
-    signal IO      : std_logic_vector(n downto 0);
+    -- memory address and data signals
+    signal A : std_logic_vector((n + 1) downto 0);
+    signal IO : std_logic_vector(n downto 0);
 
-    -------------- TEMPORARY - JUST FOR TB ------------
-
-    ---- universal registers
-    signal t_size : std_logic_vector(clgn downto 0);
-    signal t_msb : std_logic_vector(clgn1 downto 0);
-    signal t_mask : std_logic_vector(n downto 0);
-
-    signal t_1 : std_logic;
-    signal t_n1 : std_logic_vector(n downto 0);
-    signal t_n2 : std_logic_vector(n downto 0);
-
-    ---- memory signals
-    --signal t_addr : std_logic_vector(n downto 0);
-    --signal t_sym : std_logic_vector(n downto 0);
+    -- temp
+    signal t_opcode: std_logic_vector(3 downto 0);
 
 begin
 
     -- instantiate the unit under test (uut)
-    uut: topdbg port map (
+    uut: top port map (
+        -- master clock
         CLK => CLK,
-        RST => RST,
-        ENCU => ENCU,
-        POLYBCD => POLYBCD,
-        OPCODE => OPCODE,
-        OPAND1 => OPAND1,
-        OPAND2 => OPAND2,
-        RESULT => RESULT,
-        RDYGEN => RDYGEN,
-        RDYOUT => RDYOUT,
-        ERRB => ERRB,
-        ERRZ => ERRZ,
+
+        -- master reset
+        GRST => GRST,
+
+        DATA => DATA,
+        START => START,
+        TCLK => TCLK,
+        RDY => RDY,
+        ERR => ERR,
+
+        --interrupt signals to/from external device
+        INT => INT,
+        INTA => INTA,
+
+        -- memory control signals
         nCE => nCE,
         nWE => nWE,
         nOE => nOE,
         nBLE => nBLE,
         nBHE => nBHE,
-        A => A,
-        IO => IO,
 
-        -- TEMPORARY SIGNALS
-        --RST => RST,
-        t_size => t_size,
-        t_msb => t_msb,
-        t_mask => t_mask,
-        t_1 => t_1,
-        t_n1 => t_n1,
-        t_n2 => t_n2
-        --t_addr => t_addr,
-        --t_sym => t_sym
+        -- memory address and data signals
+        A => A,
+        IO => IO
     );
 
     -- clock process
@@ -160,6 +124,7 @@ begin
 
         for i in 1 to TNUMS loop
             CLK <= not CLK;
+            TCLK <= not TCLK;
             wait for (CLK_PER / 2);
         end loop;
 
@@ -169,39 +134,39 @@ begin
     stim_proc: process
     begin
 
-        POLYBCD <= "00000110";  -- x^3+x^2+x^0
-        --POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
-        --POLYBCD <= "01111110";  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
-        OPAND1 <= "00000011";
-        OPAND2 <= "00000101";
+        DATA <= "00000000000000000000000000000000";  -- x^3+x^2+x^0
+        START <= '1';
+        wait for (CLK_PER * 20);
+        ----POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
+        ----POLYBCD <= "01111110";  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
+        --OPAND1 <= "00000011";
+        --OPAND2 <= "00000101";
 
-        wait for (CLK_PER * 1);
+        --wait for (CLK_PER * 1);
 
-        RST <= '1';
+        --RST <= '1';
 
-        wait for (CLK_PER * 1);
+        --wait for (CLK_PER * 1);
 
-        RST <= '0';
-        ENCU <= '1';
+        --RST <= '0';
 
-        wait for (CLK_PER * 2);
+        --wait for (CLK_PER * 2);
 
-        OPCODE <= "000XXX";  -- generator
+        --OPCODE <= "000XXX";  -- generator
 
-        wait for (CLK_PER * 30);
+        --wait for (CLK_PER * 30);
 
-        ENCU <= '1';
+        --ENCU <= '1';
 
-        OPCODE <= "010000";  -- add, poly, poly, poly
+        --OPCODE <= "010000";  -- add, poly, poly, poly
 
-        wait for (CLK_PER * 6);
+        --wait for (CLK_PER * 6);
 
-        ENCU <= '1';
-        --OPCODE <= "001111";  -- mul, elem, elem, elem
-        OPAND1 <= "00000101";
-        OPAND2 <= "00000110";
+        --ENCU <= '1';
+        ----OPCODE <= "001111";  -- mul, elem, elem, elem
+        --OPAND1 <= "00000101";
+        --OPAND2 <= "00000110";
 
-        wait for (CLK_PER * 8);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

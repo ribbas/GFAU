@@ -45,6 +45,9 @@ entity top is
         -- memory address and data signals
         A       : out std_logic_vector((n + 1) downto 0);
         IO      : inout std_logic_vector(n downto 0)
+
+        --;
+
     );
 end top;
 
@@ -54,35 +57,38 @@ architecture behavioral of top is
 
     component IO_Handler_Top is
         port(
+        --====================================================================
+            --***External Signals***--
+        --====================================================================
 
-            --signals from/to external devices
-            data        :   inout   std_logic_vector(31 downto 0); --external data bus
-            Start       :   in      std_logic;
-            t_clk_in    :   in      std_logic; --external device clock < 200MHz
-            g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
-            ready_sig   :   out     std_logic; --gfau is ready for input
-            err         :   out     std_logic; --error signal
+        --signals from/to external devices
+        data        :   inout   std_logic_vector(31 downto 0); --external data bus
+        Start       :   in      std_logic;
+        t_clk_in    :   in      std_logic; --external device clock < 200MHz
+        g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
+        ready_sig   :   out     std_logic; --gfau is ready for input
+        err         :   out     std_logic; --error signal
 
-            --interrupt signals to/from external device
-            INT         :   out     std_logic; --generate an interrupt
-            INTA        :   in      std_logic; --interrupt acknowledge
+        --interrupt signals to/from external device
+        INT         :   out     std_logic; --generate an interrupt
+        INTA        :   in      std_logic; --interrupt acknowledge
 
-            mode_out    :   out     std_logic_vector(1 downto 0);
+        mode_out    :   out     std_logic_vector(1 downto 0);
 
-            --signals to/from gfau
-            clk         :   in      std_logic; --internal 50MHz clock
-            op_done     :   in      std_logic; --normal operation completed
-            opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
-            rst         :   out     std_logic; --propogation of g_rst
-            gen_rdy     :   in      std_logic; --field generation complete
-            gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
-            out_data    :   out     std_logic_vector(31 downto 0);
-            input_size  :   out     std_logic_vector(3 downto 0);
-            cu_start    :   out     std_logic;
+        --signals to/from gfau
+        clk         :   in      std_logic; --internal 50MHz clock
+        op_done     :   in      std_logic; --normal operation completed
+        opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
+        rst         :   out     std_logic; --propogation of g_rst
+        gen_rdy     :   in      std_logic; --field generation complete
+        gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
+        out_data    :   out     std_logic_vector(31 downto 0);
+        input_size  :   out     std_logic_vector(3 downto 0);
+        cu_start    :   out     std_logic;
 
-            --error signals
-            z_err       :   in      std_logic;
-            oob_err     :   in      std_logic
+        --error signals
+        z_err       :   in      std_logic;
+        oob_err     :   in      std_logic
         );
     end component;
 
@@ -126,6 +132,9 @@ architecture behavioral of top is
             rst_ops     : out std_logic;
             i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
             j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
+
+            -- memory types and methods
+            --mem_t       : out std_logic; -- memory type
 
             -- memory wrapper control signals
             id_cu       : out std_logic := '0';
@@ -321,7 +330,7 @@ begin
         opcode_out => opcode,
         rst => rst,
         gen_rdy => rdy_gen,
-        gfau_data(15 downto (n + 1)) => ZEROVEC,
+        gfau_data(15 downto n + 1) => ZEROVEC,
         gfau_data(n downto 0) => result,
         out_data => out_data,
         input_size => size,
