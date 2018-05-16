@@ -1,5 +1,5 @@
 //opcode macros
-#define MODE_OP     0x60
+#define MODE_OP     0x30
 #define BUS8        0x00
 #define BUS16       0x20
 #define BUS32       0x04
@@ -21,7 +21,7 @@
 
 //bus info/config
 #define BUS_SIZE    0x08
-#define DATA_PINS   {0, 1, 3, 4, 5, 6, 7, 8}
+#define DATA_PINS   {17, 16, 3, 4, 5, 6, 7, 8}
 #define INT         2
 #define INTA        9
 #define START       10
@@ -30,10 +30,10 @@
 #define ERR         13
 
 
-uint8_t data_pins[BUS_SIZE] = DATA_PINS;
-uint8_t bus_size = BUS_SIZE;
-uint8_t vec;
-uint8_t err = 0;
+const uint8_t data_pins[BUS_SIZE] = DATA_PINS;
+const uint8_t bus_size = BUS_SIZE;
+volatile uint8_t vec;
+volatile uint8_t err = 0;
 
 void setup() {
     // put your setup code here, to run once:
@@ -45,7 +45,7 @@ void setup() {
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
-    pinMode(7, OUTPUT)
+    pinMode(7, OUTPUT);
     pinMode(8, OUTPUT);
 
     pinMode(INT, INPUT); //INT
@@ -53,20 +53,34 @@ void setup() {
     pinMode(START, OUTPUT); //START
     pinMode(TCLK, OUTPUT); //TCLK
     pinMode(READY, INPUT); //READY
-    pinMode(ERR, INPUT); //ERR    
+    pinMode(ERR, INPUT); //ERR  
+    pinMode(A0, OUTPUT);  
 
-    attachInterrupt(digitalPinToInterrupt(INT), ISR, RISING);
+    digitalWrite(TCLK, LOW);
+    clearBus();
+    attachInterrupt(digitalPinToInterrupt(INT), isr, RISING);
 }
 
 void loop() {
-  
+
+    writeUint8(0x99);
+    setMode(BUS8);
+    while(1){
+           
+    }
+    //    delay(1000);
+     //   digitalWrite(A0, LOW);
+     //   delay(1000);
+    
+    
 }
+
+
 
 //swap bus direction to:
 //0: INPUT
 //ELSE: OUTPUT
 void swapDirections(uint8_t i){
-    
     if(i == 0){
         for(int i = 0; i < BUS_SIZE; i++){
             pinMode(data_pins[i], INPUT);
@@ -74,6 +88,7 @@ void swapDirections(uint8_t i){
     }else{
         for(int i = 0; i < BUS_SIZE; i++){
             pinMode(data_pins[i], OUTPUT);
+            clearBus();
         }
     }
 }
@@ -93,17 +108,31 @@ uint8_t readUint8(){
     return ret;
 }
 
-void ISR(){
+void isr(){
     vec = readUint8();
     err = digitalRead(ERR);
+    digitalWrite(INTA, HIGH);
+    digitalWrite(INTA, LOW);
 }
 
-setMode(uint8_t mode){
-    mode &= 0xF8; //clear all but bottom 3 bits;
-    op = MODE_OP | mode;
+void setMode(uint8_t mode){
+    mode &= 0x07; //clear all but bottom 3 bits;
+    uint8_t op = MODE_OP | mode;
     writeUint8(op);
+    digitalWrite(START, HIGH);
     digitalWrite(TCLK, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(START, LOW);
     digitalWrite(TCLK, LOW);
+}
+
+void clearBus(){
+    digitalWrite(START, LOW);
+    digitalWrite(TCLK, LOW);
+    digitalWrite(INTA, LOW);
+    for(int i = 0; i < 8; i++){
+        digitalWrite(data_pins[i], LOW);
+    }
 }
 
 
