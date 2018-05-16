@@ -76,7 +76,7 @@ begin
                     
                 elsif (num_clks = "10") then -- 8 bit data, 3 clocks
                 
-                    if (count = "00") then -- clock 1, in1 part 2
+                    if (count = "00") then -- clock 1, in1 part 1
                         count_rst <= '0';
                         output_reg(7 downto 0) <= in_data(7 downto 0);
                     elsif (count = "01") then --clock 2, in1 part2, in2 part 1

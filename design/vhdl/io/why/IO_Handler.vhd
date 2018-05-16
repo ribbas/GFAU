@@ -79,6 +79,8 @@ port(
 
     --input size and msb out
     insize_out  :   out     std_logic_vector(3 downto 0);
+    state_out   :   out     std_logic_vector(7 downto 0);
+    
     MSB         :   out     std_logic_vector(3 downto 0)
 
 );
@@ -100,6 +102,7 @@ architecture Behavioral of IO_Handler_FSM is
     --state(5)  :   INT1        00100000  --
     --state(6)  :   INT2        01000000  --
     --state(7)  :   send_output 10000000  --
+    --extra     :   get insize  00010010  --
     --====================================--
 
     signal state    :   std_logic_vector(7 downto 0);
@@ -136,6 +139,8 @@ architecture Behavioral of IO_Handler_FSM is
     signal input_size   :   std_logic_vector(3 downto 0);
 
 begin
+
+    state_out <= state;
 
     MSB <= std_logic_vector(unsigned(input_size) - 1);
     insize_out <= input_size;
@@ -274,7 +279,7 @@ begin
     internal    :   process(clk)
     begin
         if rising_edge(clk) then
-            if g_rst = '1'then
+            if g_rst = '1' then
                 gen_INT <= '0';
                 op_INT <= '0';
                 err_INT <= '0';
