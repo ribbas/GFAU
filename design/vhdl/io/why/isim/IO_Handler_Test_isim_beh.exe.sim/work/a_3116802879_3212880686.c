@@ -21,7 +21,7 @@
 #include <malloc.h>
 #define alloca _alloca
 #endif
-static const char *ng0 = "/home/brian/asdf/why/clk_counter.vhd";
+static const char *ng0 = "/media/sf_Xilinx/gfau/design/vhdl/io/why/clk_counter.vhd";
 extern char *IEEE_P_2592010699;
 extern char *IEEE_P_1242562249;
 
@@ -48,7 +48,7 @@ LAB3:    t1 = (t0 + 1512U);
     t4 = *((char **)t3);
     t5 = (t4 + 56U);
     t6 = *((char **)t5);
-    memcpy(t6, t2, 3U);
+    memcpy(t6, t2, 2U);
     xsi_driver_first_trans_fast_port(t1);
 
 LAB2:    t7 = (t0 + 3232);
@@ -99,12 +99,12 @@ LAB2:    xsi_set_current_line(43, ng0);
 LAB7:    xsi_set_current_line(46, ng0);
     t1 = (t0 + 1512U);
     t3 = *((char **)t1);
-    t1 = (t0 + 4992U);
+    t1 = (t0 + 5152U);
     t4 = ieee_p_1242562249_sub_1006216973935652998_1035706684(IEEE_P_1242562249, t13, t3, t1, 1);
     t7 = (t13 + 12U);
     t14 = *((unsigned int *)t7);
     t15 = (1U * t14);
-    t2 = (3U != t15);
+    t2 = (2U != t15);
     if (t2 == 1)
         goto LAB8;
 
@@ -113,23 +113,23 @@ LAB9:    t8 = (t0 + 3392);
     t10 = *((char **)t9);
     t11 = (t10 + 56U);
     t12 = *((char **)t11);
-    memcpy(t12, t4, 3U);
+    memcpy(t12, t4, 2U);
     xsi_driver_first_trans_fast(t8);
 
 LAB6:    goto LAB3;
 
 LAB5:    xsi_set_current_line(44, ng0);
-    t3 = (t0 + 5021);
+    t3 = (t0 + 5180);
     t8 = (t0 + 3392);
     t9 = (t8 + 56U);
     t10 = *((char **)t9);
     t11 = (t10 + 56U);
     t12 = *((char **)t11);
-    memcpy(t12, t3, 3U);
+    memcpy(t12, t3, 2U);
     xsi_driver_first_trans_fast(t8);
     goto LAB6;
 
-LAB8:    xsi_size_not_matching(3U, t15, 0);
+LAB8:    xsi_size_not_matching(2U, t15, 0);
     goto LAB9;
 
 }

@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/brian/asdf/why/IO_Handler_Test_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Test_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="io_handler_test" />
             <top_module name="numeric_std" />
@@ -12,14 +12,14 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="29" />
+   <WVObjectSize size="26" />
    <wvobject fp_name="/io_handler_test/start" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">start</obj_property>
       <obj_property name="ObjectShortName">start</obj_property>
    </wvobject>
-   <wvobject fp_name="/io_handler_test/t_clk" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">t_clk</obj_property>
-      <obj_property name="ObjectShortName">t_clk</obj_property>
+   <wvobject fp_name="/io_handler_test/t_clk_in" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">t_clk_in</obj_property>
+      <obj_property name="ObjectShortName">t_clk_in</obj_property>
    </wvobject>
    <wvobject fp_name="/io_handler_test/g_rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">g_rst</obj_property>
@@ -28,6 +28,10 @@
    <wvobject fp_name="/io_handler_test/inta" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">inta</obj_property>
       <obj_property name="ObjectShortName">inta</obj_property>
+   </wvobject>
+   <wvobject fp_name="/io_handler_test/int" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">int</obj_property>
+      <obj_property name="ObjectShortName">int</obj_property>
    </wvobject>
    <wvobject fp_name="/io_handler_test/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -69,10 +73,6 @@
       <obj_property name="ElementShortName">err</obj_property>
       <obj_property name="ObjectShortName">err</obj_property>
    </wvobject>
-   <wvobject fp_name="/io_handler_test/int" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">int</obj_property>
-      <obj_property name="ObjectShortName">int</obj_property>
-   </wvobject>
    <wvobject fp_name="/io_handler_test/opcode_out" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">opcode_out[5:0]</obj_property>
       <obj_property name="ObjectShortName">opcode_out[5:0]</obj_property>
@@ -109,24 +109,12 @@
       <obj_property name="ElementShortName">state[7:0]</obj_property>
       <obj_property name="ObjectShortName">state[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/io_handler_test/uut/deserial_r" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">deserial_r</obj_property>
-      <obj_property name="ObjectShortName">deserial_r</obj_property>
+   <wvobject fp_name="/io_handler_test/uut/t_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">t_clk</obj_property>
+      <obj_property name="ObjectShortName">t_clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/io_handler_test/uut/deserial_e" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">deserial_e</obj_property>
-      <obj_property name="ObjectShortName">deserial_e</obj_property>
-   </wvobject>
-   <wvobject fp_name="/io_handler_test/uut/deserial_d" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">deserial_d</obj_property>
-      <obj_property name="ObjectShortName">deserial_d</obj_property>
-   </wvobject>
-   <wvobject fp_name="/io_handler_test/uut/FSM/poly_gen" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">poly_gen</obj_property>
-      <obj_property name="ObjectShortName">poly_gen</obj_property>
-   </wvobject>
-   <wvobject fp_name="/io_handler_test/uut/FSM/serial_d" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">serial_d</obj_property>
-      <obj_property name="ObjectShortName">serial_d</obj_property>
+   <wvobject fp_name="/io_handler_test/uut/tclk_prev" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">tclk_prev</obj_property>
+      <obj_property name="ObjectShortName">tclk_prev</obj_property>
    </wvobject>
 </wave_config>

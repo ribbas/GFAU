@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "/home/brian/asdf/why/IO_Handler_Test_isim_beh.exe" -prj "/home/brian/asdf/why/IO_Handler_Test_beh.prj" "work.IO_Handler_Test" 
+-intstyle "ise" -incremental -lib "secureip" -o "/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Test_isim_beh.exe" -prj "/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Test_beh.prj" "work.IO_Handler_Test" 

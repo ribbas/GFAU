@@ -43,7 +43,7 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
     PORT(
          data : INOUT  std_logic_vector(31 downto 0);
          Start : IN  std_logic;
-         t_clk : IN  std_logic;
+         t_clk_in : IN  std_logic;
          g_rst : IN  std_logic;
          ready_sig : OUT  std_logic;
          err : OUT  std_logic;
@@ -56,7 +56,7 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
          gen_rdy : IN  std_logic;
          gfau_data : IN  std_logic_vector(15 downto 0);
          out_data : OUT  std_logic_vector(31 downto 0);
-         input_size : IN  std_logic_vector(3 downto 0);
+         input_size : OUT  std_logic_vector(3 downto 0);
          z_err : IN  std_logic;
          oob_err : IN  std_logic
         );
@@ -76,7 +76,7 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
         
    --Inputs
    signal Start : std_logic := '0';
-   signal t_clk : std_logic := '0';
+   signal t_clk_in : std_logic := '0';
    signal g_rst : std_logic := '0';
    signal INTA : std_logic := '0';
    signal clk : std_logic := '0';
@@ -103,7 +103,7 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
     signal wrrd     :   std_logic := '0';
 
    -- Clock period definitions
-   constant t_clk_period : time := 13 ns;
+   constant t_clk_period : time := 23 ns;
    constant clk_period : time := 10 ns;
  
 BEGIN
@@ -112,7 +112,7 @@ BEGIN
    uut: IO_Handler_Top PORT MAP (
           data => data,
           Start => Start,
-          t_clk => t_clk,
+          t_clk_in => t_clk_in,
           g_rst => g_rst,
           ready_sig => ready_sig,
           err => err,
@@ -142,9 +142,9 @@ BEGIN
    -- Clock process definitions
    t_clk_process :process
    begin
-		t_clk <= '0';
+		t_clk_in <= '0';
 		wait for t_clk_period/2;
-		t_clk <= '1';
+		t_clk_in <= '1';
 		wait for t_clk_period/2;
    end process;
  
@@ -160,7 +160,6 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      input_size <= "1101";
       gfau_data <= "0001010101010101";
       -- hold reset state for 100 ns.
       g_rst <= '1';
@@ -169,45 +168,61 @@ BEGIN
       g_rst <= '0';
       
       --set mode
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(5 downto 0) <= "110000";
       Start <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
+      outdata(5 downto 0) <= "000000";
+      wait until falling_edge(t_clk_in);
+      Start <= '0';
+      outdata(3 downto 0) <= "1101";
+      wait until falling_edge(t_clk_in);
+      outdata(12 downto 0) <= "1001100011111";
+      wait for 20 ns;
+      wait until falling_edge(t_clk_in);
+      gen_rdy <= '1';
+      wait until rising_edge(int);
+      wait until falling_edge(t_clk_in);
+      INTA <= '1';
+      wait until falling_edge(t_clk_in);
+      gen_rdy <= '0';
+      INTA <= '0';
+      Start <= '1';
       outdata(5 downto 0) <= "001000";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       Start <= '0';
       outdata(31 downto 0) <= "00000000000000000000000010000001";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(7 downto 0) <= "00010001";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(7 downto 0) <= "10000001";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(7 downto 0) <= "00010001";
       wait for 40 ns;
       wrrd <= '0';
       wait until rising_edge(clk);
       op_done <= '1';
-      wait until falling_edge(t_clk);
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
+      wait until falling_edge(t_clk_in);
       INTA <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       INTA <= '0';
       wait until rising_edge(ready_sig);
       wrrd <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       outdata(5 downto 0) <= "000000";
       Start <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       Start <= '0';
       outdata(12 downto 0) <= "1001100011111";
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       wait for 40 ns;
       wait until rising_edge(clk);
       gen_rdy <= '1';
       wait until rising_edge(int);
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       INTA <= '1';
-      wait until falling_edge(t_clk);
+      wait until falling_edge(t_clk_in);
       INTA <= '0';
       --Start <= '0';
       --wait for 26 ns;

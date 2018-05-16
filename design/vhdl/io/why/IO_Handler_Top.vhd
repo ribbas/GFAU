@@ -52,7 +52,7 @@ port(
     --signals to/from gfau
     clk         :   in      std_logic; --internal 50MHz clock
     op_done     :   in      std_logic; --normal operation completed
-    --opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
+    opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
     rst         :   out     std_logic; --propogation of g_rst
     gen_rdy     :   in      std_logic; --field generation complete
     gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
@@ -235,7 +235,7 @@ begin
         INTA        => INTA,
         clk         => clk,
         op_done     => op_done,
-        opcode_out  => open, --opcode_out,
+        opcode_out  => opcode_out, --opcode_out,
         rst         => rst,
         gen_rdy     => gen_rdy,
         mode        => mode,
@@ -320,10 +320,11 @@ begin
         if rising_edge(clk) then
             if (tclk_prev = '0') and (t_clk_in = '1') then
                 t_clk_buf <= '1';
+                tclk_prev <= '1';
             else 
                 t_clk_buf <= '0';
+                tclk_prev <= t_clk_in;
             end if;
-            tclk_prev <= t_clk_in;
         end if;
     end process tclk_gen;
         

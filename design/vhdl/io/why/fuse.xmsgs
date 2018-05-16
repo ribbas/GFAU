@@ -5,8 +5,5 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="HDLCompiler" num="960" delta="unknown" >"/home/brian/asdf/why/IO_Handler_Top.vhd" Line 290: Expression has incompatible type
-</msg>
-
 </messages>
 

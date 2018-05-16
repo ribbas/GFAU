@@ -21,7 +21,7 @@
 #include <malloc.h>
 #define alloca _alloca
 #endif
-static const char *ng0 = "/home/brian/asdf/why/io_port.vhd";
+static const char *ng0 = "/media/sf_Xilinx/gfau/design/vhdl/io/why/io_port.vhd";
 
 
 
