@@ -55,10 +55,14 @@ port(
     opcode_out  :   out     std_logic_vector(5 downto 0); --for internal use
     rst         :   out     std_logic; --propogation of g_rst
     gen_rdy     :   in      std_logic; --field generation complete
-    gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
+    --gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
     out_data    :   out     std_logic_vector(31 downto 0);
-    input_size  :   out     std_logic_vector(3 downto 0);
+    --input_size  :   out     std_logic_vector(3 downto 0);
     cu_start    :   out     std_logic;
+    
+    tclk_prev_o :   out     std_logic := '0';
+    
+    state_out   :   out     std_logic_vector(7 downto 0);
     
     --error signals
     z_err       :   in      std_logic;
@@ -132,6 +136,7 @@ architecture Behavioral of IO_Handler_Top is
         z_err       :   in      std_logic; --zero error
         insize_in   :   in      std_logic_vector(3 downto 0);
         insize_out  :   out     std_logic_vector(3 downto 0);
+        state_out   :   out     std_logic_vector(7 downto 0);
         oob_err     :   in      std_logic  --out of bounds error
     );
     end component;
@@ -213,15 +218,19 @@ architecture Behavioral of IO_Handler_Top is
     signal t_clk_buf    :   std_logic;
     signal t_clk        :   std_logic;
     
+    signal ng_rst       :   std_logic;
+    
 begin
 
     mode_out <= mode;
-    input_size <= input_size_s;
+    --input_size <= input_size_s;
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
     err_vec(0) <= err_type;
     err_vec(15 downto 1) <= (others => '0');
     cu_start <= deserial_d;
+    
+    ng_rst <= not g_rst;
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
@@ -229,7 +238,7 @@ begin
         insize_in   => data(3 downto 0),
         Start       => Start,
         t_clk       => t_clk,
-        g_rst       => g_rst,
+        g_rst       => ng_rst,
         ready_sig   => ready_sig,
         INT         => INT,
         INTA        => INTA,
@@ -252,7 +261,8 @@ begin
         z_err       => z_err,
         oob_err     => oob_err,
         insize_out  => input_size_s,
-        wr_rd       => wr_rd
+        wr_rd       => wr_rd,
+        state_out   => state_out
     );
     
     deser   :   data_deserialize port map(
@@ -270,7 +280,7 @@ begin
     
     serial  :   serialize port map(
         enable      => serial_e,
-        in_data     => gfau_data,
+        in_data     => "1000000000000001", --gfau_data,
         count       => count(1 downto 0),
         bus_size    => mode,
         num_clks    => num_clks,
@@ -281,7 +291,7 @@ begin
     
     countd  :   count_decoder port map(
         bus_size    => mode,
-        input_size  => input_size_s,
+        input_size  => "1101",--input_size_s,
         gen_poly    => poly_get,
         num_clks    => num_clks
     );
@@ -313,6 +323,8 @@ begin
             out_data_ext <= data_vec;
         end if;
     end process outmux;
+    
+    tclk_prev_o <= t_clk_buf;
     
     --synchronize tclk 
     tclk_gen    :   process(clk)
