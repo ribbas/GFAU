@@ -94,7 +94,12 @@ architecture behavior of top_tb is
     -- memory address and data signals
     signal A : std_logic_vector((n + 1) downto 0);
     signal IO : std_logic_vector(n downto 0);
-   constant TCLK_PER : time := 40 ns;
+    constant TCLK_PER : time := 40 ns;
+
+    signal wrrd : std_logic;
+    signal indata : std_logic_vector(31 downto 0);
+    signal outdata : std_logic_vector(31 downto 0);
+    signal pad : std_logic_vector(31 downto 0);
 
 begin
 
@@ -128,13 +133,14 @@ begin
         IO => IO
     );
 
-    iop : io_port generic map(
-        n           => 31
-    ) port map (
-        op          => outdata,
-        oe          => wrrd,
-        ip          => indata,
-        pad         => data
+    iop : io_port generic map (
+        n => 31
+    )
+    port map (
+        op => indata,
+        oe => wrrd,
+        ip => outdata,
+        pad => DATA
     );
 
 
@@ -163,7 +169,9 @@ begin
     stim_proc: process
     begin
 
-        DATA(31 downto 16) <= "0000000000000000";
+        wrrd <= '1';
+
+        indata(31 downto (n + 1)) <= "000000000000000000000000";
 
         ---------------------------------------------------------------------
         ------------------------- GENERATE ELEMENTS -------------------------
@@ -176,11 +184,13 @@ begin
 
         wait until falling_edge(TCLK);
 
-        DATA(15 downto 0) <= "000000000011000X";  -- set mode to 8-bits
+        indata(n downto 0) <= "00110000";  -- set mode to 8-bits
+        START <= '1';
 
         wait until falling_edge(TCLK);
 
-        DATA(15 downto 0) <= "0000000000000000";  -- opcode
+        START <= '0';
+        indata(n downto 0) <= "00000000";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -188,11 +198,12 @@ begin
 
         wait until falling_edge(TCLK);
 
-        DATA(15 downto 0) <= "0000000000000011";  -- input size
+        START <= '0';
+        indata(n downto 0) <= "00001000";  -- input size
 
         wait until falling_edge(TCLK);
 
-        DATA(15 downto 0) <= "0000000000000110";  -- polybcd
+        indata(n downto 0) <= "00000110";  -- polybcd
 
         wait until rising_edge(INT);
 
@@ -204,7 +215,7 @@ begin
 
         INTA <= '0';  -- acknowledge interrupt
 
-        DATA(15 downto 0) <= "0000000000001111";  -- opcode
+        indata(n downto 0) <= "00001111";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -214,15 +225,23 @@ begin
 
         START <= '0';
 
-        DATA(15 downto 0) <= "0000000000000011";  -- opand1
+        indata(n downto 0) <= "00000001";  -- opand1
 
         wait until falling_edge(TCLK);
 
-        DATA(15 downto 0) <= "0000000000000110";  -- opand2
+        indata(n downto 0) <= "00000110";  -- opand2
 
         wait until falling_edge(TCLK);
 
-        DATA(15 downto 0) <= "ZZZZZZZZZZZZZZZZ";  -- high af
+        wrrd <= '0';
+
+        wait for (TCLK_PER * 5);
+
+        GRST <= '1';
+
+        wait for (TCLK_PER * 5);
+
+        --indata(15 downto 0) <= "ZZZZZZZZZZZZZZZZ";  -- high af
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
