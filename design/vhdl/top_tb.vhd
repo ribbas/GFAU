@@ -56,17 +56,17 @@ architecture behavior of top_tb is
         );
     end component;
 
-    --component io_port
-    --    generic(
-    --        n           :   positive := DEGREE
-    --    );
-    --    port(
-    --        op          :   in      std_logic_vector(n downto 0);
-    --        oe          :   in      std_logic;
-    --        ip          :   out     std_logic_vector(n downto 0);
-    --        pad         :   inout   std_logic_vector(n downto 0)
-    --    );
-    --end component;
+    component io_port
+        generic(
+            n           :   positive
+        );
+        port(
+            op          :   in      std_logic_vector(n downto 0);
+            oe          :   in      std_logic;
+            ip          :   out     std_logic_vector(n downto 0);
+            pad         :   inout   std_logic_vector(n downto 0)
+        );
+    end component;
 
     -- master clock
     signal CLK : std_logic := '1';
@@ -128,15 +128,15 @@ begin
         IO => IO
     );
 
+    iop : io_port generic map(
+        n           => 31
+    ) port map (
+        op          => outdata,
+        oe          => wrrd,
+        ip          => indata,
+        pad         => data
+    );
 
-    --iop: io_port generic map (
-    --    n => 31
-    --) port map (
-    --    op => outdata,
-    --    oe => wrrd,
-    --    ip => indata,
-    --    pad => data
-    --);
 
     -- clock process
     clk_proc: process
@@ -163,6 +163,8 @@ begin
     stim_proc: process
     begin
 
+        DATA(31 downto 16) <= "0000000000000000";
+
         ---------------------------------------------------------------------
         ------------------------- GENERATE ELEMENTS -------------------------
         -- SIZE = 0011
@@ -174,11 +176,11 @@ begin
 
         wait until falling_edge(TCLK);
 
-        DATA <= "0000000000000000000000000011000X";  -- set mode to 8-bits
+        DATA(15 downto 0) <= "000000000011000X";  -- set mode to 8-bits
 
         wait until falling_edge(TCLK);
 
-        DATA <= "00000000000000000000000000000000";  -- opcode
+        DATA(15 downto 0) <= "0000000000000000";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -186,18 +188,41 @@ begin
 
         wait until falling_edge(TCLK);
 
-        DATA <= "00000000000000000000000000000011";  -- input size
+        DATA(15 downto 0) <= "0000000000000011";  -- input size
 
         wait until falling_edge(TCLK);
 
-        DATA <= "00000000000000000000000000000110";  -- polybcd
+        DATA(15 downto 0) <= "0000000000000110";  -- polybcd
 
-        wait for (TCLK_PER * 11);
-        wait until falling_edge(TCLK);
-
-        DATA <= "00000000000000000000000000001111";  -- opcode?
+        wait until rising_edge(INT);
 
         wait until falling_edge(TCLK);
+
+        INTA <= '1';  -- acknowledge interrupt
+
+        wait until falling_edge(TCLK);
+
+        INTA <= '0';  -- acknowledge interrupt
+
+        DATA(15 downto 0) <= "0000000000001111";  -- opcode
+
+        wait until falling_edge(TCLK);
+
+        START <= '1';
+
+        wait until falling_edge(TCLK);
+
+        START <= '0';
+
+        DATA(15 downto 0) <= "0000000000000011";  -- opand1
+
+        wait until falling_edge(TCLK);
+
+        DATA(15 downto 0) <= "0000000000000110";  -- opand2
+
+        wait until falling_edge(TCLK);
+
+        DATA(15 downto 0) <= "ZZZZZZZZZZZZZZZZ";  -- high af
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
