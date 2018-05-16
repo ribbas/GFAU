@@ -56,15 +56,27 @@ architecture behavior of top_tb is
         );
     end component;
 
+    --component io_port
+    --    generic(
+    --        n           :   positive := DEGREE
+    --    );
+    --    port(
+    --        op          :   in      std_logic_vector(n downto 0);
+    --        oe          :   in      std_logic;
+    --        ip          :   out     std_logic_vector(n downto 0);
+    --        pad         :   inout   std_logic_vector(n downto 0)
+    --    );
+    --end component;
+
     -- master clock
-    signal CLK : std_logic := '0';
+    signal CLK : std_logic := '1';
 
     -- master reset
     signal GRST : std_logic;
 
     signal DATA : std_logic_vector(31 downto 0); --external data bus
     signal START : std_logic;
-    signal TCLK : std_logic; --external device clock < 200MHz
+    signal TCLK : std_logic := '0'; --external device clock < 200MHz
     signal RDY : std_logic; --gfau is ready for input
     signal ERR : std_logic; --error signal
 
@@ -82,9 +94,7 @@ architecture behavior of top_tb is
     -- memory address and data signals
     signal A : std_logic_vector((n + 1) downto 0);
     signal IO : std_logic_vector(n downto 0);
-
-    -- temp
-    signal t_opcode: std_logic_vector(3 downto 0);
+   constant TCLK_PER : time := 13 ns;
 
 begin
 
@@ -118,55 +128,62 @@ begin
         IO => IO
     );
 
+
+    --iop: io_port generic map (
+    --    n => 31
+    --) port map (
+    --    op => outdata,
+    --    oe => wrrd,
+    --    ip => indata,
+    --    pad => data
+    --);
+
     -- clock process
     clk_proc: process
     begin
 
         for i in 1 to TNUMS loop
             CLK <= not CLK;
-            TCLK <= not TCLK;
             wait for (CLK_PER / 2);
         end loop;
 
     end process;
 
+   -- Clock process definitions
+   t_clk_process :process
+   begin
+        for i in 1 to TNUMS loop
+            TCLK <= not TCLK;
+            wait for (TCLK_PER / 2);
+        end loop;
+   end process;
+
+
     -- stimulus process
     stim_proc: process
     begin
 
-        DATA <= "00000000000000000000000000000000";  -- x^3+x^2+x^0
+        ---------------------------------------------------------------------
+        ------------------------- GENERATE ELEMENTS -------------------------
+        -- SIZE = 0011
+        -- OPCODE = 000XXX
+        -- POLYBCD = 00000110
+        ---------------------------------------------------------------------
+
+
         START <= '1';
+        GRST <= '0';
+        DATA <= "00000000000000000000000000000000";  -- opcode
+
+        wait for (CLK_PER * 5);
+
+        DATA <= "00000000000000000000000000000011";  -- input size
+
+        wait for (CLK_PER * 5.1);
+
+        DATA <= "00000000000000000000000000000110";  -- polybcd
+
         wait for (CLK_PER * 20);
-        ----POLYBCD <= "10001110";  -- x^8 + x^4 + x^3 + x^2 + 1
-        ----POLYBCD <= "01111110";  -- x^7+x^6+x^5+x^4+x^3+x^2+x^0
-        --OPAND1 <= "00000011";
-        --OPAND2 <= "00000101";
-
-        --wait for (CLK_PER * 1);
-
-        --RST <= '1';
-
-        --wait for (CLK_PER * 1);
-
-        --RST <= '0';
-
-        --wait for (CLK_PER * 2);
-
-        --OPCODE <= "000XXX";  -- generator
-
-        --wait for (CLK_PER * 30);
-
-        --ENCU <= '1';
-
-        --OPCODE <= "010000";  -- add, poly, poly, poly
-
-        --wait for (CLK_PER * 6);
-
-        --ENCU <= '1';
-        ----OPCODE <= "001111";  -- mul, elem, elem, elem
-        --OPAND1 <= "00000101";
-        --OPAND2 <= "00000110";
-
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

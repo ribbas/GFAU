@@ -57,6 +57,7 @@ void setup() {
     pinMode(READY, INPUT); //READY
     pinMode(ERR, INPUT); //ERR  
     pinMode(14, OUTPUT);  
+    pinMode(A0, OUTPUT);  
 
     digitalWrite(TCLK, LOW);
     clearBus();
@@ -191,5 +192,3 @@ void clearBus(){
         digitalWrite(data_pins[i], LOW);
     }
 }
-
-
