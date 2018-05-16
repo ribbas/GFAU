@@ -56,7 +56,8 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
          gen_rdy : IN  std_logic;
          gfau_data : IN  std_logic_vector(15 downto 0);
          out_data : OUT  std_logic_vector(31 downto 0);
-         input_size : IN  std_logic_vector(3 downto 0);
+         input_size : out  std_logic_vector(3 downto 0);
+          cu_start    :   out     std_logic;
          z_err : IN  std_logic;
          oob_err : IN  std_logic
         );
@@ -67,10 +68,10 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
         n           :   positive
     );
     port(
-        op          :   in      std_logic_vector((n - 1) downto 0);
+        op          :   in      std_logic_vector(n downto 0);
         oe          :   in      std_logic;
-        ip          :   out     std_logic_vector((n - 1) downto 0);
-        pad         :   inout   std_logic_vector((n - 1) downto 0)
+        ip          :   out     std_logic_vector(n downto 0);
+        pad         :   inout   std_logic_vector(n downto 0)
     );
     end component;
 
@@ -97,6 +98,7 @@ ARCHITECTURE behavior OF IO_Handler_Test IS
    signal opcode_out : std_logic_vector(5 downto 0);
    signal rst : std_logic;
    signal out_data : std_logic_vector(31 downto 0);
+   signal cu_start : std_logic;
 
     signal indata   :   std_logic_vector(31 downto 0) := (others => '0');
     signal outdata  :   std_logic_vector(31 downto 0) := (others => '0');
@@ -126,12 +128,13 @@ BEGIN
           gfau_data => gfau_data,
           out_data => out_data,
           input_size => input_size,
+          cu_start => cu_start,
           z_err => z_err,
           oob_err => oob_err
         );
 
     iop     :   io_port generic map(
-        n           => 32
+        n           => 31
     ) port map (
         op          => outdata,
         oe          => wrrd,
@@ -209,6 +212,10 @@ BEGIN
       INTA <= '1';
       wait until falling_edge(t_clk_in);
       INTA <= '0';
+
+        wait for 40 ns;
+        -- stop simulation
+        assert false report "simulation ended" severity failure;
       --Start <= '0';
       --wait for 26 ns;
       --deserial_d <= '1';
