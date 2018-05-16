@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    17:24:53 05/03/2018 
--- Design Name: 
--- Module Name:    IO_Handler - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Company:
+-- Engineer:
 --
--- Dependencies: 
+-- Create Date:    17:24:53 05/03/2018
+-- Design Name:
+-- Module Name:    IO_Handler - Behavioral
+-- Project Name:
+-- Target Devices:
+-- Tool versions:
+-- Description:
 --
--- Revision: 
+-- Dependencies:
+--
+-- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments: 
+-- Additional Comments:
 --
 -------------------------------------------------------------------------------
 library IEEE;
@@ -51,7 +51,7 @@ port(
     gen_rdy     :   in      std_logic; --field finished generating
     --gen_rst     :   out     std_logic; --resets gen_rdy signal
     mode        :   out     std_logic_vector(1 downto 0);
-    
+
     --error signals--
     z_err       :   in      std_logic; --zero error
     oob_err     :   in      std_logic;  --out of bounds error
@@ -62,16 +62,16 @@ port(
 
     --error interrupt vector--
     err_type    :   out     std_logic := '0';
-    
+
     --serialize/deserialze--
-    serial_e    :   out     std_logic := '0'; --serializer enable 
+    serial_e    :   out     std_logic := '0'; --serializer enable
     serial_d    :   in      std_logic; --serialization of data done
     deserial_e  :   out     std_logic := '0'; --deserializer enable
     deserial_r  :   out     std_logic := '1'; --deserializer reset
     deserial_d  :   in      std_logic; --deserialization of data done
-    
+
     --count_decoder
-    poly_get    :   out     std_logic; --signal for mux that lets it know only 
+    poly_get    :   out     std_logic; --signal for mux that lets it know only
                                        --one input is needed
     wr_rd       :   out     std_logic := '0'; --rd or write from io port
     --counter--
@@ -105,7 +105,7 @@ architecture Behavioral of IO_Handler_FSM is
     signal state    :   std_logic_vector(7 downto 0);
     signal s_state  :   std_logic_vector(7 downto 0) := "00000000";
     signal n_state  :   std_logic_vector(7 downto 0) := "00000000";
-    
+
 
     --ready signals--
     signal ready    :   std_logic;
@@ -125,7 +125,7 @@ architecture Behavioral of IO_Handler_FSM is
     --error signals--
     signal serr     :   std_logic := '0'; --flip to set err
     signal nerr     :   std_logic := '0'; --flip to unset err
-    
+
     --deserial reset--
     signal deserial_se  :   std_logic := '0';
     signal deserial_ne  :   std_logic := '0';
@@ -143,7 +143,7 @@ begin
     --mode_wr <= wr_reg;
     rst <= g_rst;
     poly_get <= poly_gen;
-    
+
     --ready signal--
     state(0) <= s_state(0) xnor n_state(0);
     ready <= s_state(0) xnor n_state(0);
@@ -182,10 +182,10 @@ begin
                 nerr_INT <= '0';
                 nerr <= '0';
                 wr_rd <= '0';
-                
+
             else
                 case state is
-                
+
                     --====================================--
                     --io handler is ready to get input    --
                     --====================================--
@@ -196,8 +196,6 @@ begin
                             elsif opcode_in(5 downto 3) = "000" then --gen field
                                 opcode_out <= opcode_in;
                                 poly_gen <= '1';
-                                deserial_se <= not deserial_se;
-                                deserial_nr <= not deserial_nr;
                                 s_state(1) <= not s_state(1); --get input
                                 n_state(4) <= not n_state(4); -- hacking in extra state
                                 n_state(0) <= not n_state(0); --not ready
@@ -212,10 +210,12 @@ begin
                         end if;
 
                     when "00010010" => --get size
+                        deserial_se <= not deserial_se;
+                        deserial_nr <= not deserial_nr;
                         input_size <= insize_in;
                         n_state(4) <= not n_state(4);
-                    
-                        
+
+
                     --====================================--
                     --wait for CPU to be ready for data   --
                     --====================================--
@@ -251,7 +251,7 @@ begin
                             n_state(6) <= not n_state(6); --unset int state
                             s_state(0) <= not s_state(0); --set ready
                         end if;
-                    
+
                     --====================================--
                     --wait for data to be sent            --
                     --====================================--
@@ -284,9 +284,9 @@ begin
                 deserial_ne <= '0';
                 deserial_sr <= '0';
             else
-                case state is 
+                case state is
 
-                        
+
                     --====================================--
                     --get input from extern dev           --
                     --====================================--
@@ -312,7 +312,7 @@ begin
                         if op_done = '1' then
                             op_INT <= not op_INT; --set op interrupt
                             n_state(3) <= not n_state(3);
-                            n_state(1) <= not n_state(1); 
+                            n_state(1) <= not n_state(1);
                             s_state(4) <= not s_state(4); --set int0
                         elsif (oob_err or z_err) = '1' then
                             if oob_err = '1' then
@@ -344,5 +344,5 @@ begin
             end if;
         end if;
     end process internal;
-    
+
 end Behavioral;

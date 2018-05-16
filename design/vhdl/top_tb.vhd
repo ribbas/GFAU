@@ -94,7 +94,7 @@ architecture behavior of top_tb is
     -- memory address and data signals
     signal A : std_logic_vector((n + 1) downto 0);
     signal IO : std_logic_vector(n downto 0);
-   constant TCLK_PER : time := 13 ns;
+   constant TCLK_PER : time := 40 ns;
 
 begin
 
@@ -170,20 +170,34 @@ begin
         -- POLYBCD = 00000110
         ---------------------------------------------------------------------
 
-
-        START <= '1';
         GRST <= '0';
+
+        wait until falling_edge(TCLK);
+
+        DATA <= "0000000000000000000000000011000X";  -- set mode to 8-bits
+
+        wait until falling_edge(TCLK);
+
         DATA <= "00000000000000000000000000000000";  -- opcode
 
-        wait for (CLK_PER * 5);
+        wait until falling_edge(TCLK);
+
+        START <= '1';
+
+        wait until falling_edge(TCLK);
 
         DATA <= "00000000000000000000000000000011";  -- input size
 
-        wait for (CLK_PER * 5.1);
+        wait until falling_edge(TCLK);
 
         DATA <= "00000000000000000000000000000110";  -- polybcd
 
-        wait for (CLK_PER * 20);
+        wait for (TCLK_PER * 11);
+        wait until falling_edge(TCLK);
+
+        DATA <= "00000000000000000000000000001111";  -- opcode?
+
+        wait until falling_edge(TCLK);
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
