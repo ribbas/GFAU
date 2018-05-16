@@ -16,7 +16,6 @@ entity outselect is
         n       : positive := DEGREE
     );
     port(
-        en      : in std_logic;
         op      : in std_logic_vector(2 downto 0);
         out_t   : in std_logic;
         bitxor  : in std_logic_vector(n downto 0);
@@ -36,9 +35,9 @@ end outselect;
 architecture behavioral of outselect is
 begin
 
-    process (op, en, out_t, bitxor, prod, quot, lg, i_null, j_null) begin
+    process (op, out_t, bitxor, prod, quot, lg, i_null, j_null) begin
 
-        if (en = '1') then
+        --if (en = '1') then
 
             case op is  -- first 3 bits
 
@@ -213,17 +212,17 @@ begin
 
             end case;
 
-        else
+        --else
 
-            -- disable output converter
-            en_con <= '0';
+        --    -- disable output converter
+        --    en_con <= '0';
 
-            err_z <= '0';
-            convert <= '0';
-            mem_t <= '-';
-            out_sel <= DCAREVEC;
+        --    err_z <= '0';
+        --    convert <= '0';
+        --    mem_t <= '-';
+        --    out_sel <= DCAREVEC;
 
-        end if;  -- enable
+        --end if;  -- enable
 
     end process;
 

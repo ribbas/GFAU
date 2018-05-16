@@ -21,8 +21,9 @@ entity outconvert is
         clk         : in std_logic;
 
         en          : in std_logic;  -- enable
-        rst         : in std_logic; -- reset
+        ops_rdy     : in std_logic;
         convert     : in std_logic;  -- convert flag
+        rst         : in std_logic; -- reset
         mask        : in std_logic_vector(n downto 0);  -- operand mask
 
         -- result
@@ -87,7 +88,7 @@ begin
                             id_con <= '1';
                             addr_con <= out_sel;
 
-                            if (mem_rdy = '1') then
+                            if (mem_rdy = '1' and ops_rdy = '1') then
 
                                 result <= dout_con and mask;
                                 rdy_out <= '1';
@@ -113,23 +114,29 @@ begin
 
                     end case;
 
+                -- no conversion requested
                 else
 
                     -- stand-by control signal with ID
                     id_con <= '0';
-                    rdy_out <= '1';
 
-                    addr_con <= DCAREVEC;
+                    if (ops_rdy = '1') then
 
-                    if (and_reduce(out_sel) = '0') then
+                        rdy_out <= '1';
 
-                        result <= out_sel and mask;
+                        addr_con <= DCAREVEC;
 
-                    else
+                        if (and_reduce(out_sel) = '0') then
 
-                        result <= out_sel;
+                            result <= out_sel and mask;
 
-                    end if;
+                        else
+
+                            result <= out_sel;
+
+                        end if;
+
+                    end if;  -- ops_rdy with no memory lookup
 
                 end if;  -- convert
 

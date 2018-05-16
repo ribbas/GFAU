@@ -22,7 +22,7 @@ entity operators is
         clk         : in std_logic;
 
         -- control signals
-        en          : in std_logic;
+        ops_rdy     : in std_logic;
         rst         : in std_logic;
 
         -- opcode
@@ -107,7 +107,6 @@ architecture behavioral of operators is
 
     component outselect
         port(
-            en      : in std_logic;
             op      : in std_logic_vector(2 downto 0);
             out_t   : in std_logic;
             bitxor  : in std_logic_vector(n downto 0);
@@ -129,8 +128,9 @@ architecture behavioral of operators is
         port(
             clk         : in std_logic;
             en          : in std_logic;
-            convert     : in std_logic;
             rst         : in std_logic;
+            ops_rdy     : in std_logic;
+            convert     : in std_logic;
             mask        : in std_logic_vector(n downto 0);
             out_sel     : in std_logic_vector(n downto 0);
             id_con      : out std_logic;
@@ -195,7 +195,6 @@ begin
     outselect_unit: outselect port map(
         op => op,
         out_t => out_t,
-        en => en,
         bitxor => bitxor,
         prod => prod,
         quot => quot,
@@ -214,6 +213,7 @@ begin
         clk => clk,
         en => en_con,
         rst => rst,
+        ops_rdy => ops_rdy,
         convert => convert,
         mask => mask,
         out_sel => out_sel,

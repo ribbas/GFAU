@@ -24,7 +24,7 @@ architecture behavioral of operators_tb is
             -- clock
             clk         : in std_logic;
 
-            en          : in std_logic;
+            ops_rdy      : in std_logic;
             rst         : in std_logic;
 
             -- opcode
@@ -63,7 +63,7 @@ architecture behavioral of operators_tb is
     -- inputs
     signal op : std_logic_vector(2 downto 0);
     signal out_t : std_logic;
-    signal en : std_logic := '0';
+    signal ops_rdy : std_logic := '0';
     signal rst : std_logic := '0';
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
@@ -92,7 +92,7 @@ begin
         clk => clk,
         op => op,
         out_t => out_t,
-        en => en,
+        ops_rdy => ops_rdy,
         rst => rst,
         i => i,
         j => j,
@@ -134,7 +134,7 @@ begin
 
         -- hold state for 10 ns
         wait for (CLK_PER * 1);
-        en <= '1';
+        ops_rdy <= '1';
 
         -- generator
         op <= "000";

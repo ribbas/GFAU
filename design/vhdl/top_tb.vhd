@@ -99,7 +99,6 @@ architecture behavior of top_tb is
     signal wrrd : std_logic;
     signal indata : std_logic_vector(31 downto 0);
     signal outdata : std_logic_vector(31 downto 0);
-    signal pad : std_logic_vector(31 downto 0);
 
 begin
 

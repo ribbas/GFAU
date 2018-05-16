@@ -122,7 +122,7 @@ architecture behavioral of top is
             rst_gen     : out std_logic;  -- polynomial generator reset
 
             -- operation signals
-            en_ops      : out std_logic;  -- operators enable
+            ops_rdy     : out std_logic;  -- operators enable
             rst_ops     : out std_logic;
             i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
             j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
@@ -175,12 +175,12 @@ architecture behavioral of top is
             -- clock
             clk         : in std_logic;
 
-            en          : in std_logic;
+            ops_rdy     : in std_logic;
             rst         : in std_logic;
 
             -- opcode
-            op      : in std_logic_vector(2 downto 0);
-            out_t   : in std_logic;
+            op          : in std_logic_vector(2 downto 0);
+            out_t       : in std_logic;
 
             -- operands
             i           : in std_logic_vector(n downto 0);
@@ -260,7 +260,7 @@ architecture behavioral of top is
     signal rst_gen : std_logic;  -- reset
 
     -- internal operation signals
-    signal en_ops : std_logic;
+    signal ops_rdy : std_logic;
     signal rst_ops: std_logic;
 
     -- control unit enable
@@ -292,7 +292,7 @@ architecture behavioral of top is
     signal opand1  : std_logic_vector(n downto 0);
     signal opand2  : std_logic_vector(n downto 0);
     signal out_data : std_logic_vector(31 downto 0);
-    signal rst    : std_logic;
+    signal rst : std_logic;
 
     -- user output
     signal result  : std_logic_vector(n downto 0);
@@ -352,7 +352,7 @@ begin
         init => init_cu,
         rst => rst,
         mask => mask,
-        en_ops => en_ops,
+        ops_rdy => ops_rdy,
         en_gen => en_gen,
         rst_gen => rst_gen,
         rst_ops => rst_ops,
@@ -393,7 +393,7 @@ begin
         clk => CLK,
         op => opcode(5 downto 3),
         out_t => opcode(0),
-        en => en_ops,
+        ops_rdy => ops_rdy,
         rst => rst_ops,
         i => i,
         j => j,
