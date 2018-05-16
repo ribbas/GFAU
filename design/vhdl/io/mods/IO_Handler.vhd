@@ -32,7 +32,6 @@ port(
     opcode_in   :   in      std_logic_vector(5 downto 0);
     insize_in   :   in      std_logic_vector(3 downto 0);
     Start       :   in      std_logic;
-    --Done        :   in      std_logic;
     t_clk       :   in      std_logic;
     g_rst       :   in      std_logic;
     ready_sig   :   out     std_logic; --ready1 xnor ready2

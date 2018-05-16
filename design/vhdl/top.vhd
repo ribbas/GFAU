@@ -77,7 +77,6 @@ architecture behavioral of top is
             gen_rdy     :   in      std_logic; --field generation complete
             gfau_data   :   in      std_logic_vector(15 downto 0); --gfau result
             out_data    :   out     std_logic_vector(31 downto 0);
-            input_size  :   out     std_logic_vector(3 downto 0);
             cu_start    :   out     std_logic;
 
             --error signals
@@ -91,7 +90,8 @@ architecture behavioral of top is
     -- order and most significant bit index
     component indices
         port(
-            size        : in std_logic_vector(clgn1 downto 0);  -- size
+            poly_bcd    : in std_logic_vector(n downto 1);  -- BCD polynomial
+            size        : out std_logic_vector(clgn downto 0);  -- size
             msb         : out std_logic_vector(clgn1 downto 0)  -- msb
         );
     end component;
@@ -251,7 +251,6 @@ architecture behavioral of top is
     -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
     signal size : std_logic_vector(clgn downto 0);  -- size
-    signal input_size : std_logic_vector(clgn downto 0);  -- size
     signal msb : std_logic_vector(clgn1 downto 0);  -- msb
     signal poly_bcd_reg : std_logic_vector(n downto 1);
 
@@ -324,7 +323,6 @@ begin
         gfau_data(15 downto (n + 1)) => ZEROVEC,
         gfau_data(n downto 0) => result,
         out_data => out_data,
-        input_size => size,
         cu_start => init_cu,
         z_err => errz,
         oob_err => errb
@@ -334,7 +332,8 @@ begin
 
     -- most significant bit
     indices_unit: indices port map(
-        size => size(clgn1 downto 0),
+        poly_bcd => poly_bcd_reg,
+        size => size,
         msb => msb
     );
 
