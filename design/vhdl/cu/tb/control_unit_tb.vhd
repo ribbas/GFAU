@@ -26,22 +26,19 @@ architecture behavior of control_unit_tb is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            init        : in std_logic;  -- control unit enable
-            rst         : in std_logic;  --reset
-
-            -- registers
-            mask        : in  std_logic_vector(n downto 0);
+            start       : in std_logic;  -- control unit enable
+            rst         : in std_logic; -- global reset
 
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
             rst_gen     : out std_logic;  -- polynomial generator reset
+            gen_rdy     : in std_logic;  -- generation done
 
             -- operation signals
-            en_ops      : out std_logic;  -- operators enable
+            ops_rdy     : out std_logic;  -- operators enable
             rst_ops     : out std_logic;
             i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
             j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
-
 
             -- memory wrapper control signals
             id_cu       : out std_logic := '0';
@@ -49,12 +46,7 @@ architecture behavior of control_unit_tb is
 
             -- memory address and data signals
             addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
-            dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
-
-            -- exceptions and flags
-            err_b       : out std_logic;  -- set membership exception
-            opand1_null : out std_logic;  -- operand 1 zero flag
-            opand2_null : out std_logic  -- operand 2 zero flag
+            dout_cu     : in std_logic_vector(n downto 0)  -- data from memory
         );
     end component;
 
@@ -62,12 +54,12 @@ architecture behavior of control_unit_tb is
     signal opcode : std_logic_vector(5 downto 1);   -- op code
     signal opand1 : std_logic_vector(n downto 0);   -- operand 1
     signal opand2 : std_logic_vector(n downto 0);   -- operand 2
-    signal mask : std_logic_vector(n downto 0);   -- mask
-    signal init : std_logic := '0';
+    signal start : std_logic := '0';
     signal rst : std_logic := '0';
 
     -- outputs
-    signal en_ops : std_logic;
+    signal ops_rdy : std_logic;
+    signal gen_rdy : std_logic;
     signal rst_gen : std_logic;
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(n downto 0);  -- address in memory
@@ -93,21 +85,18 @@ begin
         opcode => opcode,
         opand1 => opand1,
         opand2 => opand2,
-        init => init,
+        start => start,
         rst => rst,
-        mask => mask,
-        en_ops => en_ops,
+        ops_rdy => ops_rdy,
         en_gen => en_gen,
         rst_gen => rst_gen,
+        gen_rdy => gen_rdy,
         i => i,
         j => j,
         id_cu => id_cu,
         mem_rdy => mem_rdy,
         addr_cu => addr_cu,
-        dout_cu => dout_cu,
-        err_b => err_b,
-        opand1_null => opand1_null,
-        opand2_null => opand2_null
+        dout_cu => dout_cu
     );
 
     -- clock process
@@ -146,28 +135,27 @@ begin
     test : process
     begin
 
-        mask <= "00000111";
-
-        init <= '1';
+        start <= '1';
         opand1 <= "00000101";
         opand2 <= "00000011";
         opcode <= "00100";  -- add/sub, operands in polynomial
 
+        gen_rdy <= '0';
         wait for (CLK_PER * 1);
 
-        init <= '0';
+        start <= '0';
 
         wait for (CLK_PER * 8);
 
-        init <= '1';
+        start <= '1';
 
         opand1 <= "00000111";  -- 2^n-1
         opand2 <= "11111111";  -- zero in element
-        opcode <= "00111";  -- division, operands in element
+        opcode <= "01011";  -- division, operands in element
 
         wait for (CLK_PER * 1);
 
-        init <= '0';
+        start <= '0';
 
         wait for (CLK_PER * 8);
 
