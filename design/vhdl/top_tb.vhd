@@ -175,11 +175,11 @@ begin
         GRST <= '0';
         DATA <= "00000000000000000000000000000000";  -- opcode
 
-        wait for (CLK_PER * 4);
+        wait for (CLK_PER * 5);
 
         DATA <= "00000000000000000000000000000011";  -- input size
 
-        wait for (CLK_PER * 5);
+        wait for (CLK_PER * 5.1);
 
         DATA <= "00000000000000000000000000000110";  -- polybcd
 
