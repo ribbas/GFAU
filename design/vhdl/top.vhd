@@ -309,7 +309,7 @@ begin
         opcode_out => opcode,
         rst => rst,
         gen_rdy => rdy_gen,
-        gfau_data(15 downto (n + 1)) => ZEROVEC,
+        gfau_data(15 downto (n + 1)) => (others => '0'),
         gfau_data(n downto 0) => result,
         out_data => out_data,
         cu_start => init_cu,

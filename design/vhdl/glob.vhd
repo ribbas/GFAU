@@ -1,11 +1,3 @@
--- glob.vhd
---
--- Sabbir Ahmed
--- 2018-03-30
---
--- Package for the GFAU glob containing all global vectors and constants
---
-
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.std_logic_unsigned.all;
@@ -15,13 +7,13 @@ package glob is
     -------- glob constants --------
 
     -- maximum degree of polynomial
-    constant DEGREE : positive := 7;
+    constant DEGREE : positive := 13;
 
     -- ceil(log2(degree))
-    constant CEILLGN : positive := 3;
+    constant CEILLGN : positive := 4;
 
-    -- ceil(log2(degree) - 1)
-    constant CEILLGN1 : positive := 2;
+    -- ceil(log2(degree - 1))
+    constant CEILLGN1 : positive := 4;
 
     -------- glob constants --------
 
