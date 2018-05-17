@@ -94,6 +94,7 @@ architecture Behavioral of IO_Handler_Top is
         clk         :   in  std_logic;
         enable      :   in  std_logic;
         rst         :   in  std_logic;
+        poly_gen    :   in  std_logic;
         in_data     :   in  std_logic_vector(31 downto 0);
         count       :   in  std_logic_vector(1 downto 0);
         bus_size    :   in  std_logic_vector(1 downto 0);
@@ -263,6 +264,7 @@ begin
         num_clks    => num_clks,
         done        => deserial_d,
         count_rst   => count_rst2,
+        poly_gen    => poly_get,
         out_data    => out_data
     );
 

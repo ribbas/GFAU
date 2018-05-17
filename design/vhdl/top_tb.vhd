@@ -202,7 +202,7 @@ begin
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "00000110";  -- polybcd
+        indata(n downto 0) <= "10001110";  -- polybcd
 
         wait until rising_edge(INT);
 
