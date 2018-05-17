@@ -76,7 +76,8 @@ architecture behavioral of topdbg is
     -- order and most significant bit index
     component indices
         port(
-            size        : in std_logic_vector(clgn1 downto 0);  -- size
+            poly_bcd    : in std_logic_vector(n downto 1);  -- BCD polynomial
+            size        : out std_logic_vector(clgn downto 0);  -- size
             msb         : out std_logic_vector(clgn1 downto 0)  -- msb
         );
     end component;
@@ -96,24 +97,19 @@ architecture behavioral of topdbg is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            init        : in std_logic;  -- control unit enable
-            rst         : in std_logic; --reset
-
-            -- registers
-            mask        : in  std_logic_vector(n downto 0);
+            start       : in std_logic;  -- control unit enable
+            rst         : in std_logic; -- global reset
 
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
             rst_gen     : out std_logic;  -- polynomial generator reset
+            gen_rdy     : in std_logic;  -- generation done
 
             -- operation signals
-            en_ops      : out std_logic;  -- operators enable
+            ops_rdy     : out std_logic;  -- operators enable
             rst_ops     : out std_logic;
             i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
             j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
-
-            -- memory types and methods
-            --mem_t       : out std_logic; -- memory type
 
             -- memory wrapper control signals
             id_cu       : out std_logic := '0';
@@ -121,12 +117,7 @@ architecture behavioral of topdbg is
 
             -- memory address and data signals
             addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
-            dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
-
-            -- exceptions and flags
-            err_b       : out std_logic;  -- set membership exception
-            opand1_null : out std_logic;  -- operand 1 zero flag
-            opand2_null : out std_logic  -- operand 2 zero flag
+            dout_cu     : in std_logic_vector(n downto 0)  -- data from memory
         );
     end component;
 
@@ -163,20 +154,16 @@ architecture behavioral of topdbg is
             -- clock
             clk         : in std_logic;
 
-            en          : in std_logic;
+            -- control signals
+            ops_rdy     : in std_logic;
             rst         : in std_logic;
 
             -- opcode
-            op      : in std_logic_vector(2 downto 0);
-            out_t   : in std_logic;
+            opcode      : in std_logic_vector(5 downto 0);
 
             -- operands
             i           : in std_logic_vector(n downto 0);
             j           : in std_logic_vector(n downto 0);
-
-            -- operand null flags
-            i_null      : in std_logic;
-            j_null      : in std_logic;
 
             -- registers
             size        : in std_logic_vector(clgn downto 0);  -- size
@@ -193,7 +180,7 @@ architecture behavioral of topdbg is
             addr_con    : out std_logic_vector(n downto 0);
             dout_con    : inout std_logic_vector(n downto 0);
 
-            result      : out std_logic_vector(n downto 0); -- selected output
+            result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
             err_z       : out std_logic; -- zero exception
             rdy_out     : out std_logic -- result ready interrupt
         );
@@ -248,8 +235,10 @@ architecture behavioral of topdbg is
     signal rst_gen : std_logic;  -- reset
 
     -- internal operation signals
-    signal en_ops : std_logic;
+    signal ops_rdy : std_logic;
     signal rst_ops: std_logic;
+
+    signal init_cu : std_logic;
     signal id_cu : std_logic;
     signal id_con : std_logic;
     signal i : std_logic_vector(n downto 0);
@@ -261,6 +250,7 @@ architecture behavioral of topdbg is
     signal mem_t_con : std_logic;  -- memory type of operators
     signal mem_rdy : std_logic;  -- memory type
 
+    signal rdy_gen  : std_logic;
     -- memory address and data signals
     signal addr_gen : std_logic_vector((n + 1) downto 0);
     signal elem : std_logic_vector(n downto 0);
@@ -275,7 +265,8 @@ begin
 
     -- most significant bit
     indices_unit: indices port map(
-        size => size(clgn1 downto 0),
+        poly_bcd => poly_bcd_reg,
+        size => size,
         msb => msb
     );
 
@@ -291,10 +282,10 @@ begin
         opcode => OPCODE(5 downto 1),
         opand1 => OPAND1,
         opand2 => OPAND2,
-        init => ENCU,
+        start => ENCU,
         rst => RST,
-        mask => mask,
-        en_ops => en_ops,
+        gen_rdy => rdy_gen,
+        ops_rdy => ops_rdy,
         en_gen => en_gen,
         rst_gen => rst_gen,
         rst_ops => rst_ops,
@@ -303,10 +294,7 @@ begin
         id_cu => id_cu,
         mem_rdy => mem_rdy,
         addr_cu => addr_cu,
-        dout_cu => dout_cu,
-        err_b => ERRB,
-        opand1_null => i_null,
-        opand2_null => j_null
+        dout_cu => dout_cu
     );
 
     ---------------- element generator ----------------
@@ -322,7 +310,7 @@ begin
         msb => msb,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
-        gen_rdy => RDYGEN,
+        gen_rdy => rdy_gen,
         addr_gen => addr_gen,
         elem => elem
     );
@@ -333,14 +321,11 @@ begin
     -- operators
     operators_unit: operators port map(
         clk => CLK,
-        op => OPCODE(5 downto 3),
-        out_t => OPCODE(0),
-        en => en_ops,
+        opcode => OPCODE,
+        ops_rdy => ops_rdy,
         rst => rst_ops,
         i => i,
         j => j,
-        i_null => i_null,
-        j_null => j_null,
         size => size,
         mask => mask,
         mem_t => mem_t_con,
@@ -385,6 +370,7 @@ begin
     t_1 <= rst_ops;
     t_n1 <= i;
     t_n2 <= j;
+    RDYGEN <= rdy_gen;
 
     ----process (clk) begin
     ----for i in 5 downto 0 loop

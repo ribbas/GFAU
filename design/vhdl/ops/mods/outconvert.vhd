@@ -63,7 +63,7 @@ begin
 
             end if;
 
-            if (en = '1' and rst = '0') then
+            if (en = '1') then
 
                 -- if conversion requested
                 if (convert = '1') then

@@ -111,15 +111,13 @@ architecture behavioral of top is
             opand1      : in std_logic_vector(n downto 0);   -- operand 1
             opand2      : in std_logic_vector(n downto 0);   -- operand 2
 
-            init        : in std_logic;  -- control unit enable
-            rst         : in std_logic; --reset
-
-            -- registers
-            mask        : in  std_logic_vector(n downto 0);
+            start       : in std_logic;  -- control unit enable
+            rst         : in std_logic; -- global reset
 
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
             rst_gen     : out std_logic;  -- polynomial generator reset
+            gen_rdy     : in std_logic;  -- generation done
 
             -- operation signals
             ops_rdy     : out std_logic;  -- operators enable
@@ -133,12 +131,7 @@ architecture behavioral of top is
 
             -- memory address and data signals
             addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
-            dout_cu     : in std_logic_vector(n downto 0);  -- data from memory
-
-            -- exceptions and flags
-            err_b       : out std_logic;  -- set membership exception
-            opand1_null : out std_logic;  -- operand 1 zero flag
-            opand2_null : out std_logic  -- operand 2 zero flag
+            dout_cu     : in std_logic_vector(n downto 0)  -- data from memory
         );
     end component;
 
@@ -175,20 +168,16 @@ architecture behavioral of top is
             -- clock
             clk         : in std_logic;
 
+            -- control signals
             ops_rdy     : in std_logic;
             rst         : in std_logic;
 
             -- opcode
-            op          : in std_logic_vector(2 downto 0);
-            out_t       : in std_logic;
+            opcode      : in std_logic_vector(5 downto 0);
 
             -- operands
             i           : in std_logic_vector(n downto 0);
             j           : in std_logic_vector(n downto 0);
-
-            -- operand null flags
-            i_null      : in std_logic;
-            j_null      : in std_logic;
 
             -- registers
             size        : in std_logic_vector(clgn downto 0);  -- size
@@ -205,7 +194,7 @@ architecture behavioral of top is
             addr_con    : out std_logic_vector(n downto 0);
             dout_con    : inout std_logic_vector(n downto 0);
 
-            result      : out std_logic_vector(n downto 0); -- selected output
+            result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
             err_z       : out std_logic; -- zero exception
             rdy_out     : out std_logic -- result ready interrupt
         );
@@ -349,22 +338,18 @@ begin
         opcode => opcode(5 downto 1),
         opand1 => out_data(n downto 0),
         opand2 => out_data((16 + n) downto 16),
-        init => init_cu,
+        start => init_cu,
         rst => rst,
-        mask => mask,
         ops_rdy => ops_rdy,
+        gen_rdy => rdy_gen,
         en_gen => en_gen,
         rst_gen => rst_gen,
-        rst_ops => rst_ops,
         i => i,
         j => j,
         id_cu => id_cu,
         mem_rdy => mem_rdy,
         addr_cu => addr_cu,
-        dout_cu => dout_cu,
-        err_b => errb,
-        opand1_null => i_null,
-        opand2_null => j_null
+        dout_cu => dout_cu
     );
 
     ---------------- element generator ----------------
@@ -391,14 +376,11 @@ begin
     -- operators
     operators_unit: operators port map(
         clk => CLK,
-        op => opcode(5 downto 3),
-        out_t => opcode(0),
+        opcode => opcode,
         ops_rdy => ops_rdy,
         rst => rst_ops,
         i => i,
         j => j,
-        i_null => i_null,
-        j_null => j_null,
         size => size,
         mask => mask,
         mem_t => mem_t_con,

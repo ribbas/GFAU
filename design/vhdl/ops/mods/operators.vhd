@@ -9,6 +9,7 @@
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+    use ieee.std_logic_misc.all;
 library work;
     use work.glob.all;
 
@@ -26,16 +27,11 @@ entity operators is
         rst         : in std_logic;
 
         -- opcode
-        op          : in std_logic_vector(2 downto 0);
-        out_t       : in std_logic;
+        opcode      : in std_logic_vector(5 downto 0);
 
         -- operands
         i           : in std_logic_vector(n downto 0);
         j           : in std_logic_vector(n downto 0);
-
-        -- operand null flags
-        i_null      : in std_logic;
-        j_null      : in std_logic;
 
         -- registers
         size        : in std_logic_vector(clgn downto 0);  -- size
@@ -142,6 +138,10 @@ architecture behavioral of operators is
         );
     end component;
 
+    -- operand null flags
+    signal i_null : std_logic;
+    signal j_null : std_logic;
+
     signal neg_j : std_logic_vector(n downto 0);
 
     signal bitxor : std_logic_vector(n downto 0);
@@ -193,8 +193,8 @@ begin
 
     -- output selector
     outselect_unit: outselect port map(
-        op => op,
-        out_t => out_t,
+        op => opcode(5 downto 3),
+        out_t => opcode(0),
         bitxor => bitxor,
         prod => prod,
         quot => quot,
@@ -224,5 +224,31 @@ begin
         result => result,
         rdy_out => rdy_out
     );
+
+    process(opcode(1 downto 0), i, j)
+    begin
+
+        if (opcode(2) = '0') then
+
+            i_null <= and_reduce(i);
+
+        elsif (opcode(2) = '1') then
+
+            i_null <= not or_reduce(i);
+
+        end if;
+
+        if (opcode(1) = '0') then
+
+            j_null <= and_reduce(j);
+
+        elsif (opcode(1) = '1') then
+
+            j_null <= not or_reduce(j);
+
+        end if;
+
+    end process;
+
 
 end behavioral;

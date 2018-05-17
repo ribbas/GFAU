@@ -28,16 +28,11 @@ architecture behavioral of operators_tb is
             rst         : in std_logic;
 
             -- opcode
-            op      : in std_logic_vector(2 downto 0);
-            out_t   : in std_logic;
+            opcode      : in std_logic_vector(5 downto 0);
 
             -- operands
             i           : in std_logic_vector(n downto 0);
             j           : in std_logic_vector(n downto 0);
-
-            -- operand null flags
-            i_null      : in std_logic;
-            j_null      : in std_logic;
 
             -- registers
             size        : in std_logic_vector(clgn downto 0);  -- size
@@ -61,14 +56,11 @@ architecture behavioral of operators_tb is
     end component;
 
     -- inputs
-    signal op : std_logic_vector(2 downto 0);
-    signal out_t : std_logic;
+    signal opcode : std_logic_vector(5 downto 0);
     signal ops_rdy : std_logic := '0';
     signal rst : std_logic := '0';
     signal i : std_logic_vector(n downto 0);
     signal j : std_logic_vector(n downto 0);
-    signal i_null : std_logic;
-    signal j_null : std_logic;
     signal size : std_logic_vector(clgn downto 0);
     signal mask : std_logic_vector(n downto 0);
 
@@ -90,14 +82,11 @@ begin
     -- instantiate the unit under test (uut)
     uut: operators port map(
         clk => clk,
-        op => op,
-        out_t => out_t,
+        opcode => opcode,
         ops_rdy => ops_rdy,
         rst => rst,
         i => i,
         j => j,
-        i_null => i_null,
-        j_null => j_null,
         size => size,
         mask => mask,
         mem_t => mem_t,
@@ -126,9 +115,7 @@ begin
     begin
 
         i <= "00000101";
-        j <= "00000011";
-        i_null <= '0';
-        j_null <= '0';
+        j <= "11111111";
         size <= "0011";
         mask <= "00000111";
 
@@ -137,44 +124,39 @@ begin
         ops_rdy <= '1';
 
         -- generator
-        op <= "000";
-        out_t <= '0';
+        opcode <= "000000";
 
         -- hold state for 10 ns
         wait for (CLK_PER * 1);
 
         -- add/sub, poly
-        op <= "001";
-        out_t <= '1';
+        opcode <= "011000";
 
         -- hold state for 10 ns
         wait for (CLK_PER * 1);
 
-        -- mul, elem
-        op <= "010";
-        out_t <= '0';
+        ---- mul, elem
+        --opcode <= "010";
 
-        -- hold state for 10 ns
-        wait for (CLK_PER * 1);
+        ---- hold state for 10 ns
+        --wait for (CLK_PER * 1);
 
-        dout_con <= "00000100";
-        mem_rdy <= '1';
-        -- div, elem
-        op <= "011";
-        out_t <= '1';
+        --dout_con <= "00000100";
+        --mem_rdy <= '1';
+        ---- div, elem
+        --opcode <= "011";
 
-        -- hold state for 10 ns
-        wait for (CLK_PER * 3);
+        ---- hold state for 10 ns
+        --wait for (CLK_PER * 3);
 
-        -- log, elem
-        i_null <= '1';
-        op <= "100";
-        out_t <= '0';
+        ---- log, elem
+        --i_null <= '1';
+        --opcode <= "100";
 
-        wait for (CLK_PER * 1);
+        --wait for (CLK_PER * 1);
 
-        -- log, elem
-        i_null <= '0';
+        ---- log, elem
+        --i_null <= '0';
 
         wait for (CLK_PER * 1);
 

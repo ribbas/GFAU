@@ -52,6 +52,7 @@ architecture behavioral of control_unit is
     signal en : std_logic;
     signal ij : std_logic;
     signal came_from_both : std_logic;
+    signal ops_rdy_sig    :   std_logic;
 
     type cu_state_type is (ready, convi, convj, both, gen, memrd);
     signal cu_state : cu_state_type;
@@ -60,61 +61,79 @@ architecture behavioral of control_unit is
 
 begin
 
+    ops_rdy <= ops_rdy_sig;
+
     process (clk) begin
 
         if (rising_edge(clk)) then
 
-            if (start = '1') then
+            if (rst = '1') then
 
-                en <= '1';
+                -- reset operators
+                rst_ops <= '1';
+
+                -- disable generator
+                rst_gen <= '1';
+                en_gen <= '0';
+
+                -- disable memory lookup
+                id_cu <= '0';
+                addr_cu <= '-' & DCAREVEC;
 
             end if;
 
             case (cu_state) is
 
                 when ready =>
+                    rst_ops <= '0';
+                    if(ops_rdy_sig = '1') then
+                        ops_rdy_sig <= '0';
+                    end if;
+                    if (start = '1') then
+                        en <= '1';
+                        case (opcode) is
 
-                    case (opcode) is
+                            when "00000" | "00001" | "00010" | "00011" =>
 
-                        when "00000" | "00001" | "00010" | "00011" =>
+                                cu_state <= gen;
 
-                            cu_state <= gen;
+                            when "00101" | "01010" | "01110" | "10010" | "10011" =>
 
-                        when "00101" | "01010" | "01110" | "10010" | "10011" =>
+                                cu_state <= convi;
 
-                            cu_state <= convi;
+                            when "00110" | "01001" | "01101" =>
 
-                        when "00110" | "01001" | "01101" =>
+                                cu_state <= convj;
 
-                            cu_state <= convj;
+                            when "00100" | "01011" | "01111" =>
 
-                        when "00100" | "01011" | "01111" =>
+                                cu_state <= both;
 
-                            cu_state <= both;
+                        ----end no memory lookup
+                            when "00111" | "01000" | "01100" | "10000" =>
 
-                        -- no memory lookup
-                        when "00111" | "01000" | "01100" | "10000" =>
+                                i <= opand1;
+                                j <= opand2;
 
-                            i <= opand1;
-                            j <= opand2;
+                                addr_cu <= '-' & DCAREVEC;
+                                ops_rdy_sig <= '1';
 
-                            addr_cu <= '-' & DCAREVEC;
-                            ops_rdy <= '1';
+                                cu_state <= ready;
+                            when others =>
 
-                            cu_state <= ready;
+                            ----end try again
+                                cu_state <= ready;
 
-                        when others =>
-
-                            -- try again
-                            cu_state <= ready;
-
-                    end case;
-
+                        end case;
+                    else
+                        en_gen <= '0';
+                        rst_gen <= '1';
+                    end if;
                     came_from_both <= '0';
 
                 when gen =>
 
-                    if (en = '1' and gen_rdy = '0') then
+                    if (en = '1') then
 
                         -- start generator
                         en_gen <= '1';
@@ -123,23 +142,26 @@ begin
                         -- disable memory lookup
                         id_cu <= '0';
 
-
                         cu_state <= gen;
 
-                    elsif (en = '1' and gen_rdy = '1') then
+                        if (gen_rdy = '1') then
 
-                        -- turn off generator
-                        en_gen <= '0';
-                        rst_gen <= '0';
+                            report "FUCK ME";
 
-                        -- disable memory lookup
-                        id_cu <= '0';
+                            -- turn off generator
+                            en_gen <= '0';
+                            rst_gen <= '0';
 
-                        cu_state <= ready;
+                            -- disable memory lookup
+                            id_cu <= '0';
+
+                            cu_state <= ready;
+
+                        end if;
 
                     end if;
 
-                    ops_rdy <= '0';
+                    ops_rdy_sig <= '0';
 
                 when convi =>
 
@@ -150,7 +172,7 @@ begin
 
                         j <= opand2;
 
-                        ops_rdy <= '0';
+                        ops_rdy_sig <= '0';
 
                         cu_state <= memrd;
 
@@ -166,7 +188,7 @@ begin
 
                         i <= opand1;
 
-                        ops_rdy <= '0';
+                        ops_rdy_sig <= '0';
 
                         cu_state <= memrd;
 
@@ -178,7 +200,7 @@ begin
 
                         when send_addr =>
 
-                            ops_rdy <= '0';
+                            ops_rdy_sig <= '0';
 
                             if (ij = '0') then
 
@@ -222,7 +244,7 @@ begin
                                 else
 
                                     cu_state <= ready;
-                                    ops_rdy <= '1';
+                                    ops_rdy_sig <= '1';
                                     en <= '0';
 
                                 end if;
@@ -236,7 +258,7 @@ begin
                         if (en = '1') then
 
                             came_from_both <= '1';
-                            ops_rdy <= '0';
+                            ops_rdy_sig <= '0';
 
                             cu_state <= convi;
 
