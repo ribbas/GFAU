@@ -42,8 +42,14 @@ entity top is
         nBLE    : out std_logic := '0';
         nBHE    : out std_logic := '0';
 
+        state_out   :   out std_logic_vector(7 downto 0);
+        result_out  :   out std_logic_vector(7 downto 0);
+                
+        op_done_o   :   out std_logic;
+        wr_rd_o     :   out std_logic;
+
         -- memory address and data signals
-        A       : out std_logic_vector((n + 1) downto 0);
+        A       : out std_logic_vector(14 downto 0);
         IO      : inout std_logic_vector(n downto 0)
     );
 end top;
@@ -79,8 +85,14 @@ architecture behavioral of top is
             out_data    :   out     std_logic_vector(31 downto 0);
             cu_start    :   out     std_logic;
 
+            op_done_o   :   out     std_logic;
+            
             --error signals
             z_err       :   in      std_logic;
+            state_out   :   out     std_logic_vector(7 downto 0);
+            in_data_exto:   out     std_logic_vector(31 downto 0);
+            out_dataexto:  out     std_logic_vector(15 downto 0);
+            wr_rd_o     :   out     std_logic;
             oob_err     :   in      std_logic
         );
     end component;
@@ -196,7 +208,8 @@ architecture behavioral of top is
 
             result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
             err_z       : out std_logic; -- zero exception
-            rdy_out     : out std_logic -- result ready interrupt
+            rdy_out     : out std_logic; -- result ready interrupt
+            out_sel_o   : out std_logic_vector(n downto 0)
         );
     end component;
 
@@ -291,8 +304,10 @@ architecture behavioral of top is
     signal rdy_out : std_logic;
     signal errb    : std_logic;
     signal errz    : std_logic;
-
 begin
+
+    A(14 downto (n + 2)) <= (others => '0');
+    result_out <= data(7 downto 0);
 
     io_unit: IO_Handler_Top port map(
         data => DATA,
@@ -314,6 +329,13 @@ begin
         out_data => out_data,
         cu_start => init_cu,
         z_err => errz,
+        state_out => state_out,
+        op_done_o => op_done_o,
+        --in_data_exto(7 downto 0) => result_out,
+        in_data_exto(31 downto 0) => open,
+        --out_dataexto(7 downto 0) => result_out,
+        out_dataexto(15 downto 0) => open,
+        wr_rd_o => wr_rd_o,
         oob_err => errb
     );
 
@@ -390,6 +412,7 @@ begin
         dout_con => dout_con,
         result => result,
         err_z => errz,
+        out_sel_o => open,--result_out,--result_out,
         rdy_out => rdy_out
     );
 
@@ -415,7 +438,7 @@ begin
         nOE => nOE,
         nBLE => nBLE,
         nBHE => nBHE,
-        A => A,
+        A => A((n + 1) downto 0),
         DQ => IO
     );
 

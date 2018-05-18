@@ -61,6 +61,12 @@ port(
 
     --error signals
     z_err       :   in      std_logic;
+    
+    state_out   :   out     std_logic_vector(7 downto 0);
+    op_done_o   :   out     std_logic;
+    in_data_exto :  out  std_logic_vector(31 downto 0);
+    out_dataexto:   out     std_logic_vector(15 downto 0);
+    wr_rd_o     :   out     std_logic;
     oob_err     :   in      std_logic
 
 );
@@ -132,7 +138,8 @@ architecture Behavioral of IO_Handler_Top is
         z_err       :   in      std_logic; --zero error
         insize_in   :   in      std_logic_vector(3 downto 0);
         insize_out  :   out     std_logic_vector(3 downto 0);
-        oob_err     :   in      std_logic  --out of bounds error
+        oob_err     :   in      std_logic;  --out of bounds error
+        state_out   :   out     std_logic_vector(7 downto 0)
     );
     end component;
 
@@ -215,12 +222,16 @@ architecture Behavioral of IO_Handler_Top is
 
 begin
 
+    wr_rd_o <= wr_rd;
+    in_data_exto <= in_data_ext;
     mode_out <= mode;
     count_rst <= count_rst1 and count_rst2; --start counting if either goes low
     err <= err_out;
     err_vec(0) <= err_type;
     err_vec(15 downto 1) <= (others => '0');
     cu_start <= deserial_d;
+    op_done_o <= op_done;
+    out_dataexto <= out_data_ext;
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
@@ -251,6 +262,7 @@ begin
         z_err       => z_err,
         oob_err     => oob_err,
         insize_out  => input_size_s,
+        state_out   => state_out,
         wr_rd       => wr_rd
     );
 

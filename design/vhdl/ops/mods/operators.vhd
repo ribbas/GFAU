@@ -50,7 +50,9 @@ entity operators is
 
         result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
         err_z       : out std_logic; -- zero exception
-        rdy_out     : out std_logic -- result ready interrupt
+        rdy_out     : out std_logic; -- result ready interrupt
+        
+        out_sel_o   : out std_logic_vector(n downto 0)
     );
 end operators;
 
@@ -153,6 +155,8 @@ architecture behavioral of operators is
     signal en_con : std_logic;
 
 begin
+
+    out_sel_o <= out_sel;
 
     ---------------- Two's Compliment ----------------
 
