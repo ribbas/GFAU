@@ -170,7 +170,7 @@ begin
 
         wrrd <= '1';
 
-        indata(31 downto (n + 1)) <= "000000000000000000000000";
+        indata(31 downto (n + 1)) <= "000000000000000000";
 
         ---------------------------------------------------------------------
         ------------------------- GENERATE ELEMENTS -------------------------
@@ -183,13 +183,13 @@ begin
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "00110000";  -- set mode to 8-bits
+        indata(n downto 0) <= "00000000110010";  -- set mode to 8-bits
         START <= '1';
 
         wait until falling_edge(TCLK);
 
         START <= '0';
-        indata(n downto 0) <= "00000000";  -- opcode
+        indata(n downto 0) <= "00000000000000";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -198,11 +198,11 @@ begin
         wait until falling_edge(TCLK);
 
         START <= '0';
-        indata(n downto 0) <= "00001000";  -- input size
+        indata(n downto 0) <= "00000000001110";  -- input size
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "10001110";  -- polybcd
+        indata(n downto 0) <= "10000010100101";  -- polybcd (x^14 + x^8 + x^6 + x^1 + 1)
 
         wait until rising_edge(INT);
 
@@ -214,7 +214,7 @@ begin
 
         INTA <= '0';  -- acknowledge interrupt
 
-        indata(n downto 0) <= "00001111";  -- opcode
+        indata(n downto 0) <= "00000000001111";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -224,11 +224,11 @@ begin
 
         START <= '0';
 
-        indata(n downto 0) <= "00000001";  -- opand1
+        indata(n downto 0) <= "00000000000001";  -- opand1
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "00000110";  -- opand2
+        indata(n downto 0) <= "00000000000110";  -- opand2
 
         wait until falling_edge(TCLK);
 
@@ -239,8 +239,6 @@ begin
         GRST <= '1';
 
         wait for (TCLK_PER * 5);
-
-        --indata(15 downto 0) <= "ZZZZZZZZZZZZZZZZ";  -- high af
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

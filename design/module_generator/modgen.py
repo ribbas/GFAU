@@ -8,7 +8,7 @@ import math
 import os
 from pprint import pprint
 
-from modstr import GLOB_STR, VARMASK_STR
+from modstr import GLOB_STR, INDICES_STR, VARMASK_STR
 
 try:
     input = raw_input
@@ -56,6 +56,29 @@ def write_glob(deg, ceillgn, ceillgn1):
             deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1))
 
 
+def write_indices(deg, ceillgn):
+
+    indices_enc = ""
+    indices_fmt = "{:0%db}" % (ceillgn + 1)
+    indices_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
+
+    for index in range(deg, 0, -1):
+
+        case_str = indices_line.format(
+            vec=indices_fmt.format(index + 1),
+            bit=str(index)
+        )
+
+        if index != deg:
+            indices_enc += " " * 16 + case_str
+
+        else:
+            indices_enc += case_str
+
+    with open(args["indices"], "w") as indices_file:
+        indices_file.write(INDICES_STR.format(indices_enc))
+
+
 def write_varmask(deg):
 
     varmask_enc = ""
@@ -72,8 +95,6 @@ def write_varmask(deg):
         else:
             varmask_enc += case_str
 
-    print(varmask_enc)
-
     with open(args["varmask"], "w") as varmask_file:
         varmask_file.write(VARMASK_STR.format(varmask_enc))
 
@@ -87,6 +108,8 @@ def parse_args(args):
     write_glob(deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1)
 
     write_varmask(deg=deg)
+
+    write_indices(deg=deg, ceillgn=ceillgn)
 
 
 if __name__ == "__main__":
@@ -106,6 +129,9 @@ if __name__ == "__main__":
     parser.add_argument("--glob", "-g", default="", metavar="PATH",
                         help="| Path of 'glob.vhd'")
 
+    parser.add_argument("--indices", "-i", default="", metavar="PATH",
+                        help="| Path of 'indices.vhd'")
+
     parser.add_argument("--varmask", "-v", default="", metavar="PATH",
                         help="| Path of 'varmask.vhd'")
 
@@ -113,6 +139,7 @@ if __name__ == "__main__":
     args = parser.parse_args().__dict__
     ambiguous = assign_path(args, "glob")
     ambiguous = assign_path(args, "varmask")
+    ambiguous = assign_path(args, "indices")
 
     if (not ambiguous):
 

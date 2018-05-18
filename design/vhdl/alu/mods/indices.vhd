@@ -1,11 +1,3 @@
--- indices.vhd
---
--- Sabbir Ahmed
--- 2018-01-16
---
--- Generates the indices of the size and the MSB
---
-
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
@@ -31,14 +23,20 @@ architecture behavioral of indices is
 
 begin
 
-    prio_enc <= "1000" when (poly_bcd(7) = '1') else   -- 8
-                "0111" when (poly_bcd(6) = '1') else   -- 7
-                "0110" when (poly_bcd(5) = '1') else   -- 6
-                "0101" when (poly_bcd(4) = '1') else   -- 5
-                "0100" when (poly_bcd(3) = '1') else   -- 4
-                "0011" when (poly_bcd(2) = '1') else   -- 3
-                "0010" when (poly_bcd(1) = '1') else   -- 2
-                DCAREVEC(clgn downto 0);               -- under 2
+    prio_enc <= "01110" when (poly_bcd(13) = '1') else
+                "01101" when (poly_bcd(12) = '1') else
+                "01100" when (poly_bcd(11) = '1') else
+                "01011" when (poly_bcd(10) = '1') else
+                "01010" when (poly_bcd(9) = '1') else
+                "01001" when (poly_bcd(8) = '1') else
+                "01000" when (poly_bcd(7) = '1') else
+                "00111" when (poly_bcd(6) = '1') else
+                "00110" when (poly_bcd(5) = '1') else
+                "00101" when (poly_bcd(4) = '1') else
+                "00100" when (poly_bcd(3) = '1') else
+                "00011" when (poly_bcd(2) = '1') else
+                "00010" when (poly_bcd(1) = '1') else
+                DCAREVEC(clgn downto 0);
 
     size <= prio_enc;
     msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);
