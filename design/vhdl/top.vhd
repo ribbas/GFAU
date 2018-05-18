@@ -195,6 +195,7 @@ architecture behavioral of top is
             dout_con    : inout std_logic_vector(n downto 0);
 
             result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
+            err_b       : out std_logic; -- member exception
             err_z       : out std_logic; -- zero exception
             rdy_out     : out std_logic -- result ready interrupt
         );
@@ -341,6 +342,7 @@ begin
         start => init_cu,
         rst => rst,
         ops_rdy => ops_rdy,
+        rst_ops => rst_ops,
         gen_rdy => rdy_gen,
         en_gen => en_gen,
         rst_gen => rst_gen,
@@ -389,6 +391,7 @@ begin
         addr_con => addr_con,
         dout_con => dout_con,
         result => result,
+        err_b => errb,
         err_z => errz,
         rdy_out => rdy_out
     );

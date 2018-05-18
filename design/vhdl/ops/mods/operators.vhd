@@ -49,12 +49,22 @@ entity operators is
         dout_con    : inout std_logic_vector(n downto 0);
 
         result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
-        err_z       : out std_logic; -- zero exception
+        err_b       : out std_logic; -- membership exception
+        err_z       : out std_logic; -- null exception
         rdy_out     : out std_logic -- result ready interrupt
     );
 end operators;
 
 architecture behavioral of operators is
+
+    component ismember is
+        port(
+            opand1      : in std_logic_vector(n downto 0);  -- operand
+            opand2      : in std_logic_vector(n downto 0);  -- operand
+            mask        : in std_logic_vector(n downto 0);  -- mask
+            is_not_in   : out std_logic
+        );
+    end component;
 
     -- two's complement
     component maskedtwoscmp
@@ -153,6 +163,13 @@ architecture behavioral of operators is
     signal en_con : std_logic;
 
 begin
+
+    ismember_unit: ismember port map(
+        opand1 => j,
+        opand2 => j,
+        mask => mask,
+        is_not_in => err_b
+    );
 
     ---------------- Two's Compliment ----------------
 

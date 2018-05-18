@@ -60,6 +60,7 @@ def write_indices(deg, ceillgn):
 
     indices_enc = ""
     indices_fmt = "{:0%db}" % (ceillgn + 1)
+    print(indices_fmt)
     indices_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
 
     for index in range(deg, 0, -1):
@@ -102,8 +103,8 @@ def write_varmask(deg):
 def parse_args(args):
 
     deg = int(args["degree"])
-    ceillgn = int(math.ceil(math.log(deg, 2)))
-    ceillgn1 = int(math.ceil(math.log(deg - 1, 2)))
+    ceillgn = len("{:0b}".format(deg + 1)) - 1
+    ceillgn1 = len("{:0b}".format(deg)) - 1
 
     write_glob(deg=deg, ceillgn=ceillgn, ceillgn1=ceillgn1)
 
@@ -143,16 +144,20 @@ if __name__ == "__main__":
 
     if (not ambiguous):
 
-        print("\nParameters chosen:")
-        pprint(args)
-        init_gen = input("Continue? (y/n): ")
-        if (init_gen.lower() == 'y'):
-            args["degree"] -= 1
-            print("Generating modules...", end="")
-            parse_args(args)
-            print("Done")
+        if (args["degree"] < 2):
+            print("\x1b[1;31;40mPlease input degree > 1\x1b[0m")
+
         else:
-            print("\x1b[1;31;40mModule generation canceled\x1b[0m")
+            print("\nParameters chosen:")
+            pprint(args)
+            init_gen = input("Continue? (y/n): ")
+            if (init_gen.lower() == 'y'):
+                args["degree"] -= 1
+                print("Generating modules...", end="")
+                parse_args(args)
+                print("Done")
+            else:
+                print("\x1b[1;31;40mModule generation canceled\x1b[0m")
 
     else:
 

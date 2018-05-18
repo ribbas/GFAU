@@ -170,26 +170,26 @@ begin
 
         wrrd <= '1';
 
-        indata(31 downto (n + 1)) <= "000000000000000000";
+        indata(31 downto (n + 1)) <= "0000000000000000";
 
         ---------------------------------------------------------------------
         ------------------------- GENERATE ELEMENTS -------------------------
-        -- SIZE = 0011
-        -- OPCODE = 000XXX
-        -- POLYBCD = 00000110
+        -- SIZE = 10000
+        -- POLYBCD = 1000100000000101
         ---------------------------------------------------------------------
 
         GRST <= '0';
 
+        -- initialize
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "00000000110010";  -- set mode to 8-bits
+        indata(n downto 0) <= "0000000000110010";  -- set mode to 8-bits
         START <= '1';
 
         wait until falling_edge(TCLK);
 
         START <= '0';
-        indata(n downto 0) <= "00000000000000";  -- opcode
+        indata(n downto 0) <= "0000000000000000";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -198,14 +198,16 @@ begin
         wait until falling_edge(TCLK);
 
         START <= '0';
-        indata(n downto 0) <= "00000000001110";  -- input size
+        indata(n downto 0) <= "0000000000001110";  -- input size
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "10000010100101";  -- polybcd (x^14 + x^8 + x^6 + x^1 + 1)
+        indata(n downto 0) <= "1000100000000101";  -- polybcd (x^16 + x^12 + x^3 + x^1 + 1)
 
         wait until rising_edge(INT);
 
+
+        -- addition
         wait until falling_edge(TCLK);
 
         INTA <= '1';  -- acknowledge interrupt
@@ -214,7 +216,7 @@ begin
 
         INTA <= '0';  -- acknowledge interrupt
 
-        indata(n downto 0) <= "00000000001111";  -- opcode
+        indata(n downto 0) <= "0000000000001111";  -- opcode for addition
 
         wait until falling_edge(TCLK);
 
@@ -224,21 +226,130 @@ begin
 
         START <= '0';
 
-        indata(n downto 0) <= "00000000000001";  -- opand1
+        indata(n downto 0) <= "0000000000000011";  -- opand1
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "00000000000110";  -- opand2
+        indata(n downto 0) <= "0000000000000101";  -- opand2
 
         wait until falling_edge(TCLK);
 
         wrrd <= '0';
 
-        wait for (TCLK_PER * 5);
+        wait until rising_edge(INT);
 
-        GRST <= '1';
+        wait until falling_edge(TCLK);
 
-        wait for (TCLK_PER * 5);
+        wrrd <= '1';
+
+
+        -- multiplication
+        wait until falling_edge(TCLK);
+
+        INTA <= '1';  -- acknowledge interrupt
+
+        wait until falling_edge(TCLK);
+
+        INTA <= '0';  -- acknowledge interrupt
+
+        indata(n downto 0) <= "0000000000010000";  -- opcode for multiplication
+
+        wait until falling_edge(TCLK);
+
+        START <= '1';
+
+        wait until falling_edge(TCLK);
+
+        START <= '0';
+
+        indata(n downto 0) <= "0000000000000011";  -- opand1
+
+        wait until falling_edge(TCLK);
+
+        indata(n downto 0) <= "0000000000000101";  -- opand2
+
+        wait until falling_edge(TCLK);
+
+        wrrd <= '0';
+
+        wait until rising_edge(INT);
+
+        wait until falling_edge(TCLK);
+
+        wrrd <= '1';
+
+
+        -- division
+        wait until falling_edge(TCLK);
+
+        INTA <= '1';  -- acknowledge interrupt
+
+        wait until falling_edge(TCLK);
+
+        INTA <= '0';  -- acknowledge interrupt
+
+        indata(n downto 0) <= "0000000000011000";  -- opcode for multiplication
+
+        wait until falling_edge(TCLK);
+
+        START <= '1';
+
+        wait until falling_edge(TCLK);
+
+        START <= '0';
+
+        indata(n downto 0) <= "0000000000000011";  -- opand1
+
+        wait until falling_edge(TCLK);
+
+        indata(n downto 0) <= "0000000000000101";  -- opand2
+
+        wait until falling_edge(TCLK);
+
+        wrrd <= '0';
+
+        wait until rising_edge(INT);
+
+        wait until falling_edge(TCLK);
+
+        wrrd <= '1';
+
+
+        -- logarithm, with null exception
+        wait until falling_edge(TCLK);
+
+        INTA <= '1';  -- acknowledge interrupt
+
+        wait until falling_edge(TCLK);
+
+        INTA <= '0';  -- acknowledge interrupt
+
+        indata(n downto 0) <= "0000000000100000";  -- opcode for logarithm
+
+        wait until falling_edge(TCLK);
+
+        START <= '1';
+
+        wait until falling_edge(TCLK);
+
+        START <= '0';
+
+        indata(n downto 0) <= "1111111111111111";  -- opand1
+
+        wait until falling_edge(TCLK);
+
+        indata(n downto 0) <= "0000000000000101";  -- opand2
+
+        wait until falling_edge(TCLK);
+
+        wrrd <= '0';
+
+        wait until rising_edge(INT);
+
+        wait until falling_edge(TCLK);
+
+        wrrd <= '1';
+
 
         -- stop simulation
         assert false report "simulation ended" severity failure;
