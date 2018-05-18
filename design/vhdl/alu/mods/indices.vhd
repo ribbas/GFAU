@@ -36,7 +36,7 @@ begin
                 "00100" when (poly_bcd(3) = '1') else
                 "00011" when (poly_bcd(2) = '1') else
                 "00010" when (poly_bcd(1) = '1') else
-                DCAREVEC(clgn downto 0);
+                (others => '-');
 
     size <= prio_enc;
     msb <= std_logic_vector(unsigned(prio_enc(clgn1 downto 0)) - 1);

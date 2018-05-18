@@ -48,7 +48,7 @@ entity operators is
         addr_con    : out std_logic_vector(n downto 0);
         dout_con    : inout std_logic_vector(n downto 0);
 
-        result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
+        result      : out std_logic_vector(n downto 0) := (others => '-'); -- selected output
         err_b       : out std_logic; -- membership exception
         err_z       : out std_logic; -- null exception
         rdy_out     : out std_logic; -- result ready interrupt

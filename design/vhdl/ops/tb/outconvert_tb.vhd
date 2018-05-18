@@ -34,7 +34,7 @@ architecture behavioral of outconvert_tb is
 
             -- memory address and data signals
             addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
+            dout_con    : inout std_logic_vector(n downto 0) := (others => 'Z');
 
             -- final output
             result      : out std_logic_vector(n downto 0);

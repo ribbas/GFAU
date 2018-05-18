@@ -38,8 +38,8 @@ architecture test of generator_tb is
 
             -- memory signals
             gen_rdy     : out std_logic := '0';
-            addr_gen    : out std_logic_vector((n + 1) downto 0) := '-' & DCAREVEC;
-            elem        : out std_logic_vector(n downto 0) := DCAREVEC
+            addr_gen    : out std_logic_vector((n + 1) downto 0) := (others => '-');
+            elem        : out std_logic_vector(n downto 0) := (others => '-')
         );
     end component;
 

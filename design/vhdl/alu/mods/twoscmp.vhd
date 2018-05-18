@@ -24,6 +24,8 @@ end twoscmp;
 
 architecture behavioral of twoscmp is
 
+    constant ONEVEC : std_logic_vector(n downto 0) := (0 => '1', others => '0');
+
 begin
 
     tcnum <= std_logic_vector(unsigned(not num) + unsigned(ONEVEC));

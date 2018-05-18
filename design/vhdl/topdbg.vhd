@@ -108,8 +108,8 @@ architecture behavioral of topdbg is
             -- operation signals
             ops_rdy     : out std_logic;  -- operators enable
             rst_ops     : out std_logic;
-            i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
-            j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
+            i           : out std_logic_vector(n downto 0) := (others => '-');  -- i
+            j           : out std_logic_vector(n downto 0) := (others => '-');  -- j
 
             -- memory wrapper control signals
             id_cu       : out std_logic := '0';
@@ -180,7 +180,7 @@ architecture behavioral of topdbg is
             addr_con    : out std_logic_vector(n downto 0);
             dout_con    : inout std_logic_vector(n downto 0);
 
-            result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
+            result      : out std_logic_vector(n downto 0) := (others => '-'); -- selected output
             err_z       : out std_logic; -- zero exception
             rdy_out     : out std_logic -- result ready interrupt
         );

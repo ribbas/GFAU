@@ -100,7 +100,7 @@ begin
             -- control unit
             if (id_cu = '1' and id_gen = '0' and id_con = '0') then
 
-                dout_con <= DCAREVEC;
+                dout_con <= (others => '-');
 
                 -- memory read control signals
                 nCE <= '0';
@@ -138,8 +138,8 @@ begin
                         nWE <= '-';
 
                         -- data outs are don't care
-                        dout_con <= DCAREVEC;
-                        dout_cu <= DCAREVEC;
+                        dout_con <= (others => '-');
+                        dout_cu <= (others => '-');
 
                         mem_rdy <= '0';
 
@@ -150,7 +150,7 @@ begin
             -- output converter
             elsif (id_gen = '0' and id_con = '1') then
 
-                dout_cu <= DCAREVEC;
+                dout_cu <= (others => '-');
 
                 -- memory read control signals
                 nCE <= '0';
@@ -188,7 +188,7 @@ begin
                         nWE <= '-';
 
                         -- data outs are don't care
-                        dout_con <= DCAREVEC;
+                        dout_con <= (others => '-');
 
                         mem_rdy <= '0';
 
@@ -200,8 +200,8 @@ begin
             elsif (id_cu = '0' and id_gen = '1' and id_con = '0') then
 
                 -- data outs are don't care
-                dout_con <= DCAREVEC;
-                dout_cu <= DCAREVEC;
+                dout_con <= (others => '-');
+                dout_cu <= (others => '-');
                 wr_rd <= '1'; -- sets the io port to output mode
 
                 --hold address, data, and bus control signals
@@ -245,8 +245,8 @@ begin
                 mem_rdy <= '0';
 
                 -- data outs are don't care
-                dout_con <= DCAREVEC;
-                dout_cu <= DCAREVEC;
+                dout_con <= (others => '-');
+                dout_cu <= (others => '-');
 
             end if;
 

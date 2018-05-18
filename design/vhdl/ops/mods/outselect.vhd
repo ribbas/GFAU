@@ -101,7 +101,7 @@ begin
                         convert <= '0';
                         mem_t <= '-';
                         -- null (in element form) is selected
-                        out_sel <= HIVEC;
+                        out_sel <= (others => '1');
 
                     end if;
 
@@ -143,7 +143,7 @@ begin
 
                         -- throw divide by zero exception
                         err_z <= '1';
-                        out_sel <= DCAREVEC;
+                        out_sel <= (others => '-');
 
                     -- if dividing null is attempted (0/b)
                     else
@@ -155,7 +155,7 @@ begin
                         mem_t <= '-';
 
                         err_z <= '0';
-                        out_sel <= HIVEC;
+                        out_sel <= (others => '1');
 
                     end if;
 
@@ -196,7 +196,7 @@ begin
 
                         -- throw zero exception
                         err_z <= '1';
-                        out_sel <= DCAREVEC;
+                        out_sel <= (others => '-');
 
                     end if;
 
@@ -208,7 +208,7 @@ begin
                     err_z <= '0';
                     convert <= '0';
                     mem_t <= '-';
-                    out_sel <= DCAREVEC;
+                    out_sel <= (others => '-');
 
             end case;
 
@@ -220,7 +220,7 @@ begin
         --    err_z <= '0';
         --    convert <= '0';
         --    mem_t <= '-';
-        --    out_sel <= DCAREVEC;
+        --    out_sel <= (others => '-');
 
         --end if;  -- enable
 

@@ -30,6 +30,6 @@ begin
             "00000000001111" when (poly_bcd(3) = '1') else
             "00000000000111" when (poly_bcd(2) = '1') else
             "00000000000011" when (poly_bcd(1) = '1') else
-            DCAREVEC;
+            (others => '-');
 
 end behavioral;

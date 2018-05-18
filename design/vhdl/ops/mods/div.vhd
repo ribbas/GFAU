@@ -27,6 +27,8 @@ end div;
 
 architecture behavioral of div is
 
+    constant HIVEC : std_logic_vector(n downto 0) := (others => '1');
+
     signal sumij : std_logic_vector((n + 1) downto 0);
     signal sumij1 : std_logic_vector((n + 1) downto 0);
 

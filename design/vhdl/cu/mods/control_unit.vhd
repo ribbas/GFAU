@@ -34,8 +34,8 @@ entity control_unit is
         -- operation signals
         ops_rdy     : out std_logic;  -- operators enable
         rst_ops     : out std_logic;
-        i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
-        j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
+        i           : out std_logic_vector(n downto 0) := (others => '-');  -- i
+        j           : out std_logic_vector(n downto 0) := (others => '-');  -- j
 
         -- memory wrapper control signals
         id_cu       : out std_logic := '0';
@@ -78,7 +78,7 @@ begin
 
                 -- disable memory lookup
                 id_cu <= '0';
-                addr_cu <= '-' & DCAREVEC;
+                addr_cu <= (others => '-');
                 cu_state <= ready;
                 rd_state <= send_addr;
 
@@ -117,7 +117,7 @@ begin
                                 i <= opand1;
                                 j <= opand2;
 
-                                addr_cu <= '-' & DCAREVEC;
+                                addr_cu <= (others => '-');
                                 ops_rdy_sig <= '1';
 
                                 cu_state <= ready;

@@ -43,7 +43,7 @@ begin
         -- if both operands are null
         elsif (i_null = '1' and j_null = '1') then
 
-            bitxor <= ZEROVEC;
+            bitxor <= (others => '0');
 
         -- if both operands are non-null
         else

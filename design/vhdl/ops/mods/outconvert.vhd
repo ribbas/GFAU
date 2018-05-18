@@ -35,7 +35,7 @@ entity outconvert is
 
         -- memory address and data signals
         addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
+        dout_con    : inout std_logic_vector(n downto 0) := (others => 'Z');
 
         -- final output
         result      : out std_logic_vector(n downto 0);
@@ -57,8 +57,8 @@ begin
             if (rst = '1') then
 
                 id_con <= '0';
-                addr_con <= DCAREVEC;
-                result <= DCAREVEC;
+                addr_con <= (others => '-');
+                result <= (others => '-');
                 rdy_out <= '0';
 
             end if;
@@ -78,7 +78,7 @@ begin
                             rdy_out <= '0';
 
                             addr_con <= out_sel;
-                            result <= DCAREVEC;
+                            result <= (others => '-');
 
                             rd_state <= get_data;
 
@@ -96,7 +96,7 @@ begin
 
                             else
 
-                                result <= DCAREVEC;
+                                result <= (others => '-');
                                 rdy_out <= '0';
                                 rd_state <= get_data;
 
@@ -108,8 +108,8 @@ begin
                             id_con <= '0';
                             rdy_out <= '0';
 
-                            addr_con <= DCAREVEC;
-                            result <= DCAREVEC;
+                            addr_con <= (others => '-');
+                            result <= (others => '-');
                             rd_state <= send_addr;
 
                     end case;
@@ -124,7 +124,7 @@ begin
 
                         rdy_out <= '1';
 
-                        addr_con <= DCAREVEC;
+                        addr_con <= (others => '-');
 
                         if (and_reduce(out_sel) = '0') then
 

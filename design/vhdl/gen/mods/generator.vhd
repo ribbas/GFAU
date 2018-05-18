@@ -35,8 +35,8 @@ entity generator is
 
         -- memory signals
         gen_rdy     : out std_logic := '0';
-        addr_gen    : out std_logic_vector((n + 1) downto 0) := '-' & DCAREVEC;
-        elem        : out std_logic_vector(n downto 0) := DCAREVEC
+        addr_gen    : out std_logic_vector((n + 1) downto 0) := (others => '-');
+        elem        : out std_logic_vector(n downto 0) := (others => '-')
     );
 end generator;
 
@@ -64,25 +64,28 @@ begin
                 id_gen <= '1';
 
                 -- start element register at 2 for second element
-                temp_elem <= ONEVEC;
+                temp_elem <= (0 => '1', others => '0');
 
                 -- start flip element register at 1 for second element
-                temp_elem_f <= ONEVEC;
+                temp_elem_f <= (0 => '1', others => '0');
 
                 -- start counter at 1
-                counter <= ZEROVEC;
+                counter <= (others => '0');
                 -- first address
-                addr_gen <= '-' & DCAREVEC;
+                addr_gen <= (others => '-');
                 -- first element
-                elem <= DCAREVEC;
+                elem <= (others => '-');
 
             end if;
 
             if (en = '1' and rst = '0') then
+
                 -- save this for later :)
                 poly_bcd_reg <= poly_bcd(n downto 1);
+
                 -- elem^n
                 nth_elem <= (poly_bcd((n - 1) downto 0) & '1') and mask;
+
                 case flippy_flop is
 
                     when e2p =>
@@ -101,8 +104,8 @@ begin
                                 wr_rdy <= '0';
 
                                 -- addr and data of NULL
-                                addr_gen <= '1' & HIVEC;
-                                elem <= ZEROVEC;
+                                addr_gen <= (others => '1');
+                                elem <= (others => '0');
 
                             else
 
@@ -143,8 +146,8 @@ begin
                             if (wr_rdy = '1') then
 
                                 -- addr and data of NULL
-                                addr_gen <= '1' & HIVEC;
-                                elem <= ZEROVEC;
+                                addr_gen <= (others => '1');
+                                elem <= (others => '0');
 
                                 -- generator control signals
                                 gen_rdy <= '1';
@@ -163,8 +166,8 @@ begin
                                     wr_rdy <= '1';
 
                                     -- addr and data of NULL
-                                    addr_gen <= '0' & ZEROVEC;
-                                    elem <= HIVEC;
+                                    addr_gen <= (others => '0');
+                                    elem <= (others => '1');
 
                                 else
 
