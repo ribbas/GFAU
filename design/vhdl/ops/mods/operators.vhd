@@ -51,7 +51,10 @@ entity operators is
         result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
         err_b       : out std_logic; -- membership exception
         err_z       : out std_logic; -- null exception
-        rdy_out     : out std_logic -- result ready interrupt
+        rdy_out     : out std_logic; -- result ready interrupt
+
+        out_sel_o   : out std_logic_vector(n downto 0)
+
     );
 end operators;
 
@@ -170,6 +173,8 @@ begin
         mask => mask,
         is_not_in => err_b
     );
+
+    out_sel_o <= out_sel;
 
     ---------------- Two's Compliment ----------------
 

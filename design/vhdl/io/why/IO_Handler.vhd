@@ -201,8 +201,7 @@ begin
                             elsif opcode_in(5 downto 3) = "000" then --gen field
                                 opcode_out <= opcode_in;
                                 poly_gen <= '1';
-                                deserial_se <= not deserial_se;
-                                deserial_nr <= not deserial_nr;
+                                
                                 s_state(1) <= not s_state(1); --get input
                                 n_state(4) <= not n_state(4); -- hacking in extra state
                                 n_state(0) <= not n_state(0); --not ready
@@ -219,7 +218,8 @@ begin
                     when "00010010" => --get size
                         input_size <= insize_in;
                         n_state(4) <= not n_state(4);
-                    
+                        deserial_se <= not deserial_se;
+                        deserial_nr <= not deserial_nr;
                         
                     --====================================--
                     --wait for CPU to be ready for data   --

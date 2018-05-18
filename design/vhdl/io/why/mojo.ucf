@@ -121,5 +121,5 @@ NET "state_out<2>"         LOC = P132 | IOSTANDARD = LVTTL;
 NET "state_out<3>"         LOC = P131 | IOSTANDARD = LVTTL;
 NET "state_out<4>"         LOC = P127 | IOSTANDARD = LVTTL;
 NET "state_out<5>"         LOC = P126 | IOSTANDARD = LVTTL;
-NET "mode_out<0>"         LOC = P124 | IOSTANDARD = LVTTL;
-NET "mode_out<1>"         LOC = P123 | IOSTANDARD = LVTTL;
+NET "state_out<6>"         LOC = P124 | IOSTANDARD = LVTTL;
+NET "state_out<7>"         LOC = P123 | IOSTANDARD = LVTTL;

@@ -55,9 +55,9 @@ architecture behavioral of control_unit is
     signal ops_rdy_sig    :   std_logic;
 
     type cu_state_type is (ready, convi, convj, both, gen, memrd);
-    signal cu_state : cu_state_type;
+    signal cu_state : cu_state_type := ready;
 
-    signal rd_state : rd_state_type;
+    signal rd_state : rd_state_type := send_addr;
 
 begin
 
@@ -65,7 +65,7 @@ begin
 
     process (clk) begin
 
-        if (rising_edge(clk)) then
+        if (falling_edge(clk)) then
 
             if (rst = '1') then
 
@@ -79,8 +79,10 @@ begin
                 -- disable memory lookup
                 id_cu <= '0';
                 addr_cu <= '-' & DCAREVEC;
+                cu_state <= ready;
+                rd_state <= send_addr;
 
-            end if;
+            else
 
             case (cu_state) is
 
@@ -145,8 +147,6 @@ begin
                         cu_state <= gen;
 
                         if (gen_rdy = '1') then
-
-                            report "FUCK ME";
 
                             -- turn off generator
                             en_gen <= '0';
@@ -265,6 +265,7 @@ begin
                         end if;
 
                     end case;  -- control unit state
+                end if;
 
         end if;
 
