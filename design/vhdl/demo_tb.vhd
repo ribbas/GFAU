@@ -16,5 +16,6 @@ package demo_tb is
 
     constant TNUMS : integer := 320;
     constant CLK_PER : time := 10 ns;
+    constant TCLK_PER : time := 40 ns;
 
 end demo_tb;

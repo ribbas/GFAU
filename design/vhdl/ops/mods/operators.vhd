@@ -168,7 +168,7 @@ architecture behavioral of operators is
 begin
 
     ismember_unit: ismember port map(
-        opand1 => j,
+        opand1 => i,
         opand2 => j,
         mask => mask,
         is_not_in => err_b
