@@ -4,7 +4,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import argparse
-import math
 import os
 from pprint import pprint
 
@@ -60,7 +59,6 @@ def write_indices(deg, ceillgn):
 
     indices_enc = ""
     indices_fmt = "{:0%db}" % (ceillgn + 1)
-    print(indices_fmt)
     indices_line = "\"{vec}\" when (poly_bcd({bit}) = '1') else\n"
 
     for index in range(deg, 0, -1):

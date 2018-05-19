@@ -32,7 +32,7 @@ architecture behavior of control_unit_tb is
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
             rst_gen     : out std_logic;  -- polynomial generator reset
-            gen_rdy     : in std_logic;  -- generation done
+            rdy_gen     : in std_logic;  -- generation done
 
             -- operation signals
             ops_rdy     : out std_logic;  -- operators enable
@@ -59,7 +59,7 @@ architecture behavior of control_unit_tb is
 
     -- outputs
     signal ops_rdy : std_logic;
-    signal gen_rdy : std_logic;
+    signal rdy_gen : std_logic;
     signal rst_gen : std_logic;
     signal en_gen : std_logic;  -- poly generation
     signal i : std_logic_vector(n downto 0);  -- address in memory
@@ -90,7 +90,7 @@ begin
         ops_rdy => ops_rdy,
         en_gen => en_gen,
         rst_gen => rst_gen,
-        gen_rdy => gen_rdy,
+        rdy_gen => rdy_gen,
         i => i,
         j => j,
         id_cu => id_cu,
@@ -140,7 +140,7 @@ begin
         opand2 <= "00000011";
         opcode <= "00100";  -- add/sub, operands in polynomial
 
-        gen_rdy <= '0';
+        rdy_gen <= '0';
         wait for (CLK_PER * 1);
 
         start <= '0';

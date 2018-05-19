@@ -29,7 +29,7 @@ entity control_unit is
         -- generation signals
         en_gen      : out std_logic;  -- polynomial generator enable
         rst_gen     : out std_logic;  -- polynomial generator reset
-        gen_rdy     : in std_logic;  -- generation done
+        rdy_gen     : in std_logic;  -- generation done
 
         -- operation signals
         ops_rdy     : out std_logic;  -- operators enable
@@ -146,7 +146,7 @@ begin
 
                         cu_state <= gen;
 
-                        if (gen_rdy = '1') then
+                        if (rdy_gen = '1') then
 
                             -- turn off generator
                             en_gen <= '0';

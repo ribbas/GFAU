@@ -34,7 +34,7 @@ entity generator is
         mem_rdy     : in std_logic;
 
         -- memory signals
-        gen_rdy     : out std_logic := '0';
+        rdy_gen     : out std_logic := '0';
         addr_gen    : out std_logic_vector((n + 1) downto 0) := (others => '-');
         elem        : out std_logic_vector(n downto 0) := (others => '-')
     );
@@ -46,7 +46,7 @@ architecture fsm of generator is
     signal temp_elem : std_logic_vector(n downto 0);
     signal temp_elem_f : std_logic_vector(n downto 0);
     signal nth_elem : std_logic_vector(n downto 0);
-    signal wr_rdy : std_logic := '0';
+    signal full : std_logic := '0';
 
     type flip_state is (e2p, p2e);
     signal flippy_flop : flip_state;
@@ -60,7 +60,7 @@ begin
             if (rst = '1') then
 
                 -- generator control signals
-                gen_rdy <= '0';
+                rdy_gen <= '0';
                 id_gen <= '1';
 
                 -- start element register at 2 for second element
@@ -98,13 +98,13 @@ begin
                             if (counter = mask) then
 
                                 -- generator control signals
-                                gen_rdy <= '0';
+                                rdy_gen <= '0';
 
                                 -- finish writing
-                                wr_rdy <= '0';
+                                full <= '0';
 
                                 -- addr and data of NULL
-                                addr_gen <= (others => '1');
+                                addr_gen <= ((n + 1) => '0', others => '1');
                                 elem <= (others => '0');
 
                             else
@@ -124,7 +124,7 @@ begin
                                 end if;
 
                                 -- generator control signals
-                                gen_rdy <= '0';
+                                rdy_gen <= '0';
                                 id_gen <= '1';
 
                                 -- address is counter, element is the temp element
@@ -143,14 +143,14 @@ begin
 
                         if (mem_rdy = '1') then
 
-                            if (wr_rdy = '1') then
+                            if (full = '1') then
 
                                 -- addr and data of NULL
-                                addr_gen <= (others => '1');
-                                elem <= (others => '0');
+                                addr_gen <= (others => '-');
+                                elem <= (others => '-');
 
                                 -- generator control signals
-                                gen_rdy <= '1';
+                                rdy_gen <= '1';
                                 id_gen <= '0';
 
                             else
@@ -159,14 +159,14 @@ begin
                                 if (counter = mask) then
 
                                     -- generator control signals
-                                    gen_rdy <= '0';
+                                    rdy_gen <= '0';
                                     id_gen <= '1';
 
                                     -- finish writing
-                                    wr_rdy <= '1';
+                                    full <= '1';
 
                                     -- addr and data of NULL
-                                    addr_gen <= (others => '0');
+                                    addr_gen <= ((n + 1) => '1', others => '0');
                                     elem <= (others => '1');
 
                                 else

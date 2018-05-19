@@ -23,7 +23,9 @@ architecture behavioral of indices is
 
 begin
 
-    prio_enc <= "01110" when (poly_bcd(13) = '1') else
+    prio_enc <= "10000" when (poly_bcd(15) = '1') else
+                "01111" when (poly_bcd(14) = '1') else
+                "01110" when (poly_bcd(13) = '1') else
                 "01101" when (poly_bcd(12) = '1') else
                 "01100" when (poly_bcd(11) = '1') else
                 "01011" when (poly_bcd(10) = '1') else

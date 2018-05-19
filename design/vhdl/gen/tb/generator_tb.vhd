@@ -37,7 +37,7 @@ architecture test of generator_tb is
             mem_rdy     : in std_logic;
 
             -- memory signals
-            gen_rdy     : out std_logic := '0';
+            rdy_gen     : out std_logic := '0';
             addr_gen    : out std_logic_vector((n + 1) downto 0) := (others => '-');
             elem        : out std_logic_vector(n downto 0) := (others => '-')
         );
@@ -50,7 +50,7 @@ architecture test of generator_tb is
     signal mem_rdy : std_logic := '1';
 
     -- outputs
-    signal gen_rdy : std_logic;
+    signal rdy_gen : std_logic;
     signal id_gen : std_logic;
     signal addr_gen : std_logic_vector((n + 1) downto 0);
     signal elem : std_logic_vector(n downto 0);
@@ -75,7 +75,7 @@ begin
         poly_bcd_reg => poly_bcd_reg,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
-        gen_rdy => gen_rdy,
+        rdy_gen => rdy_gen,
         addr_gen => addr_gen,
         elem => elem
     );

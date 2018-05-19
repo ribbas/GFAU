@@ -103,7 +103,7 @@ architecture behavioral of topdbg is
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
             rst_gen     : out std_logic;  -- polynomial generator reset
-            gen_rdy     : in std_logic;  -- generation done
+            rdy_gen     : in std_logic;  -- generation done
 
             -- operation signals
             ops_rdy     : out std_logic;  -- operators enable
@@ -141,7 +141,7 @@ architecture behavioral of topdbg is
             mem_rdy     : in std_logic;
 
             -- memory signals
-            gen_rdy     : out std_logic := '0';
+            rdy_gen     : out std_logic := '0';
             addr_gen    : out std_logic_vector((n + 1) downto 0);
             elem        : out std_logic_vector(n downto 0)
         );
@@ -284,7 +284,7 @@ begin
         opand2 => OPAND2,
         start => ENCU,
         rst => RST,
-        gen_rdy => rdy_gen,
+        rdy_gen => rdy_gen,
         ops_rdy => ops_rdy,
         en_gen => en_gen,
         rst_gen => rst_gen,
@@ -310,7 +310,7 @@ begin
         msb => msb,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
-        gen_rdy => rdy_gen,
+        rdy_gen => rdy_gen,
         addr_gen => addr_gen,
         elem => elem
     );

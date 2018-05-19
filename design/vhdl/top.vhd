@@ -49,7 +49,7 @@ entity top is
         wr_rd_o     :   out std_logic;
 
         -- memory address and data signals
-        A       : out std_logic_vector(14 downto 0);
+        A       : out std_logic_vector((n + 1) downto 0);
         IO      : inout std_logic_vector(n downto 0)
     );
 end top;
@@ -129,7 +129,7 @@ architecture behavioral of top is
             -- generation signals
             en_gen      : out std_logic;  -- polynomial generator enable
             rst_gen     : out std_logic;  -- polynomial generator reset
-            gen_rdy     : in std_logic;  -- generation done
+            rdy_gen     : in std_logic;  -- generation done
 
             -- operation signals
             ops_rdy     : out std_logic;  -- operators enable
@@ -167,7 +167,7 @@ architecture behavioral of top is
             mem_rdy     : in std_logic;
 
             -- memory signals
-            gen_rdy     : out std_logic := '0';
+            rdy_gen     : out std_logic := '0';
             addr_gen    : out std_logic_vector((n + 1) downto 0);
             elem        : out std_logic_vector(n downto 0)
         );
@@ -332,10 +332,10 @@ begin
         z_err => errz,
         state_out => state_out,
         op_done_o => op_done_o,
-        --in_data_exto(7 downto 0) => result_out,
-        in_data_exto(31 downto 0) => open,
-        --out_dataexto(7 downto 0) => result_out,
-        out_dataexto(15 downto 0) => open,
+        ----in_data_exto(7 downto 0) => result_out,
+        --in_data_exto(31 downto 0) => open,
+        ----out_dataexto(7 downto 0) => result_out,
+        --out_dataexto(15 downto 0) => open,
         wr_rd_o => wr_rd_o,
         oob_err => errb
     );
@@ -365,7 +365,7 @@ begin
         rst => rst,
         ops_rdy => ops_rdy,
         rst_ops => rst_ops,
-        gen_rdy => rdy_gen,
+        rdy_gen => rdy_gen,
         en_gen => en_gen,
         rst_gen => rst_gen,
         i => i,
@@ -389,7 +389,7 @@ begin
         msb => msb,
         id_gen => id_gen,
         mem_rdy => mem_rdy,
-        gen_rdy => rdy_gen,
+        rdy_gen => rdy_gen,
         addr_gen => addr_gen,
         elem => elem
     );
