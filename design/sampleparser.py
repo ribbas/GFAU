@@ -59,7 +59,7 @@ def parse_log(log):
             print("New polynomial:", line[0])
             order = get_order(line[0])
         else:
-            line[1:] = [int(i, 2) for i in line[1:]]
+            line[1:] = [int(i) for i in line[1:]]
             print(raw_line, end=" ")
             if (line[0] == "add"):
                 cprint(add(*line[1:]))
