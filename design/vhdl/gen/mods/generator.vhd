@@ -71,6 +71,7 @@ architecture Behavioral of generator is
     signal starting : std_logic := '1';
     
     signal gen_rdy_hold : std_logic := '0'; --holds gen_rdy high for a clk
+    signal sync         : std_logic := '0'; --synchronizes with flip = '0'
     
 begin 
 
@@ -143,10 +144,15 @@ begin
             if rst = '1' then
                 gen_rdy <= '0'; 
                 gs <= ready;
-            elsif (start = '1') then
+            elsif (start = '1' or sync = '1') then
                 poly_bcd_reg <= poly_bcd(n downto 1);
                 irred_poly <= (poly_bcd & '1') and (mask & '1');
-                gs <= generating;
+                if flip = '0' then
+                    gs <= generating;
+                    sync <= '0';
+                else
+                    sync <= '1';
+                end if;
             end if;
             
             case (gs) is
