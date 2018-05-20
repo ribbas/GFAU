@@ -31,12 +31,13 @@ entity outconvert is
 
         -- memory wrapper control signals
         id_con      : out std_logic := '0';
-        mem_rdy     : in std_logic;
 
         -- memory address and data signals
-        addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector(n downto 0) := HIIMPVEC;
-
+        addr_con    : out std_logic_vector((n + 1) downto 0);
+        dout_con    : in  std_logic_vector(n downto 0);
+        nOE         : out std_logic;
+        nCE         : out std_logic;
+        mem_t       : in  std_logic;
         -- final output
         result      : out std_logic_vector(n downto 0);
         rdy_out     : out std_logic := '0' -- result ready interrupt
@@ -57,8 +58,8 @@ begin
             if (rst = '1') then
 
                 id_con <= '0';
-                addr_con <= DCAREVEC;
                 rdy_out <= '0';
+                nOE <= '1';
 
             end if;
 
@@ -75,8 +76,9 @@ begin
                             -- read control signal with ID
                             id_con <= '1';
                             rdy_out <= '0';
+                            nOE <= '0';
 
-                            addr_con <= out_sel;
+                            addr_con <= mem_t & out_sel;
 
                             rd_state <= get_data;
 
@@ -84,9 +86,9 @@ begin
 
                             -- read control signal with ID
                             id_con <= '1';
-                            addr_con <= out_sel;
+                            addr_con <= mem_t & out_sel;
 
-                            if (mem_rdy = '1' and ops_rdy = '1') then
+                            if (ops_rdy = '1') then
 
                                 result <= dout_con and mask;
                                 rdy_out <= '1';
@@ -105,8 +107,10 @@ begin
                             -- stand-by control signal with ID
                             id_con <= '0';
                             rdy_out <= '0';
+                            nOE <= '1';
+                            nCE <= '1';
 
-                            addr_con <= DCAREVEC;
+                            addr_con <= DCAREVEC & '-';
                             result <= DCAREVEC;
                             rd_state <= send_addr;
 
@@ -122,7 +126,7 @@ begin
 
                         rdy_out <= '1';
 
-                        addr_con <= DCAREVEC;
+                        addr_con <= DCAREVEC & '-';
 
                         if (and_reduce(out_sel) = '0') then
 
@@ -141,6 +145,9 @@ begin
             else
 
                 rdy_out <= '0';
+                id_con <= '0';
+                nCE <= '1';
+                nOE <= '1';
 
             end if;  -- enable
 

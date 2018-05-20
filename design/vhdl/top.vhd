@@ -9,6 +9,8 @@
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+library UNISIM;
+    use UNISIM.VComponents.all;
 library work;
     use work.glob.all;
 
@@ -38,9 +40,9 @@ entity top is
         -- memory control signals
         nCE     : out std_logic;
         nWE     : out std_logic;
-        nOE     : out std_logic := '0';
-        nBLE    : out std_logic := '0';
-        nBHE    : out std_logic := '0';
+        nOE     : out std_logic;
+        nBLE    : out std_logic;
+        nBHE    : out std_logic;
 
         state_out   :   out std_logic_vector(7 downto 0);
         result_out  :   out std_logic_vector(7 downto 0);
@@ -143,7 +145,8 @@ architecture behavioral of top is
 
             -- memory wrapper control signals
             id_cu       : out std_logic := '0';
-            mem_rdy     : in std_logic;
+            nOE         : out std_logic := '1';
+            nCE         : out std_logic := '1';
 
             -- memory address and data signals
             addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
@@ -159,6 +162,7 @@ architecture behavioral of top is
             clk         : in std_logic;
             start       : in std_logic;
             rst         : in std_logic;
+            id_gen      : out std_logic;
             gen_rdy     : out std_logic := '0';
 
             -- polynomial data
@@ -171,7 +175,8 @@ architecture behavioral of top is
             -- memory signals
             addr_gen    : out std_logic_vector((n + 1) downto 0);
             data_gen    : out std_logic_vector(n downto 0);
-            nWE         : out std_logic
+            nWE         : out std_logic;
+            nCE         : out std_logic
         );
     end component;
 
@@ -202,55 +207,65 @@ architecture behavioral of top is
 
             -- memory wrapper control signals
             id_con      : out std_logic;
-            mem_rdy     : in std_logic;
+            nOE         : out std_logic;
+            nCE         : out std_logic;
 
             -- memory address and data signals
-            addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : inout std_logic_vector(n downto 0);
+            addr_con    : out std_logic_vector((n + 1) downto 0);
+            dout_con    : in  std_logic_vector(n downto 0);
 
-            result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
+            result      : out std_logic_vector(n downto 0); -- selected output
             err_z       : out std_logic; -- zero exception
             rdy_out     : out std_logic; -- result ready interrupt
             out_sel_o   : out std_logic_vector(n downto 0)
         );
     end component;
+    
+    component io_port
+    port(
+        op      :   in      std_logic_vector(n downto 0);  --out to pad
+        oe      :   in      std_logic;                     --enable pad output
+        ip      :   out     std_logic_vector(n downto 0);  --in from pad
+        pad     :   inout   std_logic_vector(n downto 0) --external io pad
+    );
+    end component;
 
     ---------------- memory ----------------
 
     -- CY7C1020DV33 chips wrapper
-    component memory is
-        port(
-            -- clock
-            clk         : in std_logic;
+    --component memory is
+    --    port(
+    --        -- clock
+    --        clk         : in std_logic;
 
             -- memory types and methods
-            mem_t_con   : in std_logic;
+            --mem_t_con   : in std_logic;
             --mem_t_gen   : in std_logic;
-            mem_rdy     : out std_logic;  -- ready
+            --mem_rdy     : out std_logic;  -- ready
 
             -- module signals
-            id_cu       : in std_logic;
-            addr_cu     : in std_logic_vector((n + 1) downto 0);
-            dout_cu     : out std_logic_vector(n downto 0);
-            id_con      : in std_logic;
-            addr_con    : in std_logic_vector(n downto 0);
-            dout_con    : out std_logic_vector(n downto 0);
-            id_gen      : in std_logic;
-            addr_gen    : in std_logic_vector((n + 1) downto 0);
-            din_gen     : in std_logic_vector(n downto 0);
+            --id_cu       : in std_logic;
+            --addr_cu     : in std_logic_vector((n + 1) downto 0);
+            --dout_cu     : out std_logic_vector(n downto 0);
+            --id_con      : in std_logic;
+            --addr_con    : in std_logic_vector(n downto 0);
+            --dout_con    : out std_logic_vector(n downto 0);
+            --id_gen      : in std_logic;
+            --addr_gen    : in std_logic_vector((n + 1) downto 0);
+            --din_gen     : in std_logic_vector(n downto 0);
 
             -- memory control signals
-            nCE         : out std_logic;
-            nWE         : out std_logic;
-            nOE         : out std_logic;
-            nBLE        : out std_logic;
-            nBHE        : out std_logic;
+            --nCE         : out std_logic;
+            --nWE         : out std_logic;
+            --nOE         : out std_logic;
+            --nBLE        : out std_logic;
+            --nBHE        : out std_logic;
 
             -- memory address and data signals
-            A           : out std_logic_vector((n + 1) downto 0);
-            DQ          : inout std_logic_vector(n downto 0)
-        );
-    end component;
+            --A           : out std_logic_vector((n + 1) downto 0);
+            --DQ          : inout std_logic_vector(n downto 0)
+        --);
+    --end component;
     
     --mux to select which signals to output for debugging
     component debug_mux
@@ -293,18 +308,25 @@ architecture behavioral of top is
     signal j_null : std_logic;
 
     -- memory control signals
+    signal nCE_gen  :   std_logic;
+    signal nCE_cu   :   std_logic;
+    signal nCE_con  :   std_logic;
+    signal nOE_cu   :   std_logic;
+    signal nOE_con  :   std_logic;
     signal mem_t_cu : std_logic;  -- memory type of control unit
     signal mem_t_con : std_logic;  -- memory type of operators
     signal mem_t_gen : std_logic;  -- memory type of generator
-    signal mem_rdy : std_logic;  -- memory type
+    --signal mem_rdy : std_logic;  -- memory type
 
     -- memory address and data signals
     signal addr_gen : std_logic_vector((n + 1) downto 0);
     signal elem : std_logic_vector(n downto 0);
     signal addr_cu : std_logic_vector((n + 1) downto 0);
     signal dout_cu : std_logic_vector(n downto 0);
-    signal addr_con : std_logic_vector(n downto 0);
+    signal addr_con : std_logic_vector((n + 1) downto 0);
     signal dout_con : std_logic_vector(n downto 0);
+    signal memDout  : std_logic_vector(n downto 0);
+    signal memDin   : std_logic_vector(n downto 0);
 
     -- user inputs
     signal poly_bcd : std_logic_vector(n downto 1);
@@ -332,10 +354,16 @@ architecture behavioral of top is
     signal num_clks_o   :   std_logic_vector(1 downto 0);
     
     signal IO_s         :   std_logic_vector(n downto 0);
-    signal A_s          :   std_logic_vector(14 downto 0);
+    signal A_s          :   std_logic_vector((n + 1) downto 0);
     signal nWE_s        :   std_logic;
     
 begin
+    
+    --for some reason these are causing multiple driver errors????????
+    nBHE <= '0';
+    nBLE <= '0';
+    nOE <= nOE_cu and nOE_con;
+    nCE <= nCE_cu and nCE_con and nCE_gen;
 
     A_s(14 downto (n + 2)) <= (others => '0');
     A <= A_s;
@@ -404,9 +432,11 @@ begin
         i => i,
         j => j,
         id_cu => id_cu,
-        mem_rdy => mem_rdy,
+        --mem_rdy => mem_rdy,
         addr_cu => addr_cu,
-        dout_cu => dout_cu
+        nCE     => nCE_cu,
+        nOE     => nOE_cu,
+        dout_cu => memDin
     );
 
     ---------------- element generator ----------------
@@ -422,7 +452,10 @@ begin
         msb => msb,
         gen_rdy => rdy_gen,
         addr_gen => addr_gen,
-        data_gen => elem
+        id_gen => id_gen,
+        nWE => nWE_s,
+        nCE => nCE_gen,
+        data_gen => memDout
     );
 
 
@@ -440,9 +473,10 @@ begin
         mask => mask,
         mem_t => mem_t_con,
         id_con => id_con,
-        mem_rdy => mem_rdy,
+        nCE => nCE_con,
+        nOE => nOE_con,
         addr_con => addr_con,
-        dout_con => dout_con,
+        dout_con => memDin,
         result => result,
         err_z => errz,
         out_sel_o => open,--result_out,--result_out,
@@ -453,27 +487,35 @@ begin
     ---------------- memory ----------------
 
     -- memory wrapper
-    mem : memory port map(
-        clk => CLK,
-        mem_t_con => mem_t_con,
-        mem_rdy => mem_rdy,
-        id_cu => id_cu,
-        addr_cu => addr_cu,
-        dout_cu => dout_cu,
-        id_con => id_con,
-        addr_con => addr_con,
-        dout_con => dout_con,
-        id_gen => id_gen,
-        addr_gen => addr_gen,
-        din_gen => elem,
-        nCE => nCE,
-        nWE => nWE_s,
-        nOE => nOE,
-        nBLE => nBLE,
-        nBHE => nBHE,
-        A => A_s((n + 1) downto 0),
-        DQ => IO_s
+    --mem : memory port map(
+    --    clk => CLK,
+    --    mem_t_con => mem_t_con,
+    --    mem_rdy => mem_rdy,
+    --    id_cu => id_cu,
+    --   addr_cu => addr_cu,
+    --  dout_cu => dout_cu,
+    --    id_con => id_con,
+    --    addr_con => addr_con,
+    --   dout_con => dout_con,
+    --  id_gen => id_gen,
+    --  addr_gen => addr_gen,
+    --  din_gen => elem,
+    --    nCE => nCE,
+    --    nWE => nWE_s,
+    --    nOE => nOE,
+    --    nBLE => nBLE,
+    --    nBHE => nBHE,
+    --    A => A_s((n + 1) downto 0),
+    --    DQ => IO_s
+    --);
+    
+    mem_io : io_port port map(
+        op  =>  memDout,
+        oe  =>  nCE_gen,
+        ip  =>  memDin,
+        pad =>  IO_s
     );
+        
     
     dbg : debug_mux port map(
         in1 => data(7 downto 0),
@@ -489,5 +531,16 @@ begin
         sel => debug_sel,
         op  => result_out
     );
+
+    addr_mux : process(addr_cu, addr_con, addr_gen, id_cu, id_gen, id_con)
+    begin
+        if id_gen <= '1' then
+            A_s <= addr_gen;
+        elsif id_con <= '1' then
+            A_s <= addr_con;
+        else
+            A_s <= addr_cu;
+        end if;
+    end process addr_mux;
 
 end behavioral;

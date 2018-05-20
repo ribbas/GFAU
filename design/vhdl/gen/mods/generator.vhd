@@ -1,7 +1,7 @@
 -- generator.vhd
 --
--- Sabbir Ahmed
--- 2018-01-16
+-- Brian Weber
+-- 5/19/2018
 --
 -- Controller for the automatic and generated elements.
 --
@@ -24,6 +24,7 @@ entity generator is
         clk         :   in  std_logic;
         start       :   in  std_logic;
         rst         :   in  std_logic;
+        id_gen      :   out std_logic;
         gen_rdy     :   out std_logic;
 
         -- polynomial data
@@ -35,7 +36,8 @@ entity generator is
         -- memory signals
         addr_gen    : out std_logic_vector((n + 1) downto 0);
         data_gen    : out std_logic_vector(n downto 0);
-        nWE         : out std_logic
+        nWE         : out std_logic;
+        nCE         : out std_logic
     );
 end generator;
 
@@ -48,11 +50,8 @@ architecture Behavioral of generator is
     );
     end component;
 
-    signal counter : std_logic_vector(n downto 0);
-    signal temp_elem : std_logic_vector(n downto 0);
     signal temp_elem_f : std_logic_vector(n downto 0);
     signal nth_elem : std_logic_vector(n downto 0);
-    signal wr_rdy : std_logic := '0';
 
     signal poly     :   std_logic_vector(n downto 0);
     signal elem     :   std_logic_vector(n downto 0);
@@ -62,12 +61,8 @@ architecture Behavioral of generator is
     signal irred_poly : std_logic_vector(n + 1 downto 0);
     signal priming  :   std_logic := '0';
 
-    type flip_state is (e_add, p_add); --elem as address/poly as address
     type gen_state is (ready, generating);
-    type mem_state is (setup, wr);
-    signal flippy_flop  : flip_state := e_add; --start with elem as addr
     signal gs   :   gen_state := ready;      
-    signal mems :   mem_state := wr; --first poly and elem already setup
     signal starting : std_logic := '1';
     
     signal gen_rdy_hold : std_logic := '0'; --holds gen_rdy high for a clk
@@ -76,6 +71,9 @@ architecture Behavioral of generator is
 begin 
 
     nth_elem <= irred_poly(n downto 0) xor (poly(n - 1 downto 0) & '0');
+
+    id_gen <= '1' when gs = generating else '0';
+    nCE <= '0' when gs = generating else '1';   
 
     flip_clk <= flip;
 
@@ -147,6 +145,7 @@ begin
             elsif (start = '1' or sync = '1') then
                 poly_bcd_reg <= poly_bcd(n downto 1);
                 irred_poly <= (poly_bcd & '1') and (mask & '1');
+                --id_gen <= '1';
                 if flip = '0' then
                     gs <= generating;
                     sync <= '0';
@@ -174,6 +173,7 @@ begin
                             gs <= ready;
                             gen_rdy <= '1';
                             gen_rdy_hold <= '1';
+                            --id_gen <= '0';
                         end if;
                     end if;
             end case;

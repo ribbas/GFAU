@@ -55,9 +55,9 @@ begin
                     -- if output is requested in element form
                     if (out_t = '0') then
 
-                        -- convert to polynomial form
+                        -- convert to element form
                         convert <= '1';
-                        mem_t <= out_t;
+                        mem_t <= not out_t;
 
                     else
 
@@ -84,9 +84,9 @@ begin
                         -- if output is requested in polynomial form
                         if (out_t = '1') then
 
-                            -- convert to element form
+                            -- convert to polynomial form
                             convert <= '1';
-                            mem_t <= out_t;
+                            mem_t <= not out_t;
 
                         else
 
@@ -123,7 +123,7 @@ begin
 
                             -- convert to element form
                             convert <= '1';
-                            mem_t <= out_t;
+                            mem_t <= not out_t;
 
                         else
 
@@ -176,7 +176,7 @@ begin
                         if (out_t = '1') then
 
                             convert <= '1';
-                            mem_t <= out_t;
+                            mem_t <= not out_t;
 
                         else
 

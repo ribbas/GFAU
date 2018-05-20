@@ -42,11 +42,14 @@ entity operators is
 
         -- memory wrapper control signals
         id_con      : out std_logic;
-        mem_rdy     : in std_logic;
+
+        --memory control signals
+        nCE         : out std_logic;
+        nOE         : out std_logic;
 
         -- memory address and data signals
-        addr_con    : out std_logic_vector(n downto 0);
-        dout_con    : inout std_logic_vector(n downto 0);
+        addr_con    : out std_logic_vector((n + 1) downto 0);
+        dout_con    : in  std_logic_vector(n downto 0);
 
         result      : out std_logic_vector(n downto 0) := DCAREVEC; -- selected output
         err_z       : out std_logic; -- zero exception
@@ -132,10 +135,12 @@ architecture behavioral of operators is
             mask        : in std_logic_vector(n downto 0);
             out_sel     : in std_logic_vector(n downto 0);
             id_con      : out std_logic;
-            mem_rdy     : in std_logic;
-            addr_con    : out std_logic_vector(n downto 0);
-            dout_con    : inout std_logic_vector(n downto 0);
+            addr_con    : out std_logic_vector((n + 1) downto 0);
+            dout_con    : in  std_logic_vector(n downto 0);
+            mem_t       : in  std_logic;
             result      : out std_logic_vector(n downto 0);
+            nOE         : out std_logic;
+            nCE         : out std_logic;
             rdy_out     : out std_logic -- result ready interrupt
         );
     end component;
@@ -153,9 +158,11 @@ architecture behavioral of operators is
     signal out_sel : std_logic_vector(n downto 0);
     signal convert : std_logic;
     signal en_con : std_logic;
+    signal mem_t_s : std_logic;
 
 begin
 
+    mem_t <= not mem_t_s;
     out_sel_o <= out_sel;
 
     ---------------- Two's Compliment ----------------
@@ -206,7 +213,7 @@ begin
         i_null => i_null,
         j_null => j_null,
         out_sel => out_sel,
-        mem_t => mem_t,
+        mem_t => mem_t_s,
         convert => convert,
         en_con => en_con,
         err_z => err_z
@@ -222,7 +229,9 @@ begin
         mask => mask,
         out_sel => out_sel,
         id_con => id_con,
-        mem_rdy => mem_rdy,
+        mem_t => mem_t_s,
+        nOE => nOE,
+        nCE => nCE,
         addr_con => addr_con,
         dout_con => dout_con,
         result => result,

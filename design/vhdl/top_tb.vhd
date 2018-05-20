@@ -35,7 +35,7 @@ architecture behavior of top_tb is
 
             DATA    : inout std_logic_vector(31 downto 0); --external data bus
             START   : in std_logic;
-            TCLK    : in std_logic; --external device clock < 200MHz
+            TCLK    : in std_logic; --external device clock
             RDY     : out std_logic; --gfau is ready for input
             ERR     : out std_logic; --error signal
 

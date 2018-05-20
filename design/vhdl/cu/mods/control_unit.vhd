@@ -39,7 +39,8 @@ entity control_unit is
 
         -- memory wrapper control signals
         id_cu       : out std_logic := '0';
-        mem_rdy     : in std_logic;
+        nOE         : out std_logic := '1';
+        nCE         : out std_logic := '1';
 
         -- memory address and data signals
         addr_cu     : out std_logic_vector((n + 1) downto 0);  -- address in memory
@@ -53,6 +54,8 @@ architecture behavioral of control_unit is
     signal ij : std_logic;
     signal came_from_both : std_logic;
     signal ops_rdy_sig    :   std_logic;
+    signal en_gen_s     :   std_logic;
+
 
     type cu_state_type is (ready, convi, convj, both, gen, memrd);
     signal cu_state : cu_state_type := ready;
@@ -62,6 +65,7 @@ architecture behavioral of control_unit is
 begin
 
     ops_rdy <= ops_rdy_sig;
+    en_gen <= en_gen_s;
 
     process (clk) begin
 
@@ -72,15 +76,13 @@ begin
                 -- reset operators
                 rst_ops <= '1';
 
-                -- disable generator
-                rst_gen <= '1';
-                en_gen <= '0';
-
                 -- disable memory lookup
                 id_cu <= '0';
                 addr_cu <= '-' & DCAREVEC;
                 cu_state <= ready;
                 rd_state <= send_addr;
+                nCE <= '1';
+                nOE <= '1';
 
             else
 
@@ -88,6 +90,10 @@ begin
 
                 when ready =>
                     rst_ops <= '0';
+                    id_cu <= '0';
+                    nCE <= '1';
+                    nOE <= '1';
+                    en_gen_s <= '0';
                     if(ops_rdy_sig = '1') then
                         ops_rdy_sig <= '0';
                     end if;
@@ -128,8 +134,8 @@ begin
 
                         end case;
                     else
-                        en_gen <= '0';
-                        rst_gen <= '1';
+                        --en_gen <= '0';
+                        --rst_gen <= '1';
                     end if;
                     came_from_both <= '0';
 
@@ -138,8 +144,11 @@ begin
                     if (en = '1') then
 
                         -- start generator
-                        en_gen <= '1';
-                        rst_gen <= '0';
+                        if en_gen_s = '0' then
+                            en_gen_s <= '1';
+                        else 
+                            en_gen_s <= '0';
+                        end if;
 
                         -- disable memory lookup
                         id_cu <= '0';
@@ -147,10 +156,6 @@ begin
                         cu_state <= gen;
 
                         if (gen_rdy = '1') then
-
-                            -- turn off generator
-                            en_gen <= '0';
-                            rst_gen <= '0';
 
                             -- disable memory lookup
                             id_cu <= '0';
@@ -201,7 +206,9 @@ begin
                         when send_addr =>
 
                             ops_rdy_sig <= '0';
-
+                            nOE <= '0';
+                            nCE <= '0';
+                            
                             if (ij = '0') then
 
                                 addr_cu <= (not opcode(2)) & opand1;
@@ -217,8 +224,6 @@ begin
                             rd_state <= get_data;
 
                         when get_data =>
-
-                            if (mem_rdy = '1') then
 
                                 if (ij = '0') then
 
@@ -248,8 +253,6 @@ begin
                                     en <= '0';
 
                                 end if;
-
-                            end if;
 
                         end case;
 
