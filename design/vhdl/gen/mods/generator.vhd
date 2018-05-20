@@ -75,7 +75,7 @@ begin
     id_gen <= '1' when gs = generating else '0';
     nCE <= '0' when gs = generating else '1';   
 
-    flip_clk <= flip;
+    --flip_clk <= flip;
 
     flip_bufg   :   BUFG port map(
         I   => flip,
@@ -145,7 +145,6 @@ begin
             elsif (start = '1' or sync = '1') then
                 poly_bcd_reg <= poly_bcd(n downto 1);
                 irred_poly <= (poly_bcd & '1') and (mask & '1');
-                --id_gen <= '1';
                 if flip = '0' then
                     gs <= generating;
                     sync <= '0';
@@ -173,7 +172,6 @@ begin
                             gs <= ready;
                             gen_rdy <= '1';
                             gen_rdy_hold <= '1';
-                            --id_gen <= '0';
                         end if;
                     end if;
             end case;

@@ -153,16 +153,7 @@ begin
                         -- disable memory lookup
                         id_cu <= '0';
 
-                        cu_state <= gen;
-
-                        if (gen_rdy = '1') then
-
-                            -- disable memory lookup
-                            id_cu <= '0';
-
-                            cu_state <= ready;
-
-                        end if;
+                        cu_state <= ready;
 
                     end if;
 

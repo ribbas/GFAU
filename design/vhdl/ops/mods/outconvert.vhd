@@ -60,6 +60,7 @@ begin
                 id_con <= '0';
                 rdy_out <= '0';
                 nOE <= '1';
+                nCE <= '1';
 
             end if;
 
@@ -77,11 +78,16 @@ begin
                             id_con <= '1';
                             rdy_out <= '0';
                             nOE <= '0';
+                            nCE <= '0';
 
                             addr_con <= mem_t & out_sel;
 
-                            rd_state <= get_data;
+                            if(ops_rdy = '1') then
 
+                                rd_state <= get_data;
+
+                            end if; 
+                            
                         when get_data =>
 
                             -- read control signal with ID

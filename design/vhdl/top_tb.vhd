@@ -20,6 +20,18 @@ architecture behavior of top_tb is
     constant clgn : positive := CEILLGN;
     constant clgn1 : positive := CEILLGN1;
 
+    component mem_sim
+    port(
+        data    :   inout   std_logic_vector(13 downto 0);
+        a       :   in      std_logic_vector(14 downto 0);
+        nCE     :   in      std_logic;
+        nWE     :   in      std_logic;
+        nBHE    :   in      std_logic;
+        nBLE    :   in      std_logic;
+        nOE     :   in      std_logic
+    );
+    end component;
+
     component top
         generic(
             n       : positive := DEGREE;
@@ -132,6 +144,17 @@ begin
         IO => IO
     );
 
+    mem : mem_sim port map(
+        data => IO,
+        a => a,
+        nCE => nCE,
+        nWE => nWE,
+        nOE => nOE,
+        nBHE => nBHE,
+        nBLE => nBLE
+    );
+        
+    
     iop : io_port generic map (
         n => 31
     )
@@ -198,11 +221,11 @@ begin
         wait until falling_edge(TCLK);
 
         START <= '0';
-        indata(n downto 0) <= "00000000001110";  -- input size
+        indata(n downto 0) <= "00000000000011";  -- input size
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "10000010100101";  -- polybcd (x^14 + x^8 + x^6 + x^1 + 1)
+        indata(n downto 0) <= "00000000000110";  -- polybcd (x^14 + x^8 + x^6 + x^1 + 1)
 
         wait until rising_edge(INT);
 
@@ -214,7 +237,7 @@ begin
 
         INTA <= '0';  -- acknowledge interrupt
 
-        indata(n downto 0) <= "00000000001111";  -- opcode
+        indata(n downto 0) <= "00000000001110";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -224,13 +247,8 @@ begin
 
         START <= '0';
 
-        indata(n downto 0) <= "00000000000001";  -- opand1
+        indata(n downto 0) <= "00000001100001";  -- opand1 and 2
 
-        wait until falling_edge(TCLK);
-
-        indata(n downto 0) <= "00000000000110";  -- opand2
-
-        wait until falling_edge(TCLK);
         wait until rising_edge(INT);
         
         INTA <= '1';

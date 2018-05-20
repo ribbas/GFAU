@@ -244,7 +244,6 @@ uint8_t gen(uint8_t size, uint16_t poly){
 uint8_t gLog(uint16_t opand){
     uint8_t opcode = LOG;
     Serial.println("Log");
-    digitalWrite(INTA, LOW);
     writeUint8(opcode);
     start();
     writeUint8(opand & 0xFF);
@@ -346,7 +345,10 @@ uint8_t div(uint16_t op1, uint16_t op2, uint8_t conv){
 
 uint8_t write2Ops(uint16_t op1, uint16_t op2){
     if(bus_mode == 0){
-        if((op_size & 0x0F) <= 8){
+        if((op_size & 0x0F) <= 4){
+            writeUint8(op1 | (op2 << 4));
+            digitalWrite(TCLK, HIGH);
+        }else if((op_size & 0x0F) <= 8){
             writeUint8(op1 & 0x00FF);
             clk_blip();
             writeUint8(op2 & 0x00FF);

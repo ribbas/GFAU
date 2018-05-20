@@ -283,6 +283,18 @@ architecture behavioral of top is
     );
     end component;
 
+    component addr_mux
+    port(
+        addr_cu     :   in  std_logic_vector(n + 1 downto 0);
+        addr_con    :   in  std_logic_vector(n + 1 downto 0);
+        addr_gen    :   in  std_logic_vector(n + 1 downto 0);
+        id_cu       :   in  std_logic;
+        id_con      :   in  std_logic;
+        id_gen      :   in  std_logic;
+        A           :   out std_logic_vector(n + 1 downto 0)
+    );
+    end component;
+
     -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
     signal size : std_logic_vector(clgn downto 0);  -- size
@@ -359,13 +371,11 @@ architecture behavioral of top is
     
 begin
     
-    --for some reason these are causing multiple driver errors????????
     nBHE <= '0';
     nBLE <= '0';
     nOE <= nOE_cu and nOE_con;
     nCE <= nCE_cu and nCE_con and nCE_gen;
 
-    A_s(14 downto (n + 2)) <= (others => '0');
     A <= A_s;
     IO <= IO_s;
     nWE <= nWE_s;
@@ -511,7 +521,7 @@ begin
     
     mem_io : io_port port map(
         op  =>  memDout,
-        oe  =>  nCE_gen,
+        oe  =>  not nCE_gen,
         ip  =>  memDin,
         pad =>  IO_s
     );
@@ -525,22 +535,22 @@ begin
         in5 => i(7 downto 0),
         in6 => j(7 downto 0),
         in7 => state_out_s,
-        in8(3 downto 0) => count_out & num_clks_o,
-        in8(6 downto 4) => IO_s(0) & A_s(0) & nWE_s,
-        in8(7) => '0',
+        --in8(3 downto 0) => count_out & num_clks_o,
+        --in8(6 downto 4) => IO_s(0) & A_s(0) & nWE_s,
+        --in8(7) => '0',
+        in8 => (others => '0'),
         sel => debug_sel,
         op  => result_out
     );
-
-    addr_mux : process(addr_cu, addr_con, addr_gen, id_cu, id_gen, id_con)
-    begin
-        if id_gen <= '1' then
-            A_s <= addr_gen;
-        elsif id_con <= '1' then
-            A_s <= addr_con;
-        else
-            A_s <= addr_cu;
-        end if;
-    end process addr_mux;
+    
+    amux : addr_mux port map(
+        addr_cu => addr_cu,
+        addr_con => addr_con,
+        addr_gen => addr_gen,
+        id_cu => id_cu,
+        id_con => id_con,
+        id_gen => id_gen,
+        A => A_s
+    );
 
 end behavioral;
