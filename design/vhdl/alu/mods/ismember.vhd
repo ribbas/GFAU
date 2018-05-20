@@ -16,7 +16,7 @@ library work;
 
 entity ismember is
     generic(
-        n           : positive := DEGREE
+        n           : positive := 14
     );
     port(
         operand     : in std_logic_vector(n downto 0);  -- operand
@@ -26,7 +26,7 @@ entity ismember is
 end ismember;
 
 architecture behavioral of ismember is
-
+    
     signal is_same_mask : std_ulogic;
     signal is_below_bd : std_ulogic;
 

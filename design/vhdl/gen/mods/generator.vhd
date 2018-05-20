@@ -10,6 +10,8 @@ library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
     use ieee.std_logic_misc.all;
+library UNISIM;
+    use UNISIM.VComponents.all;
 library work;
     use work.glob.all;
 
@@ -19,9 +21,10 @@ entity generator is
         clgn1       : positive := CEILLGN1
     );
     port(
-        clk         : in std_logic;
-        en          : in std_logic;
-        rst         : in std_logic;
+        clk         :   in  std_logic;
+        start       :   in  std_logic;
+        rst         :   in  std_logic;
+        gen_rdy     :   out std_logic;
 
         -- polynomial data
         poly_bcd    : in std_logic_vector(n downto 0);
@@ -29,18 +32,21 @@ entity generator is
         msb         : in std_logic_vector(clgn1 downto 0);
         poly_bcd_reg : out std_logic_vector(n downto 1);
 
-        -- memory wrapper control signals
-        id_gen      : out std_logic := '0';
-        mem_rdy     : in std_logic;
-
         -- memory signals
-        gen_rdy     : out std_logic := '0';
-        addr_gen    : out std_logic_vector((n + 1) downto 0) := '-' & DCAREVEC;
-        elem        : out std_logic_vector(n downto 0) := DCAREVEC
+        addr_gen    : out std_logic_vector((n + 1) downto 0);
+        data_gen    : out std_logic_vector(n downto 0);
+        nWE         : out std_logic
     );
 end generator;
 
-architecture fsm of generator is
+architecture Behavioral of generator is
+
+    component BUFG
+    port(
+        I   :   in  std_logic;
+        O   :   out std_logic
+    );
+    end component;
 
     signal counter : std_logic_vector(n downto 0);
     signal temp_elem : std_logic_vector(n downto 0);
@@ -48,146 +54,123 @@ architecture fsm of generator is
     signal nth_elem : std_logic_vector(n downto 0);
     signal wr_rdy : std_logic := '0';
 
-    type flip_state is (e2p, p2e);
-    signal flippy_flop : flip_state;
+    signal poly     :   std_logic_vector(n downto 0);
+    signal elem     :   std_logic_vector(n downto 0);
+    signal chk_poly :   std_logic_vector(n downto 0);
+    signal flip     :   std_logic := '0';
+    signal flip_clk :   std_logic;
+    signal irred_poly : std_logic_vector(n + 1 downto 0);
+    signal priming  :   std_logic := '0';
 
-begin
+    type flip_state is (e_add, p_add); --elem as address/poly as address
+    type gen_state is (ready, generating);
+    type mem_state is (setup, wr);
+    signal flippy_flop  : flip_state := e_add; --start with elem as addr
+    signal gs   :   gen_state := ready;      
+    signal mems :   mem_state := wr; --first poly and elem already setup
+    signal starting : std_logic := '1';
+    
+    signal gen_rdy_hold : std_logic := '0'; --holds gen_rdy high for a clk
+    
+begin 
 
-    process (clk) begin
+    nth_elem <= irred_poly(n downto 0) xor (poly(n - 1 downto 0) & '0');
 
+    flip_clk <= flip;
+
+    flip_bufg   :   BUFG port map(
+        I   => flip,
+        O   => flip_clk
+    );
+
+    write_en    : process(clk, gs)
+    begin
+        if (gs = generating) then
+            nWE <= not clk;
+        else
+            nWE <= '1';
+        end if;
+    end process write_en;
+
+    null_check  : process(elem, poly)
+    begin
+        if elem = mask and gs = generating then
+            chk_poly <= poly xor ONEVEC;
+        else
+            chk_poly <= poly;
+        end if;
+    end process null_check;
+
+    flip_gen    : process(clk)
+    begin
+        if falling_edge(clk) then
+            flip <= not flip;
+        end if;
+    end process flip_gen;
+    
+    flipper :   process(elem, chk_poly, flip)
+    begin
+        if flip = '0' then
+            addr_gen <= '0' & elem;
+            data_gen <= chk_poly;
+        else
+            addr_gen <= '1' & chk_poly;
+            data_gen <= elem;
+        end if;
+    end process flipper;
+
+    nxt_term    :   process(flip_clk)
+    begin
+        if falling_edge(flip_clk) then
+            if gs = generating then
+                if (poly(to_integer(unsigned(msb))) = '1') then
+                    poly <= (nth_elem(n downto 0) and mask);
+                else
+                    poly <= (poly(n - 1 downto 0) & '0') and mask;
+                end if;
+                elem <= std_logic_vector(unsigned(elem) + 1) and mask;
+            else
+                poly <= ONEVEC;
+                elem <= ZEROVEC;
+            end if;
+            
+       end if;   
+    end process nxt_term;
+
+    main : process (clk) 
+    begin
         if rising_edge(clk) then
-
-            if (rst = '1') then
-
-                -- generator control signals
-                gen_rdy <= '0';
-                id_gen <= '1';
-
-                -- start element register at 2 for second element
-                temp_elem <= ONEVEC;
-
-                -- start flip element register at 1 for second element
-                temp_elem_f <= ONEVEC;
-
-                -- start counter at 1
-                counter <= ZEROVEC;
-                -- first address
-                addr_gen <= '-' & DCAREVEC;
-                -- first element
-                elem <= DCAREVEC;
-
-            end if;
-
-            if (en = '1' and rst = '0') then
-                -- save this for later :)
+            if rst = '1' then
+                gen_rdy <= '0'; 
+                gs <= ready;
+            elsif (start = '1') then
                 poly_bcd_reg <= poly_bcd(n downto 1);
-                -- elem^n
-                nth_elem <= (poly_bcd((n - 1) downto 0) & '1') and mask;
-                case flippy_flop is
-
-                    when e2p =>
-
-                        if (mem_rdy = '1') then
-
-                            id_gen <= '1';
-
-                            -- when the generator is done
-                            if (counter = mask) then
-
-                                -- generator control signals
-                                gen_rdy <= '0';
-
-                                -- finish writing
-                                wr_rdy <= '0';
-
-                                -- addr and data of NULL
-                                addr_gen <= '1' & HIVEC;
-                                elem <= ZEROVEC;
-
-                            else
-
-
-                                -- if elem^(n+(m-1))[msb] = 1
-                                if (temp_elem(to_integer(unsigned(msb))) = '1') then
-
-                                    -- (elem^(n+(m-1)) << 1) xor elem^n
-                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0')
-                                     xor nth_elem;
-
-                                else
-                                    -- (elem^(n+(m-1)) << 1)
-                                    temp_elem <= (temp_elem(n - 1 downto 0) & '0');
-
-                                end if;
-
-                                -- generator control signals
-                                gen_rdy <= '0';
-                                id_gen <= '1';
-
-                                -- address is counter, element is the temp element
-                                -- register
-                                addr_gen <= '0' & counter;
-                                elem <= temp_elem and mask;
-                                temp_elem_f <= temp_elem and mask;
-
-                            end if;
-
-                            flippy_flop <= p2e;
-
-                        end if;
-
-                    when p2e =>
-
-                        if (mem_rdy = '1') then
-
-                            if (wr_rdy = '1') then
-
-                                -- addr and data of NULL
-                                addr_gen <= '1' & HIVEC;
-                                elem <= ZEROVEC;
-
-                                -- generator control signals
-                                gen_rdy <= '1';
-                                id_gen <= '0';
-
-                            else
-
-                                -- when the generator is done
-                                if (counter = mask) then
-
-                                    -- generator control signals
-                                    gen_rdy <= '0';
-                                    id_gen <= '1';
-
-                                    -- finish writing
-                                    wr_rdy <= '1';
-
-                                    -- addr and data of NULL
-                                    addr_gen <= '0' & ZEROVEC;
-                                    elem <= HIVEC;
-
-                                else
-
-                                    addr_gen <= '1' & (temp_elem_f and mask);
-                                    elem <= counter;
-
-                                    -- increment counter
-                                    counter <= std_logic_vector(unsigned(counter) + 1);
-
-                                    flippy_flop <= e2p;
-
-                                end if;
-
-                            end if;
-
-                        end if;  -- memory ready
-
-                    end case;
-
+                irred_poly <= (poly_bcd & '1') and (mask & '1');
+                gs <= generating;
             end if;
-
-        end if;  -- clk
-
-    end process;
-
-end fsm;
+            
+            case (gs) is
+                
+                when ready =>
+                    if gen_rdy_hold = '1' then
+                        gen_rdy_hold <= '0';
+                    else
+                        gen_rdy <= '0';
+                    end if;
+                    starting <= '1';
+                when generating =>
+                    if starting = '1' then
+                        if not (elem = ZEROVEC) then
+                            starting <= '0';
+                        end if;
+                    else
+                        if elem = ZEROVEC then
+                            gs <= ready;
+                            gen_rdy <= '1';
+                            gen_rdy_hold <= '1';
+                        end if;
+                    end if;
+            end case;
+        end if;
+    end process main;
+end Behavioral;

@@ -1,0 +1,31 @@
+NET "CLK" TNM_NET=CLK;
+TIMESPEC TS_CLK = PERIOD "CLK" 50 MHZ HIGH 50%;
+
+NET "CLK"           LOC = P56   | IOSTANDARD = LVTTL;
+
+NET "io_bus<0>"     LOC = P35   | IOSTANDARD = LVTTL;
+NET "io_bus<1>"     LOC = P33   | IOSTANDARD = LVTTL;
+NET "io_bus<2>"     LOC = P27   | IOSTANDARD = LVTTL;
+NET "io_bus<3>"     LOC = P24   | IOSTANDARD = LVTTL;
+NET "io_bus<4>"     LOC = P22   | IOSTANDARD = LVTTL;
+NET "io_bus<5>"     LOC = P17   | IOSTANDARD = LVTTL;
+NET "io_bus<6>"     LOC = P15   | IOSTANDARD = LVTTL;
+NET "io_bus<7>"     LOC = P12   | IOSTANDARD = LVTTL;
+NET "oe"            LOC = P10   | IOSTANDARD = LVTTL;
+NET "wr"            LOC = P8    | IOSTANDARD = LVTTL;
+NET "result_out<0>"         LOC = P134 | IOSTANDARD = LVTTL;
+NET "result_out<1>"         LOC = P133 | IOSTANDARD = LVTTL;
+NET "result_out<2>"         LOC = P132 | IOSTANDARD = LVTTL;
+NET "result_out<3>"         LOC = P131 | IOSTANDARD = LVTTL;
+NET "result_out<4>"         LOC = P127 | IOSTANDARD = LVTTL;
+NET "result_out<5>"         LOC = P126 | IOSTANDARD = LVTTL;
+NET "result_out<6>"         LOC = P124 | IOSTANDARD = LVTTL;
+NET "result_out<7>"         LOC = P123 | IOSTANDARD = LVTTL;
+NET "dbg<0>" LOC = P117  |   IOSTANDARD = LVTTL;
+NET "dbg<1>" LOC = P115  |   IOSTANDARD = LVTTL;
+NET "dbg<2>" LOC = P112  |   IOSTANDARD = LVTTL;
+NET "dbg<3>" LOC = P105  |   IOSTANDARD = LVTTL;
+NET "dbg<4>" LOC = P102  |   IOSTANDARD = LVTTL;
+NET "dbg<5>" LOC = P100  |   IOSTANDARD = LVTTL;
+NET "dbg<6>" LOC = P98   |   IOSTANDARD = LVTTL;
+NET "dbg<7>" LOC = P95   |   IOSTANDARD = LVTTL;

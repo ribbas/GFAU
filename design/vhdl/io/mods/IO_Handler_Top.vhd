@@ -38,7 +38,7 @@ port(
     --signals from/to external devices
     data        :   inout   std_logic_vector(31 downto 0); --external data bus
     Start       :   in      std_logic;
-    t_clk_in    :   in      std_logic; --external device clock < 200MHz
+    t_clk_in    :   in      std_logic; --external device clock. must remain high for 20 ns
     g_rst       :   in      std_logic; --global reset. 1 cycle of both clks
     ready_sig   :   out     std_logic; --gfau is ready for input
     err         :   out     std_logic; --error signal
@@ -61,14 +61,19 @@ port(
 
     --error signals
     z_err       :   in      std_logic;
+    oob_err     :   in      std_logic;
     
+    --signals used for debugging
     state_out   :   out     std_logic_vector(7 downto 0);
     op_done_o   :   out     std_logic;
-    in_data_exto :  out  std_logic_vector(31 downto 0);
+    in_data_exto:  out  std_logic_vector(31 downto 0);
     out_dataexto:   out     std_logic_vector(15 downto 0);
     wr_rd_o     :   out     std_logic;
-    oob_err     :   in      std_logic
-
+    count_out   :   out     std_logic_vector(1 downto 0);
+    num_clks_o  :   out     std_logic_vector(1 downto 0);
+    
+    --select which internal signal to output
+    dbg_sel   :   out     std_logic_vector(2 downto 0)
 );
 end IO_Handler_Top;
 
@@ -139,6 +144,7 @@ architecture Behavioral of IO_Handler_Top is
         insize_in   :   in      std_logic_vector(3 downto 0);
         insize_out  :   out     std_logic_vector(3 downto 0);
         oob_err     :   in      std_logic;  --out of bounds error
+        dbg_sel     :   out     std_logic_vector(2 downto 0);
         state_out   :   out     std_logic_vector(7 downto 0)
     );
     end component;
@@ -232,6 +238,7 @@ begin
     cu_start <= deserial_d;
     op_done_o <= op_done;
     out_dataexto <= out_data_ext;
+    num_clks_o <= num_clks;
 
     FSM     :   IO_Handler_FSM port map(
         --external signals--
@@ -263,6 +270,7 @@ begin
         oob_err     => oob_err,
         insize_out  => input_size_s,
         state_out   => state_out,
+        dbg_sel     => dbg_sel,
         wr_rd       => wr_rd
     );
 
@@ -308,7 +316,7 @@ begin
         n           => 31
     ) port map (
         op(15 downto 0) => out_data_ext,
-        op(31 downto 16)=> "0000000000000000",
+        op(31 downto 16)=> out_data_ext,
         oe          => wr_rd,
         ip          => in_data_ext,
         pad         => data

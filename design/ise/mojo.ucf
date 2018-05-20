@@ -23,7 +23,14 @@ NET "IO<3>"     LOC = P143      |   IOSTANDARD = LVTTL;
 NET "IO<4>"     LOC = P1      |   IOSTANDARD = LVTTL; 
 NET "IO<5>"     LOC = P5      |   IOSTANDARD = LVTTL; 
 NET "IO<6>"     LOC = P7      |   IOSTANDARD = LVTTL; 
-NET "IO<7>"     LOC = P9      |   IOSTANDARD = LVTTL; 
+NET "IO<7>"     LOC = P9      |   IOSTANDARD = LVTTL;
+NET "IO<8>"     IOSTANDARD = LVTTL; 
+NET "IO<9>"     IOSTANDARD = LVTTL; 
+NET "IO<10>"     IOSTANDARD = LVTTL; 
+NET "IO<11>"     IOSTANDARD = LVTTL; 
+NET "IO<12>"     IOSTANDARD = LVTTL; 
+NET "IO<13>"     IOSTANDARD = LVTTL; 
+
 
 # NET "U"         LOC = P57   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P66   | IOSTANDARD = LVTTL;

@@ -26,6 +26,6 @@ architecture behavioral of twoscmp is
 
 begin
 
-    tcnum <= std_logic_vector(unsigned(not num) + unsigned(ONEVEC));
+    tcnum <= std_logic_vector(unsigned(not num) + 1);
 
 end behavioral;

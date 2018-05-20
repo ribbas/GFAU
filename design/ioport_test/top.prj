@@ -1,0 +1,2 @@
+vhdl work "io_port.vhd"
+vhdl work "top.vhd"

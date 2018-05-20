@@ -10,8 +10,11 @@
          <ClosedNode>/IO_Handler_Top - Behavioral |home|brian|gfau|design|vhdl|io|why|IO_Handler_Top.vhd/countd - count_decoder - structural</ClosedNode>
          <ClosedNode>/IO_Handler_Top - Behavioral |home|brian|gfau|design|vhdl|io|why|IO_Handler_Top_Test.vhd</ClosedNode>
          <ClosedNode>/and3 - structural |home|brian|gfau|design|vhdl|io|why|and3.vhd</ClosedNode>
+         <ClosedNode>/and3 - structural |media|sf_Xilinx|gfau|design|vhdl|io|why|and3.vhd</ClosedNode>
          <ClosedNode>/deserial_test - behavior |home|brian|gfau|design|vhdl|io|why|deserial_test.vhd</ClosedNode>
+         <ClosedNode>/deserial_test - behavior |media|sf_Xilinx|gfau|design|vhdl|io|why|deserial_test.vhd</ClosedNode>
          <ClosedNode>/op_reg - structural |home|brian|gfau|design|vhdl|io|why|op_reg.vhd</ClosedNode>
+         <ClosedNode>/op_reg - structural |media|sf_Xilinx|gfau|design|vhdl|io|why|op_reg.vhd</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
          <SelectedItem>IO_Handler_Top - Behavioral (/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Top.vhd)</SelectedItem>
@@ -33,13 +36,13 @@
          <ClosedNode>User Constraints</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
-         <SelectedItem></SelectedItem>
+         <SelectedItem>Generate Programming File</SelectedItem>
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000000000000000000f4000000010000000100000000000000000000000064ffffffff000000810000000000000001000000f40000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
-      <CurrentItem></CurrentItem>
+      <CurrentItem>Generate Programming File</CurrentItem>
    </ItemView>
    <ItemView guiview="File" >
       <ClosedNodes>
@@ -48,7 +51,7 @@
       <SelectedItems/>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
-      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000000000000000100000000000000000000000000000000000004df000000040101000100000000000000000000000064ffffffff000000810000000000000004000000ab00000001000000000000005d0000000100000000000000840000000100000000000003530000000100000000</ViewHeaderState>
+      <ViewHeaderState orientation="horizontal" >000000ff0000000000000001000000000000000001000000000000000000000000000000000000025e000000040101000100000000000000000000000064ffffffff000000810000000000000004000000ab00000001000000000000005d0000000100000000000000840000000100000000000000d20000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
       <CurrentItem>and2.vhd</CurrentItem>
    </ItemView>
@@ -70,13 +73,13 @@
          <ClosedNode>User Constraints</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
-         <SelectedItem></SelectedItem>
+         <SelectedItem/>
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000000000000000000f4000000010000000100000000000000000000000064ffffffff000000810000000000000001000000f40000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
-      <CurrentItem></CurrentItem>
+      <CurrentItem/>
    </ItemView>
    <ItemView engineview="SynthesisOnly" sourcetype="" guiview="Process" >
       <ClosedNodes>
@@ -105,13 +108,13 @@
          <ClosedNode>/serialize_tb - behavior |media|sf_Xilinx|gfau|design|vhdl|io|why|serialize_tb.vhd</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
-         <SelectedItem>and3 - structural (/media/sf_Xilinx/gfau/design/vhdl/io/why/and3.vhd)</SelectedItem>
+         <SelectedItem>uut - IO_Handler_Top - Behavioral (/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Top.vhd)</SelectedItem>
       </SelectedItems>
-      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="vertical" >1</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000202000000010000000100000064000001f0000000020000000000000000000000000200000064ffffffff000000810000000300000002000001f00000000100000003000000000000000100000003</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
-      <CurrentItem>and3 - structural (/media/sf_Xilinx/gfau/design/vhdl/io/why/and3.vhd)</CurrentItem>
+      <CurrentItem>uut - IO_Handler_Top - Behavioral (/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Top.vhd)</CurrentItem>
    </ItemView>
    <ItemView engineview="BehavioralSim" sourcetype="" guiview="Process" >
       <ClosedNodes>
@@ -132,12 +135,12 @@
          <ClosedNodesVersion>1</ClosedNodesVersion>
       </ClosedNodes>
       <SelectedItems>
-         <SelectedItem>Simulate Behavioral Model</SelectedItem>
+         <SelectedItem/>
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000000000000000000f4000000010000000100000000000000000000000064ffffffff000000810000000000000001000000f40000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
-      <CurrentItem>Simulate Behavioral Model</CurrentItem>
+      <CurrentItem/>
    </ItemView>
 </Project>

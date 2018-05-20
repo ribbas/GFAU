@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=/media/sf_Xilinx/gfau/design/ioport_test/top.ncd
+OUTFILE=/media/sf_Xilinx/gfau/design/ioport_test/top.bit
+FAMILY=Spartan6
+PART=xc6slx9-3tqg144
+WORKINGDIR=/media/sf_Xilinx/gfau/design/ioport_test
+LICENSE=ISE
+USER_INFO=179490135_1777493886_210620359_205

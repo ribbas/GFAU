@@ -6,9 +6,10 @@
 
 #define GEN         0x00
 #define ADD         0x08
-#define MULT        0x10
+#define MUL         0x10
 #define DIV         0x18
-#define LOG         0x20
+#define LOG         0x21
+#define DBG         0x28
 
 #define EEE         0x00
 #define EEP         0x01
@@ -64,7 +65,7 @@ void setup() {
     clearBus();
     attachInterrupt(digitalPinToInterrupt(INT), isr, RISING);
     delay(100);
-    Serial.begin(9600);
+    Serial.begin(2000000);
     delay(100);
     setMode(BUS8);
 }
@@ -81,25 +82,74 @@ void loop() {
             delay(50);
         }
         Serial.readBytes(buf, serial_size);
+        String bufString = String(buf);
+        delay(50);
         if(String(buf) == "rst\n"){
             rst();
             if(digitalRead(READY) == HIGH){
                 Serial.println("Reset Successful");
             }
             vec = 0;
-        }else if(String(buf) == "mode\n"){
-            setMode(BUS8);
-        }else if(String(buf) == "clk\n"){
+        }else if(bufString.substring(0, 4) == "mode"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t arg1 = bufString.substring(space1 + 1).toInt();
+            setMode(arg1);
+        }else if(bufString == "clk\n"){
             clk_blip();
-        }else if(String(buf) == "testLog\n"){
-            gLog(0xFF);   
-        }else if(String(buf) == "testAdd\n"){
-            writeUint8(0x99);
-            add(0x0A, 0xF0, PPP);
+        }else if(bufString.substring(0, 3) == "log"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t endLine = bufString.length() - 1;
+            uint16_t arg1 = bufString.substring(space1 + 1, endLine).toInt();
+            gLog(arg1);   
+        }else if(bufString.substring(0, 3) == "add"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t space2 = bufString.indexOf(' ', space1 + 1);
+            uint8_t space3 = bufString.indexOf(' ', space2 + 1);
+            uint8_t endLine = bufString.length() - 1;
+            uint16_t arg1 = bufString.substring(space1 + 1, space2).toInt();
+            uint16_t arg2 = bufString.substring(space2 + 1, space3).toInt();
+            uint16_t arg3 = bufString.substring(space3 + 1, endLine).toInt();
+            add(arg1, arg2, arg3);
+        }else if(bufString.substring(0, 3) == "sub"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t space2 = bufString.indexOf(' ', space1 + 1);
+            uint8_t space3 = bufString.indexOf(' ', space2);
+            uint8_t endLine = bufString.length() - 1;
+            uint16_t arg1 = bufString.substring(space1 + 1, space2).toInt();
+            uint16_t arg2 = bufString.substring(space2 + 1, space3).toInt();
+            uint16_t arg3 = bufString.substring(space3 + 1, endLine).toInt();
+            sub(arg1, arg2, arg3);
+        }else if(bufString.substring(0, 3) == "mul"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t space2 = bufString.indexOf(' ', space1 + 1);
+            uint8_t space3 = bufString.indexOf(' ', space2 + 1);
+            uint8_t endLine = bufString.length() - 1;
+            uint16_t arg1 = bufString.substring(space1 + 1, space2).toInt();
+            uint16_t arg2 = bufString.substring(space2 + 1, space3).toInt();
+            uint16_t arg3 = bufString.substring(space3 + 1, endLine).toInt();
+            mul(arg1, arg2, arg3);
+        }else if(bufString.substring(0, 3) == "div"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t space2 = bufString.indexOf(' ', space1 + 1);
+            uint8_t space3 = bufString.indexOf(' ', space2 + 1);
+            uint8_t endLine = bufString.length() - 1;
+            uint16_t arg1 = bufString.substring(space1 + 1, space2).toInt();
+            uint16_t arg2 = bufString.substring(space2 + 1, space3).toInt();
+            uint16_t arg3 = bufString.substring(space3 + 1, endLine).toInt();
+            div(arg1, arg2, arg3);
+        }else if(bufString.substring(0, 3) == "gen"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint8_t space2 = bufString.indexOf(' ', space1 + 1);
+            uint8_t endLine = bufString.length() - 1;
+            uint16_t arg1 = bufString.substring(space1 + 1, space2).toInt();
+            uint16_t arg2 = bufString.substring(space2 + 1, endLine).toInt();
+            gen(arg1, arg2);
+        }else if(bufString.substring(0, 3) == "dbg"){
+            uint8_t space1 = bufString.indexOf(' ');
+            uint16_t arg1 = bufString.substring(space1 + 1).toInt();
+            setDbgOutput(arg1);
         }else{
-            writeUint8(0x05);
-            gen(8, 0x8E);
-            Serial.println("Gen Started");
+            Serial.println("Invalid");
         }    
         serial_size = 0;
 }
@@ -108,6 +158,15 @@ void rst() {
     digitalWrite(RST, HIGH);
     clk_blip();
     digitalWrite(RST, LOW);
+}
+
+
+void setDbgOutput(uint8_t sel){
+    Serial.print("Setting dbg output to ");
+    Serial.println(sel, DEC);
+    uint8_t opcode = DBG | (sel & 0x07);
+    writeUint8(opcode);
+    start();
 }
 
 //swap bus direction to:
@@ -121,7 +180,6 @@ void swapDirections(uint8_t i){
     }else{
         for(int i = 0; i < BUS_SIZE; i++){
             pinMode(data_pins[i], OUTPUT);
-            clearBus();
         }
     }
 }
@@ -137,18 +195,27 @@ uint8_t readUint8(){
     uint8_t ret = 0;
     swapDirections(0);
     for(uint8_t i = 0; i < 8; i++){
+        Serial.print("PIN ");
+        Serial.print(String(data_pins[i]));
+        Serial.print(": ");
+        Serial.println(String(digitalRead(data_pins[i])));
         ret |= (digitalRead(data_pins[i]) << i);
     }
     return ret;
 }
 
 void isr(){
+    noInterrupts();
+    digitalWrite(TCLK, LOW);
     Serial.println("ISR Entered");
+    swapDirections(0);
     clk_blip();
-    vec = readUint8();
     err = digitalRead(ERR);
     intd = 1;
     digitalWrite(INTA, HIGH);
+    clk_blip();
+    digitalWrite(INTA, LOW);
+    interrupts();
 }
 
 void setMode(uint8_t mode){
@@ -160,13 +227,13 @@ void setMode(uint8_t mode){
 }
 
 uint8_t gen(uint8_t size, uint16_t poly){
+    op_size = size;
     uint8_t op = GEN;
     writeUint8(op);
     start();
     writeUint8(size & 0x0F);
     clk_blip();
-    writeUint8(poly & 0xFF);
-    clk_blip();
+    write1Op(poly);
     while(intd == 0){}
     intd = 0;
     Serial.println("ISR Exited");
@@ -176,15 +243,17 @@ uint8_t gen(uint8_t size, uint16_t poly){
 
 uint8_t gLog(uint16_t opand){
     uint8_t opcode = LOG;
+    Serial.println("Log");
+    digitalWrite(INTA, LOW);
     writeUint8(opcode);
-    delay(1);
     start();
-    writeUint8(opand & 0x66);
+    writeUint8(opand & 0xFF);
     clk_blip();
-    writeUint8(0x00);
-    clk_blip();
-    while(intd = 0){}
+    digitalWrite(TCLK, HIGH);
+    while(intd == 0){}
     intd = 0;
+    clk_blip();
+    digitalWrite(INTA, LOW);
     Serial.println("ISR Exited");
     Serial.println(String(vec, HEX));
     clk_blip();
@@ -193,6 +262,29 @@ uint8_t gLog(uint16_t opand){
 }
 
 uint8_t add(uint16_t op1, uint16_t op2, uint8_t conv){
+    uint8_t operand = ADD | (conv & 0x07);
+    Serial.println(String(op1));
+    Serial.println(String(op2));
+    Serial.println(String(conv));
+    writeUint8(operand);
+    start();
+
+    if(write2Ops(op1, op2)){
+        return 0;
+    }else{
+        
+        while(!intd){}
+        intd = 0;
+        vec = readUint8();
+        Serial.println(String(vec, HEX));
+        Serial.println("ISR Exited");
+        clk_blip();
+    }
+    
+    return 0;
+}
+
+uint8_t sub(uint16_t op1, uint16_t op2, uint8_t conv){
     uint8_t operand = ADD | (conv & 0x07);
     writeUint8(operand);
     start();
@@ -203,10 +295,49 @@ uint8_t add(uint16_t op1, uint16_t op2, uint8_t conv){
         
         while(!intd){}
         intd = 0;
-        Serial.println("ISR Exited");
+        vec = readUint8();
         Serial.println(String(vec, HEX));
+        Serial.println("ISR Exited");
         clk_blip();
-        digitalWrite(INTA, LOW);
+    }
+    
+    return 0;
+}
+
+uint8_t mul(uint16_t op1, uint16_t op2, uint8_t conv){
+    uint8_t operand = MUL | (conv & 0x07);
+    writeUint8(operand);
+    start();
+
+    if(write2Ops(op1, op2)){
+        return 0;
+    }else{
+        
+        while(!intd){}
+        intd = 0;
+        vec = readUint8();
+        Serial.println(String(vec, HEX));
+        Serial.println("ISR Exited");
+        clk_blip();
+    }
+    
+    return 0;
+}
+
+uint8_t div(uint16_t op1, uint16_t op2, uint8_t conv){
+    uint8_t operand = DIV | (conv & 0x07);
+    writeUint8(operand);
+    start();
+
+    if(write2Ops(op1, op2)){
+        return 0;
+    }else{
+        
+        while(!intd){}
+        intd = 0;
+        vec = readUint8();
+        Serial.println(String(vec, HEX));
+        Serial.println("ISR Exited");
         clk_blip();
     }
     
@@ -216,18 +347,17 @@ uint8_t add(uint16_t op1, uint16_t op2, uint8_t conv){
 uint8_t write2Ops(uint16_t op1, uint16_t op2){
     if(bus_mode == 0){
         if((op_size & 0x0F) <= 8){
-            Serial.println("uhh");
             writeUint8(op1 & 0x00FF);
             clk_blip();
             writeUint8(op2 & 0x00FF);
-            clk_blip();
-        }else if((op_size & 0x0F) > 8 && (op_size & 0x0F) < 13){
+            digitalWrite(TCLK, HIGH);
+        }else if((op_size & 0x0F) < 13){
             writeUint8(op1 & 0xFF);
             clk_blip();
             writeUint8(((op1 >> 8) & 0x0F) | ((op2 << 4) & 0xF0));
             clk_blip();
             writeUint8(((op2 >> 4) & 0xFF));
-            clk_blip();
+            digitalWrite(TCLK, HIGH);
         }else{
             writeUint8(op1 & 0xFF);
             clk_blip();
@@ -236,13 +366,26 @@ uint8_t write2Ops(uint16_t op1, uint16_t op2){
             writeUint8(op2 & 0xFF);
             clk_blip();
             writeUint8((op2 >> 8) & 0xFF);
-            clk_blip();
+            digitalWrite(TCLK, HIGH);
         }
-        Serial.println("exiting correctly");
         return 0;
         
     }else{ //must be in bus_mode 0
         return 1;
+    }
+}
+
+uint8_t write1Op(uint16_t op1){
+    if(bus_mode == 0){
+        if((op_size & 0x0F) <= 8){
+            writeUint8(op1 & 0xFF);
+            clk_blip();
+        }else{
+            writeUint8(op1 & 0xFF);
+            clk_blip();
+            writeUint8((op1 >> 8) & 0xFF);
+            clk_blip();
+        }
     }
 }
 
@@ -266,4 +409,5 @@ void clearBus(){
         digitalWrite(data_pins[i], LOW);
     }
 }
+
 

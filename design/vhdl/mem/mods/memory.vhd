@@ -135,7 +135,7 @@ begin
 
                         -- stand-by control signals
                         nCE <= '1';
-                        nWE <= '-';
+                        nWE <= '1';
 
                         -- data outs are don't care
                         dout_con <= DCAREVEC;
@@ -185,7 +185,7 @@ begin
 
                         -- stand-by control signals
                         nCE <= '1';
-                        nWE <= '-';
+                        nWE <= '1';
 
                         -- data outs are don't care
                         dout_con <= DCAREVEC;
@@ -199,9 +199,7 @@ begin
             -- generator
             elsif (id_cu = '0' and id_gen = '1' and id_con = '0') then
 
-                -- data outs are don't care
-                dout_con <= DCAREVEC;
-                dout_cu <= DCAREVEC;
+
                 wr_rd <= '1'; -- sets the io port to output mode
 
                 --hold address, data, and bus control signals
@@ -213,6 +211,7 @@ begin
                 nCE <= '0';
                 nBLE <= '0';
                 nBHE <= '0';
+                nWE <= '1';
 
                 case setup is
 
@@ -227,7 +226,7 @@ begin
                     when wr =>
 
                         nWE <= '0';
-                        mem_rdy <= '1'; -- data not ready
+                        mem_rdy <= '1';
 
                         setup <= addr_setup;
 

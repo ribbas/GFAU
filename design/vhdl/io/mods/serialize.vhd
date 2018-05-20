@@ -44,21 +44,16 @@ end serialize;
 
 architecture Behavioral of serialize is
 
-    --signal output_reg   :   std_logic_vector(15 downto 0); --reg to extern dev
-
 begin
 
-    --out_data <= output_reg;
     count_rst <= not enable;
 
     ser :   process(bus_size, count, num_clks, in_data)
     begin
-        --if (rising_edge(clk) and (enable = '1') and (rst = '0')) then
-        
-            --count_rst <= '0';
+
             if (bus_size = "00") then -- 8 bit bus
                 out_data(15 downto 8) <= (others => '0');
-                if (num_clks = "00") then -- 8 bit data, 1 clock
+                if (num_clks = "00" or num_clks = "01") then -- 8 bit data, 1 clock
                 
                     out_data(7 downto 0) <= in_data(7 downto 0);
                   

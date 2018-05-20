@@ -1,6 +1,7 @@
 library STD;
 library IEEE;
 use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
 entity count_decoder is
 port(
@@ -9,54 +10,55 @@ port(
     gen_poly    :   in  std_logic;
     num_clks    :   out std_logic_vector(1 downto 0)
 );
-
 end count_decoder;
 
-architecture structural of count_decoder is
-
-    component gt4 
-    port(
-        input   :   in  std_logic_vector(3 downto 0);
-        output  :   out std_logic
-    );
-    end component;
-
-    component gt8
-    port(
-        input   :   in  std_logic_vector(3 downto 0);
-        output  :   out std_logic
-    );
-    end component;
-
-    component gt12 
-    port(
-        input   :   in  std_logic_vector(3 downto 0);
-        output  :   out std_logic
-    );
-    end component;
-
-    for comp1   :   gt4  use entity work.gt4(structural);
-    for comp2   :   gt8  use entity work.gt8(structural);
-    for comp3   :   gt12 use entity work.gt12(structural);
-
-    signal  g4      :   std_logic;
-    signal  g8      :   std_logic;
-    signal  g12     :   std_logic;
-
-    signal b8       :   std_logic;
-    signal b16      :   std_logic;
-    signal b32      :   std_logic;
+architecture Behavioral of count_decoder is
 
 begin
 
-    comp1   :   gt4     port map(input_size,    g4);
-    comp2   :   gt8     port map(input_size,    g8);
-    comp3   :   gt12    port map(input_size,    g12);
+    decoder : process(bus_size, input_size, gen_poly)
+    begin
+        if (bus_size = "00") then
+        
+            if(to_integer(unsigned(input_size)) < 5) then
+                num_clks <= "00";
+            elsif(to_integer(unsigned(input_size)) < 9) then
+                if(gen_poly = '1') then
+                    num_clks <= "00";
+                else
+                    num_clks <= "01";
+                end if;
+            elsif(to_integer(unsigned(input_size)) < 13) then
+                if (gen_poly = '1') then
+                    num_clks <= "01";
+                else
+                    num_clks <= "10";
+                end if;
+            else
+                if (gen_poly = '1') then 
+                    num_clks <= "01";
+                else
+                    num_clks <= "11";
+                end if;
+            end if;
+        
+        elsif (bus_size = "01") then
+        
+            if (to_integer(unsigned(input_size)) < 9) then
+                num_clks <= "00";
+            else
+                if (gen_poly = '1') then
+                    num_clks <= "00";
+                else
+                    num_clks <= "01";
+                end if;
+            end if;
+            
+        else
+        
+            num_clks <= "00";
+            
+        end if;
+    end process Decoder;
 
-    b8          <=  bus_size(1) nor bus_size(0);
-    b16         <=  not bus_size(1) and bus_size(0);
-
-    num_clks(0) <=  (not gen_poly and (((b8 and ((g4 and not g8) or g12))) or (b16 and g8))) or (gen_poly and (b8 and g8));
-    num_clks(1) <=  not gen_poly and (b8 and g8);
-
-end structural;    
+end Behavioral;    

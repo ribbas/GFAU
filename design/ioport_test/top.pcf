@@ -1,0 +1,39 @@
+//! **************************************************************************
+// Written by: Map P.20131013 on Fri May 18 02:06:47 2018
+//! **************************************************************************
+
+SCHEMATIC START;
+COMP "result_out<0>" LOCATE = SITE "P134" LEVEL 1;
+COMP "result_out<1>" LOCATE = SITE "P133" LEVEL 1;
+COMP "result_out<2>" LOCATE = SITE "P132" LEVEL 1;
+COMP "result_out<3>" LOCATE = SITE "P131" LEVEL 1;
+COMP "result_out<4>" LOCATE = SITE "P127" LEVEL 1;
+COMP "clk" LOCATE = SITE "P56" LEVEL 1;
+COMP "result_out<5>" LOCATE = SITE "P126" LEVEL 1;
+COMP "result_out<6>" LOCATE = SITE "P124" LEVEL 1;
+COMP "result_out<7>" LOCATE = SITE "P123" LEVEL 1;
+COMP "oe" LOCATE = SITE "P10" LEVEL 1;
+COMP "dbg<0>" LOCATE = SITE "P117" LEVEL 1;
+COMP "dbg<1>" LOCATE = SITE "P115" LEVEL 1;
+COMP "dbg<2>" LOCATE = SITE "P112" LEVEL 1;
+COMP "dbg<3>" LOCATE = SITE "P105" LEVEL 1;
+COMP "dbg<4>" LOCATE = SITE "P102" LEVEL 1;
+COMP "dbg<5>" LOCATE = SITE "P100" LEVEL 1;
+COMP "dbg<6>" LOCATE = SITE "P98" LEVEL 1;
+COMP "dbg<7>" LOCATE = SITE "P95" LEVEL 1;
+COMP "wr" LOCATE = SITE "P8" LEVEL 1;
+COMP "io_bus<0>" LOCATE = SITE "P35" LEVEL 1;
+COMP "io_bus<1>" LOCATE = SITE "P33" LEVEL 1;
+COMP "io_bus<2>" LOCATE = SITE "P27" LEVEL 1;
+COMP "io_bus<3>" LOCATE = SITE "P24" LEVEL 1;
+COMP "io_bus<4>" LOCATE = SITE "P22" LEVEL 1;
+COMP "io_bus<5>" LOCATE = SITE "P17" LEVEL 1;
+COMP "io_bus<6>" LOCATE = SITE "P15" LEVEL 1;
+COMP "io_bus<7>" LOCATE = SITE "P12" LEVEL 1;
+TIMEGRP CLK = BEL "test_0" BEL "test_1" BEL "test_2" BEL "test_3" BEL "test_4"
+        BEL "test_5" BEL "test_6" BEL "test_7" BEL "clk_BUFGP/BUFG" BEL
+        "test_7_1" BEL "test_6_1" BEL "test_5_1" BEL "test_4_1" BEL "test_3_1"
+        BEL "test_2_1" BEL "test_1_1" BEL "test_0_1";
+TS_CLK = PERIOD TIMEGRP "CLK" 50 MHz HIGH 50%;
+SCHEMATIC END;
+

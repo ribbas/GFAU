@@ -183,7 +183,7 @@ begin
 
         wait until falling_edge(TCLK);
 
-        indata(n downto 0) <= "00000000110010";  -- set mode to 8-bits
+        indata(n downto 0) <= "00000000110000";  -- set mode to 8-bits
         START <= '1';
 
         wait until falling_edge(TCLK);
@@ -231,14 +231,40 @@ begin
         indata(n downto 0) <= "00000000000110";  -- opand2
 
         wait until falling_edge(TCLK);
+        wait until rising_edge(INT);
+        
+        INTA <= '1';
 
         wrrd <= '0';
+        
+        wait until falling_edge(TCLK);
 
-        wait for (TCLK_PER * 5);
+        INTA <= '0';
+        START <= '0';
+        indata(n downto 0) <= "00000000000000";  -- opcode
 
-        GRST <= '1';
+        wait until falling_edge(TCLK);
 
-        wait for (TCLK_PER * 5);
+        START <= '1';
+
+        wait until falling_edge(TCLK);
+
+        START <= '0';
+        indata(n downto 0) <= "00000000001000";  -- input size
+
+        wait until falling_edge(TCLK);
+
+        indata(7 downto 0) <= "10001110"; 
+
+        wait until rising_edge(INT);
+
+        wait until falling_edge(TCLK);
+
+        INTA <= '1';  -- acknowledge interrupt
+
+        wait until falling_edge(TCLK);
+
+        INTA <= '0';  -- acknowledge interrupt
 
         -- stop simulation
         assert false report "simulation ended" severity failure;

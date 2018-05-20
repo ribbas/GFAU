@@ -58,7 +58,6 @@ begin
 
                 id_con <= '0';
                 addr_con <= DCAREVEC;
-                result <= DCAREVEC;
                 rdy_out <= '0';
 
             end if;
@@ -78,7 +77,6 @@ begin
                             rdy_out <= '0';
 
                             addr_con <= out_sel;
-                            result <= DCAREVEC;
 
                             rd_state <= get_data;
 

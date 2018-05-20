@@ -87,13 +87,17 @@ architecture behavioral of top is
 
             op_done_o   :   out     std_logic;
             
-            --error signals
+            oob_err     :   in      std_logic;
             z_err       :   in      std_logic;
+            
+            --error/debug signals
             state_out   :   out     std_logic_vector(7 downto 0);
             in_data_exto:   out     std_logic_vector(31 downto 0);
-            out_dataexto:  out     std_logic_vector(15 downto 0);
+            out_dataexto:   out     std_logic_vector(15 downto 0);
             wr_rd_o     :   out     std_logic;
-            oob_err     :   in      std_logic
+            count_out   :   out     std_logic_vector(1 downto 0);
+            num_clks_o  :   out     std_logic_vector(1 downto 0);
+            dbg_sel   :   out     std_logic_vector(2 downto 0)
         );
     end component;
 
@@ -153,8 +157,9 @@ architecture behavioral of top is
     component generator
         port(
             clk         : in std_logic;
-            en          : in std_logic;
+            start       : in std_logic;
             rst         : in std_logic;
+            gen_rdy     : out std_logic := '0';
 
             -- polynomial data
             poly_bcd    : in std_logic_vector(n downto 0);
@@ -162,14 +167,11 @@ architecture behavioral of top is
             msb         : in std_logic_vector(clgn1 downto 0);
             poly_bcd_reg : out std_logic_vector(n downto 1);
 
-            -- memory wrapper control signals
-            id_gen      : out std_logic := '0';
-            mem_rdy     : in std_logic;
 
             -- memory signals
-            gen_rdy     : out std_logic := '0';
             addr_gen    : out std_logic_vector((n + 1) downto 0);
-            elem        : out std_logic_vector(n downto 0)
+            data_gen    : out std_logic_vector(n downto 0);
+            nWE         : out std_logic
         );
     end component;
 
@@ -249,6 +251,22 @@ architecture behavioral of top is
             DQ          : inout std_logic_vector(n downto 0)
         );
     end component;
+    
+    --mux to select which signals to output for debugging
+    component debug_mux
+    port(
+        in1     :   in  std_logic_vector(7 downto 0);
+        in2     :   in  std_logic_vector(7 downto 0);
+        in3     :   in  std_logic_vector(7 downto 0);
+        in4     :   in  std_logic_vector(7 downto 0);
+        in5     :   in  std_logic_vector(7 downto 0);
+        in6     :   in  std_logic_vector(7 downto 0);
+        in7     :   in  std_logic_vector(7 downto 0);
+        in8     :   in  std_logic_vector(7 downto 0);
+        sel     :   in  std_logic_vector(2 downto 0);
+        op      :   out std_logic_vector(7 downto 0)
+    );
+    end component;
 
     -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
@@ -304,10 +322,26 @@ architecture behavioral of top is
     signal rdy_out : std_logic;
     signal errb    : std_logic;
     signal errz    : std_logic;
+    
+    --debug mux select
+    signal debug_sel    :   std_logic_vector(2 downto 0);
+    signal out_data_ext_o   :   std_logic_vector(15 downto 0);
+    signal in_data_ext_o    :   std_logic_vector(31 downto 0);
+    signal state_out_s  :   std_logic_vector(7 downto 0);
+    signal count_out    :   std_logic_vector(1 downto 0);
+    signal num_clks_o   :   std_logic_vector(1 downto 0);
+    
+    signal IO_s         :   std_logic_vector(n downto 0);
+    signal A_s          :   std_logic_vector(14 downto 0);
+    signal nWE_s        :   std_logic;
+    
 begin
 
-    A(14 downto (n + 2)) <= (others => '0');
-    result_out <= data(7 downto 0);
+    A_s(14 downto (n + 2)) <= (others => '0');
+    A <= A_s;
+    IO <= IO_s;
+    nWE <= nWE_s;
+    state_out <= state_out_s;
 
     io_unit: IO_Handler_Top port map(
         data => DATA,
@@ -329,13 +363,14 @@ begin
         out_data => out_data,
         cu_start => init_cu,
         z_err => errz,
-        state_out => state_out,
+        state_out => state_out_s,
         op_done_o => op_done_o,
-        --in_data_exto(7 downto 0) => result_out,
-        in_data_exto(31 downto 0) => open,
-        --out_dataexto(7 downto 0) => result_out,
-        out_dataexto(15 downto 0) => open,
+        in_data_exto => in_data_ext_o,
+        out_dataexto => out_data_ext_o,
         wr_rd_o => wr_rd_o,
+        dbg_sel => debug_sel,
+        count_out => count_out,
+        num_clks_o => num_clks_o,
         oob_err => errb
     );
 
@@ -380,16 +415,14 @@ begin
     generator_unit: generator port map(
         clk => CLK,
         rst => rst_gen,
-        en => en_gen,
+        start => en_gen,
         poly_bcd => out_data(n downto 0),
         poly_bcd_reg => poly_bcd_reg,
         mask => mask,
         msb => msb,
-        id_gen => id_gen,
-        mem_rdy => mem_rdy,
         gen_rdy => rdy_gen,
         addr_gen => addr_gen,
-        elem => elem
+        data_gen => elem
     );
 
 
@@ -434,12 +467,27 @@ begin
         addr_gen => addr_gen,
         din_gen => elem,
         nCE => nCE,
-        nWE => nWE,
+        nWE => nWE_s,
         nOE => nOE,
         nBLE => nBLE,
         nBHE => nBHE,
-        A => A((n + 1) downto 0),
-        DQ => IO
+        A => A_s((n + 1) downto 0),
+        DQ => IO_s
+    );
+    
+    dbg : debug_mux port map(
+        in1 => data(7 downto 0),
+        in2 => result(7 downto 0),
+        in3 => out_data_ext_o(7 downto 0),
+        in4 => in_data_ext_o(7 downto 0),
+        in5 => i(7 downto 0),
+        in6 => j(7 downto 0),
+        in7 => state_out_s,
+        in8(3 downto 0) => count_out & num_clks_o,
+        in8(6 downto 4) => IO_s(0) & A_s(0) & nWE_s,
+        in8(7) => '0',
+        sel => debug_sel,
+        op  => result_out
     );
 
 end behavioral;

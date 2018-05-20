@@ -80,6 +80,8 @@ port(
     insize_out  :   out     std_logic_vector(3 downto 0);
     MSB         :   out     std_logic_vector(3 downto 0);
 
+    dbg_sel   :   out     std_logic_vector(2 downto 0); --select which signals are sent to debug output
+
     state_out   :   out     std_logic_vector(7 downto 0)
 
 );
@@ -135,10 +137,15 @@ architecture Behavioral of IO_Handler_FSM is
 
     --input size and msb index of operands/generating polynomial--
     signal input_size   :   std_logic_vector(3 downto 0);
-
+    
+    signal wr_rd_s      :   std_logic := '0';
+    signal wr_rd_r      :   std_logic := '0';
+    signal wr_rd_o      :   std_logic;
 begin
 
     state_out <= state;
+    wr_rd_o <= wr_rd_s xor wr_rd_r;
+    wr_rd <= wr_rd_o;
 
     MSB <= std_logic_vector(unsigned(input_size) - 1);
     insize_out <= input_size;
@@ -184,7 +191,7 @@ begin
                 ngen_INT <= '0';
                 nerr_INT <= '0';
                 nerr <= '0';
-                wr_rd <= '0';
+                wr_rd_r <= '0';
 
             else
                 case state is
@@ -193,10 +200,15 @@ begin
                     --io handler is ready to get input    --
                     --====================================--
                     when "00000001" =>
-                        wr_rd <= '0';
+                        if (wr_rd_o = '1') then
+                            wr_rd_r <= not wr_rd_r;
+                        end if;
                         if Start = '1' then --extern dev giving op
                             if opcode_in(5 downto 3) = "110" then --set mode
                                 mode <= opcode_in(2 downto 1);
+                            elsif opcode_in(5 downto 3) = "101" then
+                                dbg_sel <= opcode_in(2 downto 0);
+                                --wr_rd <= '1';
                             elsif opcode_in(5 downto 3) = "000" then --gen field
                                 opcode_out <= opcode_in;
                                 poly_gen <= '1';
@@ -224,11 +236,9 @@ begin
                     --wait for CPU to be ready for data   --
                     --====================================--
                     when "00010000" =>
-                        wr_rd <= '1';
                         if INTA = '1' then
                             nop_INT <= not nop_INT; --unset INT
                             serial_e <= '1'; --start serializer
-                            wr_rd <= '1';
                             n_state(4) <= not n_state(4); --unset int state
                             s_state(7) <= not s_state(7); --set wait for send state
                         end if;
@@ -238,8 +248,7 @@ begin
                     --====================================--
                     when "00100000" =>
                         if INTA = '1' then
-                            ngen_INT <= not ngen_INT; --unset INT
-                            --gen_rst <= '1';
+                            ngen_INT <= not ngen_INT; --unset INT;
                             n_state(5) <= not n_state(5); -- unset int state
                             s_state(0) <= not s_state(0); --set ready
                         end if;
@@ -248,7 +257,6 @@ begin
                     --wait for cpu to acknowledge error   --
                     --====================================--
                     when "01000000" =>
-                        wr_rd <= '1';
                         if INTA = '1' then
                             nerr <= not nerr;
                             nerr_INT <= not nerr_INT; --unset_INT
@@ -262,13 +270,25 @@ begin
                     when "10000000" =>
                         if serial_d = '1' then
                             serial_e <= '0';
-                            wr_rd <= '0';
+                            wr_rd_r <= not wr_rd_r;
                             n_state(7) <= not n_state(7);
                             s_state(0) <= not s_state(0); --set ready
                             --count_rst <= '1';
                         end if;
                     when others =>
-                        --do nothing will never happen
+                        --reset just in case
+                        --deserial_se <= '0';
+                        --deserial_nr <= '0';
+                        --serial_e <= '0';
+                        --s_state(1 downto 0) <= "00";
+                        --s_state(7) <= '0';
+                        --n_state(7 downto 4) <= "0000";
+                        --n_state(0) <= '0';
+                        --nop_INT <= '0';
+                        --ngen_INT <= '0';
+                        --nerr_INT <= '0';
+                        --nerr <= '0';
+                        --wr_rd_r <= '0';
                 end case;
             end if;
         --end if;
@@ -287,6 +307,7 @@ begin
                 serr <= '0';
                 deserial_ne <= '0';
                 deserial_sr <= '0';
+                wr_rd_s <= '0';
             else
                 case state is
 
@@ -318,6 +339,7 @@ begin
                             n_state(3) <= not n_state(3);
                             n_state(1) <= not n_state(1);
                             s_state(4) <= not s_state(4); --set int0
+                            wr_rd_s <= not wr_rd_s;
                         elsif (oob_err or z_err) = '1' then
                             if oob_err = '1' then
                                 err_type <= '1';
@@ -329,6 +351,7 @@ begin
                             n_state(3) <= not n_state(3);
                             n_state(1) <= not n_state(1);
                             s_state(6) <= not s_state(6); --set int2
+                            wr_rd_s <= not wr_rd_s;
                         end if;
 
                     --====================================--
@@ -343,7 +366,16 @@ begin
                         end if;
 
                     when others =>
-                        --do nothing will never happen
+                        --reset just in case
+                        --gen_INT <= '0';
+                        --op_INT <= '0';
+                        --err_INT <= '0';
+                        --n_state(3 downto 1) <= "000";
+                        --s_state(6 downto 2) <= "00000";
+                        --serr <= '0';
+                        --deserial_ne <= '0';
+                        --deserial_sr <= '0';
+                        --wr_rd_s <= '0';
                 end case;
             end if;
         end if;
