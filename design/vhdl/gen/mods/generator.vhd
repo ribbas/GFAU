@@ -67,31 +67,36 @@ architecture Behavioral of generator is
     
     signal gen_rdy_hold : std_logic := '0'; --holds gen_rdy high for a clk
     signal sync         : std_logic := '0'; --synchronizes with flip = '0'
+    signal flip_clk_prev: std_logic := '0';
+    signal nWE_s        : std_logic := '1';
+    signal flip_cnt     : std_logic := '0';
+    signal first        : std_logic := '0';
+    signal ending       : std_logic := '0';
     
 begin 
 
     nth_elem <= irred_poly(n downto 0) xor (poly(n - 1 downto 0) & '0');
 
     id_gen <= '1' when gs = generating else '0';
-    nCE <= '0' when gs = generating else '1';   
+   
+    nWE <= nWE_s;
 
     --flip_clk <= flip;
 
-    flip_bufg   :   BUFG port map(
-        I   => flip,
-        O   => flip_clk
-    );
-
-    write_en    : process(clk, gs)
+    write_en    : process(clk)
     begin
-        if (gs = generating) then
-            nWE <= not clk;
-        else
-            nWE <= '1';
+        if(rising_edge(clk))then
+            if(gs = generating) then
+                nWE_s <= not nWE_s;
+                first <= '1';
+            else
+                nWE_s <= '1';
+                first <= '0';
+            end if;
         end if;
     end process write_en;
 
-    null_check  : process(elem, poly)
+    null_check  : process(elem, poly, mask)
     begin
         if elem = mask and gs = generating then
             chk_poly <= poly xor ONEVEC;
@@ -102,8 +107,11 @@ begin
 
     flip_gen    : process(clk)
     begin
-        if falling_edge(clk) then
-            flip <= not flip;
+        if rising_edge(clk) then
+            flip_cnt <= not flip_cnt;
+            if(flip_cnt = '1') then
+                flip <= not flip;
+            end if;
         end if;
     end process flip_gen;
     
@@ -118,21 +126,26 @@ begin
         end if;
     end process flipper;
 
-    nxt_term    :   process(flip_clk)
+    nxt_term    :   process(clk)
     begin
-        if falling_edge(flip_clk) then
-            if gs = generating then
-                if (poly(to_integer(unsigned(msb))) = '1') then
-                    poly <= (nth_elem(n downto 0) and mask);
+        if rising_edge(clk) then
+            if (flip = '1' and flip_cnt = '1' and first = '1') then
+                if gs = generating then
+                    if (poly(to_integer(unsigned(msb))) = '1') then
+                        poly <= (nth_elem(n downto 0) and mask);
+                    else
+                        poly <= (poly(n - 1 downto 0) & '0') and mask;
+                    end if;
+                    elem <= std_logic_vector(unsigned(elem) + 1) and mask;   
                 else
-                    poly <= (poly(n - 1 downto 0) & '0') and mask;
+                    elem <= ZEROVEC;
+                    poly <= ONEVEC;
                 end if;
-                elem <= std_logic_vector(unsigned(elem) + 1) and mask;
-            else
-                poly <= ONEVEC;
+            elsif (gs = ready) then
                 elem <= ZEROVEC;
+                poly <= ONEVEC;
             end if;
-            
+             
        end if;   
     end process nxt_term;
 
@@ -142,11 +155,13 @@ begin
             if rst = '1' then
                 gen_rdy <= '0'; 
                 gs <= ready;
+                nCE <= '1';
             elsif (start = '1' or sync = '1') then
                 poly_bcd_reg <= poly_bcd(n downto 1);
                 irred_poly <= (poly_bcd & '1') and (mask & '1');
-                if flip = '0' then
+                if flip = '1' then
                     gs <= generating;
+                    nCE <= '1';
                     sync <= '0';
                 else
                     sync <= '1';
@@ -162,16 +177,21 @@ begin
                         gen_rdy <= '0';
                     end if;
                     starting <= '1';
+                    
                 when generating =>
                     if starting = '1' then
                         if not (elem = ZEROVEC) then
                             starting <= '0';
                         end if;
                     else
-                        if elem = ZEROVEC then
+                        if elem = mask then
+                            ending <= '1';
+                        end if;
+                        if ending = '1' then
                             gs <= ready;
+                            nCE <= '1';
                             gen_rdy <= '1';
-                            gen_rdy_hold <= '1';
+                            ending <= '0';
                         end if;
                     end if;
             end case;

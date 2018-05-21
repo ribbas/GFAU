@@ -294,6 +294,13 @@ architecture behavioral of top is
         A           :   out std_logic_vector(n + 1 downto 0)
     );
     end component;
+    
+    component BUFG
+    port(
+        I   :   in  std_logic;
+        O   :   out std_logic
+    );
+    end component;
 
     -- global registers
     signal mask : std_logic_vector(n downto 0);  -- mask
@@ -368,16 +375,27 @@ architecture behavioral of top is
     signal IO_s         :   std_logic_vector(n downto 0);
     signal A_s          :   std_logic_vector((n + 1) downto 0);
     signal nWE_s        :   std_logic;
+    signal nCE_s        :   std_logic;
+    signal nOE_s        :   std_logic;
+    signal nBLE_s       :   std_logic;
+    signal nBHE_s       :   std_logic;
+    
+    signal divider_cnt  :   std_logic_vector(5 downto 0) := "000001";
+    signal slow_clk     :   std_logic := '0';
+    signal slow_clk_buf :   std_logic;
     
 begin
     
-    nBHE <= '0';
-    nBLE <= '0';
-    nOE <= nOE_cu and nOE_con;
-    nCE <= nCE_cu and nCE_con and nCE_gen;
+    nBHE_s <= '0';
+    nBLE_s <= '0';
+    nBLE <= nBLE_s;
+    nBHE <= nBHE_s;
+    nOE <= nOE_s;
+    nCE <= nCE_s;
+    nOE_s <= nOE_cu and nOE_con;
+    nCE_s <= nCE_cu and nCE_con and nCE_gen;
 
     A <= A_s;
-    IO <= IO_s;
     nWE <= nWE_s;
     state_out <= state_out_s;
 
@@ -523,22 +541,20 @@ begin
         op  =>  memDout,
         oe  =>  not nCE_gen,
         ip  =>  memDin,
-        pad =>  IO_s
+        pad =>  IO
     );
         
     
     dbg : debug_mux port map(
         in1 => data(7 downto 0),
         in2 => result(7 downto 0),
-        in3 => out_data_ext_o(7 downto 0),
-        in4 => in_data_ext_o(7 downto 0),
+        in3 => IO(7 downto 0),
+        in4 => A_s(7 downto 0),
         in5 => i(7 downto 0),
         in6 => j(7 downto 0),
         in7 => state_out_s,
-        --in8(3 downto 0) => count_out & num_clks_o,
-        --in8(6 downto 4) => IO_s(0) & A_s(0) & nWE_s,
-        --in8(7) => '0',
-        in8 => (others => '0'),
+        in8(3 downto 0) => nCE_s & nOE_s & nWE_s & nBLE_s,
+        in8(7 downto 4) => IO(1 downto 0) & A_s(1 downto 0),
         sel => debug_sel,
         op  => result_out
     );
@@ -553,4 +569,16 @@ begin
         A => A_s
     );
 
+    --slowclk :   BUFG port map(slow_clk, slow_clk_buf);
+
+    clk_divider :   process(clk)
+    begin
+        if(rising_edge(clk)) then
+            divider_cnt <= std_logic_vector(unsigned(divider_cnt) + 1);
+            if divider_cnt = "000000" then
+                slow_clk <= not slow_clk;
+            end if;
+        end if;
+    end process clk_divider;
+    
 end behavioral;

@@ -316,13 +316,13 @@ begin
         n           => 31
     ) port map (
         op(15 downto 0) => out_data_ext,
-        op(31 downto 16)=> out_data_ext,
+        op(31 downto 16)=> (others => '0'),
         oe          => wr_rd,
         ip          => in_data_ext,
         pad         => data
     );
 
-    tclkbuf :   BUFG port map(t_clk_buf, t_clk);
+    --tclkbuf :   BUFG port map(t_clk_buf, t_clk);
 
 
     outmux  :   process(err_out, err_vec, data_vec)
@@ -339,10 +339,10 @@ begin
     begin
         if rising_edge(clk) then
             if (tclk_prev = '0') and (t_clk_in = '1') then
-                t_clk_buf <= '1';
+                t_clk <= '1';
                 tclk_prev <= '1';
             else
-                t_clk_buf <= '0';
+                t_clk <= '0';
                 tclk_prev <= t_clk_in;
             end if;
         end if;

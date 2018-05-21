@@ -40,7 +40,7 @@ NET "IO<13>"     IOSTANDARD = LVTTL;
  NET "A<9>"         LOC = P82   | IOSTANDARD = LVTTL;
  NET "nBLE"         LOC = P84   | IOSTANDARD = LVTTL;
  NET "nBHE"         LOC = P87   | IOSTANDARD = LVTTL;
- NET "nOE"         LOC = P92   | IOSTANDARD = LVTTL;
+ NET "nOE"         LOC = P58   | IOSTANDARD = LVTTL;
  NET "nWE"         LOC = P94   | IOSTANDARD = LVTTL;
  NET "nCE"         LOC = P97   | IOSTANDARD = LVTTL;
  NET "A<8>"         LOC = P99   | IOSTANDARD = LVTTL;

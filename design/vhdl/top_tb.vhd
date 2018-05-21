@@ -257,6 +257,7 @@ begin
         
         wait until falling_edge(TCLK);
 
+        wrrd <= '1';
         INTA <= '0';
         START <= '0';
         indata(n downto 0) <= "00000000000000";  -- opcode

@@ -69,7 +69,7 @@ begin
 
     process (clk) begin
 
-        if (falling_edge(clk)) then
+        if (rising_edge(clk)) then
 
             if (rst = '1') then
 
@@ -146,14 +146,17 @@ begin
                         -- start generator
                         if en_gen_s = '0' then
                             en_gen_s <= '1';
-                        else 
-                            en_gen_s <= '0';
                         end if;
+                          
 
                         -- disable memory lookup
                         id_cu <= '0';
 
-                        cu_state <= ready;
+                        if(gen_rdy = '1') then
+                            en_gen_s <= '0';
+                            cu_state <= ready;
+                        end if;
+                        
 
                     end if;
 

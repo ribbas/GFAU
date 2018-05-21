@@ -193,7 +193,6 @@ void writeUint8(uint8_t input){
 
 uint8_t readUint8(){
     uint8_t ret = 0;
-    swapDirections(0);
     for(uint8_t i = 0; i < 8; i++){
         Serial.print("PIN ");
         Serial.print(String(data_pins[i]));
@@ -206,9 +205,9 @@ uint8_t readUint8(){
 
 void isr(){
     noInterrupts();
+    swapDirections(0);
     digitalWrite(TCLK, LOW);
     Serial.println("ISR Entered");
-    swapDirections(0);
     clk_blip();
     err = digitalRead(ERR);
     intd = 1;
@@ -234,6 +233,7 @@ uint8_t gen(uint8_t size, uint16_t poly){
     writeUint8(size & 0x0F);
     clk_blip();
     write1Op(poly);
+    swapDirections(0);
     while(intd == 0){}
     intd = 0;
     Serial.println("ISR Exited");
