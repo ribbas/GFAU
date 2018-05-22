@@ -22,7 +22,7 @@ entity top is
     );
     port(
         -- master clock
-        CLK     : in std_logic;
+        CLK_IN  : in std_logic;
 
         -- master reset
         GRST    : in std_logic;
@@ -37,22 +37,11 @@ entity top is
         INT     : out std_logic; --generate an interrupt
         INTA    : in std_logic; --interrupt acknowledge
 
-        -- memory control signals
-        nCE     : out std_logic;
-        nWE     : out std_logic;
-        nOE     : out std_logic;
-        nBLE    : out std_logic;
-        nBHE    : out std_logic;
-
         state_out   :   out std_logic_vector(7 downto 0);
         result_out  :   out std_logic_vector(7 downto 0);
                 
         op_done_o   :   out std_logic;
-        wr_rd_o     :   out std_logic;
-
-        -- memory address and data signals
-        A       : out std_logic_vector(14 downto 0);
-        IO      : inout std_logic_vector(n downto 0)
+        wr_rd_o     :   out std_logic
     );
 end top;
 
@@ -295,6 +284,27 @@ architecture behavioral of top is
     );
     end component;
     
+    component term_mem
+    port(
+        ADDRA       :   in  std_logic_vector(14 downto 0);
+        DINA        :   in  std_logic_vector(13 downto 0);
+        ENA         :   in  std_logic;
+        WEA         :   in  std_logic_vector(0 to 0);
+        CLKA        :   in  std_logic;
+        DOUTA       :   out std_logic_vector(13 downto 0)
+    );
+    end component;
+    
+    component mem_clk
+    port(
+        CLK_IN1     :   in  std_logic;
+        CLK_OUT1    :   out std_logic;
+        CLK_OUT2    :   out std_logic
+    );
+    end component;
+        
+        
+    
     component BUFG
     port(
         I   :   in  std_logic;
@@ -372,7 +382,6 @@ architecture behavioral of top is
     signal count_out    :   std_logic_vector(1 downto 0);
     signal num_clks_o   :   std_logic_vector(1 downto 0);
     
-    signal IO_s         :   std_logic_vector(n downto 0);
     signal A_s          :   std_logic_vector((n + 1) downto 0);
     signal nWE_s        :   std_logic;
     signal nCE_s        :   std_logic;
@@ -383,20 +392,17 @@ architecture behavioral of top is
     signal divider_cnt  :   std_logic_vector(5 downto 0) := "000001";
     signal slow_clk     :   std_logic := '0';
     signal slow_clk_buf :   std_logic;
+    signal mem_clk_t    :   std_logic; --clock signal used for memory block
+    signal mem_WEA      :   std_logic_vector(0 to 0);
+    signal buff_clk     :   std_logic;
+    signal CLK          :   std_logic;
     
 begin
     
     nBHE_s <= '0';
     nBLE_s <= '0';
-    nBLE <= nBLE_s;
-    nBHE <= nBHE_s;
-    nOE <= nOE_s;
-    nCE <= nCE_s;
     nOE_s <= nOE_cu and nOE_con;
     nCE_s <= nCE_cu and nCE_con and nCE_gen;
-
-    A <= A_s;
-    nWE <= nWE_s;
     state_out <= state_out_s;
 
     io_unit: IO_Handler_Top port map(
@@ -513,48 +519,27 @@ begin
 
 
     ---------------- memory ----------------
-
-    -- memory wrapper
-    --mem : memory port map(
-    --    clk => CLK,
-    --    mem_t_con => mem_t_con,
-    --    mem_rdy => mem_rdy,
-    --    id_cu => id_cu,
-    --   addr_cu => addr_cu,
-    --  dout_cu => dout_cu,
-    --    id_con => id_con,
-    --    addr_con => addr_con,
-    --   dout_con => dout_con,
-    --  id_gen => id_gen,
-    --  addr_gen => addr_gen,
-    --  din_gen => elem,
-    --    nCE => nCE,
-    --    nWE => nWE_s,
-    --    nOE => nOE,
-    --    nBLE => nBLE,
-    --    nBHE => nBHE,
-    --    A => A_s((n + 1) downto 0),
-    --    DQ => IO_s
-    --);
-    
-    mem_io : io_port port map(
-        op  =>  memDout,
-        oe  =>  not nCE_gen,
-        ip  =>  memDin,
-        pad =>  IO
+    mem_WEA(0) <= id_gen;
+    mem :   term_mem port map(
+        ADDRA   =>  A_s,
+        DINA    =>  memDout,
+        ENA     =>  not nCE_s,
+        WEA     =>  mem_WEA,
+        CLKA    =>  mem_clk_t,
+        DOUTA   => memDin
     );
         
+    memclk  :   mem_clk port map(CLK_IN, mem_clk_t, clk);       
     
     dbg : debug_mux port map(
         in1 => data(7 downto 0),
         in2 => result(7 downto 0),
-        in3 => IO(7 downto 0),
+        in3 => (others => '0'),
         in4 => A_s(7 downto 0),
         in5 => i(7 downto 0),
         in6 => j(7 downto 0),
         in7 => state_out_s,
-        in8(3 downto 0) => nCE_s & nOE_s & nWE_s & nBLE_s,
-        in8(7 downto 4) => IO(1 downto 0) & A_s(1 downto 0),
+        in8 => not nCE_s  & mem_WEA & mem_clk_t & '0' & memDout(1 downto 0) & A_s(1 downto 0),
         sel => debug_sel,
         op  => result_out
     );
@@ -568,17 +553,5 @@ begin
         id_gen => id_gen,
         A => A_s
     );
-
-    --slowclk :   BUFG port map(slow_clk, slow_clk_buf);
-
-    clk_divider :   process(clk)
-    begin
-        if(rising_edge(clk)) then
-            divider_cnt <= std_logic_vector(unsigned(divider_cnt) + 1);
-            if divider_cnt = "000000" then
-                slow_clk <= not slow_clk;
-            end if;
-        end if;
-    end process clk_divider;
     
 end behavioral;

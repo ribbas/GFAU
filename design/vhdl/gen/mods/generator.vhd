@@ -72,6 +72,8 @@ architecture Behavioral of generator is
     signal flip_cnt     : std_logic := '0';
     signal first        : std_logic := '0';
     signal ending       : std_logic := '0';
+    signal ending2      : std_logic := '0';
+    signal ending3      : std_logic := '0';
     
 begin 
 
@@ -161,7 +163,7 @@ begin
                 irred_poly <= (poly_bcd & '1') and (mask & '1');
                 if flip = '1' then
                     gs <= generating;
-                    nCE <= '1';
+                    nCE <= '0';
                     sync <= '0';
                 else
                     sync <= '1';
@@ -187,11 +189,19 @@ begin
                         if elem = mask then
                             ending <= '1';
                         end if;
-                        if ending = '1' then
+                        if ending = '1' and ending2 = '0' then
+                            ending <= '0';
+                            ending2 <= '1';
+                        end if;
+                        if ending2 = '1' then        
+                            ending2 <= '0';
+                            ending3 <= '1';
+                        end if;
+                        if ending3 = '1' then
                             gs <= ready;
                             nCE <= '1';
                             gen_rdy <= '1';
-                            ending <= '0';
+                            ending3 <= '0';
                         end if;
                     end if;
             end case;

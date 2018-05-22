@@ -225,6 +225,7 @@ architecture Behavioral of IO_Handler_Top is
     signal tclk_prev    :   std_logic;
     signal t_clk_buf    :   std_logic;
     signal t_clk        :   std_logic;
+    signal tclk_hold   :   std_logic;
 
 begin
 
@@ -334,15 +335,17 @@ begin
         end if;
     end process outmux;
 
+     tclkbuf :   BUFG port map(t_clk_buf, t_clk);
+
     --synchronize tclk
     tclk_gen    :   process(clk)
     begin
         if rising_edge(clk) then
             if (tclk_prev = '0') and (t_clk_in = '1') then
-                t_clk <= '1';
+                t_clk_buf <= '1';
                 tclk_prev <= '1';
             else
-                t_clk <= '0';
+                t_clk_buf <= '0';
                 tclk_prev <= t_clk_in;
             end if;
         end if;

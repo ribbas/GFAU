@@ -1,11 +1,13 @@
 NET "CLK" TNM_NET=CLK;
 TIMESPEC TS_CLK = PERIOD "CLK" 50 MHZ HIGH 50%;
 
-NET "CLK"         LOC = P56   | IOSTANDARD = LVTTL;
+NET "CLK_IN"         LOC = P56   | IOSTANDARD = LVTTL;
 NET "GRST"       LOC = P121       |   IOSTANDARD = LVTTL;
 
 NET "wr_rd_o" LOC = P119      |   IOSTANDARD = LVTTL;
 NET "op_done_o"        IOSTANDARD = LVTTL;
+
+PIN "memclk/clkout1_buf.O" CLOCK_DEDICATED_ROUTE = FALSE;
 
 NET "result_out<0>" LOC = P117  |   IOSTANDARD = LVTTL;
 NET "result_out<1>" LOC = P115  |   IOSTANDARD = LVTTL;
@@ -16,41 +18,9 @@ NET "result_out<5>" LOC = P100  |   IOSTANDARD = LVTTL;
 NET "result_out<6>" LOC = P98   |   IOSTANDARD = LVTTL;
 NET "result_out<7>" LOC = P95   |   IOSTANDARD = LVTTL;
 
-NET "IO<0>"     LOC = P137      |   IOSTANDARD = LVTTL;  
-NET "IO<1>"     LOC = P139      |   IOSTANDARD = LVTTL; 
-NET "IO<2>"     LOC = P141      |   IOSTANDARD = LVTTL; 
-NET "IO<3>"     LOC = P143      |   IOSTANDARD = LVTTL; 
-NET "IO<4>"     LOC = P1      |   IOSTANDARD = LVTTL; 
-NET "IO<5>"     LOC = P5      |   IOSTANDARD = LVTTL; 
-NET "IO<6>"     LOC = P7      |   IOSTANDARD = LVTTL; 
-NET "IO<7>"     LOC = P9      |   IOSTANDARD = LVTTL;
-NET "IO<8>"     IOSTANDARD = LVTTL; 
-NET "IO<9>"     IOSTANDARD = LVTTL; 
-NET "IO<10>"     IOSTANDARD = LVTTL; 
-NET "IO<11>"     IOSTANDARD = LVTTL; 
-NET "IO<12>"     IOSTANDARD = LVTTL; 
-NET "IO<13>"     IOSTANDARD = LVTTL; 
-
-
 # NET "U"         LOC = P57   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P66   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P74   | IOSTANDARD = LVTTL;
- NET "A<11>"         LOC = P78   | IOSTANDARD = LVTTL;
- NET "A<10>"         LOC = P80   | IOSTANDARD = LVTTL;
- NET "A<9>"         LOC = P82   | IOSTANDARD = LVTTL;
- NET "nBLE"         LOC = P84   | IOSTANDARD = LVTTL;
- NET "nBHE"         LOC = P87   | IOSTANDARD = LVTTL;
- NET "nOE"         LOC = P58   | IOSTANDARD = LVTTL;
- NET "nWE"         LOC = P94   | IOSTANDARD = LVTTL;
- NET "nCE"         LOC = P97   | IOSTANDARD = LVTTL;
- NET "A<8>"         LOC = P99   | IOSTANDARD = LVTTL;
- NET "A<7>"         LOC = P101  | IOSTANDARD = LVTTL;
- NET "A<6>"         LOC = P104  | IOSTANDARD = LVTTL;
- NET "A<5>"         LOC = P111  | IOSTANDARD = LVTTL;
- NET "A<0>"         LOC = P114  | IOSTANDARD = LVTTL;
- NET "A<1>"         LOC = P116  | IOSTANDARD = LVTTL;
- NET "A<2>"         LOC = P118  | IOSTANDARD = LVTTL;
- NET "A<3>"         LOC = P120  | IOSTANDARD = LVTTL;
 
 # NET "U"         LOC = P58   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P67   | IOSTANDARD = LVTTL;
@@ -98,10 +68,6 @@ NET "ERR"       LOC = P144  | IOSTANDARD = LVTTL;
 
 
 # NET "U"         LOC = P50   | IOSTANDARD = LVTTL;
- NET "A<12>"         LOC = P40   | IOSTANDARD = LVTTL;
- NET "A<13>"         LOC = P34   | IOSTANDARD = LVTTL;
- NET "A<14>"         LOC = P32   | IOSTANDARD = LVTTL;
- NET "A<4>"         LOC = P29   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P26   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P23   | IOSTANDARD = LVTTL;
 # NET "U"         LOC = P21   | IOSTANDARD = LVTTL;

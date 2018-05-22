@@ -20,7 +20,6 @@ entity outconvert is
     port(
         clk         : in std_logic;
 
-        en          : in std_logic;  -- enable
         ops_rdy     : in std_logic;
         convert     : in std_logic;  -- convert flag
         rst         : in std_logic; -- reset
@@ -48,6 +47,9 @@ architecture behavioral of outconvert is
 
     -- define the states for writing data
     signal rd_state : rd_state_type := send_addr;
+    signal en_in    : std_logic := '0';
+    signal get_data_h   :   std_logic := '0'; --hold get_data state 
+    signal get_data_h2  :   std_logic := '0';
 
 begin
 
@@ -64,7 +66,10 @@ begin
 
             end if;
 
-            if (en = '1') then
+            if (ops_rdy = '1') then
+                en_in <= '1';
+            end if;
+            if(en_in <= '1') then
 
                 -- if conversion requested
                 if (convert = '1') then
@@ -92,17 +97,19 @@ begin
 
                             -- read control signal with ID
                             id_con <= '1';
-                            addr_con <= mem_t & out_sel;
-
-                            if (ops_rdy = '1') then
-
+                
+                            if (ops_rdy = '1' and get_data_h = '0') then
+                                get_data_h <= '1';
+                            elsif (get_data_h = '1') then
+                                get_data_h2 <= '1';
+                                get_data_h <= '0';
+                            elsif (get_data_h2 = '1') then
                                 result <= dout_con and mask;
                                 rdy_out <= '1';
-                                rd_state <= get_data;
-
+                                rd_state <= send_addr;
+                                get_data_h2 <= '0';
                             else
 
-                                result <= DCAREVEC;
                                 rdy_out <= '0';
                                 rd_state <= get_data;
 
@@ -116,8 +123,6 @@ begin
                             nOE <= '1';
                             nCE <= '1';
 
-                            addr_con <= DCAREVEC & '-';
-                            result <= DCAREVEC;
                             rd_state <= send_addr;
 
                     end case;
@@ -131,8 +136,6 @@ begin
                     if (ops_rdy = '1') then
 
                         rdy_out <= '1';
-
-                        addr_con <= DCAREVEC & '-';
 
                         if (and_reduce(out_sel) = '0') then
 

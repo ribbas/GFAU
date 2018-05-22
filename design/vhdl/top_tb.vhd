@@ -40,7 +40,7 @@ architecture behavior of top_tb is
         );
         port(
             -- master clock
-            CLK     : in std_logic;
+            CLK_IN     : in std_logic;
 
             -- master reset
             GRST    : in std_logic;
@@ -53,18 +53,8 @@ architecture behavior of top_tb is
 
             --interrupt signals to/from external device
             INT     : out std_logic; --generate an interrupt
-            INTA    : in std_logic; --interrupt acknowledge
+            INTA    : in std_logic --interrupt acknowledge
 
-            -- memory control signals
-            nCE     : out std_logic;
-            nWE     : out std_logic;
-            nOE     : out std_logic := '0';
-            nBLE    : out std_logic := '0';
-            nBHE    : out std_logic := '0';
-
-            -- memory address and data signals
-            A       : out std_logic_vector((n + 1) downto 0);
-            IO      : inout std_logic_vector(n downto 0)
         );
     end component;
 
@@ -117,7 +107,7 @@ begin
     -- instantiate the unit under test (uut)
     uut: top port map (
         -- master clock
-        CLK => CLK,
+        CLK_IN => CLK,
 
         -- master reset
         GRST => GRST,
@@ -130,18 +120,7 @@ begin
 
         --interrupt signals to/from external device
         INT => INT,
-        INTA => INTA,
-
-        -- memory control signals
-        nCE => nCE,
-        nWE => nWE,
-        nOE => nOE,
-        nBLE => nBLE,
-        nBHE => nBHE,
-
-        -- memory address and data signals
-        A => A,
-        IO => IO
+        INTA => INTA
     );
 
     mem : mem_sim port map(
@@ -191,6 +170,8 @@ begin
     stim_proc: process
     begin
 
+        wait for 100 ns;
+
         wrrd <= '1';
 
         indata(31 downto (n + 1)) <= "000000000000000000";
@@ -237,7 +218,7 @@ begin
 
         INTA <= '0';  -- acknowledge interrupt
 
-        indata(n downto 0) <= "00000000001110";  -- opcode
+        indata(n downto 0) <= "00000000001000";  -- opcode
 
         wait until falling_edge(TCLK);
 
@@ -255,6 +236,7 @@ begin
 
         wrrd <= '0';
         
+        wait until rising_edge(rdy);
         wait until falling_edge(TCLK);
 
         wrrd <= '1';

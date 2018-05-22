@@ -128,7 +128,6 @@ architecture behavioral of operators is
     component outconvert
         port(
             clk         : in std_logic;
-            en          : in std_logic;
             rst         : in std_logic;
             ops_rdy     : in std_logic;
             convert     : in std_logic;
@@ -222,7 +221,6 @@ begin
     -- output converter
     outconvert_unit : outconvert port map(
         clk => clk,
-        en => en_con,
         rst => rst,
         ops_rdy => ops_rdy,
         convert => convert,

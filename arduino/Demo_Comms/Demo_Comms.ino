@@ -148,6 +148,8 @@ void loop() {
             uint8_t space1 = bufString.indexOf(' ');
             uint16_t arg1 = bufString.substring(space1 + 1).toInt();
             setDbgOutput(arg1);
+        }else if(bufString == "testAdd\n"){
+            testAdd();
         }else{
             Serial.println("Invalid");
         }    
@@ -194,10 +196,10 @@ void writeUint8(uint8_t input){
 uint8_t readUint8(){
     uint8_t ret = 0;
     for(uint8_t i = 0; i < 8; i++){
-        Serial.print("PIN ");
-        Serial.print(String(data_pins[i]));
-        Serial.print(": ");
-        Serial.println(String(digitalRead(data_pins[i])));
+        //Serial.print("PIN ");
+        //Serial.print(String(data_pins[i]));
+        //Serial.print(": ");
+        //Serial.println(String(digitalRead(data_pins[i])));
         ret |= (digitalRead(data_pins[i]) << i);
     }
     return ret;
@@ -207,9 +209,9 @@ void isr(){
     noInterrupts();
     swapDirections(0);
     digitalWrite(TCLK, LOW);
-    Serial.println("ISR Entered");
     clk_blip();
     err = digitalRead(ERR);
+    vec = readUint8();
     intd = 1;
     digitalWrite(INTA, HIGH);
     clk_blip();
@@ -253,8 +255,6 @@ uint8_t gLog(uint16_t opand){
     intd = 0;
     clk_blip();
     digitalWrite(INTA, LOW);
-    Serial.println("ISR Exited");
-    Serial.println(String(vec, HEX));
     clk_blip();
     digitalWrite(INTA, LOW);
     clk_blip();
@@ -262,9 +262,6 @@ uint8_t gLog(uint16_t opand){
 
 uint8_t add(uint16_t op1, uint16_t op2, uint8_t conv){
     uint8_t operand = ADD | (conv & 0x07);
-    Serial.println(String(op1));
-    Serial.println(String(op2));
-    Serial.println(String(conv));
     writeUint8(operand);
     start();
 
@@ -274,10 +271,9 @@ uint8_t add(uint16_t op1, uint16_t op2, uint8_t conv){
         
         while(!intd){}
         intd = 0;
-        vec = readUint8();
-        Serial.println(String(vec, HEX));
-        Serial.println("ISR Exited");
+ 
         clk_blip();
+               return vec;
     }
     
     return 0;
@@ -294,10 +290,9 @@ uint8_t sub(uint16_t op1, uint16_t op2, uint8_t conv){
         
         while(!intd){}
         intd = 0;
-        vec = readUint8();
-        Serial.println(String(vec, HEX));
-        Serial.println("ISR Exited");
         clk_blip();
+        clk_blip();
+        return vec;
     }
     
     return 0;
@@ -315,8 +310,6 @@ uint8_t mul(uint16_t op1, uint16_t op2, uint8_t conv){
         while(!intd){}
         intd = 0;
         vec = readUint8();
-        Serial.println(String(vec, HEX));
-        Serial.println("ISR Exited");
         clk_blip();
     }
     
@@ -335,8 +328,6 @@ uint8_t div(uint16_t op1, uint16_t op2, uint8_t conv){
         while(!intd){}
         intd = 0;
         vec = readUint8();
-        Serial.println(String(vec, HEX));
-        Serial.println("ISR Exited");
         clk_blip();
     }
     
@@ -394,12 +385,14 @@ uint8_t write1Op(uint16_t op1){
 void start(){
     digitalWrite(START, HIGH);
     digitalWrite(TCLK, HIGH);
+    delay(1);
+    digitalWrite(TCLK,LOW);
     digitalWrite(START, LOW);
-    digitalWrite(TCLK, LOW);
 }
 
 void clk_blip(){
     digitalWrite(TCLK, HIGH);
+    delay(1);
     digitalWrite(TCLK, LOW);
 }
 
@@ -409,6 +402,22 @@ void clearBus(){
     digitalWrite(INTA, LOW);
     for(int i = 0; i < 8; i++){
         digitalWrite(data_pins[i], LOW);
+    }
+}
+
+void testAdd(){
+    gen(8, 142);
+    for(int i = 50; i < 255; i++){
+        for(int j = 0; j < 255; j++){
+            delay(10);
+            uint8_t k = add(i, j, 7);
+            Serial.print("add ");
+            Serial.print(String(i));
+            Serial.print(" ");
+            Serial.print(String(j));
+            Serial.print(" ");
+            Serial.println(String(k));
+        }
     }
 }
 

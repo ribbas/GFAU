@@ -175,10 +175,10 @@ begin
     --error signal--
     err <= serr xor nerr;
 
-    comm        :   process(clk)
+    comm        :   process(t_clk)
     begin
-        if rising_edge(clk) then
-            if (t_clk = '1') then
+        if rising_edge(t_clk) then
+            --if (t_clk = '1') then
             if g_rst = '1' then
                 deserial_se <= '0';
                 deserial_nr <= '0';
@@ -291,7 +291,7 @@ begin
                         --wr_rd_r <= '0';
                 end case;
             end if;
-        end if;
+        --end if;
         end if;
     end process comm;
 

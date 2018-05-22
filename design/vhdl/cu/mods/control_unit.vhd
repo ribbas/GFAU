@@ -34,8 +34,8 @@ entity control_unit is
         -- operation signals
         ops_rdy     : out std_logic;  -- operators enable
         rst_ops     : out std_logic;
-        i           : out std_logic_vector(n downto 0) := DCAREVEC;  -- i
-        j           : out std_logic_vector(n downto 0) := DCAREVEC;  -- j
+        i           : out std_logic_vector(n downto 0) := ZEROVEC;  -- i
+        j           : out std_logic_vector(n downto 0) := ZEROVEC;  -- j
 
         -- memory wrapper control signals
         id_cu       : out std_logic := '0';
@@ -55,6 +55,9 @@ architecture behavioral of control_unit is
     signal came_from_both : std_logic;
     signal ops_rdy_sig    :   std_logic;
     signal en_gen_s     :   std_logic;
+    signal get_data_h   :   std_logic := '0'; --hold get_data state to latch received data
+    signal get_data_h2  :   std_logic := '0';
+    signal ops_rdy_h    :   std_logic := '0';
 
 
     type cu_state_type is (ready, convi, convj, both, gen, memrd);
@@ -94,8 +97,12 @@ begin
                     nCE <= '1';
                     nOE <= '1';
                     en_gen_s <= '0';
-                    if(ops_rdy_sig = '1') then
+                    rd_state <= send_addr;
+                    if(ops_rdy_sig = '1' and ops_rdy_h = '1') then
                         ops_rdy_sig <= '0';
+                        ops_rdy_h <= '0';
+                    elsif(ops_rdy_sig = '1' and ops_rdy_h = '0') then
+                        ops_rdy_h <= '1';
                     end if;
                     if (start = '1') then
                         en <= '1';
@@ -123,7 +130,6 @@ begin
                                 i <= opand1;
                                 j <= opand2;
 
-                                addr_cu <= '-' & DCAREVEC;
                                 ops_rdy_sig <= '1';
 
                                 cu_state <= ready;
@@ -146,16 +152,17 @@ begin
                         -- start generator
                         if en_gen_s = '0' then
                             en_gen_s <= '1';
+                        else
+                            cu_state <= ready;
                         end if;
                           
 
                         -- disable memory lookup
                         id_cu <= '0';
 
-                        if(gen_rdy = '1') then
-                            en_gen_s <= '0';
-                            cu_state <= ready;
-                        end if;
+                        --if(gen_rdy = '1') then
+                        --    cu_state <= ready;
+                        --end if;
                         
 
                     end if;
@@ -219,33 +226,44 @@ begin
 
                         when get_data =>
 
-                                if (ij = '0') then
+                                if(get_data_h = '1') then
+                                    get_data_h2 <= '1';
+                                    get_data_h <= '0';
+                                elsif(get_data_h2 = '1') then
 
-                                    i <= dout_cu;
+                                    if (ij = '0') then
 
+                                        i <= dout_cu;
+                                        
+                                        if(came_from_both = '1') then
+                                            rd_state <= send_addr;
+                                            came_from_both <= '0';
+                                            ij <= '1';
+                                        else 
+                                            cu_state <= ready;
+                                            rd_state <= send_addr;
+                                            ops_rdy_sig <= '1';
+                                            en <= '0';
+                                            id_cu <= '0';
+                                        end if;
+
+                                    else
+
+                                        j <= dout_cu;
+                                        cu_state <= ready;
+                                        rd_state <= send_addr;
+                                        ops_rdy_sig <= '1';
+                                        en <= '0';
+                                        id_cu <= '0';
+
+                                    end if;
+                                    
+                                    get_data_h2 <= '0';
+                                
                                 else
-
-                                    j <= dout_cu;
-
-                                end if;
-
-                                id_cu <= '1';
-
-                                rd_state <= send_addr;
-
-                                if (came_from_both = '1') then
-
-                                    came_from_both <= '0';
-
-                                    cu_state <= memrd;
-                                    ij <= '1';
-
-                                else
-
-                                    cu_state <= ready;
-                                    ops_rdy_sig <= '1';
-                                    en <= '0';
-
+                                
+                                    get_data_h <= '1';
+                                  
                                 end if;
 
                         end case;
