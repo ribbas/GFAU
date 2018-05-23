@@ -7,7 +7,7 @@
 \documentclass[11pt]{extarticle}
 % specifies the document layout and style
 \input{../../../template/structure.tex}
-
+\usepackage{multirow}
 \newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
 \newcommand{\gf}[1]{GF(#1)}
 \newcommand{\examplepoly}{$x^{3}+x^{2}+x^{0}$}
@@ -58,6 +58,26 @@
 
         \input{sdd/appendix/background/secs/08-zero}
         \input{sdd/appendix/background/secs/09-upperbound}
+
+        \section{Control Unit} The \texttt{control unit} module utilizes 6-bit
+        opcodes to determine the operation selected. The truth table of the
+        opcodes are provided below:
+\begin{table}[h]
+    \def\arraystretch{1.5}
+    \caption{Truth Table of 6-bit Opcodes Provided to the Control Unit. IO type $0$ is Element Form and $1$ the Polynomial Form of an Operand or Output}
+
+        \centering
+        \begin{tabular*}{300pt}{@{\extracolsep{\fill}} c|c|c}
+        \textbf{Operation} & \textbf{IO type} & \textbf{Description} \\
+        \hline
+        $000$    & $-,-,-$   & Generate the elements in the field \\
+        $001$    & $0/1,0/1,0/1$   & Add operands \\
+        $010$    & $0/1,0/1,0/1$   & Multiply operands \\
+        $011$    & $0/1,0/1,0/1$   & Divide operands \\
+        $100$    & $0/1,-,0/1$   & Compute the logarithm of an operand \\
+        $101$    & $-,-,-$   & Set mode \\
+        \end{tabular*}
+        \end{table}
 
         \bibliographystyle{abbrv}
         \bibliography{sdd/appendix/background/finitefield,sdd/appendix/background/primitive}

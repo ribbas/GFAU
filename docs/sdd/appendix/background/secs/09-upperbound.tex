@@ -1,1 +1,8 @@
-\subsubsection{Membership} 
+\subsubsection{Membership} Elements greater than or equal to the order of a
+generated field are not considered members of the field. Although any element
+$\alpha^i$ may be represented as a member element by computing $\alpha^i
+\Mod{2^{n-1}}$, GFAU avoids the step and generates an error to notify the user.
+
+\paragraph{{\small Digital Design}} \leavevmode \\ Although not a current
+feature, non-member elements may easily be computed as member elements by the
+existing \texttt{mul} module. Utilizing the output of \texttt{mul($NULL, \alpha^i$)} will guarantee the proper operations of all elements.
