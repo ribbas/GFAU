@@ -1,8 +1,0 @@
-INTSTYLE=ise
-INFILE=/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Top.ncd
-OUTFILE=/media/sf_Xilinx/gfau/design/vhdl/io/why/IO_Handler_Top.bit
-FAMILY=Spartan6
-PART=xc6slx9-3tqg144
-WORKINGDIR=/media/sf_Xilinx/gfau/design/vhdl/io/why
-LICENSE=ISE
-USER_INFO=179490135_1777493886_210620359_205
